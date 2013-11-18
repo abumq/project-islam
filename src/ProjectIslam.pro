@@ -56,4 +56,7 @@ OTHER_FILES += \
     ../database/dua.sql \
     ../database/quran/quran_english.sql \
     ../rc/icons.rc \
-    ../database/quran/quran_arabic.sql
+    ../database/quran/quran_arabic.sql \
+    ../LICENSE \
+    ../FEATURES \
+    ../README.md

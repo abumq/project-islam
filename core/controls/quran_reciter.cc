@@ -102,6 +102,11 @@ void QuranReciter::changeChapter(quran::Chapter::Name chapter)
 
 void QuranReciter::changeVerseRange(int from, int to)
 {
+    _TRACE;
+    if (ui->spnVerseTo->minimum() == from && ui->spnVerseFrom->maximum() == to) {
+        return;
+    }
+    LOG(INFO) << "Changing range [" << from << " - " << to << "]";
     if (m_ok) {
         bool playAfterwards = m_mediaPlayer->state() == m_mediaPlayer->PlayingState;
         m_mediaPlayer->stop();
@@ -110,6 +115,11 @@ void QuranReciter::changeVerseRange(int from, int to)
             m_mediaPlayer->play();
         }
     }
+    ui->spnVerseTo->setMinimum(from);
+    ui->spnVerseTo->setValue(to);
+    ui->spnVerseFrom->setMaximum(to);
+    ui->spnVerseFrom->setValue(from);
+    
     emit verseRangeChanged(from, to);
 }
 
@@ -174,6 +184,9 @@ void QuranReciter::on_cboChapter_currentIndexChanged(int index)
         }
     }
     emit chapterChanged(chapter);
+    if (!m_playList->isEmpty()) {
+        m_playList->setCurrentIndex(0);
+    }
 }
 
 void QuranReciter::on_btnPlay_clicked()
@@ -209,8 +222,15 @@ void QuranReciter::on_spnVerseTo_valueChanged(int)
 
 void QuranReciter::onVerseChanged(int)
 {
-    LOG(INFO) << "Current Index: " << m_playList->currentIndex();
-    if (m_playList->currentIndex() == ui->spnVerseTo->value() + 1) {
+    if (m_mediaPlayer->state() != QMediaPlayer::PlayingState) {
+        return;
+    }
+    if (m_playList->currentIndex() == 0) {
+        // Ignore files *000.mp3
+        return;
+    }
+    LOG(INFO) << "Playing verse [" << m_playList->currentIndex() << "]";
+    if (m_playList->currentIndex() > ui->spnVerseTo->value()) {
         m_playList->setCurrentIndex(ui->spnVerseFrom->value());
         if (ui->chkRepeat->isChecked()) {
             ui->spnRepeat->setValue(ui->spnRepeat->value() - 1);
@@ -222,6 +242,7 @@ void QuranReciter::onVerseChanged(int)
             m_mediaPlayer->stop();
         }
     }
+    emit currentVerseChanged(m_playList->currentIndex());
 }
 
 void QuranReciter::on_chkRepeat_clicked(bool checked)
@@ -236,6 +257,7 @@ void QuranReciter::onMediaStateChanged(QMediaPlayer::State state)
         ui->btnPlay->setEnabled(false);
         ui->btnPause->setEnabled(true);
         ui->btnStop->setEnabled(true);
+        LOG(INFO) << "Playing verse [" << m_playList->currentIndex() << "]";
         break;
     case QMediaPlayer::PausedState:
         ui->btnPlay->setEnabled(true);
@@ -246,6 +268,7 @@ void QuranReciter::onMediaStateChanged(QMediaPlayer::State state)
         ui->btnPlay->setEnabled(true);
         ui->btnPause->setEnabled(false);
         ui->btnStop->setEnabled(false);
+        LOG(INFO) << "Stopped";
         break;
     }
 }

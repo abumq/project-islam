@@ -49,6 +49,7 @@ private slots:
 signals:
     void chapterChanged(const quran::Chapter*);
     void verseRangeChanged(int, int);
+    void currentVerseChanged(int);
 private:
     Ui::QuranReciter *ui;
     quran::Quran* m_quran;

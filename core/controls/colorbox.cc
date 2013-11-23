@@ -114,7 +114,7 @@ void ColorBox::setColor(const QColor& c)
 
 QColor ColorBox::color() const
 {
-    std::size_t i = currentIndex();
+    int i = currentIndex();
     if (i >= 0) {
         return m_colors.at(i);
     }

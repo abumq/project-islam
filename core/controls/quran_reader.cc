@@ -41,8 +41,29 @@ void QuranReader::changeChapter(quran::Chapter::Name chapterName)
 
 void QuranReader::changeVerseRange(int from, int to)
 {
-    ui->spnVerseFrom->setValue(from);
+    _TRACE;
+    if (ui->spnVerseTo->minimum() == from && ui->spnVerseFrom->maximum() == to) {
+        return;
+    }
+    LOG(INFO) << "Changing range [" << from << " - " << to << "]";
+    m_quranView->update(from, to);
+    ui->spnVerse->setMinimum(from);
+    
+    ui->spnVerseTo->setMinimum(from);
     ui->spnVerseTo->setValue(to);
+    ui->spnVerseFrom->setMaximum(to);
+    ui->spnVerseFrom->setValue(from);
+}
+
+void QuranReader::highlightVerse(int verseNumber)
+{
+    ui->spnVerse->setValue(verseNumber);
+    m_quranView->selectVerse(verseNumber);
+}
+
+int QuranReader::currentVerse()
+{
+    return m_quranView->selectedVerse() == nullptr ? -1 : m_quranView->selectedVerse()->number();
 }
 
 void QuranReader::on_cboChapter_currentIndexChanged(int index)
@@ -66,21 +87,20 @@ void QuranReader::on_cboChapter_currentIndexChanged(int index)
 void QuranReader::on_spnVerseFrom_valueChanged(int)
 {
     _TRACE;
-    if (m_quranView->currentChapter() != nullptr) {
-        m_quranView->update(ui->spnVerseFrom->value(), ui->spnVerseTo->value());
-    }
+    changeVerseRange(ui->spnVerseFrom->value(), ui->spnVerseTo->value());
 }
 
 void QuranReader::on_spnVerseTo_valueChanged(int)
 {
     _TRACE;
-    if (m_quranView->currentChapter() != nullptr) {
-        m_quranView->update(ui->spnVerseFrom->value(), ui->spnVerseTo->value());
-    }
+    changeVerseRange(ui->spnVerseFrom->value(), ui->spnVerseTo->value());
 }
 
 void QuranReader::on_spnVerse_valueChanged(int)
 {
     _TRACE;
-    m_quranView->selectVerse(ui->spnVerse->value());
+    if (m_quranView->selectedVerse() != nullptr 
+        && m_quranView->selectedVerse()->number() != ui->spnVerse->value()) {
+        m_quranView->selectVerse(ui->spnVerse->value());
+    }
 }

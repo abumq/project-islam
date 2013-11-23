@@ -12,7 +12,6 @@ class QLabel;
 
 class Extension : public QWidget
 {
-    Q_OBJECT
 public:
     static const int kExtensionTop = 21;
     static const int kExtensionMaxLengthName = 12;
@@ -51,9 +50,9 @@ protected:
     void resizeEvent(QResizeEvent *);
 private:
     QWidget* m_parent;
-    QLabel* m_titleLabel;
     QWidget* m_container;
     data::DataHolder* m_dataHolder;
+    QLabel* m_titleLabel;
     QString m_name;
     QString m_title;
     QString m_description;

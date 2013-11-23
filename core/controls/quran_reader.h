@@ -21,6 +21,8 @@ public:
     ~QuranReader();
     void changeChapter(quran::Chapter::Name chapterName);
     void changeVerseRange(int from, int to);
+    void highlightVerse(int);
+    int currentVerse();
 private slots:
     void on_cboChapter_currentIndexChanged(int index);
     

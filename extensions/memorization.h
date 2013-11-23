@@ -2,7 +2,6 @@
 #define MEMORIZATION_H
 
 #include "core/extension/extension.h"
-#include <QList>
 
 class QuranReciter;
 class QuranReader;
@@ -10,8 +9,13 @@ class QuranReader;
 class QTableView;
 class QStandardItemModel;
 
+namespace quran {
+class Chapter;
+}
+
 class Memorization : public Extension
 {
+    Q_OBJECT
 public:
     Memorization(QWidget *parent, data::DataHolder* dataHolder);
     virtual ~Memorization();
@@ -23,6 +27,7 @@ public slots:
     void onVerseRangeChangedReciter(int, int);
     void onChapterChangedReader(const quran::Chapter* chapter);
     void onVerseRangeChangedReader(int, int);
+    void onSelectedVerseChangedReciter(int);
 private:
     QuranReciter* m_reciter;
     QuranReader* m_reader;

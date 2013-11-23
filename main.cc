@@ -15,7 +15,7 @@ int main(int argc, char *argv[])
 
     _START_EASYLOGGINGPP(argc, argv);
     
-    configureLoggers();
+    LoggingConfigurer::configureLoggers();
     
     QApplication::setApplicationName("Project Islam Platform");
     QApplication::setApplicationDisplayName("Project Islam Platform");

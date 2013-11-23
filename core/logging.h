@@ -4,6 +4,8 @@
 #include <easylogging++.h>
 #include "core/constants.h"
 
+class LoggingConfigurer {
+public:
 static void configureLoggers() {
 
     el::Logger* dataLogger = el::Loggers::getLogger("data");
@@ -34,6 +36,7 @@ static void configureLoggers() {
     defaultLogger->configurations()->set(el::Level::Debug, el::ConfigurationType::Format, "%datetime %level [%func] %msg");
     defaultLogger->reconfigure();
 }
+};
 
 #define TRACE_LOCATION CLOG(TRACE, "locationTrace")
 

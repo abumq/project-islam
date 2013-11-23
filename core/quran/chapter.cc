@@ -77,12 +77,13 @@ const Verses& Chapter::verses(void) const
     return m_verses; 
 }
 
-const Verse *Chapter::verse(int number) const
+const Verse* Chapter::verse(int number) const
 {
     Verses::const_iterator itVerse = m_verses.find(number);
     if (itVerse != m_verses.end()) {
         return &itVerse->second;
     }
+    return nullptr;
 }
 
 } // namespace quran

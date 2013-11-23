@@ -225,12 +225,8 @@ void QuranReciter::onVerseChanged(int)
     if (m_mediaPlayer->state() != QMediaPlayer::PlayingState) {
         return;
     }
-    if (m_playList->currentIndex() == 0) {
-        // Ignore files *000.mp3
-        return;
-    }
-    LOG(INFO) << "Playing verse [" << m_playList->currentIndex() << "]";
-    if (m_playList->currentIndex() > ui->spnVerseTo->value()) {
+    if (m_playList->currentIndex() == -1 || 
+            m_playList->currentIndex() > ui->spnVerseTo->value()) {
         m_playList->setCurrentIndex(ui->spnVerseFrom->value());
         if (ui->chkRepeat->isChecked()) {
             ui->spnRepeat->setValue(ui->spnRepeat->value() - 1);
@@ -242,7 +238,10 @@ void QuranReciter::onVerseChanged(int)
             m_mediaPlayer->stop();
         }
     }
-    emit currentVerseChanged(m_playList->currentIndex());
+    LOG(INFO) << "Playing verse [" << m_playList->currentIndex() << "]";
+    if (m_playList->currentIndex() > 0) {
+        emit currentVerseChanged(m_playList->currentIndex());
+    }
 }
 
 void QuranReciter::on_chkRepeat_clicked(bool checked)

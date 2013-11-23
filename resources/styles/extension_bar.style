@@ -1,0 +1,5 @@
+ExtensionBar {
+    background-color: qlineargradient(spread:pad, x1:0, y1:0.215636, x2:1, y2:0.239, stop:0 rgba([:color1]), stop:1 rgba([:color2]));
+    color: rgb(255, 255, 255);
+    border-color: rgb(52, 52, 52);
+}

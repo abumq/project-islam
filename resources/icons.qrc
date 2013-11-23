@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/extensions">
+        <file alias="memorization">images/brain.png</file>
+    </qresource>
+</RCC>

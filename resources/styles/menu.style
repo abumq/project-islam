@@ -1,0 +1,21 @@
+QMenuBar {
+    background-color: qlineargradient(spread:pad, x1:0, y1:0.215636, x2:1, y2:0.239, stop:0 rgba([:menubarColor1]), stop:1 rgba([:menubarColor2]));
+    color: rgb(255, 255, 255);
+    border-color: rgb(52, 52, 52);
+}
+
+QMenuBar::item {
+    spacing: 3px;
+    padding: 1px 4px;
+    background: transparent;
+    color: rgba(0, 0, 0);
+}
+
+QMenuBar::item:selected {
+    
+}
+
+QMenuBar::item:pressed {
+    background-color: rgba([:menuBgColorPressed]);
+    color: rgba([:menuColorPressed]);
+}

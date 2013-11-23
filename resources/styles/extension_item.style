@@ -1,0 +1,31 @@
+ExtensionItem {
+    background-color: qlineargradient(spread:pad, x1:0, y1:0.215636, x2:1, y2:0.239, stop:0 rgba([:color1]), stop:1 rgba([:color2]));
+    border: none;
+    color: rgba(255, 255, 255, 225);
+}
+
+ExtensionItem:hover {
+    border-top: 1px solid qlineargradient(spread:reflect, x1:0.529, y1:0, x2:0.013, y2:0, stop:0 rgba([:hoverBorder1]), stop:1 transparent);
+    border-bottom: 1px solid qlineargradient(spread:reflect, x1:0.529, y1:0, x2:0.013, y2:0, stop:0 rgba([:hoverBorder1]), stop:1 transparent);
+    background-color: qlineargradient(spread:reflect, x1:0.529, y1:0, x2:0.013, y2:0, stop:0 rgba(255, 255, 255, 30), stop:1 transparent);
+    color: rgba(255, 255, 255, 255);
+}
+
+ExtensionItem::checked {
+    border: none;
+    background-color: rgba(255, 255, 255, 125);
+    color: rgba(0, 0, 0, 125);
+}
+
+ExtensionItem::checked:hover {
+    border-top: 1px solid qlineargradient(spread:reflect, x1:0.529, y1:0, x2:0.013, y2:0, stop:0 rgba([:hoverBorder1]), stop:1 rgba([:hoverBorder2]));
+    border-bottom: 1px solid qlineargradient(spread:reflect, x1:0.529, y1:0, x2:0.013, y2:0, stop:0 rgba([:hoverBorder1]), stop:1 rgba([:hoverBorder2]));
+    border: none;
+    background-color: rgba(255, 255, 255, 95);
+}
+
+ExtensionItem::pressed {
+    border: none;
+    background-color: qlineargradient(spread:pad, x1:0, y1:0.215636, x2:1, y2:0.239, stop:0 rgba([:hoverColor1]), stop:1 rgba([:hoverColor1]));
+    color: rgba(0, 0, 0, 125);
+}

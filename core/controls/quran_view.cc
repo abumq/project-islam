@@ -16,6 +16,7 @@ QuranView::QuranView(quran::Quran* quran, QWidget *parent) :
 QuranView::~QuranView()
 {
     scene()->clear();
+    delete scene();
 }
 
 quran::Chapter* QuranView::currentChapter() const

@@ -48,6 +48,7 @@ void QuranReader::changeVerseRange(int from, int to)
     LOG(INFO) << "Changing range [" << from << " - " << to << "]";
     m_quranView->update(from, to);
     ui->spnVerse->setMinimum(from);
+    ui->spnVerse->setMaximum(to);
     
     ui->spnVerseTo->setMinimum(from);
     ui->spnVerseTo->setValue(to);

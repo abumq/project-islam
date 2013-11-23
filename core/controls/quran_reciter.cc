@@ -123,7 +123,7 @@ const quran::Verse* QuranReciter::currentVerse() const
     if (currentChapt == nullptr) {
         return nullptr;
     }
-    return m_dataHolder->quranArabic()->verse(currentChapt->name(), m_playList->currentIndex());
+    return currentChapt->verse(m_playList->currentIndex());
 }
 
 void QuranReciter::on_cboChapter_currentIndexChanged(int index)

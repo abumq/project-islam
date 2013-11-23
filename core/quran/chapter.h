@@ -147,7 +147,7 @@ public:
     const std::vector<int>& positions(void) const;
     const std::wstring& muqattaat(void) const;
     const Verses& verses(void) const;
-    const Verse* readVerse(int number) const;
+    const Verse* verse(int number) const;
 private:
     friend class Quran;
     Classification m_classification;

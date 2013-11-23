@@ -6,7 +6,8 @@
 QuranReader::QuranReader(data::DataHolder* dataHolder, QWidget *parent) :
     QWidget(parent),
     ui(new Ui::QuranReader),
-    m_dataHolder(dataHolder)
+    m_dataHolder(dataHolder),
+    m_currentChapter(nullptr)
 {
     ui->setupUi(this);
     // Chapters
@@ -32,16 +33,38 @@ void QuranReader::update(int from, int to)
 
 void QuranReader::update(quran::Chapter::Name chapter, int from, int to)
 {
+    _TRACE;
+    if (static_cast<quran::Chapter::Name>(ui->cboChapter->currentIndex() + 1) != chapter) {
+        m_currentChapter = const_cast<quran::Chapter*>(m_dataHolder->quranArabic()->chapter(chapter));
+    }
+    if (m_currentChapter == nullptr) {
+        LOG(ERROR) << "Chapter index [" << static_cast<int>(chapter) << "] not found.";
+        return;
+    }
+    LOG(INFO) << "Updating reader for chapter [" << m_currentChapter->arabicName() 
+        << "] verses [" << from << " - " << to << "]";
+    CHECK(from <= m_currentChapter->versesCount()) << "Chapter: [" << m_currentChapter->arabicName() <<
+        "] only has [" << m_currentChapter->versesCount() << "] verses, requested verse [" << from << "]";
+    CHECK(to <= m_currentChapter->versesCount()) << "Chapter: [" << m_currentChapter->arabicName() <<
+        "] only has [" << m_currentChapter->versesCount() << "] verses, requested verse [" << to << "]";
+    CHECK(from <= to) << "Invalid range. Verses from [" << from << "] to [" << to << "] requested.";
     
+    for (int i = from; i <= to; ++i) {
+        const quran::Verse* verse = &m_currentChapter->verses().at(i);
+    }
 }
 
 void QuranReader::on_cboChapter_currentIndexChanged(int index)
 {
+    _TRACE;
     int chapterId = index + 1;
         
     const quran::Chapter* chapter = m_dataHolder->quranArabic()->chapter(static_cast<quran::Chapter::Name>(chapterId));
-    ui->spnVerseFrom->setMaximum(chapter->versesCount());
-    ui->spnVerseTo->setMaximum(chapter->versesCount());
-    ui->spnVerseTo->setValue(chapter->versesCount());
-    update(static_cast<quran::Chapter::Name>(chapterId), 1, chapter->versesCount());
+    if (chapter != nullptr) {
+        ui->spnVerseFrom->setMaximum(chapter->versesCount());
+        ui->spnVerseTo->setMaximum(chapter->versesCount());
+        ui->spnVerseTo->setValue(chapter->versesCount());
+        update(static_cast<quran::Chapter::Name>(chapterId), 1, chapter->versesCount());
+    }
+    m_currentChapter = const_cast<quran::Chapter*>(chapter);
 }

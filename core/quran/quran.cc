@@ -63,7 +63,7 @@ const quran::Verse* Quran::verse(quran::Chapter::Name chapter, int verseNumber) 
         return nullptr;
     Chapters::const_iterator itChapter = m_chapters.find(static_cast<int>(chapter));
     if (itChapter != m_chapters.end()) {
-        return itChapter->second.readVerse(verseNumber);
+        return itChapter->second.verse(verseNumber);
     }
     return nullptr;
 }

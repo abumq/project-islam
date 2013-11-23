@@ -31,6 +31,7 @@ private:
     bool m_rukuh;
     bool m_sajdah;
 };
+typedef std::pair<int, quran::Verse> SingleVerse;
 typedef std::map<int, quran::Verse> Verses;
 } // namespace quran
 #endif // VERSE_HH

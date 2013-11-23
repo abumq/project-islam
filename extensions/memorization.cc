@@ -30,8 +30,12 @@ Memorization::~Memorization()
 void Memorization::initialize()
 {
     _TRACE;
-    m_reciter = new QuranReciter(dataHolder(), container());
-    m_reader = new QuranReader(dataHolder(), container());
+    m_reciter = new QuranReciter(dataHolder()->quranArabic(), container());
+    m_reader = new QuranReader(dataHolder()->quranEnglish(), container());
+    connect(m_reciter, SIGNAL(chapterChanged(const quran::Chapter*)), this, SLOT(onChapterChangedReciter(const quran::Chapter*)));
+    connect(m_reciter, SIGNAL(verseRangeChanged(int,int)), this, SLOT(onVerseRangeChangedReciter(int,int)));
+    connect(m_reader, SIGNAL(chapterChanged(const quran::Chapter*)), this, SLOT(onChapterChangedReader(const quran::Chapter*)));
+    connect(m_reader, SIGNAL(verseRangeChanged(int,int)), this, SLOT(onVerseRangeChangedReader(int,int)));
     m_tableView = new QTableView(container());
     m_tableView->hide();
 }
@@ -43,5 +47,34 @@ void Memorization::resizeEvent(QResizeEvent* e)
         int centerW = (container()->width() / 2) - (m_reciter->width() / 2);
         int bottom = container()->height() - m_reciter->height() - 100;
         m_reciter->move(centerW, bottom);
+    }
+}
+
+void Memorization::onChapterChangedReciter(const quran::Chapter* chapter)
+{
+    if (m_reader != nullptr) {
+        m_reader->changeChapter(chapter->name());
+    }
+}
+
+void Memorization::onVerseRangeChangedReciter(int from, int to)
+{
+    if (m_reader != nullptr) {
+        m_reader->changeVerseRange(from, to);
+    }
+}
+
+
+void Memorization::onChapterChangedReader(const quran::Chapter* chapter)
+{
+    if (m_reciter != nullptr) {
+        m_reciter->changeChapter(chapter->name());
+    }
+}
+
+void Memorization::onVerseRangeChangedReader(int from, int to)
+{
+    if (m_reciter != nullptr) {
+        m_reciter->changeVerseRange(from, to);
     }
 }

@@ -18,6 +18,11 @@ public:
     virtual void initialize(void);
 protected:
     void resizeEvent(QResizeEvent *);
+public slots:
+    void onChapterChangedReciter(const quran::Chapter* chapter);
+    void onVerseRangeChangedReciter(int, int);
+    void onChapterChangedReader(const quran::Chapter* chapter);
+    void onVerseRangeChangedReader(int, int);
 private:
     QuranReciter* m_reciter;
     QuranReader* m_reader;

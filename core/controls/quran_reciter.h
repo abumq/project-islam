@@ -11,8 +11,8 @@ namespace Ui {
 class QuranReciter;
 }
 
-namespace data {
-class DataHolder;
+namespace quran {
+class Quran;
 }
 
 class QMediaPlaylist;
@@ -22,10 +22,10 @@ class QuranReciter : public QWidget
     Q_OBJECT
     
 public:
-    QuranReciter(data::DataHolder* dataHolder, QWidget *parent = 0);
+    QuranReciter(quran::Quran* quran, QWidget *parent = 0);
     ~QuranReciter();
     void changeChapter(quran::Chapter::Name chapter);
-    void changeVerse(int from, int);
+    void changeVerseRange(int from, int to);
     const quran::Chapter* currentChapter() const;
     const quran::Verse* currentVerse() const;
 private slots:
@@ -46,10 +46,12 @@ private slots:
     void on_chkRepeat_clicked(bool checked);
     
     void onMediaStateChanged(QMediaPlayer::State);
-    
+signals:
+    void chapterChanged(const quran::Chapter*);
+    void verseRangeChanged(int, int);
 private:
     Ui::QuranReciter *ui;
-    data::DataHolder* m_dataHolder;
+    quran::Quran* m_quran;
     QDir m_recitationsDir;
     bool m_ok;
     QDir m_currentRecitationDir;

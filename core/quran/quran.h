@@ -18,9 +18,11 @@ public:
     const quran::Chapters& chapters(void) const;
     const quran::Chapter* chapter(Chapter::Name chapter) const;
     bool ready(void) const;
+    TextType textType(void) const;
 private:
     quran::Chapters m_chapters;
     bool m_ready;
+    TextType m_textType;
 };
 } // namespace quran
 #endif // QURAN_HH

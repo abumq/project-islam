@@ -47,8 +47,6 @@ public:
     data::DataHolder* dataHolder();
     
     QLabel* titleLabel() const;
-signals:
-    void ready();
 protected:
     void resizeEvent(QResizeEvent *);
 private:

@@ -8,10 +8,10 @@
 #include "core/data/data_holder.h"
 #include "core/logging.h"
 #include "core/constants.h"
-QuranReciter::QuranReciter(data::DataHolder* dataHolder, QWidget *parent) :
+QuranReciter::QuranReciter(quran::Quran* quran, QWidget *parent) :
     QWidget(parent),
     ui(new Ui::QuranReciter),
-    m_dataHolder(dataHolder),
+    m_quran(quran),
     m_ok(false),
     m_mediaPlayer(nullptr),
     m_playList(nullptr)
@@ -19,7 +19,7 @@ QuranReciter::QuranReciter(data::DataHolder* dataHolder, QWidget *parent) :
     ui->setupUi(this);
     
     // Chapters
-    for (quran::SingleChapter c : m_dataHolder->quranArabic()->chapters()) {
+    for (quran::SingleChapter c : m_quran->chapters()) {
         QString chapterItem = QString::number(static_cast<int>(c.second.name())) + ". " + 
                 QString::fromStdWString(c.second.arabicName()) + 
                 " (" + QString::fromStdWString(c.second.arabicScriptName()) + ")";
@@ -100,7 +100,7 @@ void QuranReciter::changeChapter(quran::Chapter::Name chapter)
     ui->cboChapter->setCurrentIndex(static_cast<int>(chapter) - 1);
 }
 
-void QuranReciter::changeVerse(int from, int)
+void QuranReciter::changeVerseRange(int from, int to)
 {
     if (m_ok) {
         bool playAfterwards = m_mediaPlayer->state() == m_mediaPlayer->PlayingState;
@@ -110,11 +110,12 @@ void QuranReciter::changeVerse(int from, int)
             m_mediaPlayer->play();
         }
     }
+    emit verseRangeChanged(from, to);
 }
 
 const quran::Chapter* QuranReciter::currentChapter() const
 {
-    return m_dataHolder->quranArabic()->chapter(static_cast<quran::Chapter::Name>(ui->cboChapter->currentIndex() + 1));
+    return m_quran->chapter(static_cast<quran::Chapter::Name>(ui->cboChapter->currentIndex() + 1));
 }
 
 const quran::Verse* QuranReciter::currentVerse() const
@@ -143,7 +144,7 @@ void QuranReciter::on_cboChapter_currentIndexChanged(int index)
     }
     zeroPaddedId.append(QString::number(chapterId));
     
-    const quran::Chapter* chapter = m_dataHolder->quranArabic()->chapter(static_cast<quran::Chapter::Name>(chapterId));
+    const quran::Chapter* chapter = m_quran->chapter(static_cast<quran::Chapter::Name>(chapterId));
     ui->spnVerseFrom->setMaximum(chapter->versesCount());
     ui->spnVerseTo->setMaximum(chapter->versesCount());
     ui->spnVerseTo->setValue(chapter->versesCount());
@@ -172,6 +173,7 @@ void QuranReciter::on_cboChapter_currentIndexChanged(int index)
             }
         }
     }
+    emit chapterChanged(chapter);
 }
 
 void QuranReciter::on_btnPlay_clicked()
@@ -197,12 +199,12 @@ void QuranReciter::on_btnStop_clicked()
 
 void QuranReciter::on_spnVerseFrom_valueChanged(int)
 {
-    changeVerse(ui->spnVerseFrom->value(), ui->spnVerseTo->value());
+    changeVerseRange(ui->spnVerseFrom->value(), ui->spnVerseTo->value());
 }
 
 void QuranReciter::on_spnVerseTo_valueChanged(int)
 {
-    changeVerse(ui->spnVerseFrom->value(), ui->spnVerseTo->value());
+    changeVerseRange(ui->spnVerseFrom->value(), ui->spnVerseTo->value());
 }
 
 void QuranReciter::onVerseChanged(int)

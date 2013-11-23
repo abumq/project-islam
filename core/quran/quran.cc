@@ -14,6 +14,7 @@ void Quran::load(const Quran::TextType &textType)
 {
     QURAN_LOG(DEBUG) << "Loading Quran...";
     TIMED_SCOPE(quranLoadTimer, "Load Complete Quran");
+    m_textType = textType;
     data::DatabaseManager d;
     data::QueryResult result = d.query("SELECT * FROM QuranChapter ORDER BY ID");
     for (int i = 0; i < result.size(); ++i) {
@@ -84,6 +85,11 @@ const quran::Chapter* Quran::chapter(Chapter::Name chapter) const
 
 bool Quran::ready(void) const { 
     return m_ready; 
+}
+
+Quran::TextType Quran::textType() const
+{
+    return m_textType;
 }
 
 

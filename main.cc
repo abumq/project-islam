@@ -3,6 +3,10 @@
 #include <QResource>
 #include "core/logging.h"
 
+#if (QT_VERSION < QT_VERSION_CHECK(5, 0, 0))
+#   error This project requires Qt 5.x
+#endif
+
 _INITIALIZE_EASYLOGGINGPP
 
 int main(int argc, char *argv[])
@@ -17,10 +21,10 @@ int main(int argc, char *argv[])
     
     LoggingConfigurer::configureLoggers();
     
-    QApplication::setApplicationName("Project Islam Platform");
-    QApplication::setApplicationDisplayName("Project Islam Platform");
-    QApplication::setApplicationVersion("v0.1");
-    
+    a.setApplicationName("Project Islam Platform");
+    a.setApplicationVersion("v0.1");
+    a.setApplicationDisplayName("Project Islam Platform");
+
     MainWindow w(&a);
     w.show();
     

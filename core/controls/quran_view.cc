@@ -1,6 +1,9 @@
 #include "quran_view.h"
 #include <QGraphicsTextItem>
 #include <QGraphicsEllipseItem>
+#include <QTextDocument>
+#include <QTextBlockFormat>
+#include <QTextCursor>
 #include "core/quran/quran.h"
 QuranView::QuranView(quran::Quran* quran, QWidget *parent) :
     QGraphicsView(new QGraphicsScene(parent), parent),
@@ -70,29 +73,34 @@ void QuranView::update(quran::Chapter* chapter, int from, int to)
     m_ok = m_currentChapter != nullptr;
     
     // TODO: Set pos according to m_quran->readingDirection()
-    int locH = 0;
-    int locW = m_quran->readingDirection() == quran::Quran::ReadingDirection::LeftToRight ? 
-        -(width() / 2) + 60 :
-        (width() / 2) - 60;
-        
+    int locY = 0;
+    int locX = m_quran->readingDirection() == quran::Quran::ReadingDirection::LeftToRight ? 
+                -(width() / 2) + 60 :
+                (width() / 2) - 60;
+    
     float size = 0;
+    float maxWidth = -2;
     for (int i = from; i <= to; ++i) {
         const quran::Verse* verse = &m_currentChapter->verses().at(i);
         VerseTextItem* verseTextItem = new VerseTextItem(QString::fromStdWString(verse->text()), 
                                                          const_cast<quran::Verse*>(verse), nullptr);
         scene()->addItem(verseTextItem);
-        verseTextItem->setFlag(QGraphicsItem::ItemIsMovable);
-        verseTextItem->setPos(locW, locH);
-        locH += 30;
+        //verseTextItem->setPos(locX, locY);
+        verseTextItem->setY(locY);
+        locY += 30;
         m_verseTextItems.insert(i, verseTextItem);
         if (i == from) {
             m_selectedVerseTextItem = verseTextItem;
             verseTextItem->highlight();
             size = verseTextItem->size();
-            locW = verseTextItem->pos().x();
+        }
+        if (verseTextItem->textWidth() > maxWidth) {
+            maxWidth = verseTextItem->textWidth();
+            verseTextItem->setTextWidth(maxWidth);
         }
     }
     changeSize(size);
+    changeTextWidth(maxWidth);
     if (isChapterChanged) {
         emit chapterChanged(m_currentChapter);
     }
@@ -154,14 +162,29 @@ float QuranView::fontSize() const
     return m_fontSize;
 }
 
+void QuranView::changeTextWidth(float val)
+{
+    Qt::Alignment alignment = m_quran->readingDirection() == quran::Quran::ReadingDirection::LeftToRight ?
+        Qt::AlignLeft : Qt::AlignRight;
+    VerseTextItem* curr = nullptr;
+    for (int key : m_verseTextItems.keys()) {
+        curr = m_verseTextItems.value(key);
+        curr->setTextWidth(val);
+        curr->setAlignment(alignment);
+    }
+}
+
 VerseTextItem::VerseTextItem(const QString& text, quran::Verse* verse, QGraphicsItem* parent) :
     QGraphicsTextItem(text, parent),
     m_plainText(text),
     m_verse(verse),
-    m_highlighted(false)
+    m_highlighted(false),
+    m_size(10.0f),
+    m_alignment(Qt::AlignLeft)
 {
-    m_size = 10.0f;
     unhighlight();
+    setTextWidth(boundingRect().width());
+    setAlignment(m_alignment);
 }
 
 void VerseTextItem::paint(QPainter* painter, const QStyleOptionGraphicsItem* o, QWidget* w)
@@ -220,5 +243,20 @@ float VerseTextItem::size() const
 void VerseTextItem::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
 {
     QGraphicsTextItem::mouseMoveEvent(event);
-    setHtml(QString::number(pos().x()));
+    setToolTip(QString::number(pos().x()));
+}
+
+void VerseTextItem::setAlignment(Qt::Alignment alignment)
+{
+    m_alignment = alignment;
+    
+    QTextBlockFormat format;
+    format.setAlignment(m_alignment);
+    
+    QTextCursor cursor = textCursor();
+    cursor.select(QTextCursor::Document);
+    cursor.mergeBlockFormat(format);
+    cursor.clearSelection();
+    
+    setTextCursor(cursor); 
 }

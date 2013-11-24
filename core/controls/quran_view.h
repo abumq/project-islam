@@ -12,23 +12,30 @@ class Quran;
 
 class VerseTextItem : public QGraphicsTextItem
 {
+    Q_OBJECT
 public:
     VerseTextItem(const QString &text = QString(), quran::Verse* verse = 0, QGraphicsItem* parent = 0);
     
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *o, QWidget *w);
+    
     void highlight();
     void unhighlight();
+    
     quran::Verse* verse();
+    
     void sizeUp(float threshold);
     void sizeDown(float threshold);
     void changeSize(float newSize);
     float size() const;
+    
     void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
+    void setAlignment(Qt::Alignment alignment);
 private:
     QString m_plainText;
     quran::Verse* m_verse;
     bool m_highlighted;
     float m_size;
+    Qt::Alignment m_alignment;
 };
 
 class QuranView : public QGraphicsView
@@ -61,6 +68,8 @@ private:
     VerseTextItem* m_selectedVerseTextItem;
     bool m_ok;
     qreal m_fontSize;
+    
+    void changeTextWidth(float);
 };
 
 #endif // QURAN_VIEW_H

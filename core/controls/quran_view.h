@@ -14,6 +14,7 @@ class VerseTextItem : public QGraphicsTextItem
 {
     Q_OBJECT
 public:
+    static const float kDefaultFontSize;
     VerseTextItem(const QString &text = QString(), quran::Verse* verse = 0, QGraphicsItem* parent = 0);
     
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *o, QWidget *w);
@@ -28,7 +29,6 @@ public:
     void changeSize(float newSize);
     float size() const;
     
-    void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
     void setAlignment(Qt::Alignment alignment);
 private:
     QString m_plainText;
@@ -67,9 +67,9 @@ private:
     QMap<int, VerseTextItem*> m_verseTextItems;
     VerseTextItem* m_selectedVerseTextItem;
     bool m_ok;
-    qreal m_fontSize;
+    float m_fontSize;
     
-    void changeTextWidth(float);
+    void updateView(float valW, float spaceBw);
 };
 
 #endif // QURAN_VIEW_H

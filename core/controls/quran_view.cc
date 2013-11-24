@@ -4,6 +4,7 @@
 #include <QTextDocument>
 #include <QTextBlockFormat>
 #include <QTextCursor>
+#include <QScrollBar>
 #include "core/quran/quran.h"
 QuranView::QuranView(quran::Quran* quran, QWidget *parent) :
     QGraphicsView(new QGraphicsScene(parent), parent),
@@ -13,7 +14,7 @@ QuranView::QuranView(quran::Quran* quran, QWidget *parent) :
     m_ok(false)
 {
     _TRACE;
-    const QRectF rect = QRectF(0, 0, width(), height() * 100);
+    const QRectF rect = QRectF(0, 0, 1, 1);
     scene()->setSceneRect(rect);
 }
 
@@ -75,27 +76,26 @@ void QuranView::update(quran::Chapter* chapter, int from, int to)
     int locY = 0;
     
     float size = 0;
-    float maxWidth = -2;
     for (int i = from; i <= to; ++i) {
         const quran::Verse* verse = &m_currentChapter->verses().at(i);
         VerseTextItem* verseTextItem = new VerseTextItem(QString::fromStdWString(verse->text()), 
                                                          const_cast<quran::Verse*>(verse), nullptr);
         scene()->addItem(verseTextItem);
         verseTextItem->setY(locY);
+        verseTextItem->setToolTip(QString::number(locY));
         locY += 30;
         m_verseTextItems.insert(i, verseTextItem);
         if (i == from) {
+            // First verse i.e, val 'from'
             m_selectedVerseTextItem = verseTextItem;
             verseTextItem->highlight();
-            size = verseTextItem->size();
-        }
-        if (verseTextItem->textWidth() > maxWidth) {
-            maxWidth = verseTextItem->textWidth();
-            verseTextItem->setTextWidth(maxWidth);
+            if (m_fontSize == 0) {
+                m_fontSize = VerseTextItem::kDefaultFontSize;
+            }
+            size = verseTextItem->size() == m_fontSize ? verseTextItem->size() : m_fontSize;
         }
     }
     changeSize(size);
-    changeTextWidth(maxWidth);
     if (isChapterChanged) {
         emit chapterChanged(m_currentChapter);
     }
@@ -108,7 +108,7 @@ void QuranView::update(quran::Chapter::Name chapter, int from, int to)
     update(const_cast<quran::Chapter*>(m_quran->chapter(chapter)), from, to);
 }
 
-quran::Verse*QuranView::selectedVerse()
+quran::Verse* QuranView::selectedVerse()
 {
     _TRACE;
     return m_selectedVerseTextItem == nullptr ? nullptr : m_selectedVerseTextItem->verse();
@@ -134,11 +134,14 @@ void QuranView::sizeDown(float threshold)
 void QuranView::changeSize(float newSize)
 {
     _TRACE;
+    scene()->setSceneRect(QRectF(0, 0, 1, 1)); // Will be updated in updateView()
     // We dont ignore (newSize == m_fontSize) case since we
     // still want to space out verses
     if (m_verseTextItems.empty()) {
         return;
     }
+    int maxWidth = -2;
+    int spaceBw = 30;
     VerseTextItem* prev = nullptr;
     VerseTextItem* curr = nullptr;
     for (int key : m_verseTextItems.keys()) {
@@ -147,39 +150,47 @@ void QuranView::changeSize(float newSize)
         curr->changeSize(newSize);
         if (prev != nullptr) {
             curr->setPos(curr->pos().x(), prev->size() + prev->pos().y() + (newSize * 3));
+            spaceBw = curr->pos().y() - prev->pos().y() - newSize;
+            LOG(INFO) << spaceBw;
+        }
+        if (maxWidth < curr->textWidth()) {
+            maxWidth = curr->textWidth();
         }
     }
     m_fontSize = newSize;
+    updateView(maxWidth, spaceBw);
 }
 
 float QuranView::fontSize() const
 {
     return m_fontSize;
 }
-
-void QuranView::changeTextWidth(float val)
+void QuranView::updateView(float valW, float spaceBw)
 {
-    const QRectF rect = QRectF(scene()->sceneRect().x(), scene()->sceneRect().y(), 
-        val, scene()->sceneRect().height());
+    _TRACE;
+    int h = m_verseTextItems.count() * spaceBw + (m_verseTextItems.count() * m_fontSize);
+    const QRectF rect = QRectF(0, 0, valW, h);
     scene()->setSceneRect(rect);
-    
+    horizontalScrollBar()->setValue(horizontalScrollBar()->maximum());
     // Regardless of quran->textDirection we will have to set it to left
     // since it's unicode's job to align it after we have set text width
     Qt::Alignment alignment = Qt::AlignLeft;
     VerseTextItem* curr = nullptr;
     for (int key : m_verseTextItems.keys()) {
         curr = m_verseTextItems.value(key);
-        curr->setTextWidth(val);
+        curr->setTextWidth(valW);
         curr->setAlignment(alignment);
     }
 }
+
+const float VerseTextItem::kDefaultFontSize = 10.0f;
 
 VerseTextItem::VerseTextItem(const QString& text, quran::Verse* verse, QGraphicsItem* parent) :
     QGraphicsTextItem(text, parent),
     m_plainText(text),
     m_verse(verse),
     m_highlighted(false),
-    m_size(10.0f),
+    m_size(kDefaultFontSize),
     m_alignment(Qt::AlignLeft)
 {
     unhighlight();
@@ -238,12 +249,6 @@ void VerseTextItem::changeSize(float newSize)
 float VerseTextItem::size() const
 {
     return m_size;
-}
-
-void VerseTextItem::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
-{
-    QGraphicsTextItem::mouseMoveEvent(event);
-    setToolTip(QString::number(pos().x()));
 }
 
 void VerseTextItem::setAlignment(Qt::Alignment alignment)

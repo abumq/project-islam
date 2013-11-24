@@ -100,7 +100,17 @@
         </widget>
        </item>
        <item>
-        <widget class="QSpinBox" name="spnZoom"/>
+        <widget class="QDoubleSpinBox" name="spnZoom">
+         <property name="minimum">
+          <double>10.000000000000000</double>
+         </property>
+         <property name="maximum">
+          <double>300.000000000000000</double>
+         </property>
+         <property name="singleStep">
+          <double>1.000000000000000</double>
+         </property>
+        </widget>
        </item>
       </layout>
      </widget>

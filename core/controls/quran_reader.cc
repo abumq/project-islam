@@ -40,6 +40,8 @@ QuranReader::QuranReader(quran::Quran* quran, QWidget *parent) :
     connect(m_quranView, SIGNAL(verseRangeChanged(int,int)), this, SIGNAL(verseRangeChanged(int,int)));
     connect(m_quranView, SIGNAL(currentVerseChanged(int)), this, SIGNAL(currentVerseChanged(int)));
     on_btnMoreControls_clicked(false);
+    
+    ui->spnZoom->setValue(static_cast<double>(m_quranView->fontSize()));
 }
 
 QuranReader::~QuranReader()
@@ -189,4 +191,9 @@ void QuranReader::on_btnMoreControls_clicked(bool checked)
     ui->grpMoreControls->setVisible(checked);
     ui->grpControls->resize(ui->grpControls->width(), !checked ? 71 : 131);
     resize(width(), height() - 1);
+}
+
+void QuranReader::on_spnZoom_valueChanged(double val)
+{
+    m_quranView->changeSize(val);
 }

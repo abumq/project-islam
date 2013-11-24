@@ -12,6 +12,9 @@ public:
     enum class TextType {
         Arabic, English
     };
+    enum class ReadingDirection {
+        LeftToRight, RightToLeft
+    };
     Quran(void);
     void load(const TextType& textType);
     const quran::Verse* verse(Chapter::Name chapter, int verseNumber) const;
@@ -19,10 +22,12 @@ public:
     const quran::Chapter* chapter(Chapter::Name chapter) const;
     bool ready(void) const;
     TextType textType(void) const;
+    ReadingDirection readingDirection(void) const;
 private:
     quran::Chapters m_chapters;
     bool m_ready;
     TextType m_textType;
+    ReadingDirection m_readingDirection;
 };
 } // namespace quran
 #endif // QURAN_HH

@@ -39,6 +39,8 @@ private slots:
     void on_spnVerse_valueChanged(int);
     void on_btnMoreControls_clicked(bool checked);
     
+    void on_spnZoom_valueChanged(double arg1);
+    
 signals:
     void chapterChanged(const quran::Chapter*);
     void verseRangeChanged(int, int);

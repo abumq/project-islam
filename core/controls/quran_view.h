@@ -19,9 +19,16 @@ public:
     void highlight();
     void unhighlight();
     quran::Verse* verse();
+    void sizeUp(float threshold);
+    void sizeDown(float threshold);
+    void changeSize(float newSize);
+    float size() const;
+    void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
 private:
     QString m_plainText;
     quran::Verse* m_verse;
+    bool m_highlighted;
+    float m_size;
 };
 
 class QuranView : public QGraphicsView
@@ -39,6 +46,10 @@ public:
     void update(quran::Chapter::Name name, int from, int to);
     quran::Verse* selectedVerse();
     bool ok() const;
+    void sizeUp(float threshold);
+    void sizeDown(float threshold);
+    void changeSize(float newSize);
+    float fontSize() const;
 signals:
     void chapterChanged(const quran::Chapter*);
     void verseRangeChanged(int, int);
@@ -46,9 +57,10 @@ signals:
 private:
     quran::Quran* m_quran;
     quran::Chapter* m_currentChapter;
-    QHash<int, VerseTextItem*> m_verseTextItemHash;
+    QMap<int, VerseTextItem*> m_verseTextItems;
     VerseTextItem* m_selectedVerseTextItem;
     bool m_ok;
+    qreal m_fontSize;
 };
 
 #endif // QURAN_VIEW_H

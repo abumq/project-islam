@@ -41,8 +41,10 @@ void Quran::load(const Quran::TextType &textType)
         QString table;
         if (textType == TextType::Arabic) {
             table = "QuranArabic";
+            m_readingDirection = ReadingDirection::RightToLeft;
         } else if (textType == TextType::English) {
             table = "QuranEnglish";
+            m_readingDirection = ReadingDirection::LeftToRight;
         }
         data::QueryResult verses = d.query("SELECT * FROM " + table + " WHERE QuranChapterID = :QuranChapterID ORDER BY ID", args);
         for (int i = 0; i < verses.size(); ++i) {
@@ -90,6 +92,11 @@ bool Quran::ready(void) const {
 Quran::TextType Quran::textType() const
 {
     return m_textType;
+}
+
+Quran::ReadingDirection Quran::readingDirection() const
+{
+    return m_readingDirection;
 }
 
 

@@ -4,11 +4,12 @@
 #include "core/logging.h"
 #include "core/constants.h"
 
+const QString SettingsLoader::kMasterSettingsFile = QString("master.settings");
+QString SettingsLoader::s_defaultHomeDir = QString();
+
 SettingsLoader::SettingsLoader()
 {
-    m_settingsFile = QString(kHomeDir.c_str()) + "basic_settings.ini";
-    m_settings = nullptr;
-    changeSettingsFile(m_settingsFile);
+    initialize();
 }
 
 SettingsLoader::~SettingsLoader()
@@ -17,6 +18,13 @@ SettingsLoader::~SettingsLoader()
         delete m_settings;
         m_settings = nullptr;
     }
+}
+
+void SettingsLoader::initialize()
+{
+    m_settingsFile = defaultHomeDir() + "basic_settings.ini";
+    m_settings = nullptr;
+    changeSettingsFile(m_settingsFile);
 }
 
 void SettingsLoader::saveSettings(QMap<QString, QVariant>* map)
@@ -67,4 +75,50 @@ void SettingsLoader::changeSettingsFile(const QString &filename)
 QString SettingsLoader::settingsFile() const
 {
     return m_settingsFile;
+}
+
+QString SettingsLoader::defaultHomeDir()
+{
+    if (s_defaultHomeDir.isEmpty()) {
+        updateDefaultHomeDir(kDefaultHomeDir);
+    }
+    return s_defaultHomeDir;
+}
+
+void SettingsLoader::updateDefaultHomeDir(const QString& dir)
+{
+    QFile masterSettingsFile(kMasterSettingsFile);
+    if (!masterSettingsFile.exists()) {
+        // Create master settings
+        if (masterSettingsFile.open(QFile::WriteOnly) || masterSettingsFile.isWritable()) {
+            masterSettingsFile.write(kDefaultHomeDir.toStdString().c_str());
+            masterSettingsFile.flush();
+            masterSettingsFile.close();
+        } else {
+            LOG(ERROR) << "Unable to write to [" << masterSettingsFile.fileName() << "]";
+            s_defaultHomeDir = kDefaultHomeDir;
+        }
+    } else {
+        // Update master settings
+        if (!s_defaultHomeDir.isEmpty() && s_defaultHomeDir != dir) {
+            if (masterSettingsFile.open(QFile::WriteOnly) || masterSettingsFile.isWritable()) {
+                masterSettingsFile.write(dir.toStdString().c_str());
+                masterSettingsFile.flush();
+                masterSettingsFile.close();
+            }
+        }
+        if (masterSettingsFile.open(QFile::ReadOnly)) {
+            QString l = masterSettingsFile.readAll();
+            if (!l.isEmpty()) {
+                LOG(INFO) << "Setting up home dir to [" << l << "]";
+                s_defaultHomeDir = l;
+            } else {
+                LOG(INFO) << "Setting up home dir to [" << kDefaultHomeDir << "]";
+                s_defaultHomeDir = kDefaultHomeDir;
+            }
+        } else {
+            LOG(INFO) << "Setting up home dir to [" << kDefaultHomeDir << "]";
+            s_defaultHomeDir = kDefaultHomeDir;
+        }
+    }
 }

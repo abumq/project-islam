@@ -10,6 +10,7 @@ public:
     DataHolder();
     quran::Quran* quranArabic();
     quran::Quran* quranEnglish();
+    void initialize();
 private:
     quran::Quran m_quranArabic;
     quran::Quran m_quranEnglish;

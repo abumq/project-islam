@@ -6,89 +6,122 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>644</width>
+    <width>681</width>
     <height>487</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Form</string>
   </property>
-  <widget class="QSplitter" name="splitter">
+  <widget class="QGroupBox" name="grpControls">
    <property name="geometry">
     <rect>
-     <x>9</x>
-     <y>9</y>
-     <width>291</width>
-     <height>23</height>
+     <x>0</x>
+     <y>-10</y>
+     <width>641</width>
+     <height>131</height>
     </rect>
    </property>
-   <property name="orientation">
-    <enum>Qt::Horizontal</enum>
+   <property name="title">
+    <string/>
    </property>
-   <widget class="QLabel" name="label">
-    <property name="text">
-     <string>Chapter:</string>
-    </property>
-   </widget>
-   <widget class="QComboBox" name="cboChapter"/>
+   <layout class="QVBoxLayout" name="verticalLayout">
+    <item>
+     <widget class="QSplitter" name="splitter_4">
+      <property name="orientation">
+       <enum>Qt::Horizontal</enum>
+      </property>
+      <widget class="QSplitter" name="splitter">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <widget class="QLabel" name="lblCboChapter">
+        <property name="text">
+         <string>Chapter:</string>
+        </property>
+       </widget>
+       <widget class="QComboBox" name="cboChapter"/>
+      </widget>
+      <widget class="QSplitter" name="splitter_2">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <widget class="QLabel" name="lblVerseRange">
+        <property name="text">
+         <string>Verses:</string>
+        </property>
+       </widget>
+       <widget class="QSpinBox" name="spnVerseFrom">
+        <property name="minimum">
+         <number>1</number>
+        </property>
+        <property name="maximum">
+         <number>286</number>
+        </property>
+       </widget>
+       <widget class="QLabel" name="lblVerseRangeSeparator">
+        <property name="text">
+         <string>-</string>
+        </property>
+       </widget>
+       <widget class="QSpinBox" name="spnVerseTo">
+        <property name="minimum">
+         <number>1</number>
+        </property>
+        <property name="maximum">
+         <number>286</number>
+        </property>
+       </widget>
+      </widget>
+      <widget class="QSplitter" name="splitter_3">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <widget class="QLabel" name="lblVerse">
+        <property name="text">
+         <string>Verse:</string>
+        </property>
+       </widget>
+       <widget class="QSpinBox" name="spnVerse"/>
+      </widget>
+     </widget>
+    </item>
+    <item>
+     <widget class="QGroupBox" name="grpMoreControls">
+      <property name="title">
+       <string/>
+      </property>
+      <layout class="QHBoxLayout" name="horizontalLayout">
+       <item>
+        <widget class="QLabel" name="label_5">
+         <property name="text">
+          <string>Zoom</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QSpinBox" name="spnZoom"/>
+       </item>
+      </layout>
+     </widget>
+    </item>
+   </layout>
   </widget>
-  <widget class="QSplitter" name="splitter_2">
+  <widget class="QToolButton" name="btnMoreControls">
    <property name="geometry">
     <rect>
-     <x>310</x>
-     <y>10</y>
-     <width>181</width>
-     <height>24</height>
+     <x>650</x>
+     <y>20</y>
+     <width>28</width>
+     <height>22</height>
     </rect>
    </property>
-   <property name="orientation">
-    <enum>Qt::Horizontal</enum>
+   <property name="text">
+    <string>...</string>
    </property>
-   <widget class="QLabel" name="label_2">
-    <property name="text">
-     <string>Verses:</string>
-    </property>
-   </widget>
-   <widget class="QSpinBox" name="spnVerseFrom">
-    <property name="minimum">
-     <number>1</number>
-    </property>
-    <property name="maximum">
-     <number>286</number>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label_4">
-    <property name="text">
-     <string>-</string>
-    </property>
-   </widget>
-   <widget class="QSpinBox" name="spnVerseTo">
-    <property name="minimum">
-     <number>1</number>
-    </property>
-    <property name="maximum">
-     <number>286</number>
-    </property>
-   </widget>
-  </widget>
-  <widget class="QSplitter" name="splitter_3">
-   <property name="geometry">
-    <rect>
-     <x>510</x>
-     <y>10</y>
-     <width>121</width>
-     <height>24</height>
-    </rect>
+   <property name="checkable">
+    <bool>true</bool>
    </property>
-   <property name="orientation">
-    <enum>Qt::Horizontal</enum>
-   </property>
-   <widget class="QLabel" name="label_3">
-    <property name="text">
-     <string>Verse:</string>
-    </property>
-   </widget>
-   <widget class="QSpinBox" name="spnVerse"/>
   </widget>
  </widget>
  <resources/>

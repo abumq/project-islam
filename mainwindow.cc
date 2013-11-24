@@ -4,6 +4,7 @@
 #include <QMessageBox>
 #include <QResizeEvent>
 #include <QLabel>
+#include <QProcess>
 
 #include "core/logging.h"
 #include "core/constants.h"
@@ -14,12 +15,15 @@
 
 #include "settings_dialog.h"
 
-MainWindow::MainWindow(QWidget *parent) :
-    QMainWindow(parent),
-    ui(new Ui::MainWindow)
+MainWindow::MainWindow(QApplication* app) :
+    QMainWindow(0),
+    ui(new Ui::MainWindow),
+    m_app(app),
+    m_container(nullptr),
+    m_extensionBar(nullptr)
 {
     ui->setupUi(this);
-
+    
     initialize();
 }
 
@@ -38,12 +42,20 @@ MainWindow::~MainWindow()
 
 void MainWindow::initialize()
 {
+    if (m_extensionBar != nullptr) {
+        delete m_extensionBar;
+        m_extensionBar = nullptr;
+    }
+    if (m_container != nullptr) {
+        delete m_container;
+        m_container = nullptr;
+    }
     loadSettings();
     
     m_container = new QWidget(this);
     m_container->setObjectName("extensionContainer");
     m_container->setGeometry(ExtensionBar::kExtensionBarWidth, Extension::kExtensionTop, width(), height());
-
+    
     m_extensionBar = new ExtensionBar(this, m_container);
     connect(m_extensionBar, SIGNAL(extensionChanged(Extension*)), this, SLOT(onExtensionChanged(Extension*)));
     addToolBar(Qt::LeftToolBarArea, m_extensionBar);
@@ -127,7 +139,13 @@ void MainWindow::on_action_Settings_triggered()
 {
     SettingsDialog settingsDialog(this, this);
     settingsDialog.exec();
-    reloadStyles();
+    if (settingsDialog.homeDirectoryChanged) {
+        LOG(INFO) << "Home directory has been updated - restarting";
+        m_app->quit();
+        QProcess::startDetached(m_app->arguments()[0], m_app->arguments());
+    } else {
+        reloadStyles();
+    }
 }
 
 void MainWindow::on_actionFull_Screen_triggered(bool checked)

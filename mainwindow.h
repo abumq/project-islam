@@ -19,7 +19,7 @@ class MainWindow : public QMainWindow
     Q_OBJECT
     
 public:
-    explicit MainWindow(QWidget *parent = 0);
+    MainWindow(QApplication* app);
     ~MainWindow();
     void initialize();
     void reloadStyles();
@@ -41,6 +41,7 @@ private slots:
     
 private:
     Ui::MainWindow *ui;
+    QApplication* m_app;
     QWidget* m_container;
     ExtensionBar* m_extensionBar;
     StyleLoader m_styleLoader;

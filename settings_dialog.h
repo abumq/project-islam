@@ -15,8 +15,9 @@ class SettingsDialog : public QDialog
     Q_OBJECT
     
 public:
-    explicit SettingsDialog(MainWindow* mainWindow, QWidget* parent = 0);
+    SettingsDialog(MainWindow* mainWindow, QWidget* parent = 0);
     ~SettingsDialog();
+    bool homeDirectoryChanged;
 protected:
     void accept();
 private slots:

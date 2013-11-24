@@ -6,8 +6,7 @@ namespace data {
 DataHolder::DataHolder()
 {
     _TRACE;
-    quranArabic()->load(quran::Quran::TextType::Arabic);
-    quranEnglish()->load(quran::Quran::TextType::English);
+    initialize();
 }
 
 quran::Quran* DataHolder::quranArabic()
@@ -19,6 +18,12 @@ quran::Quran* DataHolder::quranArabic()
 quran::Quran* DataHolder::quranEnglish()
 {
     return &m_quranEnglish;
+}
+
+void DataHolder::initialize()
+{
+    quranArabic()->load(quran::Quran::TextType::Arabic);
+    quranEnglish()->load(quran::Quran::TextType::English);
 }
 
 } // namespace data

@@ -6,18 +6,17 @@
 #include <QSqlRecord>
 #include <QSqlDatabase>
 #include <QVariantMap>
-#include "core/constants.h"
+#include "core/settings_loader.h"
 
 namespace data {
     typedef QList<QSqlRecord> QueryResult;
     
     static const QString kSqlCommentBegin = "--";
-    static const QString kDefaultDatabasePath = QString(kHomeDir.c_str()) + "data" + QDir::separator();
+    static const QString kDefaultDatabasePath = SettingsLoader::defaultHomeDir() + "data" + QDir::separator();
     static const QString kDefaultDatabaseName = kDefaultDatabasePath + "project-islam.db";
     
 class DatabaseManager {
 public:
-    static const QString kDefaultDatabaseName;
     explicit DatabaseManager(const QString& uniqueId = "DefaultDataManager");
     virtual ~DatabaseManager(void);
     const data::QueryResult& query(const QString& query, const QVariantMap& arguments = QVariantMap());

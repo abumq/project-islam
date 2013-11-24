@@ -26,8 +26,15 @@ public:
     ~QuranReciter();
     void changeChapter(quran::Chapter::Name chapter);
     void changeVerseRange(int from, int to);
+    void changeVerse(int);
     const quran::Chapter* currentChapter() const;
     const quran::Verse* currentVerse() const;
+    void hideChapterSelector();
+    void showChapterSelector();
+    void hideVerseRangeSelector();
+    void showVerseRangeSelector();
+    void hideCurrentVerseSelector();
+    void showCurrentVerseSelector();
 private slots:
     void on_cboChapter_currentIndexChanged(int index);
     
@@ -46,6 +53,10 @@ private slots:
     void on_chkRepeat_clicked(bool checked);
     
     void onMediaStateChanged(QMediaPlayer::State);
+    void on_spnVerse_valueChanged(int);
+    
+    void on_btnReplayCurrentVerse_clicked();
+    
 signals:
     void chapterChanged(const quran::Chapter*);
     void verseRangeChanged(int, int);

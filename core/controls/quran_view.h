@@ -38,17 +38,17 @@ public:
     void update(quran::Chapter* chapter, int from, int to);
     void update(quran::Chapter::Name name, int from, int to);
     quran::Verse* selectedVerse();
-    
+    bool ok() const;
 signals:
     void chapterChanged(const quran::Chapter*);
     void verseRangeChanged(int, int);
-    void selectedVerseChanged(int);
-public slots:
+    void currentVerseChanged(int);
 private:
     quran::Quran* m_quran;
     quran::Chapter* m_currentChapter;
-    QHash<int, VerseTextItem*> m_versesHash;
+    QHash<int, VerseTextItem*> m_verseTextItemHash;
     VerseTextItem* m_selectedVerseTextItem;
+    bool m_ok;
 };
 
 #endif // QURAN_VIEW_H

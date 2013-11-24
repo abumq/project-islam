@@ -6,8 +6,10 @@ QuranView::QuranView(quran::Quran* quran, QWidget *parent) :
     QGraphicsView(new QGraphicsScene(parent), parent),
     m_quran(quran),
     m_currentChapter(nullptr),
-    m_selectedVerseTextItem(nullptr)
+    m_selectedVerseTextItem(nullptr),
+    m_ok(false)
 {
+    _TRACE;
     setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
     setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
     scene()->setSceneRect(0, 0, width(), height());
@@ -15,31 +17,33 @@ QuranView::QuranView(quran::Quran* quran, QWidget *parent) :
 
 QuranView::~QuranView()
 {
+    _TRACE;
     scene()->clear();
     delete scene();
 }
 
 quran::Chapter* QuranView::currentChapter() const
 {
+    _TRACE;
     return m_currentChapter;
 }
 
 void QuranView::selectVerse(int verse)
 {
     _TRACE;
-    if (m_versesHash.empty() || !m_versesHash.contains(verse)) {
+    if (m_verseTextItemHash.empty() || !m_verseTextItemHash.contains(verse)) {
         return;
     }
     if (m_selectedVerseTextItem != nullptr) {
         // unhighlight selected verse
         m_selectedVerseTextItem->unhighlight();
     }
-    LOG(INFO) << "Selecting verse [" << verse << "]";
+    DVLOG(8) << "Selecting verse [" << verse << "]";
     // Change currently selected verse and hightlight
-    m_selectedVerseTextItem = m_versesHash.value(verse);
+    m_selectedVerseTextItem = m_verseTextItemHash.value(verse);
     
     m_selectedVerseTextItem->highlight();
-    emit selectedVerseChanged(verse);
+    emit currentVerseChanged(verse);
 }
 
 void QuranView::update(int from, int to)
@@ -54,16 +58,17 @@ void QuranView::update(quran::Chapter* chapter, int from, int to)
     TIMED_FUNC(timer);
     m_selectedVerseTextItem = nullptr;
     scene()->clear();
-    m_versesHash.clear();
+    m_verseTextItemHash.clear();
     bool isChapterChanged = m_currentChapter != chapter;
     m_currentChapter = CHECK_NOTNULL(chapter);
-    CHECK(from <= m_currentChapter->versesCount()) << "Chapter: [" << m_currentChapter->arabicName() <<
+    DCHECK(from <= m_currentChapter->versesCount()) << "Chapter: [" << m_currentChapter->arabicName() <<
                                                       "] only has [" << m_currentChapter->versesCount() << "] verses, requested verse [" << from << "]";
-    CHECK(to <= m_currentChapter->versesCount()) << "Chapter: [" << m_currentChapter->arabicName() <<
+    DCHECK(to <= m_currentChapter->versesCount()) << "Chapter: [" << m_currentChapter->arabicName() <<
                                                     "] only has [" << m_currentChapter->versesCount() << "] verses, requested verse [" << to << "]";
-    CHECK(from <= to) << "Invalid range. Verses from [" << from << "] to [" << to << "] requested.";
-    LOG(INFO) << "Updating reader for chapter [" << m_currentChapter->arabicName() 
+    DCHECK(from <= to) << "Invalid range. Verses from [" << from << "] to [" << to << "] requested.";
+    DVLOG(7) << "Updating reader for chapter [" << m_currentChapter->arabicName() 
               << "] verses [" << from << " - " << to << "]";
+    m_ok = m_currentChapter != nullptr;
     int locH = -(height() / 2) + 20;
     int locW = -(width() / 2) + 60;
     for (int i = from; i <= to; ++i) {
@@ -72,7 +77,7 @@ void QuranView::update(quran::Chapter* chapter, int from, int to)
         scene()->addItem(verseTextItem);
         verseTextItem->setPos(locW, locH);
         locH += 20;
-        m_versesHash.insert(i, verseTextItem);
+        m_verseTextItemHash.insert(i, verseTextItem);
         if (i == from) {
             m_selectedVerseTextItem = verseTextItem;
             verseTextItem->highlight();
@@ -92,7 +97,13 @@ void QuranView::update(quran::Chapter::Name chapter, int from, int to)
 
 quran::Verse*QuranView::selectedVerse()
 {
+    _TRACE;
     return m_selectedVerseTextItem == nullptr ? nullptr : m_selectedVerseTextItem->verse();
+}
+
+bool QuranView::ok() const
+{
+    return m_ok;
 }
 
 VerseTextItem::VerseTextItem(const QString& text, quran::Verse* verse, QGraphicsItem* parent) :

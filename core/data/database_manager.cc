@@ -8,7 +8,13 @@ namespace data {
 
 DatabaseManager::DatabaseManager(const QString& uniqueId) : 
         m_uniqueId(uniqueId), m_lastQuerySuccessful(false), m_connections(0) {
-    DATA_LOG(DEBUG) << "Initializing DatabaseManager [" << m_uniqueId << "]";
+    DDATA_LOG(INFO) << "Initializing DatabaseManager [" << m_uniqueId << "]";
+    
+    if (!QFile(kDefaultDatabaseName).exists()) {
+        LOG(ERROR) << "Database not found! Please make sure you have correct home path. Current ["
+                    << SettingsLoader::defaultHomeDir() << "]";
+    }
+    
     if (QSqlDatabase::contains(QSqlDatabase::defaultConnection)) {
         QSqlDatabase::removeDatabase(QSqlDatabase::defaultConnection);
     }
@@ -25,7 +31,7 @@ const data::QueryResult& DatabaseManager::query(const QString& query, const QVar
     m_lastQueryResult.clear();
     m_lastQuery = query;
     QString connectionName = m_uniqueId + "_connection" + QString::number(++m_connections);
-    DATA_LOG(DEBUG) << "Making connection using [" << connectionName << "]";
+    VDATA_LOG(9) << "Making connection using [" << connectionName << "]";
     if (!m_sqlDatabase.open()) {
         DDATA_LOG(ERROR) << "Could not open database [" << connectionName << "]";
         return m_lastQueryResult;
@@ -43,7 +49,7 @@ const data::QueryResult& DatabaseManager::query(const QString& query, const QVar
         return m_lastQueryResult;
     } else {
         m_lastQuerySuccessful = true;
-        DDATA_LOG(INFO) << "Successfully executed [" << sqlQuery.executedQuery() << "]";
+        VDATA_LOG(9) << "Successfully executed [" << sqlQuery.executedQuery() << "]";
     }
     while(sqlQuery.next()) {
         m_lastQueryResult << sqlQuery.record();

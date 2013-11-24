@@ -23,7 +23,7 @@
       <enum>QTabWidget::North</enum>
      </property>
      <property name="currentIndex">
-      <number>2</number>
+      <number>0</number>
      </property>
      <property name="elideMode">
       <enum>Qt::ElideNone</enum>
@@ -44,6 +44,30 @@
        <property name="title">
         <string>Theme</string>
        </property>
+      </widget>
+      <widget class="QSplitter" name="splitter">
+       <property name="geometry">
+        <rect>
+         <x>30</x>
+         <y>90</y>
+         <width>691</width>
+         <height>23</height>
+        </rect>
+       </property>
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <widget class="QLabel" name="label_2">
+        <property name="text">
+         <string>Home Directory</string>
+        </property>
+       </widget>
+       <widget class="QLineEdit" name="txtHomeDir"/>
+       <widget class="QLabel" name="label_3">
+        <property name="text">
+         <string>(Requires restart)</string>
+        </property>
+       </widget>
       </widget>
      </widget>
      <widget class="QWidget" name="tabLogging">

@@ -1,8 +1,9 @@
 #ifndef LOGGING_H
 #define LOGGING_H
 
+
 #include <easylogging++.h>
-#include "core/constants.h"
+#include "settings_loader.h"
 
 class LoggingConfigurer {
 public:
@@ -25,7 +26,7 @@ static void configureLoggers() {
 
     el::Configurations* configurations = el::Loggers::getLogger("default")->configurations();
     configurations->set(el::Level::Global, el::ConfigurationType::Filename, 
-        std::string(kHomeDir) + "logs" + QString(QDir::separator()).toStdString() + "project-islam.log");
+        SettingsLoader::defaultHomeDir().toStdString() + "logs" + QString(QDir::separator()).toStdString() + "project-islam.log");
     el::Loggers::setDefaultConfigurations(*configurations, true);
     
     dataLogger->configurations()->set(el::Level::Debug, el::ConfigurationType::Enabled, "false");
@@ -36,15 +37,22 @@ static void configureLoggers() {
     defaultLogger->configurations()->set(el::Level::Debug, el::ConfigurationType::Format, "%datetime %level [%func] %msg");
     defaultLogger->reconfigure();
 }
+
+static void disableTracing() {
+    el::Logger* traceLogger = el::Loggers::getLogger("locationTrace");
+    traceLogger->configurations()->set(el::Level::Debug, el::ConfigurationType::Enabled, "false");
+    traceLogger->reconfigure();
+}
 };
 
 #define TRACE_LOCATION CLOG(TRACE, "locationTrace")
 
 #define DATA_LOG(LEVEL) CLOG(LEVEL, "data")
 #define DDATA_LOG(LEVEL) DCLOG(LEVEL, "data")
+#define VDATA_LOG(vlevel) DCVLOG(vlevel, "data")
 
 #define QURAN_LOG(LEVEL) CLOG(LEVEL, "quran")
 
-#define _TRACE LOG(TRACE)
+#define _TRACE DLOG(TRACE)
 
 #endif // LOGGING_H

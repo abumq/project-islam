@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>523</width>
+    <width>629</width>
     <height>115</height>
    </rect>
   </property>
@@ -34,9 +34,9 @@
    <property name="orientation">
     <enum>Qt::Horizontal</enum>
    </property>
-   <widget class="QLabel" name="label_2">
+   <widget class="QLabel" name="lblVerseRange">
     <property name="text">
-     <string>Verse:</string>
+     <string>Verses:</string>
     </property>
    </widget>
    <widget class="QSpinBox" name="spnVerseFrom">
@@ -47,7 +47,7 @@
      <number>286</number>
     </property>
    </widget>
-   <widget class="QLabel" name="label_4">
+   <widget class="QLabel" name="lblVerseRangeSeparator">
     <property name="text">
      <string>-</string>
     </property>
@@ -61,7 +61,7 @@
     </property>
    </widget>
   </widget>
-  <widget class="QLabel" name="label">
+  <widget class="QLabel" name="lblCboChapter">
    <property name="geometry">
     <rect>
      <x>9</x>
@@ -138,41 +138,70 @@
     </property>
    </widget>
   </widget>
-  <widget class="QSplitter" name="splitter_3">
+  <widget class="QSplitter" name="splitter_4">
    <property name="geometry">
     <rect>
-     <x>140</x>
+     <x>520</x>
+     <y>10</y>
+     <width>101</width>
+     <height>24</height>
+    </rect>
+   </property>
+   <property name="orientation">
+    <enum>Qt::Horizontal</enum>
+   </property>
+   <widget class="QLabel" name="lblVerse">
+    <property name="text">
+     <string>Verse:</string>
+    </property>
+   </widget>
+   <widget class="QSpinBox" name="spnVerse"/>
+  </widget>
+  <widget class="QSplitter" name="splitter_5">
+   <property name="geometry">
+    <rect>
+     <x>150</x>
      <y>80</y>
-     <width>240</width>
+     <width>320</width>
      <height>23</height>
     </rect>
    </property>
    <property name="orientation">
     <enum>Qt::Horizontal</enum>
    </property>
-   <widget class="QPushButton" name="btnStop">
-    <property name="toolTip">
-     <string>Stop</string>
-    </property>
+   <widget class="QPushButton" name="btnReplayCurrentVerse">
     <property name="text">
-     <string>■</string>
+     <string>↶</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="btnPause">
-    <property name="toolTip">
-     <string>Pause</string>
+   <widget class="QSplitter" name="splitter_3">
+    <property name="orientation">
+     <enum>Qt::Horizontal</enum>
     </property>
-    <property name="text">
-     <string>▮▮</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="btnPlay">
-    <property name="toolTip">
-     <string>Play</string>
-    </property>
-    <property name="text">
-     <string>▶</string>
-    </property>
+    <widget class="QPushButton" name="btnStop">
+     <property name="toolTip">
+      <string>Stop</string>
+     </property>
+     <property name="text">
+      <string>■</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="btnPause">
+     <property name="toolTip">
+      <string>Pause</string>
+     </property>
+     <property name="text">
+      <string>▮▮</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="btnPlay">
+     <property name="toolTip">
+      <string>Play</string>
+     </property>
+     <property name="text">
+      <string>▶</string>
+     </property>
+    </widget>
    </widget>
   </widget>
  </widget>

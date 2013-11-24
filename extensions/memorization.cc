@@ -32,10 +32,14 @@ void Memorization::initialize()
     _TRACE;
     m_reciter = new QuranReciter(dataHolder()->quranArabic(), container());
     m_reader = new QuranReader(dataHolder()->quranArabic(), container());
+    m_reciter->hideChapterSelector();
+    m_reciter->hideVerseRangeSelector();
+    m_reciter->hideCurrentVerseSelector();
     connect(m_reciter, SIGNAL(chapterChanged(const quran::Chapter*)), this, SLOT(onChapterChangedReciter(const quran::Chapter*)));
     connect(m_reciter, SIGNAL(verseRangeChanged(int,int)), this, SLOT(onVerseRangeChangedReciter(int,int)));
     connect(m_reader, SIGNAL(chapterChanged(const quran::Chapter*)), this, SLOT(onChapterChangedReader(const quran::Chapter*)));
     connect(m_reader, SIGNAL(verseRangeChanged(int,int)), this, SLOT(onVerseRangeChangedReader(int,int)));
+    connect(m_reader, SIGNAL(currentVerseChanged(int)), this, SLOT(onSelectedVerseChangedReader(int)));
     connect(m_reciter, SIGNAL(currentVerseChanged(int)), this, SLOT(onSelectedVerseChangedReciter(int)));
     m_tableView = new QTableView(container());
     m_tableView->hide();
@@ -82,8 +86,15 @@ void Memorization::onVerseRangeChangedReader(int from, int to)
 void Memorization::onSelectedVerseChangedReciter(int verseNumber)
 {
     if (m_reader != nullptr) {
-        if (m_reader->currentVerse() != verseNumber) {
+        if (m_reader->currentVerseNumber() != verseNumber) {
             m_reader->highlightVerse(verseNumber);
         }
+    }
+}
+
+void Memorization::onSelectedVerseChangedReader(int index)
+{
+    if (m_reciter != nullptr) {
+        m_reciter->changeVerse(index);
     }
 }

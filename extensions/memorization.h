@@ -28,6 +28,7 @@ public slots:
     void onChapterChangedReader(const quran::Chapter* chapter);
     void onVerseRangeChangedReader(int, int);
     void onSelectedVerseChangedReciter(int);
+    void onSelectedVerseChangedReader(int);
 private:
     QuranReciter* m_reciter;
     QuranReader* m_reader;

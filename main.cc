@@ -21,7 +21,7 @@ int main(int argc, char *argv[])
     QApplication::setApplicationDisplayName("Project Islam Platform");
     QApplication::setApplicationVersion("v0.1");
     
-    MainWindow w;
+    MainWindow w(&a);
     w.show();
     
     return a.exec();

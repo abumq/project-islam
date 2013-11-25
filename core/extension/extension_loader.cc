@@ -26,8 +26,8 @@ void ExtensionLoader::loadAll(const QString& appPath, ExtensionBar* extensionBar
         if (abstractExtension != nullptr) {
             abstractExtension->extension()->setDataHolder(m_dataHolder);
             abstractExtension->extension()->setParent(extensionBar->container());
-            // reinitialize
-            abstractExtension->initialize(true, el::Loggers::getLogger("default")->configurations());
+            // initialize
+            abstractExtension->initialize(el::Loggers::getLogger("default")->configurations());
             
             extensionBar->addExtension(abstractExtension->extension());
         } else {

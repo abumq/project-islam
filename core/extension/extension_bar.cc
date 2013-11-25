@@ -4,6 +4,7 @@
 #include "core/logging.h"
 #include "core/constants.h"
 #include "core/extension/extension.h"
+#include "core/extension/extension_info.h"
 #include "core/extension/extension_item.h"
 
 ExtensionBar::ExtensionBar(QWidget *parent, QWidget* container) :
@@ -48,7 +49,7 @@ void ExtensionBar::addExtension(Extension* extension)
         // we dont have any other way excepting looping through manually since we have
         // container of extension pointer
         if (*e == *extension) {
-            LOG(WARNING) << "Ignoring extension [" << extension->name() << "], "
+            LOG(WARNING) << "Ignoring extension [" << extension->info()->name() << "], "
                             << "Already contains extension with same name."
                             << " Unloading extension...";
             // TODO: delete? Answer relies on how extension loader :: loadAll works
@@ -69,7 +70,7 @@ void ExtensionBar::addExtension(Extension* extension)
     }
     m_extensions.push_back(extension);
     ExtensionItem* extensionItem = new ExtensionItem(this, extension, &m_extensionItems);
-    extensionItem->setText(extension->name());
+    extensionItem->setText(extension->info()->name());
     extensionItem->show();
     m_extensionItems.push_back(extensionItem);
     addWidget(extensionItem);

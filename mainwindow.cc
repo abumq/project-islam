@@ -9,6 +9,7 @@
 #include "core/logging.h"
 #include "core/constants.h"
 #include "core/extension/extension.h"
+#include "core/extension/extension_info.h"
 #include "core/extension/extension_bar.h"
 #include "core/extension/extension_item.h"
 #include "core/extension/extension_loader.h"
@@ -137,7 +138,7 @@ void MainWindow::on_actionExit_triggered()
 void MainWindow::onExtensionChanged(Extension *extension)
 {
     if (extension != nullptr) {
-        setWindowTitle(extension->title());
+        setWindowTitle(extension->info()->title());
     }
     m_container->resize(width(), height());
     m_extensionBar->currentExtension()->resize(m_container->size());

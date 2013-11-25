@@ -5,37 +5,19 @@
 #include "core/constants.h"
 #include "core/extension/extension_item.h"
 #include "core/extension/extension_bar.h"
+#include "core/extension/extension_info.h"
 
-Extension::Extension(QWidget *parent, const QString& name,
-        const QString &title, const QString &description, bool isDefault) :
+Extension::Extension(QWidget *parent, ExtensionInfo *extensionInfo, bool isDefault) :
     QWidget(parent),
     m_parent(parent),
     m_dataHolder(nullptr),
     m_titleLabel(nullptr),
-    m_name(name),
-    m_title(title),
-    m_description(description),
+    m_info(extensionInfo),
     m_isDefault(isDefault)
 {
     _TRACE;
-    LOG(INFO) << "Loading extension [" << name << "]";
-    // Name length check
-    CHECK(!m_name.isEmpty()) << "Extension should have a name";
-    CHECK(m_name.length() <= kExtensionMaxLengthName) << "Extension name should be <= " << kExtensionMaxLengthName 
-                                                      << ", got [" << m_name.size() << "] for [" << m_name << "]";
-    
-    // Title length check
-    if (m_title.isEmpty()) {
-        LOG(WARNING) << "No title for [" << m_name << "], using name as title";
-        m_title = m_name;
-    } else {
-        CHECK(m_title.length() <= kExtensionMaxLengthTitle) << "Extension title should be <= " << kExtensionMaxLengthTitle 
-                                                            << ", got [" << m_title.size() << "] for [" << m_name << "]";
-    }
-    
-    // Description length check
-    CHECK(m_description.length() <= kExtensionMaxLengthDescription) << "Extension description should be <= " << kExtensionMaxLengthDescription 
-                                                                    << ", got [" << m_description.size() << "] for [" << m_name << "]";
+    LOG(INFO) << "Loading extension [" << extensionInfo << "]";
+
     hide();
     
     if (m_parent != nullptr) {
@@ -51,26 +33,26 @@ Extension::Extension(QWidget *parent, const QString& name,
 
 Extension::~Extension()
 {
-    LOG(INFO) << "Unloading extension [" << m_name << "]";
+    LOG(INFO) << "Unloading extension [" << info()->name() << "]";
     delete m_titleLabel;
     m_titleLabel = nullptr;
     delete m_container;
     m_container = nullptr;
 }
 
-QString Extension::name() const
+bool Extension::operator ==(const Extension &ex)
 {
-    return m_name;
+    if (ex.info() == nullptr) {
+        return info() == nullptr;
+    } else if (info() == nullptr) {
+        return false;
+    }
+    return ex.info()->name() == info()->name();
 }
 
-QString Extension::title() const
+const ExtensionInfo *Extension::info() const
 {
-    return m_title;
-}
-
-QString Extension::description() const
-{
-    return m_description;
+    return m_info;
 }
 
 bool Extension::isDefault() const
@@ -92,7 +74,7 @@ void Extension::setExtensionItem(ExtensionItem *extensionItem)
 {
     m_extensionItem = extensionItem;
     if (extensionItem != nullptr) {
-        m_titleLabel->setText("<h1><img src='" + extensionItem->icon() + "'/>" + m_title + "</h1>");
+        m_titleLabel->setText("<h1><img src='" + extensionItem->icon() + "'/>" + info()->title() + "</h1>");
     }
 }
 
@@ -167,17 +149,17 @@ QLabel* Extension::titleLabel() const
 
 void Extension::buildHtmlFormattedDescription()
 {
-    if (m_description.isEmpty()) {
-        if (m_title != m_name) {
-            m_htmlFormattedDescription.append("<b>" + m_title + "</b>");
-            m_htmlFormattedDescription.append(" (" + m_name + ")");
+    if (info()->description().isEmpty()) {
+        if (info()->title() != info()->name()) {
+            m_htmlFormattedDescription.append("<b>" + info()->title() + "</b>");
+            m_htmlFormattedDescription.append(" (" + info()->name() + ")");
         }
     } else {
-        m_htmlFormattedDescription.append("<b>" + m_title + "</b>");
-        if (m_title != m_name) {
-            m_htmlFormattedDescription.append(" (" + m_name + ")");
+        m_htmlFormattedDescription.append("<b>" + info()->title() + "</b>");
+        if (info()->title() != info()->name()) {
+            m_htmlFormattedDescription.append(" (" + info()->name() + ")");
         }
         m_htmlFormattedDescription.append("<br/>");
-        m_htmlFormattedDescription.append(m_description);
+        m_htmlFormattedDescription.append(info()->description());
     }
 }

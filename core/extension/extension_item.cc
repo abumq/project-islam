@@ -7,6 +7,7 @@
 
 #include "core/constants.h"
 #include "core/extension/extension.h"
+#include "core/extension/extension_info.h"
 #include "core/extension/extension_bar.h"
 
 ExtensionItem::ExtensionItem(ExtensionBar *extensionBar, Extension* extension, 
@@ -31,7 +32,7 @@ ExtensionItem::ExtensionItem(ExtensionBar *extensionBar, Extension* extension,
     
     setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
     
-    m_icon = ":/extensions/" + m_extension->name().toLower();
+    m_icon = ":/extensions/" + m_extension->info()->name().toLower();
     setIcon(QPixmap(m_icon));
     setIconSize(QSize(32, 32));
     

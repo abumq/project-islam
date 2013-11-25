@@ -12,29 +12,28 @@ const char* Memorization::kDescription  = "Memorize glorious Quran with help of 
                                             "This extension helps you keep track of your progress " \
                                             "of Quran memorization.";
 
-Memorization::Memorization(QObject *parent) :
-    QObject(parent),
+Memorization::Memorization() :
     m_reciter(nullptr),
     m_reader(nullptr)
 {
+    setExtensionInfo(ExtensionInfo(kMajorVersion, kMinorVersion, QString(kAuthor), 
+                                        QString(kName), QString(kTitle), QString(kDescription)));
 }
 
 Memorization::~Memorization()
 {
 }
 
-bool Memorization::initialize(bool initFromLoader, const el::Configurations* confFromLoader)
+bool Memorization::initialize(const el::Configurations* confFromLoader)
 {
-    if (!AbstractExtension::initialize(initFromLoader, confFromLoader)) {
+    if (!AbstractExtension::initialize(confFromLoader)) {
         // Do not proceed
         return false;
     }
 
     // Do not trace location before calling parent's initialize
     _TRACE;
-    
-    QObject::connect(extension(), SIGNAL(containerGeometryChanged()), this, SLOT(onContainerGeometryChanged()));
-    
+
     if (m_reciter != nullptr) {
         delete m_reciter;
         m_reciter = nullptr;
@@ -58,41 +57,6 @@ bool Memorization::initialize(bool initFromLoader, const el::Configurations* con
     // Force trigger this slot
     onContainerGeometryChanged();
     return true;
-}
-
-int Memorization::majorVersion() const
-{
-    return kMajorVersion;
-}
-
-int Memorization::minorVersion() const
-{
-    return kMinorVersion;
-}
-
-int Memorization::patchVersion() const
-{
-    return kPatchVersion;
-}
-
-const char* Memorization::author() const
-{
-    return kAuthor;
-}
-
-QString Memorization::name() const
-{
-    return QString(kName);
-}
-
-QString Memorization::title() const
-{
-    return QString(kTitle);
-}
-
-QString Memorization::description() const
-{
-    return QString(kDescription);
 }
 
 void Memorization::onContainerGeometryChanged()

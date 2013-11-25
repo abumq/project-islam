@@ -11,33 +11,23 @@ namespace quran {
 class Chapter;
 }
 
-class Memorization : public QObject, public AbstractExtension
+class Memorization : public AbstractExtension
 {
     Q_OBJECT
     Q_INTERFACES(AbstractExtension)
     Q_PLUGIN_METADATA(IID "ProjectIslam.Extension.Memorization.v1.0")
 private:
-    static const int kMajorVersion = 1;
-    static const int kMinorVersion = 0;
-    static const int kPatchVersion = 0;
+    static const unsigned int kMajorVersion = 1;
+    static const unsigned int kMinorVersion = 0;
     static const char* kAuthor;
     static const char* kName;
     static const char* kTitle;
     static const char* kDescription;
 public:
-    explicit Memorization(QObject *parent = 0);
+    explicit Memorization();
     virtual ~Memorization();
     
-    virtual bool initialize(bool initFromLoader, const el::Configurations* confFromLoader);
-    
-    // Extension Info
-    virtual int majorVersion(void) const;
-    virtual int minorVersion(void) const;
-    virtual int patchVersion(void) const;
-    virtual const char* author(void) const;
-    virtual QString name() const;
-    virtual QString title() const;
-    virtual QString description() const;
+    virtual bool initialize(const el::Configurations* confFromLoader);
     
 public slots:
     void onChapterChangedReciter(const quran::Chapter* chapter);

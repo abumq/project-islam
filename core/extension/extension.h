@@ -6,29 +6,27 @@
 #include "core/constants.h"
 #include "core/data/data_holder.h"
 
+class ExtensionInfo;
 class ExtensionItem;
 class QLabel;
-class AbstractExtension;
 
 class Extension : public QWidget
 {
     Q_OBJECT
 public:
     static const int kExtensionTop = 21;
-    static const int kExtensionMaxLengthName = 12;
-    static const int kExtensionMaxLengthTitle = 50;
-    static const int kExtensionMaxLengthDescription = 1000;
-    static const int kExtensionStartTop = 53;
+    static const unsigned int kExtensionMaxLengthAuthor = 30;
+    static const unsigned int kExtensionMaxLengthName = 12;
+    static const unsigned int kExtensionMaxLengthTitle = 50;
+    static const unsigned int kExtensionMaxLengthDescription = 1000;
+    static const unsigned int kExtensionStartTop = 53;
     
-    Extension(QWidget *parent, const QString& name, const QString& title = "", 
-            const QString& description = "", bool isDefault = false);
+    Extension(QWidget *parent, ExtensionInfo* info, bool isDefault = false);
     virtual ~Extension();
     
-    bool operator==(const Extension& ex) { return name() == ex.name(); }
+    bool operator==(const Extension& ex);
     
-    QString name() const;
-    QString title() const;
-    QString description() const;
+    const ExtensionInfo* info() const;
     
     bool isDefault(void) const;
     void setIsDefault(bool);
@@ -59,9 +57,7 @@ private:
     QWidget* m_container;
     data::DataHolder* m_dataHolder;
     QLabel* m_titleLabel;
-    QString m_name;
-    QString m_title;
-    QString m_description;
+    ExtensionInfo* m_info;
     ExtensionItem* m_extensionItem;
     QString m_htmlFormattedDescription;
     bool m_isDefault;

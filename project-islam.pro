@@ -8,7 +8,7 @@ TEMPLATE = app
 
 QMAKE_CXXFLAGS += -std=c++0x -fPIE -g
 
-COMPILER = g++
+COMPILER = icpc
 QMAKE_CC = $$COMPILER
 QMAKE_CXX = $$COMPILER
 QMAKE_LINK = $$COMPILER
@@ -19,11 +19,6 @@ DEFINES += _ELPP_UNICODE \
            _ELPP_LOG_UNORDERED_MAP \
            _ELPP_NO_DEFAULT_LOG_FILE \
            _ELPP_STACKTRACE_ON_CRASH
-
-#LIBS += -Lextensions
-
-# Extensions
-#LIBS += -lmemorization
 
 # libimf for Intel C++
 # TODO: export LD_LIBRARY_PATH
@@ -71,7 +66,8 @@ HEADERS  += mainwindow.h \
     core/controls/quran_reciter.h \
     core/controls/quran_reader.h \
     core/controls/quran_view.h \
-    core/extension/abstract_extension.h
+    core/extension/abstract_extension.h \
+    core/extension/extension_info.h
 
 FORMS    += mainwindow.ui \
     settings_dialog.ui \

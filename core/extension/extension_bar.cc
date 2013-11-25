@@ -43,6 +43,19 @@ ExtensionBar::~ExtensionBar()
 
 void ExtensionBar::addExtension(Extension* extension)
 {
+    for (Extension* e : m_extensions) {
+        // Ensure we dont have extension with same name - 
+        // we dont have any other way excepting looping through manually since we have
+        // container of extension pointer
+        if (*e == *extension) {
+            LOG(WARNING) << "Ignoring extension [" << extension->name() << "], "
+                            << "Already contains extension with same name."
+                            << " Unloading extension...";
+            // TODO: delete? Answer relies on how extension loader :: loadAll works
+            // delete extension;
+            return;
+        }
+    }
     if (extension->isDefault()) {
         // If we already have default, remove it
         for (ExtensionItem* extensionItem : m_extensionItems) {

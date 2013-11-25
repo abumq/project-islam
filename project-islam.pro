@@ -57,7 +57,6 @@ HEADERS  += mainwindow.h \
     core/extension/extension_bar.h \
     core/extension/extension_item.h \
     core/extension/extension.h \
-    core/extension/extension_interface.h \
     core/extension/extension_loader.h \
     core/controls/colorbox.h \
     settings_dialog.h \
@@ -71,7 +70,8 @@ HEADERS  += mainwindow.h \
     core/data/data_holder.h \
     core/controls/quran_reciter.h \
     core/controls/quran_reader.h \
-    core/controls/quran_view.h
+    core/controls/quran_view.h \
+    core/extension/abstract_extension.h
 
 FORMS    += mainwindow.ui \
     settings_dialog.ui \

@@ -8,6 +8,7 @@
 
 class ExtensionItem;
 class QLabel;
+class AbstractExtension;
 
 class Extension : public QWidget
 {
@@ -19,9 +20,11 @@ public:
     static const int kExtensionMaxLengthDescription = 1000;
     static const int kExtensionStartTop = 53;
     
-    Extension(QWidget *parent, const QString &name,
-              const QString &title = "", const QString &description = "", bool isDefault = false);
+    Extension(QWidget *parent, const QString& name, const QString& title = "", 
+            const QString& description = "", bool isDefault = false);
     virtual ~Extension();
+    
+    bool operator==(const Extension& ex) { return name() == ex.name(); }
     
     QString name() const;
     QString title() const;

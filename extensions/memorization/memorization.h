@@ -1,9 +1,8 @@
 #ifndef MEMORIZATION_H
 #define MEMORIZATION_H
 
-#include "extensions/memorization/memorization_global.h"
-#include "core/extension/extension_interface.h"
-#include "core/extension/extension.h"
+#include "memorization_global.h"
+#include "core/extension/abstract_extension.h"
 
 class QuranReciter;
 class QuranReader;
@@ -12,26 +11,34 @@ namespace quran {
 class Chapter;
 }
 
-class Memorization : public QObject, public ExtensionInterface
+class Memorization : public QObject, public AbstractExtension
 {
     Q_OBJECT
-    Q_INTERFACES(ExtensionInterface)
+    Q_INTERFACES(AbstractExtension)
     Q_PLUGIN_METADATA(IID "ProjectIslam.Extension.Memorization.v1.0")
 private:
-    static const int kMajorVersion = 0;
+    static const int kMajorVersion = 1;
     static const int kMinorVersion = 0;
-    static const int kPatchVersion = 1;
+    static const int kPatchVersion = 0;
+    static const char* kAuthor;
+    static const char* kName;
+    static const char* kTitle;
+    static const char* kDescription;
 public:
     explicit Memorization(QObject *parent = 0);
     virtual ~Memorization();
     
-    void initialize(void);
+    virtual bool initialize(bool initFromLoader, const el::Configurations* confFromLoader);
     
-    int majorVersion(void) const;
-    int minorVersion(void) const;
-    int patchVersion(void) const;
+    // Extension Info
+    virtual int majorVersion(void) const;
+    virtual int minorVersion(void) const;
+    virtual int patchVersion(void) const;
+    virtual const char* author(void) const;
+    virtual QString name() const;
+    virtual QString title() const;
+    virtual QString description() const;
     
-    Extension* extension();
 public slots:
     void onChapterChangedReciter(const quran::Chapter* chapter);
     void onVerseRangeChangedReciter(int, int);
@@ -39,9 +46,8 @@ public slots:
     void onVerseRangeChangedReader(int, int);
     void onSelectedVerseChangedReciter(int);
     void onSelectedVerseChangedReader(int);
-    void updateView();
+    void onContainerGeometryChanged();
 private:
-    Extension* m_extension;
     QuranReciter* m_reciter;
     QuranReader* m_reader;
 };

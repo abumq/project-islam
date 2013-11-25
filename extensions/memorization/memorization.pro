@@ -12,10 +12,10 @@ QMAKE_LINK = $$COMPILER
 
 DEFINES += _ELPP_UNICODE \
            _ELPP_QT_LOGGING \
-           _ELPP_STL_LOGGING 
+           _ELPP_STL_LOGGING \
+           _ELPP_DEFAULT_LOG_FILE=\\\"l.lg\\\"
            
-# Assuming this extension is in extensions/ dir
-INCLUDEPATH += "../../../project-islam"
+INCLUDEPATH += "../../"
 
 SOURCES +=  memorization.cc \
     ../../core/extension/extension.cc \

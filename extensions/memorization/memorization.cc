@@ -1,45 +1,40 @@
 #include "memorization.h"
 
-#include <QResizeEvent>
-
-#include "core/logging.h"
 #include "core/controls/quran_reciter.h"
 #include "core/controls/quran_reader.h"
 
 _INITIALIZE_EASYLOGGINGPP
 
+const char* Memorization::kAuthor       = "Project Islam Authors";
+const char* Memorization::kName         = "Memorization";
+const char* Memorization::kTitle        = "Quran Memorization";
+const char* Memorization::kDescription  = "Memorize glorious Quran with help of this extension. " \
+                                            "This extension helps you keep track of your progress " \
+                                            "of Quran memorization.";
+
 Memorization::Memorization(QObject *parent) :
     QObject(parent),
-    m_extension(nullptr),
     m_reciter(nullptr),
     m_reader(nullptr)
 {
-    initialize();
 }
 
 Memorization::~Memorization()
 {
-    // No need to delete m_extension as plugin loader
-    // i.e, ExtensionLoader deletes this anyway in fact doing this
-    // will cause segmentation fault
 }
 
-Extension *Memorization::extension()
+bool Memorization::initialize(bool initFromLoader, const el::Configurations* confFromLoader)
 {
-    if (m_extension == nullptr) {
-        m_extension = new Extension(0, "Memorization", "Quran Memorization",
-            "Memorize glorious Quran with help of this extension. " \
-            "This extension helps you keep track of your progress " \
-            "of Quran memorization."
-        );
-        QObject::connect(m_extension, SIGNAL(containerGeometryChanged()), this, SLOT(updateView()));
+    if (!AbstractExtension::initialize(initFromLoader, confFromLoader)) {
+        // Do not proceed
+        return false;
     }
-    return m_extension;
-}
 
-void Memorization::initialize()
-{
+    // Do not trace location before calling parent's initialize
     _TRACE;
+    
+    QObject::connect(extension(), SIGNAL(containerGeometryChanged()), this, SLOT(onContainerGeometryChanged()));
+    
     if (m_reciter != nullptr) {
         delete m_reciter;
         m_reciter = nullptr;
@@ -60,7 +55,9 @@ void Memorization::initialize()
     QObject::connect(m_reader, SIGNAL(currentVerseChanged(int)), this, SLOT(onSelectedVerseChangedReader(int)));
     QObject::connect(m_reciter, SIGNAL(currentVerseChanged(int)), this, SLOT(onSelectedVerseChangedReciter(int)));
     
-    updateView();
+    // Force trigger this slot
+    onContainerGeometryChanged();
+    return true;
 }
 
 int Memorization::majorVersion() const
@@ -78,12 +75,31 @@ int Memorization::patchVersion() const
     return kPatchVersion;
 }
 
-void Memorization::updateView()
+const char* Memorization::author() const
+{
+    return kAuthor;
+}
+
+QString Memorization::name() const
+{
+    return QString(kName);
+}
+
+QString Memorization::title() const
+{
+    return QString(kTitle);
+}
+
+QString Memorization::description() const
+{
+    return QString(kDescription);
+}
+
+void Memorization::onContainerGeometryChanged()
 {
     if (m_reciter != nullptr) {
         int centerW = (extension()->container()->width() / 2) - (m_reciter->width() / 2);
         int bottom = extension()->container()->height() - m_reciter->height() - 100;
-        LOG(INFO) << "Moving reciter to [" << center << "l; " << bottom << "b]";
         m_reciter->move(centerW, bottom);
     }
 }

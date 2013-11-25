@@ -1,6 +1,8 @@
 #ifndef EXTENSION_LOADER_H
 #define EXTENSION_LOADER_H
 
+#include <QString>
+
 class ExtensionBar;
 namespace data {
 class DataHolder;
@@ -10,7 +12,7 @@ class ExtensionLoader
 {
 public:
     explicit ExtensionLoader(data::DataHolder* m_dataHolder);
-    void loadAll(ExtensionBar* extensionBar) const;
+    void loadAll(const QString& appPath, ExtensionBar* extensionBar) const;
 private:
     data::DataHolder* m_dataHolder;
 };

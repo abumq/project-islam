@@ -12,14 +12,15 @@ ExtensionLoader::ExtensionLoader(data::DataHolder* dataHolder) :
 {
 }
 
-void ExtensionLoader::loadAll(ExtensionBar* extensionBar) const
+void ExtensionLoader::loadAll(const QString& appPath, ExtensionBar* extensionBar) const
 {
     _TRACE;
-    LOG(INFO) << "Loading all the extensions. ExtensionBar [" << extensionBar << "]";
+    LOG(INFO) << "Loading all the extensions. ExtensionBar [" << extensionBar << "]; application path: "
+                << appPath;
     
     // TODO: Loop through extensions file and load each extension
     
-    QPluginLoader loader("/home/majid/projects/build/extensions/libMemorization.so");
+    QPluginLoader loader(appPath + "/extensions/libMemorization.so");
     ExtensionInterface* extensionInterface = qobject_cast<ExtensionInterface*>(loader.instance());
     if (extensionInterface != nullptr) {
         extensionInterface->extension()->setDataHolder(m_dataHolder);

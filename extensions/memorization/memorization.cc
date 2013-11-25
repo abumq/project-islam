@@ -38,6 +38,21 @@ void Memorization::initialize()
     connect(m_reciter, SIGNAL(currentVerseChanged(int)), this, SLOT(onSelectedVerseChangedReciter(int)));
 }
 
+int Memorization::majorVersion() const
+{
+    return kMajorVersion;
+}
+
+int Memorization::minorVersion() const
+{
+    return kMinorVersion;
+}
+
+int Memorization::patchVersion() const
+{
+    return kPatchVersion;
+}
+
 void Memorization::resizeEvent(QResizeEvent* e)
 {
     Extension::resizeEvent(e);

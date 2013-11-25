@@ -2,7 +2,6 @@
 #define EXTENSION_H
 
 #include <QWidget>
-#include <QSize>
 #include "core/logging.h"
 #include "core/constants.h"
 #include "core/data/data_holder.h"
@@ -37,17 +36,22 @@ public:
     void setExtensionItem(ExtensionItem* extensionItem);
     ExtensionItem* extensionItem() const;
     
-    void update(const QSize&);
     QWidget* container();
     
     void activate();
     void deactivate();
+    
+    void update();
     
     data::DataHolder* dataHolder();
     
     QLabel* titleLabel() const;
 protected:
     void resizeEvent(QResizeEvent *);
+    
+    virtual int majorVersion(void) const = 0;
+    virtual int minorVersion(void) const = 0;
+    virtual int patchVersion(void) const = 0;
 private:
     QWidget* m_parent;
     QWidget* m_container;

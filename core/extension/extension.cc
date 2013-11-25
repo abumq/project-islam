@@ -6,8 +6,8 @@
 #include "core/extension/extension_item.h"
 #include "core/extension/extension_bar.h"
 
-Extension::Extension(QWidget *parent, data::DataHolder* dataHolder, 
-                     const QString& name, const QString &title, const QString &description, bool isDefault) :
+Extension::Extension(QWidget *parent, data::DataHolder* dataHolder, const QString& name,
+        const QString &title, const QString &description, bool isDefault) :
     QWidget(parent),
     m_parent(parent),
     m_dataHolder(dataHolder),
@@ -102,11 +102,12 @@ ExtensionItem *Extension::extensionItem() const
 void Extension::resizeEvent(QResizeEvent* event)
 {
     event->accept();
-    update(event->size());
+    update();
 }
 
-void Extension::update(const QSize&)
+void Extension::update()
 {
+    QWidget::update();
     if (m_titleLabel != nullptr) {
         m_titleLabel->setMinimumSize(width(), m_titleLabel->height());
     }

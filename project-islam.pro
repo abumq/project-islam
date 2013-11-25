@@ -20,6 +20,10 @@ DEFINES += _ELPP_UNICODE \
            _ELPP_NO_DEFAULT_LOG_FILE \
            _ELPP_STACKTRACE_ON_CRASH
 
+LIBS += -Lextensions -lwelcome
+# libimf for Intel C++
+LIBS += -L/home/mkhan/intel/composer_xe_2013.5.192/compiler/lib/intel64/
+ 
 SOURCES += main.cc\
         mainwindow.cc \
     core/style_loader.cc \

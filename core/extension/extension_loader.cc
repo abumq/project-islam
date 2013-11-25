@@ -3,6 +3,7 @@
 #include "core/extension/extension_bar.h"
 #include "core/data/data_holder.h"
 #include "extensions/memorization.h"
+#include "extensions/welcome.h"
 
 ExtensionLoader::ExtensionLoader(data::DataHolder* dataHolder) :
     m_dataHolder(dataHolder)
@@ -14,5 +15,6 @@ void ExtensionLoader::loadAll(ExtensionBar* extensionBar) const
     _TRACE;
     LOG(INFO) << "Loading all the extensions. ExtensionBar [" << extensionBar << "]";
     
+    extensionBar->addExtension(new Welcome(extensionBar->container(), m_dataHolder));
     extensionBar->addExtension(new Memorization(extensionBar->container(), m_dataHolder));
 }

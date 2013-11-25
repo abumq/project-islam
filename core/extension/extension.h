@@ -7,6 +7,14 @@
 #include "core/constants.h"
 #include "core/data/data_holder.h"
 
+#include <QtCore/qglobal.h>
+
+#if defined(EXTENSION_LIBRARY)
+#  define EXTENSION_EXPORT Q_DECL_EXPORT
+#else
+#  define EXTENSION_EXPORT Q_DECL_IMPORT
+#endif
+
 class ExtensionItem;
 class QLabel;
 

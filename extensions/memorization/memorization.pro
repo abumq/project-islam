@@ -12,7 +12,7 @@ QMAKE_LINK = $$COMPILER
 
 DEFINES += _ELPP_UNICODE \
            _ELPP_QT_LOGGING \
-           _ELPP_STL_LOGGING
+           _ELPP_STL_LOGGING 
            
 # Assuming this extension is in extensions/ dir
 INCLUDEPATH += "../../../project-islam"

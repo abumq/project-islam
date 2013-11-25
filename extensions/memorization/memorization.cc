@@ -2,6 +2,7 @@
 
 #include <QResizeEvent>
 
+#include "core/logging.h"
 #include "core/controls/quran_reciter.h"
 #include "core/controls/quran_reader.h"
 

@@ -82,7 +82,6 @@ void QuranView::update(quran::Chapter* chapter, int from, int to)
                                                          const_cast<quran::Verse*>(verse), nullptr);
         scene()->addItem(verseTextItem);
         verseTextItem->setY(locY);
-        verseTextItem->setToolTip(QString::number(locY));
         locY += 30;
         m_verseTextItems.insert(i, verseTextItem);
         if (i == from) {
@@ -151,7 +150,6 @@ void QuranView::changeSize(float newSize)
         if (prev != nullptr) {
             curr->setPos(curr->pos().x(), prev->size() + prev->pos().y() + (newSize * 3));
             spaceBw = curr->pos().y() - prev->pos().y() - newSize;
-            LOG(INFO) << spaceBw;
         }
         if (maxWidth < curr->textWidth()) {
             maxWidth = curr->textWidth();
@@ -171,7 +169,11 @@ void QuranView::updateView(float valW, float spaceBw)
     int h = m_verseTextItems.count() * spaceBw + (m_verseTextItems.count() * m_fontSize);
     const QRectF rect = QRectF(0, 0, valW, h);
     scene()->setSceneRect(rect);
-    horizontalScrollBar()->setValue(horizontalScrollBar()->maximum());
+    if (m_quran->readingDirection() == quran::Quran::ReadingDirection::LeftToRight) {
+        horizontalScrollBar()->setValue(horizontalScrollBar()->minimum());
+    } else {
+        horizontalScrollBar()->setValue(horizontalScrollBar()->maximum());
+    }
     // Regardless of quran->textDirection we will have to set it to left
     // since it's unicode's job to align it after we have set text width
     Qt::Alignment alignment = Qt::AlignLeft;

@@ -1,4 +1,5 @@
 #include "settings_loader.h"
+#include <QString>
 #include <QFile>
 #include <QSettings>
 #include "core/logging.h"
@@ -79,10 +80,21 @@ QString SettingsLoader::settingsFile() const
 
 QString SettingsLoader::defaultHomeDir()
 {
+
+    
+    /*
+     
+    // FIXME: Uncommenting this code causes segmentation fault on Intel C++
+    //        I think it's to do with order of initialization of static member
+    //        < This code is actually what should be used, hence need fixed >
+     
     if (s_defaultHomeDir.isEmpty()) {
         updateDefaultHomeDir(kDefaultHomeDir);
     }
     return s_defaultHomeDir;
+    
+    */
+    return QDir::homePath() +  QString(QDir::separator()) + QString(".project-islam") + QString(QDir::separator());
 }
 
 void SettingsLoader::updateDefaultHomeDir(const QString& dir)

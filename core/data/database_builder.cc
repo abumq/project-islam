@@ -30,7 +30,7 @@ bool DatabaseBuilder::build(const QString& sqlFile, bool stopOnFirstError)
     foreach (QString sql, sqlFromFile) {
         if (sql.trimmed().isEmpty() || sql.startsWith(data::kSqlCommentBegin))
             continue;
-        CLOG_EVERY_N(100, DEBUG, "database") << "Current iteration [" << ELPP_COUNTER_POS << "]; SQL: " << sql;
+        CLOG_EVERY_N(100, DEBUG, "data") << "Current iteration [" << ELPP_COUNTER_POS << "]; SQL: " << sql;
         manager.query(sql);
         if (stopOnFirstError && !manager.lastQuerySuccessful()) {
             return false;

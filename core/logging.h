@@ -29,19 +29,17 @@ static void configureLoggers() {
         SettingsLoader::defaultHomeDir().toStdString() + "logs" + QString(QDir::separator()).toStdString() + "project-islam.log");
     el::Loggers::setDefaultConfigurations(*configurations, true);
     
-    dataLogger->configurations()->set(el::Level::Debug, el::ConfigurationType::Enabled, "false");
+    dataLogger->configurations()->set(el::Level::Debug, el::ConfigurationType::Enabled, "true");
     dataLogger->reconfigure();
+    
+    el::Logger* traceLogger = el::Loggers::getLogger("locationTrace");
+    traceLogger->configurations()->set(el::Level::Debug, el::ConfigurationType::Enabled, "false");
+    traceLogger->reconfigure();
     
     el::Logger* defaultLogger = el::Loggers::getLogger("default");
     defaultLogger->configurations()->set(el::Level::Trace, el::ConfigurationType::Format, "%datetime %level %func");
     defaultLogger->configurations()->set(el::Level::Debug, el::ConfigurationType::Format, "%datetime %level [%func] %msg");
     defaultLogger->reconfigure();
-}
-
-static void disableTracing() {
-    el::Logger* traceLogger = el::Loggers::getLogger("locationTrace");
-    traceLogger->configurations()->set(el::Level::Debug, el::ConfigurationType::Enabled, "false");
-    traceLogger->reconfigure();
 }
 };
 

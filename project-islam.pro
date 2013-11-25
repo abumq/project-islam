@@ -6,7 +6,7 @@ TARGET = project-islam
 TEMPLATE = app
 
 
-QMAKE_CXXFLAGS += -std=c++0x -fPIC
+QMAKE_CXXFLAGS += -std=c++0x -fPIE
 
 COMPILER = icpc
 QMAKE_CC = $$COMPILER
@@ -44,6 +44,7 @@ SOURCES += main.cc\
 HEADERS  += mainwindow.h \
     core/constants.h \
     core/style_loader.h \
+    core/settings_loader.h \
     core/logging.h \
     core/extension/extension_bar.h \
     core/extension/extension_item.h \
@@ -51,8 +52,6 @@ HEADERS  += mainwindow.h \
     core/extension/extension_loader.h \
     core/controls/colorbox.h \
     extensions/memorization.h \
-    core/settings_loader.h \
-    core/settings_loader.h \
     settings_dialog.h \
     core/quran/chapter.h \
     core/quran/quran.h \

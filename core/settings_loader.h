@@ -13,6 +13,8 @@ template <class Key, class T> class QMap;
 class SettingsLoader
 {
 public:
+    static QString s_defaultHomeDir;
+    
     SettingsLoader();
     ~SettingsLoader();
     void saveSettings(QMap<QString, QVariant>* map);
@@ -27,7 +29,6 @@ private:
     QSettings* m_settings;
     
     static const QString kMasterSettingsFile;
-    static QString s_defaultHomeDir;
 };
 
 #endif // SETTINGS_LOADER_H

@@ -86,7 +86,6 @@ QuranReciter::QuranReciter(quran::Quran* quran, QWidget *parent) :
         ui->btnPause->setEnabled(false);
         ui->btnStop->setEnabled(false);
         ui->chkRepeat->setChecked(false);
-        on_chkRepeat_clicked(false);
         connect(m_playList, SIGNAL(currentIndexChanged(int)), this, SLOT(onVerseChanged(int)));
         connect(m_mediaPlayer, SIGNAL(stateChanged(QMediaPlayer::State)), this, SLOT(onMediaStateChanged(QMediaPlayer::State)));
     } else {
@@ -94,8 +93,11 @@ QuranReciter::QuranReciter(quran::Quran* quran, QWidget *parent) :
         ui->btnPlay->setEnabled(false);
         ui->btnStop->setEnabled(false);
         ui->cboChapter->setEnabled(false);
+        ui->chkRepeat->setEnabled(false);
     }
     ui->btnReplayCurrentVerse->hide();
+    ui->chkRepeat->setChecked(false);
+    on_chkRepeat_clicked(false);
 }
 
 QuranReciter::~QuranReciter()
@@ -274,7 +276,7 @@ void QuranReciter::on_btnPlay_clicked()
 {
     _TRACE;
     if (!m_ok) return;
-    m_mediaPlayer->play();\
+    m_mediaPlayer->play();
 }
 
 void QuranReciter::on_btnPause_clicked()
@@ -335,7 +337,6 @@ void QuranReciter::onVerseChanged(int)
 void QuranReciter::on_chkRepeat_clicked(bool checked)
 {
     _TRACE;
-    if (!m_ok) return;
     ui->spnRepeat->setEnabled(checked);
 }
 

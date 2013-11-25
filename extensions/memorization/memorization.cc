@@ -5,12 +5,11 @@
 #include "core/controls/quran_reciter.h"
 #include "core/controls/quran_reader.h"
 
-Memorization::Memorization(QWidget *parent, data::DataHolder* dataHolder) :
-    Extension(parent, dataHolder, "Memorization", "Quran Memorization",
-        "Memorize glorious Quran with help of this extension. " \
-        "This extension helps you keep track of your progress " \
-        "of Quran memorization."
-    ),
+_INITIALIZE_EASYLOGGINGPP
+
+Memorization::Memorization(QObject *parent) :
+    QObject(parent),
+    m_extension(nullptr),
     m_reciter(nullptr),
     m_reader(nullptr)
 {
@@ -19,23 +18,48 @@ Memorization::Memorization(QWidget *parent, data::DataHolder* dataHolder) :
 
 Memorization::~Memorization()
 {
-    _TRACE;
+    // No need to delete m_extension as plugin loader
+    // i.e, ExtensionLoader deletes this anyway in fact doing this
+    // will cause segmentation fault
+}
+
+Extension *Memorization::extension()
+{
+    if (m_extension == nullptr) {
+        m_extension = new Extension(0, "Memorization", "Quran Memorization",
+            "Memorize glorious Quran with help of this extension. " \
+            "This extension helps you keep track of your progress " \
+            "of Quran memorization."
+        );
+        QObject::connect(m_extension, SIGNAL(containerGeometryChanged()), this, SLOT(updateView()));
+    }
+    return m_extension;
 }
 
 void Memorization::initialize()
 {
     _TRACE;
-    m_reciter = new QuranReciter(dataHolder()->quranArabic(), container());
-    m_reader = new QuranReader(dataHolder()->quranArabic(), container());
+    if (m_reciter != nullptr) {
+        delete m_reciter;
+        m_reciter = nullptr;
+    }
+    if (m_reader != nullptr) {
+        delete m_reader;
+        m_reader = nullptr;
+    }
+    m_reciter = new QuranReciter(extension()->dataHolder()->quranArabic(), extension()->container());
+    m_reader = new QuranReader(extension()->dataHolder()->quranArabic(), extension()->container());
     m_reciter->hideChapterSelector();
     m_reciter->hideVerseRangeSelector();
     m_reciter->hideCurrentVerseSelector();
-    connect(m_reciter, SIGNAL(chapterChanged(const quran::Chapter*)), this, SLOT(onChapterChangedReciter(const quran::Chapter*)));
-    connect(m_reciter, SIGNAL(verseRangeChanged(int,int)), this, SLOT(onVerseRangeChangedReciter(int,int)));
-    connect(m_reader, SIGNAL(chapterChanged(const quran::Chapter*)), this, SLOT(onChapterChangedReader(const quran::Chapter*)));
-    connect(m_reader, SIGNAL(verseRangeChanged(int,int)), this, SLOT(onVerseRangeChangedReader(int,int)));
-    connect(m_reader, SIGNAL(currentVerseChanged(int)), this, SLOT(onSelectedVerseChangedReader(int)));
-    connect(m_reciter, SIGNAL(currentVerseChanged(int)), this, SLOT(onSelectedVerseChangedReciter(int)));
+    QObject::connect(m_reciter, SIGNAL(chapterChanged(const quran::Chapter*)), this, SLOT(onChapterChangedReciter(const quran::Chapter*)));
+    QObject::connect(m_reciter, SIGNAL(verseRangeChanged(int,int)), this, SLOT(onVerseRangeChangedReciter(int,int)));
+    QObject::connect(m_reader, SIGNAL(chapterChanged(const quran::Chapter*)), this, SLOT(onChapterChangedReader(const quran::Chapter*)));
+    QObject::connect(m_reader, SIGNAL(verseRangeChanged(int,int)), this, SLOT(onVerseRangeChangedReader(int,int)));
+    QObject::connect(m_reader, SIGNAL(currentVerseChanged(int)), this, SLOT(onSelectedVerseChangedReader(int)));
+    QObject::connect(m_reciter, SIGNAL(currentVerseChanged(int)), this, SLOT(onSelectedVerseChangedReciter(int)));
+    
+    updateView();
 }
 
 int Memorization::majorVersion() const
@@ -53,12 +77,12 @@ int Memorization::patchVersion() const
     return kPatchVersion;
 }
 
-void Memorization::resizeEvent(QResizeEvent* e)
+void Memorization::updateView()
 {
-    Extension::resizeEvent(e);
     if (m_reciter != nullptr) {
-        int centerW = (container()->width() / 2) - (m_reciter->width() / 2);
-        int bottom = container()->height() - m_reciter->height() - 100;
+        int centerW = (extension()->container()->width() / 2) - (m_reciter->width() / 2);
+        int bottom = extension()->container()->height() - m_reciter->height() - 100;
+        LOG(INFO) << "Moving reciter to [" << center << "l; " << bottom << "b]";
         m_reciter->move(centerW, bottom);
     }
 }

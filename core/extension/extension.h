@@ -11,6 +11,7 @@ class QLabel;
 
 class Extension : public QWidget
 {
+    Q_OBJECT
 public:
     static const int kExtensionTop = 21;
     static const int kExtensionMaxLengthName = 12;
@@ -18,11 +19,9 @@ public:
     static const int kExtensionMaxLengthDescription = 1000;
     static const int kExtensionStartTop = 53;
     
-    Extension(QWidget *parent, data::DataHolder* m_dataHolder, const QString &name,
+    Extension(QWidget *parent, const QString &name,
               const QString &title = "", const QString &description = "", bool isDefault = false);
     virtual ~Extension();
-    
-    virtual void initialize(void) = 0;
     
     QString name() const;
     QString title() const;
@@ -37,6 +36,7 @@ public:
     ExtensionItem* extensionItem() const;
     
     QWidget* container();
+    void setParent(QWidget *container);
     
     void activate();
     void deactivate();
@@ -44,14 +44,13 @@ public:
     void update();
     
     data::DataHolder* dataHolder();
+    void setDataHolder(data::DataHolder* dataHolder);
     
     QLabel* titleLabel() const;
+signals:
+    void containerGeometryChanged();
 protected:
     void resizeEvent(QResizeEvent *);
-    
-    virtual int majorVersion(void) const = 0;
-    virtual int minorVersion(void) const = 0;
-    virtual int patchVersion(void) const = 0;
 private:
     QWidget* m_parent;
     QWidget* m_container;
@@ -66,5 +65,5 @@ private:
     
     void buildHtmlFormattedDescription();
 };
-
+                    
 #endif // EXTENSION_H

@@ -29,7 +29,7 @@ static void configureLoggers() {
         SettingsLoader::defaultHomeDir().toStdString() + "logs" + QString(QDir::separator()).toStdString() + "project-islam.log");
     el::Loggers::setDefaultConfigurations(*configurations, true);
     
-    dataLogger->configurations()->set(el::Level::Debug, el::ConfigurationType::Enabled, "true");
+    dataLogger->configurations()->set(el::Level::Debug, el::ConfigurationType::Enabled, "false");
     dataLogger->reconfigure();
     
     el::Logger* traceLogger = el::Loggers::getLogger("locationTrace");

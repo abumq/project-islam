@@ -5,6 +5,7 @@ class ExtensionBar;
 namespace data {
 class DataHolder;
 }
+
 class ExtensionLoader
 {
 public:

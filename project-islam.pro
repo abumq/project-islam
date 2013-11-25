@@ -6,9 +6,9 @@ TARGET = project-islam
 TEMPLATE = app
 
 
-QMAKE_CXXFLAGS += -std=c++0x -fPIE
+QMAKE_CXXFLAGS += -std=c++0x -fPIE -g
 
-COMPILER = icpc
+COMPILER = g++
 QMAKE_CC = $$COMPILER
 QMAKE_CXX = $$COMPILER
 QMAKE_LINK = $$COMPILER
@@ -20,10 +20,10 @@ DEFINES += _ELPP_UNICODE \
            _ELPP_NO_DEFAULT_LOG_FILE \
            _ELPP_STACKTRACE_ON_CRASH
 
-LIBS += -Lextensions
+#LIBS += -Lextensions
 
 # Extensions
-LIBS += -lmemorization
+#LIBS += -lmemorization
 
 # libimf for Intel C++
 # TODO: export LD_LIBRARY_PATH
@@ -57,6 +57,7 @@ HEADERS  += mainwindow.h \
     core/extension/extension_bar.h \
     core/extension/extension_item.h \
     core/extension/extension.h \
+    core/extension/extension_interface.h \
     core/extension/extension_loader.h \
     core/controls/colorbox.h \
     settings_dialog.h \

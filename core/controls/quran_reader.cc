@@ -15,33 +15,35 @@ QuranReader::QuranReader(quran::Quran* quran, QWidget *parent) :
     _TRACE;
     
     ui->setupUi(this);
-    if (quran->chapters().empty()) {
-        ui->cboChapter->setEnabled(false);
-        ui->spnVerse->setEnabled(false);
-        ui->spnVerseFrom->setEnabled(false);
-        ui->spnVerseTo->setEnabled(false);
+    if (m_quran != nullptr) {
+        if (m_quran->chapters().empty()) {
+            ui->cboChapter->setEnabled(false);
+            ui->spnVerse->setEnabled(false);
+            ui->spnVerseFrom->setEnabled(false);
+            ui->spnVerseTo->setEnabled(false);
+        }
+        m_quranView = new QuranView(m_quran, this);
+        m_quranView->setGeometry(5, 
+                                 ui->grpControls->geometry().top() + ui->grpControls->geometry().height(),
+                                 621, 
+                                 431);
+        // Chapters
+        for (quran::SingleChapter c : m_quran->chapters()) {
+            QString chapterItem = QString::number(static_cast<int>(c.second.name())) + ". " + 
+                    QString::fromStdWString(c.second.arabicName()) + 
+                    " (" + QString::fromStdWString(c.second.arabicScriptName()) + ")";
+            ui->cboChapter->addItem(chapterItem);
+        }
+        ui->cboChapter->setCurrentIndex(0);
+        on_cboChapter_currentIndexChanged(0);
+        
+        connect(m_quranView, SIGNAL(chapterChanged(const quran::Chapter*)), this, SIGNAL(chapterChanged(const quran::Chapter*)));
+        connect(m_quranView, SIGNAL(verseRangeChanged(int,int)), this, SIGNAL(verseRangeChanged(int,int)));
+        connect(m_quranView, SIGNAL(currentVerseChanged(int)), this, SIGNAL(currentVerseChanged(int)));
+        on_btnMoreControls_clicked(false);
+        
+        ui->spnZoom->setValue(static_cast<double>(m_quranView->fontSize()));
     }
-    m_quranView = new QuranView(quran, this);
-    m_quranView->setGeometry(5, 
-                             ui->grpControls->geometry().top() + ui->grpControls->geometry().height(),
-                             621, 
-                             431);
-    // Chapters
-    for (quran::SingleChapter c : quran->chapters()) {
-        QString chapterItem = QString::number(static_cast<int>(c.second.name())) + ". " + 
-                QString::fromStdWString(c.second.arabicName()) + 
-                " (" + QString::fromStdWString(c.second.arabicScriptName()) + ")";
-        ui->cboChapter->addItem(chapterItem);
-    }
-    ui->cboChapter->setCurrentIndex(0);
-    on_cboChapter_currentIndexChanged(0);
-    
-    connect(m_quranView, SIGNAL(chapterChanged(const quran::Chapter*)), this, SIGNAL(chapterChanged(const quran::Chapter*)));
-    connect(m_quranView, SIGNAL(verseRangeChanged(int,int)), this, SIGNAL(verseRangeChanged(int,int)));
-    connect(m_quranView, SIGNAL(currentVerseChanged(int)), this, SIGNAL(currentVerseChanged(int)));
-    on_btnMoreControls_clicked(false);
-    
-    ui->spnZoom->setValue(static_cast<double>(m_quranView->fontSize()));
 }
 
 QuranReader::~QuranReader()

@@ -63,7 +63,12 @@ void MainWindow::initialize()
     ExtensionLoader extensionLoader(&m_dataHolder);
     extensionLoader.loadAll(m_extensionBar);
     
-    m_extensionBar->defaultExtensionItem()->showExtension(true);
+    ExtensionItem* defaultExtension = m_extensionBar->defaultExtensionItem();
+    if (defaultExtension != nullptr) {
+        defaultExtension->showExtension(true);
+    } else {
+        LOG(ERROR) << "Default extension not found";
+    }
     
     setWindowState(Qt::WindowMaximized);
     m_previousWindowsState = Qt::WindowMaximized;
@@ -113,7 +118,10 @@ data::DataHolder *MainWindow::dataHolder()
 void MainWindow::resizeEvent(QResizeEvent *event)
 {
     m_container->resize(event->size().width(), event->size().height());
-    m_extensionBar->currentExtension()->resize(m_container->size());
+    Extension* currentExtension = m_extensionBar->currentExtension();
+    if (currentExtension != nullptr) {
+        currentExtension->resize(m_container->size());
+    }
 }
 
 void MainWindow::on_actionAbout_Qt_triggered()

@@ -6,11 +6,11 @@
 #include "core/extension/extension_item.h"
 #include "core/extension/extension_bar.h"
 
-Extension::Extension(QWidget *parent, data::DataHolder* dataHolder, const QString& name,
+Extension::Extension(QWidget *parent, const QString& name,
         const QString &title, const QString &description, bool isDefault) :
     QWidget(parent),
     m_parent(parent),
-    m_dataHolder(dataHolder),
+    m_dataHolder(nullptr),
     m_titleLabel(nullptr),
     m_name(name),
     m_title(title),
@@ -37,7 +37,10 @@ Extension::Extension(QWidget *parent, data::DataHolder* dataHolder, const QStrin
     CHECK(m_description.length() <= kExtensionMaxLengthDescription) << "Extension description should be <= " << kExtensionMaxLengthDescription 
                                                                     << ", got [" << m_description.size() << "] for [" << m_name << "]";
     hide();
-    resize(parent->width(), parent->height());
+    
+    if (m_parent != nullptr) {
+        resize(m_parent->width(), m_parent->height());
+    }
     
     m_titleLabel = new QLabel(this);
     m_titleLabel->setObjectName("extensionTitle");
@@ -48,7 +51,6 @@ Extension::Extension(QWidget *parent, data::DataHolder* dataHolder, const QStrin
 
 Extension::~Extension()
 {
-    _TRACE;
     LOG(INFO) << "Unloading extension [" << m_name << "]";
     delete m_titleLabel;
     m_titleLabel = nullptr;
@@ -115,12 +117,22 @@ void Extension::update()
         LOG(DEBUG) << "Resizing container to [" << width() << " x " << height() << "]";
         m_container->setMinimumSize(width(), height());
         m_container->setMaximumSize(width(), height());
+        emit containerGeometryChanged();
     }
 }
 
 QWidget* Extension::container()
 {
     return m_container;
+}
+
+void Extension::setParent(QWidget *parent)
+{
+    QWidget::setParent(parent);
+    m_parent = parent;
+    if (m_parent != nullptr) {
+        resize(m_parent->width(), m_parent->height());
+    }
 }
 
 void Extension::activate()
@@ -140,6 +152,12 @@ void Extension::deactivate()
 data::DataHolder* Extension::dataHolder()
 {
     return m_dataHolder;
+}
+
+void Extension::setDataHolder(data::DataHolder *dataHolder)
+{
+    _TRACE;
+    m_dataHolder = dataHolder;
 }
 
 QLabel* Extension::titleLabel() const

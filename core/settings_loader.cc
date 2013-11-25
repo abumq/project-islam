@@ -6,7 +6,7 @@
 #include "core/constants.h"
 
 const QString SettingsLoader::kMasterSettingsFile = QString("master.settings");
-QString SettingsLoader::s_defaultHomeDir = QString();
+QString SettingsLoader::s_defaultHomeDir = QString("");
 
 SettingsLoader::SettingsLoader()
 {
@@ -80,19 +80,15 @@ QString SettingsLoader::settingsFile() const
 
 QString SettingsLoader::defaultHomeDir()
 {
-
-    
     /*
-     
     // FIXME: Uncommenting this code causes segmentation fault on Intel C++
     //        I think it's to do with order of initialization of static member
     //        < This code is actually what should be used, hence need fixed >
      
-    if (s_defaultHomeDir.isEmpty()) {
+    if (s_defaultHomeDir.isNull() || s_defaultHomeDir.isEmpty()) {
         updateDefaultHomeDir(kDefaultHomeDir);
     }
     return s_defaultHomeDir;
-    
     */
     return QDir::homePath() +  QString(QDir::separator()) + QString(".project-islam") + QString(QDir::separator());
 }

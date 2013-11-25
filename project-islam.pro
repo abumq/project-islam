@@ -1,6 +1,6 @@
-QT       += core gui sql multimedia
+QT       += core gui widgets sql multimedia
 
-greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
+greaterThan(QT_MAJOR_VERSION, 4):
 
 TARGET = project-islam
 TEMPLATE = app
@@ -20,8 +20,13 @@ DEFINES += _ELPP_UNICODE \
            _ELPP_NO_DEFAULT_LOG_FILE \
            _ELPP_STACKTRACE_ON_CRASH
 
-LIBS += -Lextensions -lwelcome
+LIBS += -Lextensions
+
+# Extensions
+LIBS += -lmemorization
+
 # libimf for Intel C++
+# TODO: export LD_LIBRARY_PATH
 LIBS += -L/home/mkhan/intel/composer_xe_2013.5.192/compiler/lib/intel64/
  
 SOURCES += main.cc\
@@ -32,7 +37,6 @@ SOURCES += main.cc\
     core/extension/extension_item.cc \
     core/extension/extension.cc \
     core/controls/colorbox.cc \
-    extensions/memorization.cc \
     core/settings_loader.cc \
     settings_dialog.cc \
     core/quran/verse.cc \
@@ -55,7 +59,6 @@ HEADERS  += mainwindow.h \
     core/extension/extension.h \
     core/extension/extension_loader.h \
     core/controls/colorbox.h \
-    extensions/memorization.h \
     settings_dialog.h \
     core/quran/chapter.h \
     core/quran/quran.h \

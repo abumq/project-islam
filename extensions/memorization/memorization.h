@@ -1,19 +1,17 @@
 #ifndef MEMORIZATION_H
 #define MEMORIZATION_H
 
+#include "extensions/memorization/memorization_global.h"
 #include "core/extension/extension.h"
 
 class QuranReciter;
 class QuranReader;
 
-class QTableView;
-class QStandardItemModel;
-
 namespace quran {
 class Chapter;
 }
 
-class Memorization : public Extension
+class MEMORIZATION_EXPORT Memorization : public Extension
 {
     Q_OBJECT
 public:
@@ -32,8 +30,6 @@ public slots:
 private:
     QuranReciter* m_reciter;
     QuranReader* m_reader;
-    QTableView* m_tableView;
-    QStandardItemModel* m_model;
 };
 
 #endif // MEMORIZATION_H

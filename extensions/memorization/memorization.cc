@@ -1,8 +1,6 @@
-#include "extensions/memorization.h"
+#include "memorization.h"
 
 #include <QResizeEvent>
-#include <QTableView>
-#include <QStandardItemModel>
 
 #include "core/controls/quran_reciter.h"
 #include "core/controls/quran_reader.h"
@@ -14,8 +12,7 @@ Memorization::Memorization(QWidget *parent, data::DataHolder* dataHolder) :
         "of Quran memorization."
     ),
     m_reciter(nullptr),
-    m_reader(nullptr),
-    m_tableView(nullptr)
+    m_reader(nullptr)
 {
     initialize();
 }
@@ -23,8 +20,6 @@ Memorization::Memorization(QWidget *parent, data::DataHolder* dataHolder) :
 Memorization::~Memorization()
 {
     _TRACE;
-    delete m_tableView;
-    m_tableView = nullptr;
 }
 
 void Memorization::initialize()
@@ -41,8 +36,6 @@ void Memorization::initialize()
     connect(m_reader, SIGNAL(verseRangeChanged(int,int)), this, SLOT(onVerseRangeChangedReader(int,int)));
     connect(m_reader, SIGNAL(currentVerseChanged(int)), this, SLOT(onSelectedVerseChangedReader(int)));
     connect(m_reciter, SIGNAL(currentVerseChanged(int)), this, SLOT(onSelectedVerseChangedReciter(int)));
-    m_tableView = new QTableView(container());
-    m_tableView->hide();
 }
 
 void Memorization::resizeEvent(QResizeEvent* e)

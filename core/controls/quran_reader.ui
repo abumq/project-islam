@@ -131,6 +131,32 @@
         </widget>
        </item>
        <item>
+        <widget class="QPushButton" name="btnTranslation">
+         <property name="text">
+          <string>Translation</string>
+         </property>
+         <property name="checkable">
+          <bool>true</bool>
+         </property>
+         <property name="checked">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="btnTransliteration">
+         <property name="text">
+          <string>Transliteration</string>
+         </property>
+         <property name="checkable">
+          <bool>true</bool>
+         </property>
+         <property name="checked">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+       <item>
         <widget class="QSplitter" name="splitter_6">
          <property name="orientation">
           <enum>Qt::Horizontal</enum>

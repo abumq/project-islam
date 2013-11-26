@@ -18,6 +18,9 @@ QuranView::QuranView(quran::Quran* quran, quran::Quran* quranTranslation,
     m_quranTransliteration(quranTransliteration),
     m_currentChapter(nullptr),
     m_selectedVerseTextItem(nullptr),
+    m_showVerseNumbers(true),
+    m_currFrom(1),
+    m_currTo(1),
     m_ok(false)
 {
     _TRACE;
@@ -39,22 +42,23 @@ quran::Chapter* QuranView::currentChapter() const
     return m_currentChapter;
 }
 
-void QuranView::selectVerse(int verse)
+void QuranView::selectVerse(int verseNumber)
 {
     _TRACE;
-    if (m_verseTextItems.empty() || !m_verseTextItems.contains(verse)) {
+    if (m_verseTextItems.empty() || !m_verseTextItems.contains(verseNumber)) {
         return;
     }
     if (m_selectedVerseTextItem != nullptr) {
         // unhighlight selected verse
         m_selectedVerseTextItem->unhighlight();
     }
-    DVLOG(8) << "Selecting verse [" << verse << "]";
+    DVLOG(8) << "Selecting verse [" << verseNumber << "]";
     // Change currently selected verse and hightlight
-    m_selectedVerseTextItem = m_verseTextItems.value(verse);
+    m_selectedVerseTextItem = m_verseTextItems.value(verseNumber);
     
     m_selectedVerseTextItem->highlight();
-    emit currentVerseChanged(verse);
+    
+    emit currentVerseChanged(verseNumber);
 }
 
 void QuranView::update(int from, int to)
@@ -73,6 +77,8 @@ void QuranView::update(quran::Chapter* chapter, int from, int to)
     bool isChapterChanged = m_currentChapter != chapter;
     m_currentChapter = CHECK_NOTNULL(chapter);
     m_ok = m_currentChapter != nullptr;
+    m_currFrom = from;
+    m_currFrom = to;
     DCHECK(from <= m_currentChapter->versesCount()) << "Chapter: [" << m_currentChapter->arabicName() <<
                                                        "] only has [" << m_currentChapter->versesCount() << "] verses, requested verse [" << from << "]";
     DCHECK(to <= m_currentChapter->versesCount()) << "Chapter: [" << m_currentChapter->arabicName() <<
@@ -104,7 +110,9 @@ void QuranView::update(quran::Chapter* chapter, int from, int to)
         if (hasTranslation) {
             translatedVerse = const_cast<quran::Verse*>(&translatedChapter->verses().at(i));
         }
-        VerseTextItem* verseTextItem = new VerseTextItem(QString::fromStdWString(verse->text()), 
+        QString verseText = QString(m_showVerseNumbers ? arabicNumber(verse->number()) + " -  " : "") + 
+                QString::fromStdWString(verse->text());
+        VerseTextItem* verseTextItem = new VerseTextItem(verseText, 
                                                          const_cast<quran::Verse*>(verse), nullptr);
         scene()->addItem(verseTextItem);
         verseTextItem->setY(locY);
@@ -246,6 +254,56 @@ void QuranView::updateView(float newSize)
         curr->setTextWidth(maxWidth);
         curr->setAlignment(alignment);
     }
+}
+
+void QuranView::setShowVerseNumbers(bool showVerseNumbers)
+{
+    m_showVerseNumbers = showVerseNumbers;
+}
+
+bool QuranView::showVerseNumbers() const
+{
+    return m_showVerseNumbers;
+}
+
+void QuranView::turnOnTranslation(quran::Quran* translationQuran)
+{
+    m_quranTranslation = translationQuran;
+    update(m_currFrom, m_currTo);
+}
+
+void QuranView::turnOffTranslation()
+{
+    m_quranTranslation = nullptr;
+    update(m_currFrom, m_currTo);
+}
+
+void QuranView::turnOffTransliteration()
+{
+    m_quranTranslation = nullptr;
+    update(m_currFrom, m_currTo);
+}
+
+void QuranView::turnOnTransliteration(quran::Quran* transliterationQuran)
+{
+    m_quranTransliteration = transliterationQuran;
+    update(m_currFrom, m_currTo);
+}
+
+QString QuranView::arabicNumber(int n)
+{
+    QString nstr = QString::number(n);
+    nstr.replace("0", "۰");
+    nstr.replace("1", "۱");
+    nstr.replace("2", "۲");
+    nstr.replace("3", "۳");
+    nstr.replace("4", "٤");
+    nstr.replace("5", "۵");
+    nstr.replace("6", "٦");
+    nstr.replace("7", "٧");
+    nstr.replace("8", "٨");
+    nstr.replace("9", "٩");
+    return nstr;
 }
 
 VerseTextItem::VerseTextItem(const QString& text, quran::Verse* verse, QGraphicsItem* parent) :

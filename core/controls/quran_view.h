@@ -44,7 +44,7 @@ public:
     
     quran::Chapter* currentChapter() const;
     
-    void selectVerse(int verse);
+    void selectVerse(int verseNumber);
     void update(int from, int to);
     void update(quran::Chapter* chapter, int from, int to);
     void update(quran::Chapter::Name name, int from, int to);
@@ -57,6 +57,17 @@ public:
     void zoomOut(float scaleFactor = kDefaultZoomFactor);
     
     void updateView(float newSize);
+    
+    void setShowVerseNumbers(bool showVerseNumbers);
+    bool showVerseNumbers() const;
+    
+    void turnOffTranslation();
+    void turnOnTranslation(quran::Quran* translationQuran);
+    
+    void turnOffTransliteration();
+    void turnOnTransliteration(quran::Quran* transliterationQuran);
+    
+    static QString arabicNumber(int n);
 signals:
     void chapterChanged(const quran::Chapter*);
     void verseRangeChanged(int, int);
@@ -70,7 +81,10 @@ private:
     QMap<int, VerseTextItem*> m_verseTextTranslationItems;
     QMap<int, VerseTextItem*> m_verseTextTransliterationItems;
     VerseTextItem* m_selectedVerseTextItem;
+    bool m_showVerseNumbers;
     bool m_ok;
+    int m_currFrom;
+    int m_currTo;
     float m_zoomValue;
     
     void updateView(float valW, float spaceBw);

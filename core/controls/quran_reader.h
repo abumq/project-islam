@@ -30,6 +30,13 @@ public:
     void showVerseRangeSelector();
     void hideCurrentVerseSelector();
     void showCurrentVerseSelector();
+    
+    void turnOffTranslation();
+    void turnOnTranslation();
+    
+    void turnOffTransliteration();
+    void turnOnTransliteration();
+    
 private slots:
     void on_cboChapter_currentIndexChanged(int index);
     
@@ -43,6 +50,10 @@ private slots:
     void on_btnZoomOut_clicked();
     
     void on_btnZoomIn_clicked();
+    
+    void on_btnTranslation_clicked(bool checked);
+    
+    void on_btnTransliteration_clicked(bool checked);
     
 signals:
     void chapterChanged(const quran::Chapter*);

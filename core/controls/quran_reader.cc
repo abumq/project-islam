@@ -137,6 +137,27 @@ void QuranReader::showCurrentVerseSelector()
     ui->lblVerse->hide();
 }
 
+
+void QuranReader::turnOnTranslation()
+{
+    m_quranView->turnOnTranslation(m_quranTranslation);
+}
+
+void QuranReader::turnOffTranslation()
+{
+    m_quranView->turnOffTranslation();
+}
+
+void QuranReader::turnOffTransliteration()
+{
+    m_quranView->turnOffTranslation();
+}
+
+void QuranReader::turnOnTransliteration()
+{
+    m_quranView->turnOnTransliteration(m_quranTransliteration);
+}
+
 void QuranReader::on_cboChapter_currentIndexChanged(int index)
 {
     _TRACE;
@@ -211,4 +232,22 @@ void QuranReader::on_btnZoomIn_clicked()
     
     m_quranView->zoomIn();
     ui->lblZoomValue->setText(QString::number(m_quranView->zoomValue()) + "%");
+}
+
+void QuranReader::on_btnTranslation_clicked(bool checked)
+{
+    if (checked) {
+        turnOnTranslation();
+    } else {
+        turnOffTranslation();
+    }
+}
+
+void QuranReader::on_btnTransliteration_clicked(bool checked)
+{
+    if (checked) {
+        turnOnTransliteration();
+    } else {
+        turnOffTransliteration();
+    }
 }

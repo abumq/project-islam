@@ -150,7 +150,7 @@ void QuranReader::turnOffTranslation()
 
 void QuranReader::turnOffTransliteration()
 {
-    m_quranView->turnOffTranslation();
+    m_quranView->turnOffTransliteration();
 }
 
 void QuranReader::turnOnTransliteration()

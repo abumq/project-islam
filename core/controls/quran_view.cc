@@ -74,6 +74,8 @@ void QuranView::update(quran::Chapter* chapter, int from, int to)
     m_selectedVerseTextItem = nullptr;
     scene()->clear();
     m_verseTextItems.clear();
+    m_verseTextTranslationItems.clear();
+    m_verseTextTransliterationItems.clear();
     bool isChapterChanged = m_currentChapter != chapter;
     m_currentChapter = CHECK_NOTNULL(chapter);
     m_ok = m_currentChapter != nullptr;
@@ -117,6 +119,7 @@ void QuranView::update(quran::Chapter* chapter, int from, int to)
         scene()->addItem(verseTextItem);
         verseTextItem->setY(locY);
         locY += kSpaceBetweenVerses;
+        m_verseTextItems.insert(i, verseTextItem);
         if (hasTransliteration) {
             VerseTextItem* transliteratedVerseTextItem = new VerseTextItem(QString::fromStdWString(transliteratedVerse->text()), 
                                                                            transliteratedVerse, nullptr);
@@ -136,7 +139,6 @@ void QuranView::update(quran::Chapter* chapter, int from, int to)
             locY += kSpaceBetweenVerses + 10;
             m_verseTextTranslationItems.insert(i, translatedVerseTextItem);
         }
-        m_verseTextItems.insert(i, verseTextItem);
         if (i == from) {
             // First verse i.e, val 'from'
             m_selectedVerseTextItem = verseTextItem;
@@ -212,15 +214,16 @@ void QuranView::updateView(float newSize)
             maxWidth = curr->textWidth();
         }
         // Check max width from transliterations
-        if (!m_verseTextTransliterationItems.empty()) {
+        if (!m_verseTextTransliterationItems.empty() && m_verseTextTransliterationItems.contains(key)) {
             curr = m_verseTextTransliterationItems.value(key);
             if (maxWidth < curr->textWidth()) {
                 maxWidth = curr->textWidth();
             }
         }
         // Check max width from translation
-        if (!m_verseTextTranslationItems.empty()) {
+        if (!m_verseTextTranslationItems.empty() && m_verseTextTranslationItems.contains(key)) {
             curr = m_verseTextTranslationItems.value(key);
+            LOG(INFO) << curr;
             if (maxWidth < curr->textWidth()) {
                 maxWidth = curr->textWidth();
             }

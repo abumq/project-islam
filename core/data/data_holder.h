@@ -9,11 +9,13 @@ class DataHolder
 public:
     DataHolder();
     quran::Quran* quranArabic();
-    quran::Quran* quranEnglish();
+    quran::Quran* quranTranslation();
+    quran::Quran* quranTransliteration();
     void initialize();
 private:
     quran::Quran m_quranArabic;
-    quran::Quran m_quranEnglish;
+    quran::Quran m_quranTransliteration;
+    quran::Quran m_quranTranslation;
 };
 } // namespace database
 #endif // DATA_HOLDER_HH

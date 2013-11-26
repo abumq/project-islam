@@ -45,7 +45,10 @@ bool Memorization::initialize()
         m_reader = nullptr;
     }
     m_reciter = new QuranReciter(extension()->dataHolder()->quranArabic(), extension()->container());
-    m_reader = new QuranReader(extension()->dataHolder()->quranArabic(), nullptr, extension()->container());
+    m_reader = new QuranReader(extension()->dataHolder()->quranArabic(), 
+        extension()->dataHolder()->quranTranslation(), extension()->dataHolder()->quranTransliteration(), 
+        extension()->container());
+        
     m_reciter->hideChapterSelector();
     m_reciter->hideVerseRangeSelector();
     m_reciter->hideCurrentVerseSelector();

@@ -17,7 +17,8 @@ class QuranReader : public QWidget
     Q_OBJECT
     
 public:
-    QuranReader(quran::Quran* quran, quran::Quran* quranTranslation = nullptr, QWidget *parent = 0);
+    QuranReader(quran::Quran* quran, quran::Quran* quranTranslation = nullptr, 
+        quran::Quran* quranTransliteration = nullptr, QWidget *parent = 0);
     ~QuranReader();
     void changeChapter(quran::Chapter::Name chapterName);
     void changeVerseRange(int from, int to);
@@ -53,6 +54,7 @@ private:
     Ui::QuranReader *ui;
     quran::Quran* m_quran;
     quran::Quran* m_quranTranslation;
+    quran::Quran* m_quranTransliteration;
     QuranView* m_quranView;
 };
 

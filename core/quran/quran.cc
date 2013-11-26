@@ -10,7 +10,7 @@ Quran::Quran(void) :
 {
 }
 
-void Quran::load(const Quran::TextType &textType)
+void Quran::load(const Quran::TextType &textType, const std::string& databaseTable)
 {
     QURAN_LOG(DEBUG) << "Loading Quran...";
     TIMED_SCOPE(quranLoadTimer, "Load Complete Quran");
@@ -39,14 +39,18 @@ void Quran::load(const Quran::TextType &textType)
         QVariantMap args;
         args.insert(":QuranChapterID", cid);
         QString table;
-        if (textType == TextType::Arabic) {
+        if (textType == TextType::Original) {
             table = "QuranArabic";
             m_readingDirection = ReadingDirection::RightToLeft;
-        } else if (textType == TextType::English) {
-            table = "QuranEnglish";
+        } else if (textType == TextType::Translation || textType == TextType::Transliteration) {
+            table = QString(databaseTable.c_str());
             m_readingDirection = ReadingDirection::LeftToRight;
         }
         data::QueryResult verses = d.query("SELECT * FROM " + table + " WHERE QuranChapterID = :QuranChapterID ORDER BY ID", args);
+        if (!d.lastQuerySuccessful()) {
+            m_ready = false;
+            return;
+        }
         for (int i = 0; i < verses.size(); ++i) {
             int id = verses.at(i).value("ID").toInt();
             int number = verses.at(i).value("VerseNumber").toInt();

@@ -10,10 +10,12 @@
 const float QuranView::kDefaultZoom = 1.0f;
 const float QuranView::kDefaultZoomFactor = 1.1f;
 
-QuranView::QuranView(quran::Quran* quran, quran::Quran* quranTranslation, QWidget *parent) :
+QuranView::QuranView(quran::Quran* quran, quran::Quran* quranTranslation, 
+        quran::Quran* quranTransliteration, QWidget *parent) :
     QGraphicsView(new QGraphicsScene(parent), parent),
     m_quran(quran),
     m_quranTranslation(quranTranslation),
+    m_quranTransliteration(quranTransliteration),
     m_currentChapter(nullptr),
     m_selectedVerseTextItem(nullptr),
     m_ok(false)
@@ -70,6 +72,7 @@ void QuranView::update(quran::Chapter* chapter, int from, int to)
     m_verseTextItems.clear();
     bool isChapterChanged = m_currentChapter != chapter;
     m_currentChapter = CHECK_NOTNULL(chapter);
+    m_ok = m_currentChapter != nullptr;
     DCHECK(from <= m_currentChapter->versesCount()) << "Chapter: [" << m_currentChapter->arabicName() <<
                                                        "] only has [" << m_currentChapter->versesCount() << "] verses, requested verse [" << from << "]";
     DCHECK(to <= m_currentChapter->versesCount()) << "Chapter: [" << m_currentChapter->arabicName() <<
@@ -77,22 +80,28 @@ void QuranView::update(quran::Chapter* chapter, int from, int to)
     DCHECK(from <= to) << "Invalid range. Verses from [" << from << "] to [" << to << "] requested.";
     DVLOG(7) << "Updating reader for chapter [" << m_currentChapter->arabicName() 
              << "] verses [" << from << " - " << to << "]";
-    m_ok = m_currentChapter != nullptr;
-    
-    if (!m_ok) {
-        LOG(ERROR) << "Not Ok!";
-        return;
-    }
     int locY = 0;
     
+    bool hasTransliteration;
+    quran::Chapter* transliteratedChapter = nullptr;
+    if (m_quranTransliteration != nullptr && m_quranTransliteration->ready()) {
+        transliteratedChapter = const_cast<quran::Chapter*>(m_quranTransliteration->chapter(m_currentChapter->name()));
+        hasTransliteration = true;
+    }
+    bool hasTranslation;
     quran::Chapter* translatedChapter = nullptr;
-    if (m_quranTranslation != nullptr) {
+    if (m_quranTranslation != nullptr && m_quranTranslation->ready()) {
         translatedChapter = const_cast<quran::Chapter*>(m_quranTranslation->chapter(m_currentChapter->name()));
+        hasTranslation = true;
     }
     for (int i = from; i <= to; ++i) {
         const quran::Verse* verse = &m_currentChapter->verses().at(i);
+        quran::Verse* transliteratedVerse = nullptr;
+        if (hasTransliteration) {
+            transliteratedVerse = const_cast<quran::Verse*>(&transliteratedChapter->verses().at(i));
+        }
         quran::Verse* translatedVerse = nullptr;
-        if (translatedChapter != nullptr) {
+        if (hasTranslation) {
             translatedVerse = const_cast<quran::Verse*>(&translatedChapter->verses().at(i));
         }
         VerseTextItem* verseTextItem = new VerseTextItem(QString::fromStdWString(verse->text()), 
@@ -100,7 +109,17 @@ void QuranView::update(quran::Chapter* chapter, int from, int to)
         scene()->addItem(verseTextItem);
         verseTextItem->setY(locY);
         locY += kSpaceBetweenVerses;
-        if (translatedVerse != nullptr) {
+        if (hasTransliteration) {
+            VerseTextItem* transliteratedVerseTextItem = new VerseTextItem(QString::fromStdWString(transliteratedVerse->text()), 
+                                                            transliteratedVerse, nullptr);
+            scene()->addItem(transliteratedVerseTextItem);
+            transliteratedVerseTextItem->setY(locY);
+            locY += kSpaceBetweenVerses;
+            if (!hasTranslation) {
+                locY += 10;
+            }
+        }
+        if (hasTranslation) {
             VerseTextItem* translatedVerseTextItem = new VerseTextItem(QString::fromStdWString(translatedVerse->text()), 
                                                             translatedVerse, nullptr);
             scene()->addItem(translatedVerseTextItem);

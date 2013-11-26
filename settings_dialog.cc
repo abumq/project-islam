@@ -92,15 +92,15 @@ void SettingsDialog::on_chkLevelGlobal_clicked(bool checked)
 void SettingsDialog::on_buildQuranEnglish_clicked()
 {
     DATA_LOG(INFO) << "Building data: Quran English";
-    data::DatabaseBuilder::build(data::DatabaseBuilder::DataType::QuranEnglish);
-    m_mainWindow->dataHolder()->quranEnglish()->load(quran::Quran::TextType::English);
+    data::DatabaseBuilder::build(data::DatabaseBuilder::DataType::QuranTranslation);
+    m_mainWindow->dataHolder()->quranTranslation()->load(quran::Quran::TextType::Translation);
 }
 
 void SettingsDialog::on_buildQuranArabic_clicked()
 {
     DATA_LOG(INFO) << "Building data: Quran Arabic";
     data::DatabaseBuilder::build(data::DatabaseBuilder::DataType::QuranArabic);
-    m_mainWindow->dataHolder()->quranArabic()->load(quran::Quran::TextType::Arabic);
+    m_mainWindow->dataHolder()->quranArabic()->load(quran::Quran::TextType::Original);
 }
 
 void SettingsDialog::on_buildQuranChapters_clicked()

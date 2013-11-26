@@ -39,7 +39,7 @@ public:
     
     static const float kDefaultZoom;
     static const float kDefaultZoomFactor;
-    QuranView(quran::Quran* quran, quran::Quran* quranTranslation, QWidget* parent);    
+    QuranView(quran::Quran* quran, quran::Quran* quranTranslation, quran::Quran* quranTransliteration, QWidget* parent);    
     virtual ~QuranView();
     
     quran::Chapter* currentChapter() const;
@@ -64,6 +64,7 @@ signals:
 private:
     quran::Quran* m_quran;
     quran::Quran* m_quranTranslation;
+    quran::Quran* m_quranTransliteration;
     quran::Chapter* m_currentChapter;
     QMap<int, VerseTextItem*> m_verseTextItems;
     VerseTextItem* m_selectedVerseTextItem;

@@ -78,7 +78,7 @@ void QuranView::update(quran::Chapter* chapter, int from, int to)
     m_currentChapter = CHECK_NOTNULL(chapter);
     m_ok = m_currentChapter != nullptr;
     m_currFrom = from;
-    m_currFrom = to;
+    m_currTo = to;
     DCHECK(from <= m_currentChapter->versesCount()) << "Chapter: [" << m_currentChapter->arabicName() <<
                                                        "] only has [" << m_currentChapter->versesCount() << "] verses, requested verse [" << from << "]";
     DCHECK(to <= m_currentChapter->versesCount()) << "Chapter: [" << m_currentChapter->arabicName() <<

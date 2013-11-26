@@ -31,6 +31,8 @@ private slots:
     
     void on_buildDua_clicked();
     
+    void on_buildQuranTransliterationEnglish_clicked();
+    
 private:
     Ui::SettingsDialog *ui;
     MainWindow* m_mainWindow;

@@ -91,8 +91,8 @@ void SettingsDialog::on_chkLevelGlobal_clicked(bool checked)
 
 void SettingsDialog::on_buildQuranEnglish_clicked()
 {
-    DATA_LOG(INFO) << "Building data: Quran English";
-    data::DatabaseBuilder::build(data::DatabaseBuilder::DataType::QuranTranslation);
+    DATA_LOG(INFO) << "Building data: Quran English (Yusuf Ali)";
+    data::DatabaseBuilder::build(data::DatabaseBuilder::DataType::QuranTranslation_English_YusufAli);
     m_mainWindow->dataHolder()->quranTranslation()->load(quran::Quran::TextType::Translation);
 }
 
@@ -113,4 +113,11 @@ void SettingsDialog::on_buildDua_clicked()
 {
     DATA_LOG(INFO) << "Building data: Dua";
     data::DatabaseBuilder::build(data::DatabaseBuilder::DataType::Dua);
+}
+
+void SettingsDialog::on_buildQuranTransliterationEnglish_clicked()
+{
+    DATA_LOG(INFO) << "Building data: Quran Tranliteration (English)";
+    data::DatabaseBuilder::build(data::DatabaseBuilder::DataType::QuranTransliteration_English);
+    m_mainWindow->dataHolder()->quranTransliteration()->load(quran::Quran::TextType::Transliteration, "QuranTransliteration_English");
 }

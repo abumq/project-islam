@@ -27,10 +27,10 @@ public:
     
         el::Loggers::setDefaultConfigurations(baseConfiguration(), true);
         
-        dataLogger->configurations()->set(el::Level::Debug, el::ConfigurationType::Enabled, "false");
+        dataLogger->configurations()->set(el::Level::Debug, el::ConfigurationType::Enabled, "true");
         dataLogger->reconfigure();
         
-        traceLogger->configurations()->set(el::Level::Debug, el::ConfigurationType::Enabled, "false");
+        traceLogger->configurations()->set(el::Level::Global, el::ConfigurationType::Enabled, "true");
         traceLogger->reconfigure();
     }
 
@@ -54,6 +54,6 @@ public:
 
 #define QURAN_LOG(LEVEL) CLOG(LEVEL, "quran")
 
-#define _TRACE DCLOG(TRACE, "locationTrace")
+#define _TRACE CLOG(TRACE, "locationTrace")
 
 #endif // LOGGING_H

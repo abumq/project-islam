@@ -29,8 +29,7 @@ void DataHolder::initialize()
     quranArabic()->load(quran::Quran::TextType::Original);
     // Default is English (Yusuf Ali)
     quranTranslation()->load(quran::Quran::TextType::Translation);
-    // TODO: Build transliteration database and specify database table here
-    quranTransliteration()->load(quran::Quran::TextType::Transliteration);
+    quranTransliteration()->load(quran::Quran::TextType::Transliteration, "QuranTransliteration_English");
 }
 
 } // namespace data

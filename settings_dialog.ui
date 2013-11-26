@@ -23,7 +23,7 @@
       <enum>QTabWidget::North</enum>
      </property>
      <property name="currentIndex">
-      <number>1</number>
+      <number>2</number>
      </property>
      <property name="elideMode">
       <enum>Qt::ElideNone</enum>
@@ -218,20 +218,13 @@
          <x>20</x>
          <y>30</y>
          <width>311</width>
-         <height>152</height>
+         <height>211</height>
         </rect>
        </property>
        <property name="title">
         <string>Rebuild Data</string>
        </property>
        <layout class="QVBoxLayout" name="verticalLayout_2">
-        <item>
-         <widget class="QPushButton" name="buildQuranEnglish">
-          <property name="text">
-           <string>Quran English</string>
-          </property>
-         </widget>
-        </item>
         <item>
          <widget class="QPushButton" name="buildQuranArabic">
           <property name="text">
@@ -243,6 +236,20 @@
          <widget class="QPushButton" name="buildQuranChapters">
           <property name="text">
            <string>Quran Chapters</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="buildQuranEnglish">
+          <property name="text">
+           <string>Quran English (Yusuf Ali)</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="buildQuranTransliterationEnglish">
+          <property name="text">
+           <string>Quran Transliteration (English)</string>
           </property>
          </widget>
         </item>

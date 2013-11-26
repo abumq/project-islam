@@ -11,7 +11,7 @@ const float QuranView::kDefaultZoom = 1.0f;
 const float QuranView::kDefaultZoomFactor = 1.1f;
 
 QuranView::QuranView(quran::Quran* quran, quran::Quran* quranTranslation, 
-        quran::Quran* quranTransliteration, QWidget *parent) :
+                     quran::Quran* quranTransliteration, QWidget *parent) :
     QGraphicsView(new QGraphicsScene(parent), parent),
     m_quran(quran),
     m_quranTranslation(quranTranslation),
@@ -111,20 +111,22 @@ void QuranView::update(quran::Chapter* chapter, int from, int to)
         locY += kSpaceBetweenVerses;
         if (hasTransliteration) {
             VerseTextItem* transliteratedVerseTextItem = new VerseTextItem(QString::fromStdWString(transliteratedVerse->text()), 
-                                                            transliteratedVerse, nullptr);
+                                                                           transliteratedVerse, nullptr);
             scene()->addItem(transliteratedVerseTextItem);
             transliteratedVerseTextItem->setY(locY);
             locY += kSpaceBetweenVerses;
             if (!hasTranslation) {
                 locY += 10;
             }
+            m_verseTextTransliterationItems.insert(i, transliteratedVerseTextItem);
         }
         if (hasTranslation) {
             VerseTextItem* translatedVerseTextItem = new VerseTextItem(QString::fromStdWString(translatedVerse->text()), 
-                                                            translatedVerse, nullptr);
+                                                                       translatedVerse, nullptr);
             scene()->addItem(translatedVerseTextItem);
             translatedVerseTextItem->setY(locY);
             locY += kSpaceBetweenVerses + 10;
+            m_verseTextTranslationItems.insert(i, translatedVerseTextItem);
         }
         m_verseTextItems.insert(i, verseTextItem);
         if (i == from) {
@@ -201,8 +203,33 @@ void QuranView::updateView(float newSize)
         if (maxWidth < curr->textWidth()) {
             maxWidth = curr->textWidth();
         }
+        // Check max width from transliterations
+        if (!m_verseTextTransliterationItems.empty()) {
+            curr = m_verseTextTransliterationItems.value(key);
+            if (maxWidth < curr->textWidth()) {
+                maxWidth = curr->textWidth();
+            }
+        }
+        // Check max width from translation
+        if (!m_verseTextTranslationItems.empty()) {
+            curr = m_verseTextTranslationItems.value(key);
+            if (maxWidth < curr->textWidth()) {
+                maxWidth = curr->textWidth();
+            }
+        }
     }
-    int h = m_verseTextItems.count() * 30 + (m_verseTextItems.count() * newSize);
+    
+    int h = m_verseTextItems.count() * kSpaceBetweenVerses + m_verseTextItems.count();
+    bool hasTransliteration = m_quranTransliteration != nullptr && m_quranTransliteration->ready();
+    bool hasTranslation = m_quranTranslation != nullptr && m_quranTranslation->ready();
+    
+    if (hasTransliteration && hasTranslation) {
+        h *= 3; // Original + translation + tranliteration
+        h += m_verseTextItems.count() * 10; // Extra when translating / transliterating
+    } else if (hasTransliteration || hasTranslation) {
+        h *= 2; // Original + (translation OR tranliteration)
+        h += m_verseTextItems.count() * 10; // Extra when translating / transliterating
+    }
     const QRectF rect = QRectF(0, 0, maxWidth, h);
     scene()->setSceneRect(rect);
     if (m_quran->readingDirection() == quran::Quran::ReadingDirection::LeftToRight) {

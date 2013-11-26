@@ -52,7 +52,10 @@ QString DatabaseBuilder::dataTypeToFilename(const DatabaseBuilder::DataType &typ
     if (type == DataType::QuranArabic) {
         return ":/quran/quran_arabic";
     }
-    if (type == DataType::QuranTranslation) {
+    if (type == DataType::QuranTransliteration_English) {
+        return ":/quran/quran_transliteration_english";
+    }
+    if (type == DataType::QuranTranslation_English_YusufAli) {
         return ":/quran/quran_english_yusuf_ali";
     }
     if (type == DataType::Dua) {

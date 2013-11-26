@@ -67,6 +67,8 @@ private:
     quran::Quran* m_quranTransliteration;
     quran::Chapter* m_currentChapter;
     QMap<int, VerseTextItem*> m_verseTextItems;
+    QMap<int, VerseTextItem*> m_verseTextTranslationItems;
+    QMap<int, VerseTextItem*> m_verseTextTransliterationItems;
     VerseTextItem* m_selectedVerseTextItem;
     bool m_ok;
     float m_zoomValue;

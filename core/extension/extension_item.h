@@ -3,7 +3,7 @@
 
 #include <QToolButton>
 
-class Extension;
+class AbstractExtension;
 class ExtensionBar;
 template <class T> class QVector;
 
@@ -15,10 +15,10 @@ public:
     static const int kExtensionItemHeight = 55;
     static const int kExtensionItemFontSize = 9;
     
-    ExtensionItem(ExtensionBar *extensionBar,  Extension *extension,  QVector<ExtensionItem*>* allExtensionItems);
+    ExtensionItem(ExtensionBar *extensionBar,  AbstractExtension *extension,  QVector<ExtensionItem*>* allExtensionItems);
     ~ExtensionItem();
     
-    Extension* extension(void) const;
+    AbstractExtension* extension(void) const;
     
     void select(void);
     void deselect(void);
@@ -30,7 +30,7 @@ public slots:
     void showExtension(bool);
 private:
     ExtensionBar* m_extensionBar;
-    Extension* m_extension;
+    AbstractExtension* m_extension;
     QVector<ExtensionItem*>* m_allExtensionItems;
     QString m_icon;
 };

@@ -17,7 +17,8 @@ SettingsDialog::SettingsDialog(MainWindow* mainWindow, QWidget* parent) :
 {
     ui->setupUi(this);
     ui->tabWidget->setCurrentIndex(0);
-    m_colorBox = new ColorBox(QColor::fromRgb(StyleLoader::kDefaultThemeRed, StyleLoader::kDefaultThemeGreen, StyleLoader::kDefaultThemeBlue), ui->groupTheme);
+    m_colorBox = new ColorBox(QColor::fromRgb(StyleLoader::kDefaultThemeRed, 
+                                StyleLoader::kDefaultThemeGreen, StyleLoader::kDefaultThemeBlue), ui->groupTheme);
     m_colorBox->move(0, 25);
     loadSettingsInUi();
 }
@@ -30,18 +31,19 @@ SettingsDialog::~SettingsDialog()
 void SettingsDialog::accept()
 {
     LOG(INFO) << "Updating settings...";
-    el::Configurations* configurations = el::Loggers::getLogger("default")->configurations();
-    configurations->set(el::Level::Global, el::ConfigurationType::Enabled, ui->chkLevelGlobal->isChecked() ? "true" : "false");
+    el::Configurations configurations = LoggingConfigurer::baseConfiguration();
+    configurations.set(el::Level::Global, el::ConfigurationType::Filename, ui->txtLogFile->text().toStdString());
+    configurations.set(el::Level::Global, el::ConfigurationType::Enabled, ui->chkLevelGlobal->isChecked() ? "true" : "false");
     if (!ui->chkLevelGlobal->isChecked()) {
-        configurations->set(el::Level::Error, el::ConfigurationType::Enabled, ui->chkLevelError->isChecked() ? "true" : "false");
-        configurations->set(el::Level::Info, el::ConfigurationType::Enabled, ui->chkLevelInfo->isChecked() ? "true" : "false");
-        configurations->set(el::Level::Warning, el::ConfigurationType::Enabled, ui->chkLevelWarning->isChecked() ? "true" : "false");
-        configurations->set(el::Level::Fatal, el::ConfigurationType::Enabled, ui->chkLevelFatal->isChecked() ? "true" : "false");
-        configurations->set(el::Level::Debug, el::ConfigurationType::Enabled, ui->chkLevelDebug->isChecked() ? "true" : "false");
-        configurations->set(el::Level::Verbose, el::ConfigurationType::Enabled, ui->chkLevelVerbose->isChecked() ? "true" : "false");
+        configurations.set(el::Level::Error, el::ConfigurationType::Enabled, ui->chkLevelError->isChecked() ? "true" : "false");
+        configurations.set(el::Level::Info, el::ConfigurationType::Enabled, ui->chkLevelInfo->isChecked() ? "true" : "false");
+        configurations.set(el::Level::Warning, el::ConfigurationType::Enabled, ui->chkLevelWarning->isChecked() ? "true" : "false");
+        configurations.set(el::Level::Fatal, el::ConfigurationType::Enabled, ui->chkLevelFatal->isChecked() ? "true" : "false");
+        configurations.set(el::Level::Debug, el::ConfigurationType::Enabled, ui->chkLevelDebug->isChecked() ? "true" : "false");
+        configurations.set(el::Level::Verbose, el::ConfigurationType::Enabled, ui->chkLevelVerbose->isChecked() ? "true" : "false");
     }
-    configurations->set(el::Level::Global, el::ConfigurationType::MaxLogFileSize, QString::number(ui->spnMaxLogFileSize->value()).toStdString());
-    el::Loggers::setDefaultConfigurations(*configurations, true);
+    configurations.set(el::Level::Global, el::ConfigurationType::MaxLogFileSize, QString::number(ui->spnMaxLogFileSize->value()).toStdString());
+    el::Loggers::setDefaultConfigurations(configurations, true);
     
     homeDirectoryChanged = SettingsLoader::defaultHomeDir() != ui->txtHomeDir->text();
     SettingsLoader::updateDefaultHomeDir(ui->txtHomeDir->text());
@@ -60,6 +62,7 @@ void SettingsDialog::loadSettingsInUi()
     // -------------------- Tab: Logging ------------------------
     
     // All loggers
+    // TODO: Get it using defaultConfigurations() when it's available from Easylogging++
     el::base::TypedConfigurations* configurations = el::Loggers::getLogger("default")->typedConfigurations();
 
     std::string filename = configurations->filename(el::Level::Global);

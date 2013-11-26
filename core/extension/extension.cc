@@ -1,4 +1,4 @@
-#include "core/extension/extension.h"
+#include "core/extension/abstract_extension.h"
 #include <QLabel>
 #include <QResizeEvent>
 #include "core/logging.h"
@@ -7,7 +7,7 @@
 #include "core/extension/extension_bar.h"
 #include "core/extension/extension_info.h"
 
-Extension::Extension(QWidget *parent, ExtensionInfo *extensionInfo, bool isDefault) :
+AbstractExtension::AbstractExtension(QWidget *parent, ExtensionInfo *extensionInfo, bool isDefault) :
     QWidget(parent),
     m_parent(parent),
     m_dataHolder(nullptr),
@@ -31,7 +31,7 @@ Extension::Extension(QWidget *parent, ExtensionInfo *extensionInfo, bool isDefau
     m_container->move(0, kExtensionStartTop);
 }
 
-Extension::~Extension()
+AbstractExtension::~AbstractExtension()
 {
     LOG(INFO) << "Unloading extension [" << info()->name() << "]";
     delete m_titleLabel;
@@ -40,7 +40,7 @@ Extension::~Extension()
     m_container = nullptr;
 }
 
-bool Extension::operator ==(const Extension &ex)
+bool AbstractExtension::operator ==(const AbstractExtension &ex)
 {
     if (ex.info() == nullptr) {
         return info() == nullptr;
@@ -50,27 +50,27 @@ bool Extension::operator ==(const Extension &ex)
     return ex.info()->name() == info()->name();
 }
 
-const ExtensionInfo *Extension::info() const
+const ExtensionInfo *AbstractExtension::info() const
 {
     return m_info;
 }
 
-bool Extension::isDefault() const
+bool AbstractExtension::isDefault() const
 {
     return m_isDefault;
 }
 
-void Extension::setIsDefault(bool value)
+void AbstractExtension::setIsDefault(bool value)
 {
     m_isDefault = value;
 }
 
-QString Extension::htmlFormattedDescription() const 
+QString AbstractExtension::htmlFormattedDescription() const 
 {
     return m_htmlFormattedDescription;
 }
 
-void Extension::setExtensionItem(ExtensionItem *extensionItem)
+void AbstractExtension::setExtensionItem(ExtensionItem *extensionItem)
 {
     m_extensionItem = extensionItem;
     if (extensionItem != nullptr) {
@@ -78,18 +78,18 @@ void Extension::setExtensionItem(ExtensionItem *extensionItem)
     }
 }
 
-ExtensionItem *Extension::extensionItem() const
+ExtensionItem *AbstractExtension::extensionItem() const
 {
     return m_extensionItem;
 }
 
-void Extension::resizeEvent(QResizeEvent* event)
+void AbstractExtension::resizeEvent(QResizeEvent* event)
 {
     event->accept();
     update();
 }
 
-void Extension::update()
+void AbstractExtension::update()
 {
     QWidget::update();
     if (m_titleLabel != nullptr) {
@@ -103,12 +103,12 @@ void Extension::update()
     }
 }
 
-QWidget* Extension::container()
+QWidget* AbstractExtension::container()
 {
     return m_container;
 }
 
-void Extension::setParent(QWidget *parent)
+void AbstractExtension::setParent(QWidget *parent)
 {
     QWidget::setParent(parent);
     m_parent = parent;
@@ -117,37 +117,37 @@ void Extension::setParent(QWidget *parent)
     }
 }
 
-void Extension::activate()
+void AbstractExtension::activate()
 {
     m_extensionItem->select();
     show();
     m_extensionItem->extensionBar()->setCurrentExtension(this);
 }
 
-void Extension::deactivate()
+void AbstractExtension::deactivate()
 {
     m_extensionItem->deselect();
     hide();
     m_extensionItem->extensionBar()->setCurrentExtension(nullptr);
 }
 
-data::DataHolder* Extension::dataHolder()
+data::DataHolder* AbstractExtension::dataHolder()
 {
     return m_dataHolder;
 }
 
-void Extension::setDataHolder(data::DataHolder *dataHolder)
+void AbstractExtension::setDataHolder(data::DataHolder *dataHolder)
 {
     _TRACE;
     m_dataHolder = dataHolder;
 }
 
-QLabel* Extension::titleLabel() const
+QLabel* AbstractExtension::titleLabel() const
 {
     return m_titleLabel;
 }
 
-void Extension::buildHtmlFormattedDescription()
+void AbstractExtension::buildHtmlFormattedDescription()
 {
     if (info()->description().isEmpty()) {
         if (info()->title() != info()->name()) {

@@ -3,7 +3,7 @@
 #include <QVector>
 #include "core/logging.h"
 #include "core/constants.h"
-#include "core/extension/extension.h"
+#include "core/extension/abstract_extension.h"
 #include "core/extension/extension_info.h"
 #include "core/extension/extension_item.h"
 
@@ -42,9 +42,9 @@ ExtensionBar::~ExtensionBar()
                                 << "Memory leak from [" << m_extensions.size() << "] extensions.";
 }
 
-void ExtensionBar::addExtension(Extension* extension)
+void ExtensionBar::addExtension(AbstractExtension* extension)
 {
-    for (Extension* e : m_extensions) {
+    for (AbstractExtension* e : m_extensions) {
         // Ensure we dont have extension with same name - 
         // we dont have any other way excepting looping through manually since we have
         // container of extension pointer
@@ -86,13 +86,13 @@ ExtensionItem* ExtensionBar::defaultExtensionItem() const
     return nullptr;
 }
 
-void ExtensionBar::setCurrentExtension(Extension *currentExtension)
+void ExtensionBar::setCurrentExtension(AbstractExtension *currentExtension)
 {
     m_currentExtension = currentExtension;
     emit extensionChanged(currentExtension);
 }
 
-Extension *ExtensionBar::currentExtension() const
+AbstractExtension *ExtensionBar::currentExtension() const
 {
     return m_currentExtension;
 }
@@ -107,7 +107,7 @@ const QVector<ExtensionItem*>* ExtensionBar::extensionItems() const
     return &m_extensionItems;
 }
 
-const QVector<Extension*>* ExtensionBar::extensions() const
+const QVector<AbstractExtension*>* ExtensionBar::extensions() const
 {
     return &m_extensions;
 }

@@ -11,7 +11,7 @@ namespace Ui {
 class MainWindow;
 }
 
-class Extension;
+class AbstractExtension;
 class ExtensionBar;
 
 class MainWindow : public QMainWindow
@@ -34,7 +34,7 @@ private slots:
     void on_actionAbout_Qt_triggered();
     
     void on_actionExit_triggered();
-    void onExtensionChanged(Extension* extension);
+    void onExtensionChanged(AbstractExtension* extension);
     void on_action_Settings_triggered();
     
     void on_actionFull_Screen_triggered(bool checked);

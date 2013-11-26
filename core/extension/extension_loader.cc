@@ -2,8 +2,8 @@
 #include <QPluginLoader>
 #include <QFileDialog>
 #include "core/logging.h"
+#include "core/extension/extension_base.h"
 #include "core/extension/abstract_extension.h"
-#include "core/extension/extension.h"
 #include "core/extension/extension_bar.h"
 #include "core/data/data_holder.h"
 
@@ -22,12 +22,14 @@ void ExtensionLoader::loadAll(const QString& appPath, ExtensionBar* extensionBar
     
     for (QString extensionFilename : extensionsDir.entryList()) {
         QPluginLoader loader(extensionsDir.absoluteFilePath(extensionFilename));
-        AbstractExtension* abstractExtension = qobject_cast<AbstractExtension*>(loader.instance());
+        ExtensionBase* abstractExtension = qobject_cast<ExtensionBase*>(loader.instance());
         if (abstractExtension != nullptr) {
             abstractExtension->extension()->setDataHolder(m_dataHolder);
             abstractExtension->extension()->setParent(extensionBar->container());
+            // Extensions may change the configurations so we reconfigure them
+            LoggingConfigurer::configureLoggers();
             // initialize
-            abstractExtension->initialize(el::Loggers::getLogger("default")->configurations());
+            abstractExtension->initialize();
             
             extensionBar->addExtension(abstractExtension->extension());
         } else {

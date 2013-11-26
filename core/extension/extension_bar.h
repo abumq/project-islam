@@ -3,7 +3,7 @@
 
 #include <QToolBar>
 
-class Extension;
+class AbstractExtension;
 class ExtensionItem;
 
 template <class T> class QVector;
@@ -19,23 +19,23 @@ public:
     ExtensionBar(QWidget *parent, QWidget* container);
     ~ExtensionBar();
     QWidget* mainFrame();
-    void addExtension(Extension* extension);
+    void addExtension(AbstractExtension* extension);
     ExtensionItem* defaultExtensionItem(void) const;
     
-    void setCurrentExtension(Extension* currentExtension);
-    Extension* currentExtension() const;
+    void setCurrentExtension(AbstractExtension* currentExtension);
+    AbstractExtension* currentExtension() const;
     
     QWidget* container(void) const;
     
     const QVector<ExtensionItem*>* extensionItems() const;
-    const QVector<Extension*>* extensions() const;
+    const QVector<AbstractExtension*>* extensions() const;
 signals:
-    void extensionChanged(Extension* extension);
+    void extensionChanged(AbstractExtension* extension);
 private:
     QWidget* m_mainWindow;
     QWidget* m_container;
-    Extension* m_currentExtension;
-    QVector<Extension*> m_extensions;
+    AbstractExtension* m_currentExtension;
+    QVector<AbstractExtension*> m_extensions;
     QVector<ExtensionItem*> m_extensionItems;
 };
 

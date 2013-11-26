@@ -24,9 +24,9 @@ Memorization::~Memorization()
 {
 }
 
-bool Memorization::initialize(const el::Configurations* confFromLoader)
+bool Memorization::initialize()
 {
-    if (!AbstractExtension::initialize(confFromLoader)) {
+    if (!ExtensionBase::initialize()) {
         // Do not proceed
         return false;
     }

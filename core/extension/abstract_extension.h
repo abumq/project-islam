@@ -1,64 +1,68 @@
 #ifndef ABSTRACT_EXTENSION_H
 #define ABSTRACT_EXTENSION_H
 
-#include <QtPlugin>
-#include <QObject>
+#include <QWidget>
 #include "core/logging.h"
-#include "core/extension/extension.h"
-#include "core/extension/extension_info.h"
+#include "core/constants.h"
+#include "core/data/data_holder.h"
 
-class AbstractExtension : public QObject
+class ExtensionInfo;
+class ExtensionItem;
+class QLabel;
+
+class AbstractExtension : public QWidget
 {
+    Q_OBJECT
 public:
-    AbstractExtension() :
-        m_extension(nullptr) {
-        el::Loggers::reconfigureAllLoggers(el::ConfigurationType::ToFile, "false");
-        
-        // Do not call initialize here since we dont want to run into FATAL error
-        // of not initializing extensionInfo
-    }
+    static const int kExtensionTop = 21;
+    static const unsigned int kExtensionMaxLengthAuthor = 30;
+    static const unsigned int kExtensionMaxLengthName = 12;
+    static const unsigned int kExtensionMaxLengthTitle = 50;
+    static const unsigned int kExtensionMaxLengthDescription = 1000;
+    static const unsigned int kExtensionStartTop = 53;
     
-    virtual ~AbstractExtension() {
-        // No need to delete m_extension as plugin loader
-        // i.e, ExtensionLoader deletes this anyway in fact doing this
-        // will cause segmentation fault
-    }
+    AbstractExtension(QWidget *parent, ExtensionInfo* info, bool isDefault = false);
+    virtual ~AbstractExtension();
     
-    Extension *extension() {
-        if (m_extension == nullptr) {
-            m_extension = new Extension(0, &m_extensionInfo);
-        }
-        return m_extension;
-    }
+    bool operator==(const AbstractExtension& ex);
     
-    /// @brief Returns true if successfully initialized
-    virtual bool initialize(const el::Configurations* confFromLoader) {
-        CHECK (m_extensionInfo.isInitialized()) << "Please initialize ExtensionInfo (using constructor) from constructor of your extension.";
-        if (confFromLoader == nullptr) return false;
-        
-        // We dont expect confFromLoader being null from loader
-        el::Loggers::setDefaultConfigurations(*confFromLoader, true);
-        QObject::connect(extension(), SIGNAL(containerGeometryChanged()), this, SLOT(onContainerGeometryChanged()));
-        return true;
-    }
+    const ExtensionInfo* info() const;
     
-    void setExtensionInfo(const ExtensionInfo& extensionInfo) {
-        m_extensionInfo = extensionInfo;
-    }
+    bool isDefault(void) const;
+    void setIsDefault(bool);
     
-    const ExtensionInfo& extensionInfo() const {
-        return m_extensionInfo;
-    }
-
-public slots:
+    QString htmlFormattedDescription() const;
     
-    /// @brief This needs to connect to Extension::containerGeometryChanged()
-    virtual void onContainerGeometryChanged() = 0;
+    void setExtensionItem(ExtensionItem* extensionItem);
+    ExtensionItem* extensionItem() const;
+    
+    QWidget* container();
+    void setParent(QWidget *container);
+    
+    void activate();
+    void deactivate();
+    
+    void update();
+    
+    data::DataHolder* dataHolder();
+    void setDataHolder(data::DataHolder* dataHolder);
+    
+    QLabel* titleLabel() const;
+signals:
+    void containerGeometryChanged();
+protected:
+    void resizeEvent(QResizeEvent *);
 private:
-    Extension* m_extension;
-    ExtensionInfo m_extensionInfo;
+    QWidget* m_parent;
+    QWidget* m_container;
+    data::DataHolder* m_dataHolder;
+    QLabel* m_titleLabel;
+    ExtensionInfo* m_info;
+    ExtensionItem* m_extensionItem;
+    QString m_htmlFormattedDescription;
+    bool m_isDefault;
+    
+    void buildHtmlFormattedDescription();
 };
-
-Q_DECLARE_INTERFACE(AbstractExtension, "ProjectIslam.AbstractExtension.v1.0")
-
+                    
 #endif // ABSTRACT_EXTENSION_H

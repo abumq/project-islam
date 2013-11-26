@@ -6,11 +6,11 @@
 #include <QSize>
 
 #include "core/constants.h"
-#include "core/extension/extension.h"
+#include "core/extension/abstract_extension.h"
 #include "core/extension/extension_info.h"
 #include "core/extension/extension_bar.h"
 
-ExtensionItem::ExtensionItem(ExtensionBar *extensionBar, Extension* extension, 
+ExtensionItem::ExtensionItem(ExtensionBar *extensionBar, AbstractExtension* extension, 
         QVector<ExtensionItem*>* allExtensionItems) :
     QToolButton(extensionBar),
     m_extensionBar(extensionBar),
@@ -52,7 +52,7 @@ ExtensionItem::~ExtensionItem()
     m_extension->setExtensionItem(nullptr);
 }
 
-Extension* ExtensionItem::extension() const
+AbstractExtension* ExtensionItem::extension() const
 {
     return m_extension;
 }

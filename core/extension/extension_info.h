@@ -3,7 +3,7 @@
 
 #include <QString>
 #include "core/logging.h"
-
+#include "core/extension/abstract_extension.h"
 class ExtensionInfo {
 public:
     ExtensionInfo() :
@@ -16,14 +16,14 @@ public:
         CHECK(!author.isEmpty()) << "Author name is required";
         CHECK(!name.isEmpty()) << "Extension name is required";
         CHECK(!description.isEmpty()) << "Description is required";
-        CHECK(author.length() <= Extension::kExtensionMaxLengthAuthor) << "Author name is too long, max allowed: [" 
-                                                                        << Extension::kExtensionMaxLengthAuthor << "]";
-        CHECK(name.length() <= Extension::kExtensionMaxLengthName) << "Extension name is too long, max allowed: [" 
-                                                                        << Extension::kExtensionMaxLengthName << "]";
-        CHECK(title.length() <= Extension::kExtensionMaxLengthTitle) << "Title too long, max allowed: [" 
-                                                                        << Extension::kExtensionMaxLengthTitle << "]";
-        CHECK(description.length() <= Extension::kExtensionMaxLengthDescription) << "Description too long, max allowed: [" 
-                                                                        << Extension::kExtensionMaxLengthDescription << "]";
+        CHECK(author.length() <= AbstractExtension::kExtensionMaxLengthAuthor) << "Author name is too long, max allowed: [" 
+                                                                        << AbstractExtension::kExtensionMaxLengthAuthor << "]";
+        CHECK(name.length() <= AbstractExtension::kExtensionMaxLengthName) << "Extension name is too long, max allowed: [" 
+                                                                        << AbstractExtension::kExtensionMaxLengthName << "]";
+        CHECK(title.length() <= AbstractExtension::kExtensionMaxLengthTitle) << "Title too long, max allowed: [" 
+                                                                        << AbstractExtension::kExtensionMaxLengthTitle << "]";
+        CHECK(description.length() <= AbstractExtension::kExtensionMaxLengthDescription) << "Description too long, max allowed: [" 
+                                                                        << AbstractExtension::kExtensionMaxLengthDescription << "]";
         CHECK(majorVersion <= 99) << "Invalid major version";
         CHECK(minorVersion <= 99) << "Invalid minor version";
         m_majorVersion = majorVersion;

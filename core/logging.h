@@ -1,49 +1,52 @@
 #ifndef LOGGING_H
 #define LOGGING_H
 
-
 #include <easylogging++.h>
 #include "settings_loader.h"
 
 class LoggingConfigurer {
 public:
-static void configureLoggers() {
-
-    el::Logger* dataLogger = el::Loggers::getLogger("data");
-    el::Loggers::getLogger("quran");
-    el::Loggers::getLogger("locationTrace");
-    /*
-     // Having issue with path
-     QString logConfigFilename;
-#if _ELPP_OS_UNIX
-    logConfigFilename = QApplication::applicationDirPath() + QDir::separator() + "configs/logging.linux.config";
-#elif _ELPP_OS_WINDOWS
-    logConfigFilename = ":/logging_config/win";
-#endif
-
-    el::Loggers::configureFromGlobal(logConfigFilename.toStdString().c_str());
-    */
-
-    el::Configurations* configurations = el::Loggers::getLogger("default")->configurations();
-    configurations->set(el::Level::Global, el::ConfigurationType::Filename, 
-        SettingsLoader::defaultHomeDir().toStdString() + "logs" + QString(QDir::separator()).toStdString() + "project-islam.log");
-    el::Loggers::setDefaultConfigurations(*configurations, true);
+    static void configureLoggers() {
+        
+        el::Logger* defaultLogger = el::Loggers::getLogger("default");
+        el::Logger* dataLogger = el::Loggers::getLogger("data");
+        el::Logger* quranLogger = el::Loggers::getLogger("quran");
+        el::Logger* traceLogger = el::Loggers::getLogger("locationTrace");
+        /*
+         // Having issue with path
+         // We need configureFromGlobalText(confText)
+         QString logConfigFilename;
+        #if _ELPP_OS_UNIX
+            logConfigFilename = QApplication::applicationDirPath() + QDir::separator() + "configs/logging.linux.config";
+        #elif _ELPP_OS_WINDOWS
+            logConfigFilename = ":/logging_config/win";
+        #endif
     
-    dataLogger->configurations()->set(el::Level::Debug, el::ConfigurationType::Enabled, "false");
-    dataLogger->reconfigure();
+        el::Loggers::configureFromGlobal(logConfigFilename.toStdString().c_str());
+        */
     
-    el::Logger* traceLogger = el::Loggers::getLogger("locationTrace");
-    traceLogger->configurations()->set(el::Level::Debug, el::ConfigurationType::Enabled, "false");
-    traceLogger->reconfigure();
+        el::Loggers::setDefaultConfigurations(baseConfiguration(), true);
+        
+        dataLogger->configurations()->set(el::Level::Debug, el::ConfigurationType::Enabled, "false");
+        dataLogger->reconfigure();
+        
+        traceLogger->configurations()->set(el::Level::Debug, el::ConfigurationType::Enabled, "false");
+        traceLogger->reconfigure();
+    }
+
+    static el::Configurations baseConfiguration() {
     
-    el::Logger* defaultLogger = el::Loggers::getLogger("default");
-    defaultLogger->configurations()->set(el::Level::Trace, el::ConfigurationType::Format, "%datetime %level %func");
-    defaultLogger->configurations()->set(el::Level::Debug, el::ConfigurationType::Format, "%datetime %level [%func] %msg");
-    defaultLogger->reconfigure();
-}
+        el::Configurations configurations;
+        configurations.setToDefault();
+        configurations.set(el::Level::Global, el::ConfigurationType::Filename, 
+            SettingsLoader::defaultHomeDir().toStdString() + "logs" + QString(QDir::separator()).toStdString() + "project-islam.log");
+        configurations.set(el::Level::Trace, el::ConfigurationType::Format, "%datetime %level %func");
+        configurations.set(el::Level::Debug, el::ConfigurationType::Format, "%datetime %level [%func] %msg");
+        // 2mb max log file size
+        configurations.set(el::Level::Global, el::ConfigurationType::MaxLogFileSize, "2048000");
+        return configurations;
+    }
 };
-
-#define TRACE_LOCATION CLOG(TRACE, "locationTrace")
 
 #define DATA_LOG(LEVEL) CLOG(LEVEL, "data")
 #define DDATA_LOG(LEVEL) DCLOG(LEVEL, "data")
@@ -51,6 +54,6 @@ static void configureLoggers() {
 
 #define QURAN_LOG(LEVEL) CLOG(LEVEL, "quran")
 
-#define _TRACE DLOG(TRACE)
+#define _TRACE DCLOG(TRACE, "locationTrace")
 
 #endif // LOGGING_H

@@ -6,10 +6,11 @@
 #include "core/logging.h"
 #include "core/constants.h"
 
-QuranReader::QuranReader(quran::Quran* quran, QWidget *parent) :
+QuranReader::QuranReader(quran::Quran* quran, quran::Quran* quranTranslation, QWidget *parent) :
     QWidget(parent),
     ui(new Ui::QuranReader),
     m_quran(quran),
+    m_quranTranslation(quranTranslation),
     m_quranView(nullptr)
 {
     _TRACE;
@@ -22,7 +23,7 @@ QuranReader::QuranReader(quran::Quran* quran, QWidget *parent) :
             ui->spnVerseFrom->setEnabled(false);
             ui->spnVerseTo->setEnabled(false);
         }
-        m_quranView = new QuranView(m_quran, this);
+        m_quranView = new QuranView(m_quran, m_quranTranslation, this);
         m_quranView->setGeometry(5, 
                                  ui->grpControls->geometry().top() + ui->grpControls->geometry().height(),
                                  621, 

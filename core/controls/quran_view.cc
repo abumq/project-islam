@@ -10,9 +10,10 @@
 const float QuranView::kDefaultZoom = 1.0f;
 const float QuranView::kDefaultZoomFactor = 1.1f;
 
-QuranView::QuranView(quran::Quran* quran, QWidget *parent) :
+QuranView::QuranView(quran::Quran* quran, quran::Quran* quranTranslation, QWidget *parent) :
     QGraphicsView(new QGraphicsScene(parent), parent),
     m_quran(quran),
+    m_quranTranslation(quranTranslation),
     m_currentChapter(nullptr),
     m_selectedVerseTextItem(nullptr),
     m_ok(false)
@@ -78,15 +79,34 @@ void QuranView::update(quran::Chapter* chapter, int from, int to)
              << "] verses [" << from << " - " << to << "]";
     m_ok = m_currentChapter != nullptr;
     
+    if (!m_ok) {
+        LOG(ERROR) << "Not Ok!";
+        return;
+    }
     int locY = 0;
     
+    quran::Chapter* translatedChapter = nullptr;
+    if (m_quranTranslation != nullptr) {
+        translatedChapter = const_cast<quran::Chapter*>(m_quranTranslation->chapter(m_currentChapter->name()));
+    }
     for (int i = from; i <= to; ++i) {
         const quran::Verse* verse = &m_currentChapter->verses().at(i);
+        quran::Verse* translatedVerse = nullptr;
+        if (translatedChapter != nullptr) {
+            translatedVerse = const_cast<quran::Verse*>(&translatedChapter->verses().at(i));
+        }
         VerseTextItem* verseTextItem = new VerseTextItem(QString::fromStdWString(verse->text()), 
                                                          const_cast<quran::Verse*>(verse), nullptr);
         scene()->addItem(verseTextItem);
         verseTextItem->setY(locY);
-        locY += 30;
+        locY += kSpaceBetweenVerses;
+        if (translatedVerse != nullptr) {
+            VerseTextItem* translatedVerseTextItem = new VerseTextItem(QString::fromStdWString(translatedVerse->text()), 
+                                                            translatedVerse, nullptr);
+            scene()->addItem(translatedVerseTextItem);
+            translatedVerseTextItem->setY(locY);
+            locY += kSpaceBetweenVerses + 10;
+        }
         m_verseTextItems.insert(i, verseTextItem);
         if (i == from) {
             // First verse i.e, val 'from'

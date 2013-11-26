@@ -35,9 +35,11 @@ class QuranView : public QGraphicsView
 {
     Q_OBJECT
 public:
+    static const int kSpaceBetweenVerses = 30;
+    
     static const float kDefaultZoom;
     static const float kDefaultZoomFactor;
-    QuranView(quran::Quran* quran, QWidget* parent);    
+    QuranView(quran::Quran* quran, quran::Quran* quranTranslation, QWidget* parent);    
     virtual ~QuranView();
     
     quran::Chapter* currentChapter() const;
@@ -61,6 +63,7 @@ signals:
     void currentVerseChanged(int);
 private:
     quran::Quran* m_quran;
+    quran::Quran* m_quranTranslation;
     quran::Chapter* m_currentChapter;
     QMap<int, VerseTextItem*> m_verseTextItems;
     VerseTextItem* m_selectedVerseTextItem;

@@ -19,7 +19,7 @@
      <x>0</x>
      <y>-10</y>
      <width>641</width>
-     <height>131</height>
+     <height>161</height>
     </rect>
    </property>
    <property name="title">
@@ -116,6 +116,9 @@
           </property>
          </widget>
          <widget class="QLabel" name="lblZoomValue">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
           <property name="text">
            <string>100%</string>
           </property>
@@ -131,29 +134,26 @@
         </widget>
        </item>
        <item>
-        <widget class="QPushButton" name="btnTranslation">
-         <property name="text">
-          <string>Translation</string>
+        <widget class="QSplitter" name="splitter_7">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
          </property>
-         <property name="checkable">
-          <bool>true</bool>
-         </property>
-         <property name="checked">
-          <bool>true</bool>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QPushButton" name="btnTransliteration">
-         <property name="text">
-          <string>Transliteration</string>
-         </property>
-         <property name="checkable">
-          <bool>true</bool>
-         </property>
-         <property name="checked">
-          <bool>true</bool>
-         </property>
+         <widget class="QCheckBox" name="chkTransliteration">
+          <property name="text">
+           <string>Transliteration</string>
+          </property>
+          <property name="checked">
+           <bool>true</bool>
+          </property>
+         </widget>
+         <widget class="QCheckBox" name="chkTranslation">
+          <property name="text">
+           <string>Translation</string>
+          </property>
+          <property name="checked">
+           <bool>true</bool>
+          </property>
+         </widget>
         </widget>
        </item>
        <item>

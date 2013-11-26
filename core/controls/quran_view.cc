@@ -90,13 +90,13 @@ void QuranView::update(quran::Chapter* chapter, int from, int to)
              << "] verses [" << from << " - " << to << "]";
     int locY = 0;
     
-    bool hasTransliteration;
+    bool hasTransliteration = false;
     quran::Chapter* transliteratedChapter = nullptr;
     if (m_quranTransliteration != nullptr && m_quranTransliteration->ready()) {
         transliteratedChapter = const_cast<quran::Chapter*>(m_quranTransliteration->chapter(m_currentChapter->name()));
         hasTransliteration = true;
     }
-    bool hasTranslation;
+    bool hasTranslation = false;
     quran::Chapter* translatedChapter = nullptr;
     if (m_quranTranslation != nullptr && m_quranTranslation->ready()) {
         translatedChapter = const_cast<quran::Chapter*>(m_quranTranslation->chapter(m_currentChapter->name()));
@@ -283,7 +283,7 @@ void QuranView::turnOffTranslation()
 
 void QuranView::turnOffTransliteration()
 {
-    m_quranTranslation = nullptr;
+    m_quranTransliteration = nullptr;
     update(m_currFrom, m_currTo);
 }
 

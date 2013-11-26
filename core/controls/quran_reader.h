@@ -51,9 +51,9 @@ private slots:
     
     void on_btnZoomIn_clicked();
     
-    void on_btnTranslation_clicked(bool checked);
+    void on_chkTransliteration_clicked(bool checked);
     
-    void on_btnTransliteration_clicked(bool checked);
+    void on_chkTranslation_clicked(bool checked);
     
 signals:
     void chapterChanged(const quran::Chapter*);

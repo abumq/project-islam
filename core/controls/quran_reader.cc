@@ -140,21 +140,25 @@ void QuranReader::showCurrentVerseSelector()
 
 void QuranReader::turnOnTranslation()
 {
+    _TRACE;
     m_quranView->turnOnTranslation(m_quranTranslation);
 }
 
 void QuranReader::turnOffTranslation()
 {
+    _TRACE;
     m_quranView->turnOffTranslation();
 }
 
 void QuranReader::turnOffTransliteration()
 {
+    _TRACE;
     m_quranView->turnOffTransliteration();
 }
 
 void QuranReader::turnOnTransliteration()
 {
+    _TRACE;
     m_quranView->turnOnTransliteration(m_quranTransliteration);
 }
 
@@ -216,7 +220,7 @@ void QuranReader::on_btnMoreControls_clicked(bool checked)
 {
     _TRACE;
     ui->grpMoreControls->setVisible(checked);
-    ui->grpControls->resize(ui->grpControls->width(), !checked ? 71 : 131);
+    ui->grpControls->resize(ui->grpControls->width(), !checked ? 71 : 161);
     resize(width(), height() - 1);
     ui->btnMoreControls->setToolTip(QString(checked ? "Hide" : "Show") + " more controls...");
 }
@@ -234,20 +238,21 @@ void QuranReader::on_btnZoomIn_clicked()
     ui->lblZoomValue->setText(QString::number(m_quranView->zoomValue()) + "%");
 }
 
-void QuranReader::on_btnTranslation_clicked(bool checked)
+void QuranReader::on_chkTransliteration_clicked(bool checked)
+{
+        if (checked) {
+        turnOnTransliteration();
+    } else {
+        turnOffTransliteration();
+    }
+}
+
+void QuranReader::on_chkTranslation_clicked(bool checked)
 {
     if (checked) {
         turnOnTranslation();
     } else {
         turnOffTranslation();
     }
-}
-
-void QuranReader::on_btnTransliteration_clicked(bool checked)
-{
-    if (checked) {
-        turnOnTransliteration();
-    } else {
-        turnOffTransliteration();
-    }
+    
 }

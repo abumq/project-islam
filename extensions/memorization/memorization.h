@@ -36,7 +36,7 @@ public slots:
     void onVerseRangeChangedReader(int, int);
     void onSelectedVerseChangedReciter(int);
     void onSelectedVerseChangedReader(int);
-    void onContainerGeometryChanged();
+    void onContainerGeometryChanged(int, int);
 private:
     QuranReciter* m_reciter;
     QuranReader* m_reader;

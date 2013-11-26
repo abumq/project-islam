@@ -27,10 +27,10 @@ LIBS += -L/home/mkhan/intel/composer_xe_2013.5.192/compiler/lib/intel64/
 SOURCES += main.cc\
         mainwindow.cc \
     core/style_loader.cc \
+    core/extension/abstract_extension.cc \
     core/extension/extension_loader.cc \
     core/extension/extension_bar.cc \
     core/extension/extension_item.cc \
-    core/extension/extension.cc \
     core/controls/colorbox.cc \
     core/settings_loader.cc \
     settings_dialog.cc \
@@ -49,6 +49,9 @@ HEADERS  += mainwindow.h \
     core/style_loader.h \
     core/settings_loader.h \
     core/logging.h \
+    core/extension/extension_info.h \
+    core/extension/extension_base.h \
+    core/extension/abstract_extension.h \
     core/extension/extension_bar.h \
     core/extension/extension_item.h \
     core/extension/extension_loader.h \
@@ -64,10 +67,7 @@ HEADERS  += mainwindow.h \
     core/data/data_holder.h \
     core/controls/quran_reciter.h \
     core/controls/quran_reader.h \
-    core/controls/quran_view.h \
-    core/extension/extension_info.h \
-    core/extension/extension_base.h \
-    core/extension/abstract_extension.h
+    core/controls/quran_view.h
 
 FORMS    += mainwindow.ui \
     settings_dialog.ui \

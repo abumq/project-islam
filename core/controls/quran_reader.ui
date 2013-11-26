@@ -100,16 +100,47 @@
         </widget>
        </item>
        <item>
-        <widget class="QDoubleSpinBox" name="spnZoom">
-         <property name="minimum">
-          <double>10.000000000000000</double>
+        <widget class="QSplitter" name="splitter_5">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
          </property>
-         <property name="maximum">
-          <double>30.000000000000000</double>
+         <property name="opaqueResize">
+          <bool>false</bool>
          </property>
-         <property name="singleStep">
-          <double>1.000000000000000</double>
+         <property name="childrenCollapsible">
+          <bool>true</bool>
          </property>
+         <widget class="QPushButton" name="btnZoomOut">
+          <property name="text">
+           <string>-</string>
+          </property>
+         </widget>
+         <widget class="QLabel" name="lblZoomValue">
+          <property name="text">
+           <string>100%</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+         <widget class="QPushButton" name="btnZoomIn">
+          <property name="text">
+           <string>+</string>
+          </property>
+         </widget>
+        </widget>
+       </item>
+       <item>
+        <widget class="QSplitter" name="splitter_6">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <widget class="QLabel" name="label">
+          <property name="text">
+           <string>Search</string>
+          </property>
+         </widget>
+         <widget class="QLineEdit" name="lineEdit"/>
         </widget>
        </item>
       </layout>
@@ -125,6 +156,9 @@
      <width>28</width>
      <height>22</height>
     </rect>
+   </property>
+   <property name="toolTip">
+    <string>Show more controls...</string>
    </property>
    <property name="text">
     <string>...</string>

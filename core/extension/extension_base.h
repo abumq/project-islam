@@ -36,7 +36,7 @@ public:
     /// Returns true if successfully initialized
     virtual bool initialize() {
         CHECK (m_extensionInfo.isInitialized()) << "Please initialize ExtensionInfo (using constructor) from constructor of your extension.";
-        QObject::connect(extension(), SIGNAL(containerGeometryChanged()), this, SLOT(onContainerGeometryChanged()));
+        QObject::connect(extension(), SIGNAL(containerGeometryChanged(int, int)), this, SLOT(onContainerGeometryChanged(int, int)));
         return true;
     }
     
@@ -51,9 +51,8 @@ public:
 public slots:
     
     /// @brief Slot that is connected to signal that is emitted when container
-    /// geometry changes. This is pretty much similar to QWidget::resizeEvent(). New width and height
-    /// can be retrieved by extension()->container()->width() and extension()->container()->height()
-    virtual void onContainerGeometryChanged() = 0;
+    /// geometry changes. This is pretty much similar to QWidget::resizeEvent().
+    virtual void onContainerGeometryChanged(int width, int height) = 0;
 private:
     AbstractExtension* m_extension;
     ExtensionInfo m_extensionInfo;

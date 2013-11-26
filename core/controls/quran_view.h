@@ -14,7 +14,6 @@ class VerseTextItem : public QGraphicsTextItem
 {
     Q_OBJECT
 public:
-    static const float kDefaultFontSize;
     VerseTextItem(const QString &text = QString(), quran::Verse* verse = 0, QGraphicsItem* parent = 0);
     
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *o, QWidget *w);
@@ -24,17 +23,11 @@ public:
     
     quran::Verse* verse();
     
-    void sizeUp(float threshold);
-    void sizeDown(float threshold);
-    void changeSize(float newSize);
-    float size() const;
-    
     void setAlignment(Qt::Alignment alignment);
 private:
     QString m_plainText;
     quran::Verse* m_verse;
     bool m_highlighted;
-    float m_size;
     Qt::Alignment m_alignment;
 };
 
@@ -42,6 +35,8 @@ class QuranView : public QGraphicsView
 {
     Q_OBJECT
 public:
+    static const float kDefaultZoom;
+    static const float kDefaultZoomFactor;
     QuranView(quran::Quran* quran, QWidget* parent);    
     virtual ~QuranView();
     
@@ -53,10 +48,13 @@ public:
     void update(quran::Chapter::Name name, int from, int to);
     quran::Verse* selectedVerse();
     bool ok() const;
-    void sizeUp(float threshold);
-    void sizeDown(float threshold);
-    void changeSize(float newSize);
-    float fontSize() const;
+    
+    float zoomValue() const;
+    void scaleToDefault();
+    void zoomIn(float scaleFactor = kDefaultZoomFactor);
+    void zoomOut(float scaleFactor = kDefaultZoomFactor);
+    
+    void updateView(float newSize);
 signals:
     void chapterChanged(const quran::Chapter*);
     void verseRangeChanged(int, int);
@@ -67,7 +65,7 @@ private:
     QMap<int, VerseTextItem*> m_verseTextItems;
     VerseTextItem* m_selectedVerseTextItem;
     bool m_ok;
-    float m_fontSize;
+    float m_zoomValue;
     
     void updateView(float valW, float spaceBw);
 };

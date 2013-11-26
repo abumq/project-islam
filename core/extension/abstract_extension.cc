@@ -29,6 +29,7 @@ AbstractExtension::AbstractExtension(QWidget *parent, ExtensionInfo *extensionIn
     buildHtmlFormattedDescription();
     m_container = new QWidget(this);
     m_container->move(0, kExtensionStartTop);
+    m_titleLabel->setGeometry(0, 0, m_container->width(), kExtensionStartTop);
 }
 
 AbstractExtension::~AbstractExtension()
@@ -92,14 +93,16 @@ void AbstractExtension::resizeEvent(QResizeEvent* event)
 void AbstractExtension::update()
 {
     QWidget::update();
+    int w = width() - ExtensionBar::kExtensionBarWidth - 5 /* Margin for extension bar (from stylesheet) */;
+    int h = height() - AbstractExtension::kExtensionStartTop - kExtensionTop;
     if (m_titleLabel != nullptr) {
-        m_titleLabel->setMinimumSize(width(), m_titleLabel->height());
+        m_titleLabel->setMinimumSize(w, m_titleLabel->height());
     }
     if (m_container != nullptr) {
-        LOG(DEBUG) << "Resizing container to [" << width() << " x " << height() << "]";
-        m_container->setMinimumSize(width(), height());
-        m_container->setMaximumSize(width(), height());
-        emit containerGeometryChanged();
+        LOG(DEBUG) << "Resizing container to [" << w << " x " << h << "]";
+        m_container->setMinimumSize(w, h);
+        m_container->setMaximumSize(w, h);
+        emit containerGeometryChanged(w, h);
     }
 }
 

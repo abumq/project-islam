@@ -42,7 +42,7 @@ QuranReader::QuranReader(quran::Quran* quran, QWidget *parent) :
         connect(m_quranView, SIGNAL(currentVerseChanged(int)), this, SIGNAL(currentVerseChanged(int)));
         on_btnMoreControls_clicked(false);
         
-        ui->spnZoom->setValue(static_cast<double>(m_quranView->fontSize()));
+        ui->lblZoomValue->setText(QString::number(m_quranView->zoomValue()) + "%");
     }
 }
 
@@ -185,6 +185,7 @@ void QuranReader::resizeEvent(QResizeEvent* e)
                                  e->size().height() - (ui->grpControls->geometry().top() + ui->grpControls->geometry().height()));
     }
     QWidget::resizeEvent(e);
+    
 }
 
 void QuranReader::on_btnMoreControls_clicked(bool checked)
@@ -193,9 +194,18 @@ void QuranReader::on_btnMoreControls_clicked(bool checked)
     ui->grpMoreControls->setVisible(checked);
     ui->grpControls->resize(ui->grpControls->width(), !checked ? 71 : 131);
     resize(width(), height() - 1);
+    ui->btnMoreControls->setToolTip(QString(checked ? "Hide" : "Show") + " more controls...");
 }
 
-void QuranReader::on_spnZoom_valueChanged(double val)
+void QuranReader::on_btnZoomOut_clicked()
 {
-    m_quranView->changeSize(val);
+    m_quranView->zoomOut();
+    ui->lblZoomValue->setText(QString::number(m_quranView->zoomValue()) + "%");
+}
+
+void QuranReader::on_btnZoomIn_clicked()
+{
+    
+    m_quranView->zoomIn();
+    ui->lblZoomValue->setText(QString::number(m_quranView->zoomValue()) + "%");
 }

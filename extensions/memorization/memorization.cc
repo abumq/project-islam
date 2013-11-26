@@ -1,5 +1,7 @@
 #include "memorization.h"
 
+#include <QLabel>
+
 #include "core/controls/quran_reciter.h"
 #include "core/controls/quran_reader.h"
 
@@ -55,17 +57,18 @@ bool Memorization::initialize()
     QObject::connect(m_reciter, SIGNAL(currentVerseChanged(int)), this, SLOT(onSelectedVerseChangedReciter(int)));
     
     // Force trigger this slot
-    onContainerGeometryChanged();
+    onContainerGeometryChanged(extension()->container()->width(), extension()->container()->height());
     return true;
 }
 
-void Memorization::onContainerGeometryChanged()
+void Memorization::onContainerGeometryChanged(int w, int h)
 {
     if (m_reciter != nullptr) {
-        int centerW = (extension()->container()->width() / 2) - (m_reciter->width() / 2);
-        int bottom = extension()->container()->height() - m_reciter->height() - 100;
+        int centerW = (w / 2) - (m_reciter->width() / 2);
+        int bottom = h - m_reciter->height();
         m_reciter->move(centerW, bottom);
     }
+    m_reader->resize(w, h - m_reciter->height());
 }
 
 void Memorization::onChapterChangedReciter(const quran::Chapter* chapter)

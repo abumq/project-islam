@@ -49,7 +49,7 @@ public:
     
     QLabel* titleLabel() const;
 signals:
-    void containerGeometryChanged();
+    void containerGeometryChanged(int, int);
 protected:
     void resizeEvent(QResizeEvent *);
 private:

@@ -6,6 +6,10 @@
 #include <QTextCursor>
 #include <QScrollBar>
 #include "core/quran/quran.h"
+
+const float QuranView::kDefaultZoom = 1.0f;
+const float QuranView::kDefaultZoomFactor = 1.1f;
+
 QuranView::QuranView(quran::Quran* quran, QWidget *parent) :
     QGraphicsView(new QGraphicsScene(parent), parent),
     m_quran(quran),
@@ -16,6 +20,7 @@ QuranView::QuranView(quran::Quran* quran, QWidget *parent) :
     _TRACE;
     const QRectF rect = QRectF(0, 0, 1, 1);
     scene()->setSceneRect(rect);
+    scaleToDefault();
 }
 
 QuranView::~QuranView()
@@ -75,7 +80,6 @@ void QuranView::update(quran::Chapter* chapter, int from, int to)
     
     int locY = 0;
     
-    float size = 0;
     for (int i = from; i <= to; ++i) {
         const quran::Verse* verse = &m_currentChapter->verses().at(i);
         VerseTextItem* verseTextItem = new VerseTextItem(QString::fromStdWString(verse->text()), 
@@ -88,13 +92,9 @@ void QuranView::update(quran::Chapter* chapter, int from, int to)
             // First verse i.e, val 'from'
             m_selectedVerseTextItem = verseTextItem;
             verseTextItem->highlight();
-            if (m_fontSize == 0) {
-                m_fontSize = VerseTextItem::kDefaultFontSize;
-            }
-            size = verseTextItem->size() == m_fontSize ? verseTextItem->size() : m_fontSize;
         }
     }
-    changeSize(size);
+    updateView(kDefaultZoom);
     if (isChapterChanged) {
         emit chapterChanged(m_currentChapter);
     }
@@ -118,19 +118,36 @@ bool QuranView::ok() const
     return m_ok;
 }
 
-void QuranView::sizeUp(float threshold)
+float QuranView::zoomValue() const
 {
-    _TRACE;
-    changeSize(m_fontSize + threshold);
+    return m_zoomValue;
 }
 
-void QuranView::sizeDown(float threshold)
+void QuranView::scaleToDefault()
 {
     _TRACE;
-    changeSize(m_fontSize - threshold);
+    float v = kDefaultZoom;
+    scale(v, v);
+    m_zoomValue = 100.0f;
 }
 
-void QuranView::changeSize(float newSize)
+void QuranView::zoomIn(float scaleFactor)
+{
+    _TRACE;
+    float v = scaleFactor;
+    scale(v, v);
+    m_zoomValue *= v;
+}
+
+void QuranView::zoomOut(float scaleFactor)
+{
+    _TRACE;
+    float v = 1.0 / scaleFactor;
+    scale(v, v);
+    m_zoomValue *= v;
+}
+
+void QuranView::updateView(float newSize)
 {
     _TRACE;
     scene()->setSceneRect(QRectF(0, 0, 1, 1)); // Will be updated in updateView()
@@ -140,34 +157,14 @@ void QuranView::changeSize(float newSize)
         return;
     }
     int maxWidth = -2;
-    int spaceBw = 30;
-    VerseTextItem* prev = nullptr;
-    VerseTextItem* curr = nullptr;
     for (int key : m_verseTextItems.keys()) {
-        prev = curr;
-        curr = m_verseTextItems.value(key);
-        curr->changeSize(newSize);
-        if (prev != nullptr) {
-            curr->setPos(curr->pos().x(), prev->size() + prev->pos().y() + (newSize * 3));
-            spaceBw = curr->pos().y() - prev->pos().y() - newSize;
-        }
+        VerseTextItem* curr = m_verseTextItems.value(key);
         if (maxWidth < curr->textWidth()) {
             maxWidth = curr->textWidth();
         }
     }
-    m_fontSize = newSize;
-    updateView(maxWidth, spaceBw);
-}
-
-float QuranView::fontSize() const
-{
-    return m_fontSize;
-}
-void QuranView::updateView(float valW, float spaceBw)
-{
-    _TRACE;
-    int h = m_verseTextItems.count() * spaceBw + (m_verseTextItems.count() * m_fontSize);
-    const QRectF rect = QRectF(0, 0, valW, h);
+    int h = m_verseTextItems.count() * 30 + (m_verseTextItems.count() * newSize);
+    const QRectF rect = QRectF(0, 0, maxWidth, h);
     scene()->setSceneRect(rect);
     if (m_quran->readingDirection() == quran::Quran::ReadingDirection::LeftToRight) {
         horizontalScrollBar()->setValue(horizontalScrollBar()->minimum());
@@ -180,19 +177,16 @@ void QuranView::updateView(float valW, float spaceBw)
     VerseTextItem* curr = nullptr;
     for (int key : m_verseTextItems.keys()) {
         curr = m_verseTextItems.value(key);
-        curr->setTextWidth(valW);
+        curr->setTextWidth(maxWidth);
         curr->setAlignment(alignment);
     }
 }
-
-const float VerseTextItem::kDefaultFontSize = 10.0f;
 
 VerseTextItem::VerseTextItem(const QString& text, quran::Verse* verse, QGraphicsItem* parent) :
     QGraphicsTextItem(text, parent),
     m_plainText(text),
     m_verse(verse),
     m_highlighted(false),
-    m_size(kDefaultFontSize),
     m_alignment(Qt::AlignLeft)
 {
     unhighlight();
@@ -207,50 +201,19 @@ void VerseTextItem::paint(QPainter* painter, const QStyleOptionGraphicsItem* o, 
 
 void VerseTextItem::highlight()
 {
-    _TRACE;
-    setHtml("<span style='font-size: " + QString::number(m_size) + "pt;background-color:#FFFF00;'>" + m_plainText + "</span>");
+    setHtml("<span style='background-color:#FFFF00;'>" + m_plainText + "</span>");
     m_highlighted = true;
 }
 
 void VerseTextItem::unhighlight()
 {
-    _TRACE;
-    setHtml("<span style='font-size: " + QString::number(m_size) + "pt;'>" + m_plainText + "</span>");
+    setHtml("<span>" + m_plainText + "</span>");
     m_highlighted = false;
 }
 
 quran::Verse* VerseTextItem::verse()
 {
     return m_verse;
-}
-
-void VerseTextItem::sizeUp(float threshold)
-{
-    _TRACE;
-    changeSize(m_size + threshold);
-}
-
-void VerseTextItem::sizeDown(float threshold)
-{
-    _TRACE;
-    changeSize(m_size - threshold);
-}
-
-void VerseTextItem::changeSize(float newSize)
-{
-    _TRACE;
-    LOG(INFO) << "Changing size from [" << m_size << "] to [" << newSize << "]";
-    m_size = newSize;
-    if (m_highlighted) {
-        highlight();
-    } else {
-        unhighlight();
-    }
-}
-
-float VerseTextItem::size() const
-{
-    return m_size;
 }
 
 void VerseTextItem::setAlignment(Qt::Alignment alignment)

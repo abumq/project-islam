@@ -23,7 +23,7 @@ INCLUDEPATH += "../../"
 LIBS += -L/home/mkhan/intel/composer_xe_2013.5.192/compiler/lib/intel64/
 
 SOURCES +=  memorization.cc \
-    ../../core/extension/extension.cc \
+    ../../core/extension/abstract_extension.cc \
     ../../core/data/data_holder.cc \
     ../../core/controls/quran_view.cc \
     ../../core/controls/quran_reciter.cc \
@@ -35,7 +35,7 @@ SOURCES +=  memorization.cc \
 
 HEADERS += memorization.h \
             memorization_global.h \
-    ../../core/extension/extension.h \
+    ../../core/extension/abstract_extension.h \
     ../../core/data/data_holder.h \
     ../../core/controls/quran_view.h \
     ../../core/controls/quran_reciter.h \

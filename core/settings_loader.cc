@@ -6,6 +6,10 @@
 #include "core/constants.h"
 
 const QString SettingsLoader::kMasterSettingsFile = QString("master.settings");
+const QString SettingsLoader::kSettingKeyTheme = "theme";
+const QString SettingsLoader::kSettingKeyQuranTranslationTable = "default_quran_translation";
+const QString SettingsLoader::kSettingKeyQuranTranslationFile = "default_quran_translation_db";
+
 QString SettingsLoader::s_defaultHomeDir = QString("");
 
 SettingsLoader::SettingsLoader()

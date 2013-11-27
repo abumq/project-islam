@@ -5,11 +5,11 @@
 
 namespace quran {
 
-    const char* Quran::kQuranArabicDatabaseTable = "QuranArabic";
-    const char* Quran::kQuranChapterDatabaseTable = "QuranChapter";
-    const char* Quran::kQuranTransliterationDatabaseTable = "Quran__English_Transliteration";
-    const char* Quran::kQuranDefaultTranslationDatabaseTable = "Quran__English_Translation_Sahih_International";
-    
+const char* Quran::kQuranArabicDatabaseTable = "QuranArabic";
+const char* Quran::kQuranChapterDatabaseTable = "QuranChapter";
+const char* Quran::kQuranTransliterationDatabaseTable = "Quran__English_Transliteration";
+const char* Quran::kQuranDefaultTranslationDatabaseTable = "Quran__English_Translation_Sahih_International";
+
 Quran::Quran(void) : 
     m_ready(false) 
 {
@@ -20,7 +20,8 @@ void Quran::load(const Quran::TextType &textType, const std::string& databaseTab
     QURAN_LOG(DEBUG) << "Loading Quran...";
     TIMED_SCOPE(quranLoadTimer, "Load Complete Quran");
     m_textType = textType;
-    data::DatabaseManager d;
+    data::DatabaseManager d("QuranDataManager", 
+                            SettingsLoader().get(SettingsLoader::kSettingKeyQuranTranslationFile, "project-islam.db").toString());
     data::QueryResult result = d.query("SELECT * FROM " + QString(kQuranChapterDatabaseTable) + " ORDER BY ID");
     for (int i = 0; i < result.size(); ++i) {
         int cid = result.at(i).value("ID").toInt();

@@ -15,6 +15,10 @@ class SettingsLoader
     static QString s_defaultHomeDir;
 public:
     
+    static const QString kSettingKeyTheme;
+    static const QString kSettingKeyQuranTranslationTable;
+    static const QString kSettingKeyQuranTranslationFile;
+    
     SettingsLoader();
     ~SettingsLoader();
     void saveSettings(QMap<QString, QVariant>* map) const;

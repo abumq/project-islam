@@ -15,7 +15,7 @@ namespace data {
     
 class DatabaseManager {
 public:
-    explicit DatabaseManager(const QString& uniqueId = "DefaultDataManager");
+    DatabaseManager(const QString& uniqueId = "DefaultDataManager", const QString& dbFilename = "project-islam.db");
     virtual ~DatabaseManager(void);
     const data::QueryResult& query(const QString& query, const QVariantMap& arguments = QVariantMap());
     void reset(void);

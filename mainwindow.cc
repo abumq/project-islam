@@ -31,7 +31,7 @@ MainWindow::MainWindow(QApplication* app) :
 MainWindow::~MainWindow()
 {
     _TRACE;
-
+    
     delete m_extensionBar;
     m_extensionBar = nullptr;
     delete m_container;
@@ -91,7 +91,8 @@ void MainWindow::reloadStyles()
 
 void MainWindow::loadSettings()
 {
-    QString theme = m_settingsLoader.get("theme", StyleLoader::defaultTheme()).toString();
+    QString theme = m_settingsLoader.get(SettingsLoader::kSettingKeyTheme, 
+                                         StyleLoader::defaultTheme()).toString();
     QStringList rgbList = theme.split(',');
     int r = rgbList.at(0).trimmed().toInt();
     int g = rgbList.at(1).trimmed().toInt();

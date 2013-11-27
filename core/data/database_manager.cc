@@ -6,15 +6,15 @@
 
 namespace data {
 
-DatabaseManager::DatabaseManager(const QString& uniqueId) : 
+DatabaseManager::DatabaseManager(const QString& uniqueId, const QString& dbFilename) : 
         m_uniqueId(uniqueId), m_lastQuerySuccessful(false), m_connections(0) {
     DDATA_LOG(INFO) << "Initializing DatabaseManager [" << m_uniqueId << "]";
     
     const QString kDefaultDatabasePath = SettingsLoader().defaultHomeDir() + "data" + QDir::separator();
-    const QString kDefaultDatabaseName = kDefaultDatabasePath + "project-islam.db";
+    const QString kDefaultDatabaseName = kDefaultDatabasePath + dbFilename;
     
     if (!QFile(kDefaultDatabaseName).exists()) {
-        LOG(ERROR) << "Database not found! Please make sure you have correct home path. Current ["
+        LOG(ERROR) << "Database not found [" << kDefaultDatabaseName << "] ! Please make sure you have correct home path. Current ["
                     << SettingsLoader().defaultHomeDir() << "]";
     }
     

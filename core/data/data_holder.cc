@@ -27,9 +27,11 @@ quran::Quran* DataHolder::quranTranslation()
 void DataHolder::initialize()
 {
     quranArabic()->load(quran::Quran::TextType::Original, quran::Quran::kQuranArabicDatabaseTable);
+    
     quranTranslation()->load(quran::Quran::TextType::Translation, 
-                             SettingsLoader().get(QString("default_quran_translation"), 
+                             SettingsLoader().get(QString(SettingsLoader::kSettingKeyQuranTranslationTable), 
                                                   QString(quran::Quran::kQuranDefaultTranslationDatabaseTable)).toString().toStdString());
+                                                  
     quranTransliteration()->load(quran::Quran::TextType::Transliteration, quran::Quran::kQuranTransliterationDatabaseTable);
 }
 

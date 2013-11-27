@@ -52,10 +52,9 @@ void SettingsDialog::accept()
     m_mainWindow->styleLoader()->reset(m_colorBox->color().red(), m_colorBox->color().green(), m_colorBox->color().blue());
     
     QMap<QString, QVariant> settingsMap;
-    settingsMap.insert("default_quran_translation", 
-                       ui->cboQuranTranslations->itemData(ui->cboQuranTranslations->currentIndex()).toString());
-    settingsMap.insert("theme", StyleLoader::rgb(m_mainWindow->styleLoader()->r(), 
-                                                 m_mainWindow->styleLoader()->g(), m_mainWindow->styleLoader()->b()));
+    settingsMap = ui->cboQuranTranslations->itemData(ui->cboQuranTranslations->currentIndex()).toMap();
+    settingsMap.insert(SettingsLoader::kSettingKeyTheme, StyleLoader::rgb(m_mainWindow->styleLoader()->r(), 
+                                                                          m_mainWindow->styleLoader()->g(), m_mainWindow->styleLoader()->b()));
     s.saveSettings(&settingsMap);
     close();
 }
@@ -99,16 +98,55 @@ void SettingsDialog::loadSettingsInUi()
         QString displayName = name;
         displayName = displayName.mid(QString("Quran__").length());
         displayName.replace("_", " ");
-        ui->cboQuranTranslations->addItem(displayName, QVariant(name));
-        if (SettingsLoader().get("default_quran_translation", QString("Quran__English_Translation_Sahih_International")) ==
-                name) {
+        int index = ui->cboQuranTranslations->findText(displayName);
+        if (index != -1) {
+            // No duplication!
+            continue;
+        }
+        QMap<QString, QVariant> m;
+        m.insert(SettingsLoader::kSettingKeyQuranTranslationFile, "project-islam.db");
+        m.insert(SettingsLoader::kSettingKeyQuranTranslationTable, name);
+        ui->cboQuranTranslations->addItem(displayName, m);
+        if (SettingsLoader().get(SettingsLoader::kSettingKeyQuranTranslationTable, 
+                                 QString(quran::Quran::kQuranDefaultTranslationDatabaseTable)) == name) {
             selectedIndex = i;
         }
         ++i;
     }
+    // Now look at data/quran_translations folder for other translations
+    QDir translationsDir((QStringList() << SettingsLoader().defaultHomeDir() << "data" << "translations").join(QDir::separator()));
+    if (translationsDir.exists() && !translationsDir.entryList(QStringList() << "*.db").empty()) {
+        QStringList translationsAvailable = translationsDir.entryList(QStringList() << "*.db");
+        for (QString t : translationsAvailable) {
+            QString dbfilename = "translations/" + t;
+            data::DatabaseManager dbManager2("TranslationFinderData", dbfilename);
+            result = dbManager2.query(
+                        QString("SELECT * FROM sqlite_master WHERE type='table' AND name like 'Quran%Translation%' AND name != 'Quran__English_Transliteration';"));
+            for (QSqlRecord rec : result) {
+                QString name = rec.value(1).toString();
+                QString displayName = name;
+                displayName = displayName.mid(QString("Quran__").length());
+                displayName.replace("_", " ");
+                int index = ui->cboQuranTranslations->findText(displayName);
+                if (index != -1) {
+                    // No duplication!
+                    continue;
+                }
+                QMap<QString, QVariant> m;
+                m.insert(SettingsLoader::kSettingKeyQuranTranslationFile, dbfilename);
+                m.insert(SettingsLoader::kSettingKeyQuranTranslationTable, name);
+                ui->cboQuranTranslations->addItem(displayName, m);
+                if (SettingsLoader().get(SettingsLoader::kSettingKeyQuranTranslationTable, 
+                                         QString(quran::Quran::kQuranDefaultTranslationDatabaseTable)) == name &&
+                        SettingsLoader().get(SettingsLoader::kSettingKeyQuranTranslationFile, 
+                                             QString("project-islam.db")) == dbfilename) {
+                    selectedIndex = i;
+                }
+                ++i;
+            }
+        }
+    }
     ui->cboQuranTranslations->setCurrentIndex(selectedIndex);
-    
-    
 }
 
 void SettingsDialog::on_chkLevelGlobal_clicked(bool checked)

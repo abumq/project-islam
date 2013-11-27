@@ -3,7 +3,7 @@
 #include <QFile>
 
 const QString StyleLoader::kStylesDirectory = ":";
-
+    
 StyleLoader::StyleLoader(int r, int g, int b)
     : m_r(r), m_g(g), m_b(b)
 {

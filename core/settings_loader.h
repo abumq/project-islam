@@ -17,7 +17,7 @@ public:
     
     SettingsLoader();
     ~SettingsLoader();
-    void saveSettings(QMap<QString, QVariant>* map);
+    void saveSettings(QMap<QString, QVariant>* map) const;
     QVariant get(const QString &key, const QVariant &defaultValue = QVariant()) const;
     void changeSettingsFile(const QString& filename);
     QString settingsFile() const;

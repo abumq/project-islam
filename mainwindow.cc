@@ -31,9 +31,7 @@ MainWindow::MainWindow(QApplication* app) :
 MainWindow::~MainWindow()
 {
     _TRACE;
-    QMap<QString, QVariant> settingsMap;
-    settingsMap.insert("theme", StyleLoader::rgb(m_styleLoader.r(), m_styleLoader.g(), m_styleLoader.b()));
-    m_settingsLoader.saveSettings(&settingsMap);
+
     delete m_extensionBar;
     m_extensionBar = nullptr;
     delete m_container;

@@ -29,7 +29,7 @@ void SettingsLoader::initialize()
     changeSettingsFile(m_settingsFile);
 }
 
-void SettingsLoader::saveSettings(QMap<QString, QVariant>* map)
+void SettingsLoader::saveSettings(QMap<QString, QVariant>* map) const
 {
     _TRACE;
     if (m_settings == nullptr || !m_settings->isWritable()) {
@@ -49,6 +49,10 @@ QVariant SettingsLoader::get(const QString& key, const QVariant& defaultValue) c
     if (m_settings != nullptr) {
         return m_settings->value(key, defaultValue);
     }
+    // Save default value
+    QMap<QString, QVariant> defValMap;
+    defValMap.insert(key, defaultValue);
+    saveSettings(&defValMap);
     return defaultValue;
 }
 

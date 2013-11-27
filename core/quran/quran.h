@@ -9,6 +9,11 @@
 namespace quran {
 class Quran {
 public:
+    static const char* kQuranArabicDatabaseTable;
+    static const char* kQuranChapterDatabaseTable;
+    static const char* kQuranTransliterationDatabaseTable;
+    static const char* kQuranDefaultTranslationDatabaseTable;
+    
     enum class TextType {
         Original, Translation, Transliteration
     };
@@ -16,7 +21,7 @@ public:
         LeftToRight, RightToLeft
     };
     Quran(void);
-    void load(const TextType& textType, const std::string& databaseTable = "Quran__English_Translation_Sahih_International");
+    void load(const TextType& textType, const std::string& databaseTable);
     const quran::Verse* verse(Chapter::Name chapter, int verseNumber) const;
     const quran::Chapters& chapters(void) const;
     const quran::Chapter* chapter(Chapter::Name chapter) const;

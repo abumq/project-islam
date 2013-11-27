@@ -208,11 +208,44 @@
        </layout>
       </widget>
      </widget>
+     <widget class="QWidget" name="tabQuran">
+      <attribute name="title">
+       <string>Qur'an</string>
+      </attribute>
+      <widget class="QSplitter" name="splitter_2">
+       <property name="geometry">
+        <rect>
+         <x>50</x>
+         <y>30</y>
+         <width>681</width>
+         <height>23</height>
+        </rect>
+       </property>
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <widget class="QLabel" name="label_4">
+        <property name="text">
+         <string>Translation</string>
+        </property>
+       </widget>
+       <widget class="QComboBox" name="cboQuranTranslations"/>
+      </widget>
+     </widget>
      <widget class="QWidget" name="tabData">
       <attribute name="title">
        <string>Data</string>
       </attribute>
       <widget class="QGroupBox" name="groupBox_4">
+       <property name="enabled">
+        <bool>false</bool>
+       </property>
        <property name="geometry">
         <rect>
          <x>20</x>

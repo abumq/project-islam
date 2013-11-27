@@ -5,6 +5,11 @@
 
 namespace quran {
 
+    const char* Quran::kQuranArabicDatabaseTable = "QuranArabic";
+    const char* Quran::kQuranChapterDatabaseTable = "QuranChapter";
+    const char* Quran::kQuranTransliterationDatabaseTable = "Quran__English_Transliteration";
+    const char* Quran::kQuranDefaultTranslationDatabaseTable = "Quran__English_Translation_Sahih_International";
+    
 Quran::Quran(void) : 
     m_ready(false) 
 {
@@ -16,7 +21,7 @@ void Quran::load(const Quran::TextType &textType, const std::string& databaseTab
     TIMED_SCOPE(quranLoadTimer, "Load Complete Quran");
     m_textType = textType;
     data::DatabaseManager d;
-    data::QueryResult result = d.query("SELECT * FROM QuranChapter ORDER BY ID");
+    data::QueryResult result = d.query("SELECT * FROM " + QString(kQuranChapterDatabaseTable) + " ORDER BY ID");
     for (int i = 0; i < result.size(); ++i) {
         int cid = result.at(i).value("ID").toInt();
         quran::Chapter::Name name = static_cast<quran::Chapter::Name>(cid);
@@ -40,10 +45,10 @@ void Quran::load(const Quran::TextType &textType, const std::string& databaseTab
         args.insert(":QuranChapterID", cid);
         QString table;
         if (textType == TextType::Original) {
-            table = "QuranArabic";
+            table = kQuranArabicDatabaseTable;
             m_readingDirection = ReadingDirection::RightToLeft;
         } else if (textType == TextType::Translation || textType == TextType::Transliteration) {
-            table = QString(databaseTable.c_str());
+            table = QString(databaseTable.empty() ? kQuranDefaultTranslationDatabaseTable : databaseTable.c_str());
             m_readingDirection = ReadingDirection::LeftToRight;
         }
         data::QueryResult verses = d.query("SELECT * FROM " + table + " WHERE QuranChapterID = :QuranChapterID ORDER BY ID", args);

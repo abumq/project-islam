@@ -26,10 +26,11 @@ quran::Quran* DataHolder::quranTranslation()
 
 void DataHolder::initialize()
 {
-    quranArabic()->load(quran::Quran::TextType::Original);
-    // Default is English (Yusuf Ali)
-    quranTranslation()->load(quran::Quran::TextType::Translation);
-    quranTransliteration()->load(quran::Quran::TextType::Transliteration, "Quran__English_Transliteration");
+    quranArabic()->load(quran::Quran::TextType::Original, quran::Quran::kQuranArabicDatabaseTable);
+    quranTranslation()->load(quran::Quran::TextType::Translation, 
+                             SettingsLoader().get(QString("default_quran_translation"), 
+                                                  QString(quran::Quran::kQuranDefaultTranslationDatabaseTable)).toString().toStdString());
+    quranTransliteration()->load(quran::Quran::TextType::Transliteration, quran::Quran::kQuranTransliterationDatabaseTable);
 }
 
 } // namespace data

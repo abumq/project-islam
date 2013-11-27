@@ -242,7 +242,7 @@
         <item>
          <widget class="QPushButton" name="buildQuranEnglish">
           <property name="text">
-           <string>Quran English (Yusuf Ali)</string>
+           <string>Quran English (Sahih International)</string>
           </property>
          </widget>
         </item>

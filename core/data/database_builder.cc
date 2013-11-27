@@ -28,7 +28,8 @@ bool DatabaseBuilder::build(const QString& sqlFile, bool stopOnFirstError)
     DDATA_LOG(INFO) << "Building database... [" << data::kDefaultDatabaseName << "]";
     data::DatabaseManager manager("DatabaseBuilder");
     foreach (QString sql, sqlFromFile) {
-        if (sql.trimmed().isEmpty() || sql.startsWith(data::kSqlCommentBegin))
+        sql = sql.trimmed();
+        if (sql.isEmpty() || sql.startsWith(data::kSqlCommentBegin))
             continue;
         CLOG_EVERY_N(100, DEBUG, "data") << "Current iteration [" << ELPP_COUNTER_POS << "]; SQL: " << sql;
         manager.query(sql);
@@ -52,11 +53,11 @@ QString DatabaseBuilder::dataTypeToFilename(const DatabaseBuilder::DataType &typ
     if (type == DataType::QuranArabic) {
         return ":/quran/quran_arabic";
     }
-    if (type == DataType::QuranTransliteration_English) {
+    if (type == DataType::QuranTransliteration) {
         return ":/quran/quran_transliteration_english";
     }
-    if (type == DataType::QuranTranslation_English_YusufAli) {
-        return ":/quran/quran_english_yusuf_ali";
+    if (type == DataType::QuranSahihTranslation) {
+        return ":/quran/quran_english_sahih";
     }
     if (type == DataType::Dua) {
         return ":dua";

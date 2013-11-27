@@ -20,7 +20,7 @@ void ExtensionLoader::loadAll(const QString& appPath, ExtensionBar* extensionBar
     
     QDir extensionsDir(appPath + "/extensions/", "*.so", QDir::Name | QDir::IgnoreCase, QDir::Files);
     
-    for (QString extensionFilename : extensionsDir.entryList()) {
+    /*for (QString extensionFilename : extensionsDir.entryList()) {
         QPluginLoader loader(extensionsDir.absoluteFilePath(extensionFilename));
         ExtensionBase* abstractExtension = qobject_cast<ExtensionBase*>(loader.instance());
         if (abstractExtension != nullptr) {
@@ -35,5 +35,5 @@ void ExtensionLoader::loadAll(const QString& appPath, ExtensionBar* extensionBar
         } else {
             LOG(ERROR) << "Error occured while loading extension [" << loader.fileName() << "]: " << loader.errorString();
         }
-    }
+    }*/
 }

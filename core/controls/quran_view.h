@@ -14,6 +14,9 @@ class VerseTextItem : public QGraphicsTextItem
 {
     Q_OBJECT
 public:
+    static const QString kSajdahChar;
+    static const QString kRukuhChar;
+    
     VerseTextItem(const QString &text = QString(), quran::Verse* verse = 0, QGraphicsItem* parent = 0);
     
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *o, QWidget *w);

@@ -136,6 +136,12 @@ void QuranView::update(quran::Chapter* chapter, int from, int to)
         }
         QString verseText = QString(m_showVerseNumbers ? arabicNumber(verse->number()) + " -  " : "") + 
                 QString::fromStdWString(verse->text());
+        if (verse->sajdah()) {
+            verseText.append("<b>" + VerseTextItem::kSajdahChar + "</b>");
+        }
+        if (verse->rukuh()) {
+            verseText.append("<b>" + VerseTextItem::kRukuhChar + "</b>");
+        }
         VerseTextItem* verseTextItem = new VerseTextItem(verseText, 
                                                          const_cast<quran::Verse*>(verse), nullptr);
         scene()->addItem(verseTextItem);
@@ -348,6 +354,9 @@ QString QuranView::arabicNumber(int n)
     nstr.replace("9", "٩");
     return nstr;
 }
+
+const QString VerseTextItem::kSajdahChar = "۩";
+const QString VerseTextItem::kRukuhChar = "(ع)";
 
 VerseTextItem::VerseTextItem(const QString& text, quran::Verse* verse, QGraphicsItem* parent) :
     QGraphicsTextItem(text, parent),

@@ -21,10 +21,10 @@ public:
         #elif _ELPP_OS_WINDOWS
             logConfigFilename = ":/logging_config/win";
         #endif
-    
+        
         el::Loggers::configureFromGlobal(logConfigFilename.toStdString().c_str());
         */
-    
+        
         el::Loggers::setDefaultConfigurations(baseConfiguration(), true);
         
         dataLogger->configurations()->set(el::Level::Debug, el::ConfigurationType::Enabled, "true");
@@ -33,13 +33,13 @@ public:
         traceLogger->configurations()->set(el::Level::Global, el::ConfigurationType::Enabled, "true");
         traceLogger->reconfigure();
     }
-
-    static el::Configurations baseConfiguration() {
     
+    static el::Configurations baseConfiguration() {
+        
         el::Configurations configurations;
         configurations.setToDefault();
         configurations.set(el::Level::Global, el::ConfigurationType::Filename, 
-            SettingsLoader::defaultHomeDir().toStdString() + "logs" + QString(QDir::separator()).toStdString() + "project-islam.log");
+                           SettingsLoader().defaultHomeDir().toStdString() + "logs" + QString(QDir::separator()).toStdString() + "project-islam.log");
         configurations.set(el::Level::Trace, el::ConfigurationType::Format, "%datetime %level %func");
         configurations.set(el::Level::Debug, el::ConfigurationType::Format, "%datetime %level [%func] %msg");
         // 2mb max log file size

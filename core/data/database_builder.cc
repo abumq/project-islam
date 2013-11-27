@@ -12,6 +12,10 @@ bool DatabaseBuilder::build(const QString& sqlFile, bool stopOnFirstError)
     QFile file(sqlFile);
     DCHECK(file.open(QIODevice::ReadOnly)) << "Unable to open SQL file [" << sqlFile << "]";
     
+    // Messed up!
+    const QString kDefaultDatabasePath = SettingsLoader().defaultHomeDir() + "data" + QDir::separator();
+    const QString kDefaultDatabaseName = kDefaultDatabasePath + "project-islam.db";
+    
     QTextStream in(&file);
     
     DDATA_LOG(INFO) << "Reading SQL file...";
@@ -21,11 +25,11 @@ bool DatabaseBuilder::build(const QString& sqlFile, bool stopOnFirstError)
     }
     
     file.close();
-    if (!QDir(data::kDefaultDatabasePath).exists()) {
-        DDATA_LOG(INFO) << "Creating path [" << data::kDefaultDatabasePath << "]";
-        QDir(data::kDefaultDatabasePath).mkdir(data::kDefaultDatabasePath);
+    if (!QDir(kDefaultDatabasePath).exists()) {
+        DDATA_LOG(INFO) << "Creating path [" << kDefaultDatabasePath << "]";
+        QDir(kDefaultDatabasePath).mkdir(kDefaultDatabasePath);
     }
-    DDATA_LOG(INFO) << "Building database... [" << data::kDefaultDatabaseName << "]";
+    DDATA_LOG(INFO) << "Building database... [" << kDefaultDatabaseName << "]";
     data::DatabaseManager manager("DatabaseBuilder");
     foreach (QString sql, sqlFromFile) {
         sql = sql.trimmed();

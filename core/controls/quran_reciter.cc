@@ -37,7 +37,7 @@ QuranReciter::QuranReciter(quran::Quran* quran, QWidget *parent) :
         
         // Reciters
         const QString noReciterAvailableText = " -- NO RECITER AVAILABLE -- ";
-        m_recitationsDir = QDir(SettingsLoader::defaultHomeDir()
+        m_recitationsDir = QDir(SettingsLoader().defaultHomeDir()
                                 + "data" + QDir::separator() + "recitations" + QDir::separator(), 
                                 QString(), QDir::Name | QDir::IgnoreCase, QDir::Dirs | QDir::NoDotAndDotDot);
         if (!m_recitationsDir.exists()) {

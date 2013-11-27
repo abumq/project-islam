@@ -45,8 +45,8 @@ void SettingsDialog::accept()
     configurations.set(el::Level::Global, el::ConfigurationType::MaxLogFileSize, QString::number(ui->spnMaxLogFileSize->value()).toStdString());
     el::Loggers::setDefaultConfigurations(configurations, true);
     
-    homeDirectoryChanged = SettingsLoader::defaultHomeDir() != ui->txtHomeDir->text();
-    SettingsLoader::updateDefaultHomeDir(ui->txtHomeDir->text());
+    homeDirectoryChanged = SettingsLoader().defaultHomeDir() != ui->txtHomeDir->text();
+    SettingsLoader().updateDefaultHomeDir(ui->txtHomeDir->text());
     
     m_mainWindow->styleLoader()->reset(m_colorBox->color().red(), m_colorBox->color().green(), m_colorBox->color().blue());
     close();
@@ -57,7 +57,7 @@ void SettingsDialog::loadSettingsInUi()
 
     // -------------------- Tab: Environment ------------------------
     m_colorBox->setColor(QColor::fromRgb(m_mainWindow->styleLoader()->r(), m_mainWindow->styleLoader()->g(), m_mainWindow->styleLoader()->b()));
-    ui->txtHomeDir->setText(SettingsLoader::defaultHomeDir());
+    ui->txtHomeDir->setText(SettingsLoader().defaultHomeDir());
     
     // -------------------- Tab: Logging ------------------------
     

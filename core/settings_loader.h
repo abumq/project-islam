@@ -12,8 +12,8 @@ template <class Key, class T> class QMap;
 
 class SettingsLoader
 {
-public:
     static QString s_defaultHomeDir;
+public:
     
     SettingsLoader();
     ~SettingsLoader();
@@ -22,8 +22,8 @@ public:
     void changeSettingsFile(const QString& filename);
     QString settingsFile() const;
     void initialize();
-    static QString defaultHomeDir();
-    static void updateDefaultHomeDir(const QString&);
+    QString defaultHomeDir();
+    void updateDefaultHomeDir(const QString&);
 private:
     QString m_settingsFile;
     QSettings* m_settings;

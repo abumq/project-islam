@@ -10,16 +10,19 @@ DatabaseManager::DatabaseManager(const QString& uniqueId) :
         m_uniqueId(uniqueId), m_lastQuerySuccessful(false), m_connections(0) {
     DDATA_LOG(INFO) << "Initializing DatabaseManager [" << m_uniqueId << "]";
     
+    const QString kDefaultDatabasePath = SettingsLoader().defaultHomeDir() + "data" + QDir::separator();
+    const QString kDefaultDatabaseName = kDefaultDatabasePath + "project-islam.db";
+    
     if (!QFile(kDefaultDatabaseName).exists()) {
         LOG(ERROR) << "Database not found! Please make sure you have correct home path. Current ["
-                    << SettingsLoader::defaultHomeDir() << "]";
+                    << SettingsLoader().defaultHomeDir() << "]";
     }
     
     if (QSqlDatabase::contains(QSqlDatabase::defaultConnection)) {
         QSqlDatabase::removeDatabase(QSqlDatabase::defaultConnection);
     }
     m_sqlDatabase = QSqlDatabase::addDatabase("QSQLITE");
-    m_sqlDatabase.setDatabaseName(data::kDefaultDatabaseName);
+    m_sqlDatabase.setDatabaseName(kDefaultDatabaseName);
 }
 
 DatabaseManager::~DatabaseManager(void) {

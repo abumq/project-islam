@@ -12,8 +12,6 @@ namespace data {
     typedef QList<QSqlRecord> QueryResult;
     
     static const QString kSqlCommentBegin = "--";
-    static const QString kDefaultDatabasePath = SettingsLoader::defaultHomeDir() + "data" + QDir::separator();
-    static const QString kDefaultDatabaseName = kDefaultDatabasePath + "project-islam.db";
     
 class DatabaseManager {
 public:

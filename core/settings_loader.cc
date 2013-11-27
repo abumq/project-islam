@@ -23,6 +23,7 @@ SettingsLoader::~SettingsLoader()
 
 void SettingsLoader::initialize()
 {
+    _TRACE;
     m_settingsFile = defaultHomeDir() + "basic_settings.ini";
     m_settings = nullptr;
     changeSettingsFile(m_settingsFile);
@@ -30,6 +31,7 @@ void SettingsLoader::initialize()
 
 void SettingsLoader::saveSettings(QMap<QString, QVariant>* map)
 {
+    _TRACE;
     if (m_settings == nullptr || !m_settings->isWritable()) {
         LOG(ERROR) << "Settings are not writable [" << m_settings->status() << "]";
     } else {
@@ -43,6 +45,7 @@ void SettingsLoader::saveSettings(QMap<QString, QVariant>* map)
 
 QVariant SettingsLoader::get(const QString& key, const QVariant& defaultValue) const
 {
+    _TRACE;
     if (m_settings != nullptr) {
         return m_settings->value(key, defaultValue);
     }
@@ -51,6 +54,7 @@ QVariant SettingsLoader::get(const QString& key, const QVariant& defaultValue) c
 
 void SettingsLoader::changeSettingsFile(const QString &filename)
 {
+    _TRACE;
     if (m_settings != nullptr) {
         delete m_settings;
         m_settings = nullptr;
@@ -80,21 +84,15 @@ QString SettingsLoader::settingsFile() const
 
 QString SettingsLoader::defaultHomeDir()
 {
-    /*
-    // FIXME: Uncommenting this code causes segmentation fault on Intel C++
-    //        I think it's to do with order of initialization of static member
-    //        < This code is actually what should be used, hence need fixed >
-     
     if (s_defaultHomeDir.isNull() || s_defaultHomeDir.isEmpty()) {
         updateDefaultHomeDir(kDefaultHomeDir);
     }
     return s_defaultHomeDir;
-    */
-    return QDir::homePath() +  QString(QDir::separator()) + QString(".project-islam") + QString(QDir::separator());
 }
 
 void SettingsLoader::updateDefaultHomeDir(const QString& dir)
 {
+    _TRACE;
     QFile masterSettingsFile(kMasterSettingsFile);
     if (!masterSettingsFile.exists()) {
         // Create master settings

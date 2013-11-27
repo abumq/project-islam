@@ -13,7 +13,8 @@ bool DatabaseBuilder::build(const QString& sqlFile, bool stopOnFirstError)
     DCHECK(file.open(QIODevice::ReadOnly)) << "Unable to open SQL file [" << sqlFile << "]";
     
     // Messed up!
-    const QString kDefaultDatabasePath = SettingsLoader().defaultHomeDir() + "data" + QDir::separator();
+    const QString kDefaultDatabasePath = (QStringList() << SettingsLoader().defaultHomeDir() << "data")
+            .join(QDir::separator()).append(QDir::separator());
     const QString kDefaultDatabaseName = kDefaultDatabasePath + "project-islam.db";
     
     QTextStream in(&file);

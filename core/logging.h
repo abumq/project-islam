@@ -37,8 +37,11 @@ public:
         
         el::Configurations configurations;
         configurations.setToDefault();
+        std::string logFile = (QStringList() << SettingsLoader().defaultHomeDir() << "logs")
+            .join(QDir::separator()).append(QDir::separator()).toStdString() + "project-islam.log";
+
         configurations.set(el::Level::Global, el::ConfigurationType::Filename, 
-            (QStringList() << SettingsLoader().defaultHomeDir() << "logs").join(QDir::separator()).toStdString() + "project-islam.log");
+            logFile);
         configurations.set(el::Level::Trace, el::ConfigurationType::Format, "%datetime %level %func");
         configurations.set(el::Level::Debug, el::ConfigurationType::Format, "%datetime %level [%func] %msg");
         // 2mb max log file size

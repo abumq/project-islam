@@ -10,7 +10,8 @@ DatabaseManager::DatabaseManager(const QString& uniqueId, const QString& dbFilen
         m_uniqueId(uniqueId), m_lastQuerySuccessful(false), m_connections(0) {
     DDATA_LOG(INFO) << "Initializing DatabaseManager [" << m_uniqueId << "]";
     
-    const QString kDefaultDatabasePath = SettingsLoader().defaultHomeDir() + "data" + QDir::separator();
+    const QString kDefaultDatabasePath = (QStringList() << SettingsLoader().defaultHomeDir() << "data")
+            .join(QDir::separator()).append(QDir::separator());
     const QString kDefaultDatabaseName = kDefaultDatabasePath + dbFilename;
     
     if (!QFile(kDefaultDatabaseName).exists()) {

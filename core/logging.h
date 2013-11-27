@@ -10,8 +10,7 @@ public:
         
         el::Logger* defaultLogger = el::Loggers::getLogger("default");
         el::Logger* dataLogger = el::Loggers::getLogger("data");
-        el::Logger* quranLogger = el::Loggers::getLogger("quran");
-        el::Logger* traceLogger = el::Loggers::getLogger("locationTrace");
+        el::Loggers::getLogger("quran");
         /*
          // Having issue with path
          // We need configureFromGlobalText(confText)
@@ -30,8 +29,8 @@ public:
         dataLogger->configurations()->set(el::Level::Debug, el::ConfigurationType::Enabled, "true");
         dataLogger->reconfigure();
         
-        traceLogger->configurations()->set(el::Level::Global, el::ConfigurationType::Enabled, "true");
-        traceLogger->reconfigure();
+        defaultLogger->configurations()->set(el::Level::Trace, el::ConfigurationType::Enabled, "true");
+        defaultLogger->reconfigure();
     }
     
     static el::Configurations baseConfiguration() {
@@ -39,7 +38,7 @@ public:
         el::Configurations configurations;
         configurations.setToDefault();
         configurations.set(el::Level::Global, el::ConfigurationType::Filename, 
-                           SettingsLoader().defaultHomeDir().toStdString() + "logs" + QString(QDir::separator()).toStdString() + "project-islam.log");
+            (QStringList() << SettingsLoader().defaultHomeDir() << "logs").join(QDir::separator()).toStdString() + "project-islam.log");
         configurations.set(el::Level::Trace, el::ConfigurationType::Format, "%datetime %level %func");
         configurations.set(el::Level::Debug, el::ConfigurationType::Format, "%datetime %level [%func] %msg");
         // 2mb max log file size
@@ -54,6 +53,6 @@ public:
 
 #define QURAN_LOG(LEVEL) CLOG(LEVEL, "quran")
 
-#define _TRACE CLOG(TRACE, "locationTrace")
+#define _TRACE CLOG(TRACE, "default")
 
 #endif // LOGGING_H

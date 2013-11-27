@@ -74,7 +74,7 @@ void QuranReader::changeVerseRange(int from, int to)
     int currVal = ui->spnVerse->value();
     ui->spnVerse->setMinimum(from);
     ui->spnVerse->setMaximum(to);
-    if (currVal != from) {
+    if (currVal < from || currVal > to) {
         ui->spnVerse->setValue(from);
     }
     

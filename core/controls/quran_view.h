@@ -48,7 +48,7 @@ public:
     void update(int from, int to);
     void update(quran::Chapter* chapter, int from, int to);
     void update(quran::Chapter::Name name, int from, int to);
-    quran::Verse* selectedVerse();
+    quran::Verse* selectedVerse() const;
     bool ok() const;
     
     float zoomValue() const;
@@ -56,7 +56,7 @@ public:
     void zoomIn(float scaleFactor = kDefaultZoomFactor);
     void zoomOut(float scaleFactor = kDefaultZoomFactor);
     
-    void updateView(float newSize);
+    void updateView();
     
     void setShowVerseNumbers(bool showVerseNumbers);
     bool showVerseNumbers() const;
@@ -66,6 +66,9 @@ public:
     
     void turnOffTransliteration();
     void turnOnTransliteration(quran::Quran* transliterationQuran);
+    
+    bool hasTranslation() const;
+    bool hasTransliteration() const;
     
     static QString arabicNumber(int n);
 signals:

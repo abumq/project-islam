@@ -19,7 +19,7 @@ QuranReader::QuranReader(quran::Quran* quran, quran::Quran* quranTranslation,
     
     ui->setupUi(this);
     if (m_quran != nullptr) {
-        if (m_quran->chapters().empty()) {
+        if (m_quran->chapters().size() != quran::Quran::kChapterCount) {
             ui->cboChapter->setEnabled(false);
             ui->spnVerse->setEnabled(false);
             ui->spnVerseFrom->setEnabled(false);

@@ -57,6 +57,8 @@ private slots:
     
     void on_btnReplayCurrentVerse_clicked();
     
+    void on_cboReciter_currentIndexChanged(int index);
+    
 signals:
     void chapterChanged(const quran::Chapter*);
     void verseRangeChanged(int, int);
@@ -64,6 +66,7 @@ signals:
 private:
     Ui::QuranReciter *ui;
     quran::Quran* m_quran;
+    quran::Chapter* m_currentChapter;
     QDir m_recitationsDir;
     bool m_ok;
     QDir m_currentRecitationDir;

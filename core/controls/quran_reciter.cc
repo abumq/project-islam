@@ -13,6 +13,7 @@ QuranReciter::QuranReciter(quran::Quran* quran, QWidget *parent) :
     QWidget(parent),
     ui(new Ui::QuranReciter),
     m_quran(quran),
+    m_currentChapter(nullptr),
     m_ok(false),
     m_mediaPlayer(nullptr),
     m_playList(nullptr)
@@ -20,7 +21,7 @@ QuranReciter::QuranReciter(quran::Quran* quran, QWidget *parent) :
     _TRACE;
     ui->setupUi(this);
     if (m_quran != nullptr) {
-        if (m_quran->chapters().empty()) {
+        if (m_quran->chapters().size() != quran::Quran::kChapterCount) {
             ui->cboChapter->setEnabled(false);
             ui->spnVerse->setEnabled(false);
             ui->spnVerseFrom->setEnabled(false);
@@ -168,20 +169,20 @@ void QuranReciter::changeVerseRange(int from, int to)
         return;
     }
     DVLOG(8) << "Changing range [" << from << " - " << to << "]";
-    if (m_ok) {
-        bool playAfterwards = m_mediaPlayer->state() == m_mediaPlayer->PlayingState;
-        m_mediaPlayer->stop();
-        m_playList->setCurrentIndex(from == 1 ? 0 : from);
-        if (playAfterwards) {
-            m_mediaPlayer->play();
-        }
-    }
-    
     int currVal = ui->spnVerse->value();
     ui->spnVerse->setMinimum(from);
     ui->spnVerse->setMaximum(to);
-    if (currVal != from) {
+    if (currVal < from || currVal > to) {
         ui->spnVerse->setValue(from);
+        currVal = from;
+    }
+    if (m_ok) {
+        bool playAfterwards = m_mediaPlayer->state() == m_mediaPlayer->PlayingState;
+        m_mediaPlayer->stop();
+        m_playList->setCurrentIndex(from == 1 ? 0 : currVal);
+        if (playAfterwards) {
+            m_mediaPlayer->play();
+        }
     }
     
     ui->spnVerseTo->setMinimum(from);
@@ -203,7 +204,7 @@ const quran::Chapter* QuranReciter::currentChapter() const
 {
     _TRACE;
     if (!m_ok) return nullptr;
-    return m_quran->chapter(static_cast<quran::Chapter::Name>(ui->cboChapter->currentIndex() + 1));
+    return m_currentChapter;
 }
 
 const quran::Verse* QuranReciter::currentVerse() const
@@ -221,12 +222,25 @@ void QuranReciter::on_cboChapter_currentIndexChanged(int index)
 {
     _TRACE;
     if (!m_ok) return;
-    if (m_mediaPlayer->state() == m_mediaPlayer->PlayingState) {
-        m_mediaPlayer->stop();
+    int resetIndex = 0;
+    QMediaPlayer::State resumeState = QMediaPlayer::StoppedState;
+    int chapterId = index + 1;
+    bool isChapterChanged = m_currentChapter != nullptr && 
+            static_cast<quran::Chapter::Name>(chapterId) != m_currentChapter->name();
+    if (m_mediaPlayer->state() == m_mediaPlayer->PlayingState ||
+            m_mediaPlayer->state() == m_mediaPlayer->PausedState) {
+        if (!isChapterChanged) {
+            // This is case when chapter index is not chaged instead it's same chapter
+            // but slot is triggered manually
+            resumeState = m_mediaPlayer->state();
+            m_mediaPlayer->pause();
+            resetIndex = ui->spnVerse->value();
+        } else {
+            m_mediaPlayer->stop();
+        }
     }
     m_playList->clear();
     
-    int chapterId = index + 1;
     QString zeroPaddedId;
     if (chapterId < 10) {
         zeroPaddedId.append("00");
@@ -234,16 +248,18 @@ void QuranReciter::on_cboChapter_currentIndexChanged(int index)
         zeroPaddedId.append("0");
     }
     zeroPaddedId.append(QString::number(chapterId));
-    
-    const quran::Chapter* chapter = m_quran->chapter(static_cast<quran::Chapter::Name>(chapterId));
-    ui->spnVerseFrom->setMaximum(chapter->versesCount());
-    ui->spnVerseTo->setMaximum(chapter->versesCount());
-    ui->spnVerseTo->setValue(chapter->versesCount());
-    
-    ui->spnVerse->setMinimum(1);
-    ui->spnVerse->setMaximum(chapter->versesCount());
-    ui->spnVerse->setValue(1);
-    
+    QString zeroFile = zeroPaddedId + "000.mp3";
+    if (isChapterChanged || m_currentChapter == nullptr) {
+        const quran::Chapter* chapter = m_quran->chapter(static_cast<quran::Chapter::Name>(chapterId));
+        m_currentChapter = const_cast<quran::Chapter*>(chapter);
+        ui->spnVerseFrom->setMaximum(chapter->versesCount());
+        ui->spnVerseTo->setMaximum(chapter->versesCount());
+        ui->spnVerseTo->setValue(chapter->versesCount());
+        
+        ui->spnVerse->setMinimum(1);
+        ui->spnVerse->setMaximum(chapter->versesCount());
+        ui->spnVerse->setValue(1);
+    }
     QString recitationFolder = ui->cboReciter->itemData(ui->cboReciter->currentIndex()).toString();
     DVLOG(8) << "Loading recitation data from [" << recitationFolder << "]";
     m_currentRecitationDir = QDir(recitationFolder, zeroPaddedId, QDir::Name | QDir::IgnoreCase, QDir::Dirs | QDir::NoDotAndDotDot);
@@ -259,7 +275,16 @@ void QuranReciter::on_cboChapter_currentIndexChanged(int index)
             if (verseEntries.isEmpty()) {
                 DVLOG(8) << "Chapter verses not found for [" << chapterFolder << "]";
             } else {
+                QString bismillah = recitationFolder + "bismillah.mp3";
+                QFileInfo fileInfo(bismillah);
+                QUrl url = QUrl::fromLocalFile(fileInfo.absoluteFilePath());
+                m_playList->addMedia(url);
                 for (QString verseEntry : verseEntries) {
+                    if (verseEntry == zeroFile) {
+                        // Zero file = some reciters have bismilliah/audubillah in chapter file
+                        // we added it already
+                        continue;
+                    }
                     QString fullVersePath = recitationFolder + chapterFolder + QDir::separator() + verseEntry;
                     QFileInfo fileInfo(fullVersePath);
                     QUrl url = QUrl::fromLocalFile(fileInfo.absoluteFilePath());
@@ -268,9 +293,16 @@ void QuranReciter::on_cboChapter_currentIndexChanged(int index)
             }
         }
     }
-    emit chapterChanged(chapter);
+    if (isChapterChanged) {
+        emit chapterChanged(m_currentChapter);
+    }
     if (!m_playList->isEmpty()) {
-        m_playList->setCurrentIndex(0);
+        m_playList->setCurrentIndex(resetIndex);
+    }
+    if (resumeState == QMediaPlayer::PlayingState) {
+        m_mediaPlayer->play();
+    } else if (resumeState == QMediaPlayer::PausedState) {
+        m_mediaPlayer->pause();
     }
 }
 
@@ -317,7 +349,7 @@ void QuranReciter::onVerseChanged(int)
         return;
     }
     if (m_playList->currentIndex() == -1 || 
-            m_playList->currentIndex() > ui->spnVerseTo->value()) {
+        m_playList->currentIndex() > ui->spnVerseTo->value()) {
         m_playList->setCurrentIndex(ui->spnVerseFrom->value());
         if (ui->chkRepeat->isChecked() && ui->spnRepeat->value() > 1) {
             ui->spnRepeat->setValue(ui->spnRepeat->value() - 1);
@@ -385,8 +417,15 @@ void QuranReciter::on_btnReplayCurrentVerse_clicked()
     _TRACE;
     if (!m_ok) return;
     if (m_mediaPlayer->state() == QMediaPlayer::PlayingState
-         || m_mediaPlayer->state() == QMediaPlayer::PausedState) {
+        || m_mediaPlayer->state() == QMediaPlayer::PausedState) {
         DVLOG(7) << "Re-reciting verse [" << m_playList->currentIndex() << "]";
         m_mediaPlayer->setPosition(0);
+    }
+}
+
+void QuranReciter::on_cboReciter_currentIndexChanged(int)
+{
+    if (m_currentChapter != nullptr && ui->cboChapter->count() == quran::Quran::kChapterCount) {
+        on_cboChapter_currentIndexChanged(static_cast<int>(m_currentChapter->name()) - 1);
     }
 }

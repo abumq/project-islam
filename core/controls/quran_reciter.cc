@@ -37,47 +37,7 @@ QuranReciter::QuranReciter(quran::Quran* quran, QWidget *parent) :
         ui->cboChapter->setCurrentIndex(0);
         
         // Reciters
-        const QString noReciterAvailableText = " -- NO RECITER AVAILABLE -- ";
-        m_recitationsDir = QDir(SettingsLoader().defaultHomeDir()
-                                + "data" + QDir::separator() + "recitations" + QDir::separator(), 
-                                QString(), QDir::Name | QDir::IgnoreCase, QDir::Dirs | QDir::NoDotAndDotDot);
-        if (!m_recitationsDir.exists()) {
-            DLOG(ERROR) << "Recitations directory [" << m_recitationsDir.absolutePath() << "] not found";
-            ui->cboReciter->addItem(noReciterAvailableText);
-            ui->cboReciter->setEnabled(false);
-        } else {
-            QStringList recitersList =  m_recitationsDir.entryList();
-            if (recitersList.empty()) {
-                DLOG(ERROR) << "No reciter found in [" << m_recitationsDir.absolutePath() << "]";
-                ui->cboReciter->addItem(noReciterAvailableText);
-                ui->cboReciter->setEnabled(false);
-            } else {
-                DVLOG(8) << "Loading reciters...";
-            }
-            for (QString reciter : recitersList) {
-                QString reciterDir(m_recitationsDir.absolutePath() + QDir::separator() + reciter + QDir::separator());
-                
-                QFile f(reciterDir + "info");
-                if (!f.open(QFile::ReadOnly) || !f.exists()) {
-                    LOG(ERROR) << "Info file not found for [" << reciter << "] in [" << f.fileName() << "]";
-                    continue;
-                }
-                QString fileContents = QString(f.readAll());
-                QStringList info = fileContents.split(",");
-                if (info.empty() || info.at(0).isEmpty()) {
-                    DLOG(ERROR) << "Invalid info file [" << f.fileName() << "] Contents: " << fileContents;
-                    continue;
-                }
-                DVLOG(8) << "Reciter info: " << info.toStdList();
-                ui->cboReciter->addItem(info.at(0), QVariant(reciterDir));
-                m_ok = true;
-            }
-        }
-        m_ok = m_ok && ui->cboReciter->count() > 0 && ui->cboReciter->isEnabled();
-        if (!m_ok && ui->cboReciter->count() == 0) {
-            ui->cboReciter->addItem(noReciterAvailableText);
-            ui->cboReciter->setEnabled(false);
-        }
+        loadReciters();
         
         // Media player
         if (m_ok) {
@@ -154,6 +114,53 @@ void QuranReciter::showCurrentVerseSelector()
     ui->lblVerse->hide();
 }
 
+void QuranReciter::loadReciters()
+{
+    ui->cboReciter->clear();
+    // Reciters
+    const QString noReciterAvailableText = " -- NO RECITER AVAILABLE -- ";
+    m_recitationsDir = QDir(
+                (QStringList() << SettingsLoader().defaultHomeDir() << "data" << "recitations").join(QDir::separator()), 
+                QString(), QDir::Name | QDir::IgnoreCase, QDir::Dirs | QDir::NoDotAndDotDot);
+    if (!m_recitationsDir.exists()) {
+        DLOG(ERROR) << "Recitations directory [" << m_recitationsDir.absolutePath() << "] not found";
+        ui->cboReciter->addItem(noReciterAvailableText);
+        ui->cboReciter->setEnabled(false);
+    } else {
+        QStringList recitersList =  m_recitationsDir.entryList();
+        if (recitersList.empty()) {
+            DLOG(ERROR) << "No reciter found in [" << m_recitationsDir.absolutePath() << "]";
+            ui->cboReciter->addItem(noReciterAvailableText);
+            ui->cboReciter->setEnabled(false);
+        } else {
+            DVLOG(8) << "Loading reciters...";
+        }
+        for (QString reciter : recitersList) {
+            QString reciterDir(m_recitationsDir.absolutePath() + QDir::separator() + reciter + QDir::separator());
+            
+            QFile f(reciterDir + "info");
+            if (!f.open(QFile::ReadOnly) || !f.exists()) {
+                LOG(ERROR) << "Info file not found for [" << reciter << "] in [" << f.fileName() << "]";
+                continue;
+            }
+            QString fileContents = QString(f.readAll());
+            QStringList info = fileContents.split(",");
+            if (info.empty() || info.at(0).isEmpty()) {
+                DLOG(ERROR) << "Invalid info file [" << f.fileName() << "] Contents: " << fileContents;
+                continue;
+            }
+            DVLOG(8) << "Reciter info: " << info.toStdList();
+            ui->cboReciter->addItem(info.at(0), QVariant(reciterDir));
+            m_ok = true;
+        }
+    }
+    m_ok = m_ok && ui->cboReciter->count() > 0 && ui->cboReciter->isEnabled();
+    if (!m_ok && ui->cboReciter->count() == 0) {
+        ui->cboReciter->addItem(noReciterAvailableText);
+        ui->cboReciter->setEnabled(false);
+    }
+}
+
 void QuranReciter::changeChapter(quran::Chapter::Name chapter)
 {
     _TRACE;
@@ -228,7 +235,7 @@ void QuranReciter::on_cboChapter_currentIndexChanged(int index)
     bool isChapterChanged = m_currentChapter != nullptr && 
             static_cast<quran::Chapter::Name>(chapterId) != m_currentChapter->name();
     if (m_mediaPlayer->state() == m_mediaPlayer->PlayingState ||
-            m_mediaPlayer->state() == m_mediaPlayer->PausedState) {
+        m_mediaPlayer->state() == m_mediaPlayer->PausedState) {
         if (!isChapterChanged) {
             // This is case when chapter index is not chaged instead it's same chapter
             // but slot is triggered manually
@@ -428,4 +435,9 @@ void QuranReciter::on_cboReciter_currentIndexChanged(int)
     if (m_currentChapter != nullptr && ui->cboChapter->count() == quran::Quran::kChapterCount) {
         on_cboChapter_currentIndexChanged(static_cast<int>(m_currentChapter->name()) - 1);
     }
+}
+
+void QuranReciter::on_btnReloadReciters_clicked()
+{
+    loadReciters();
 }

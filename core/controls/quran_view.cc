@@ -356,7 +356,7 @@ QString QuranView::arabicNumber(int n)
 }
 
 const QString VerseTextItem::kSajdahChar = "۩";
-const QString VerseTextItem::kRukuhChar = "(ع)";
+const QString VerseTextItem::kRukuhChar = "(؏)";
 
 VerseTextItem::VerseTextItem(const QString& text, quran::Verse* verse, QGraphicsItem* parent) :
     QGraphicsTextItem(text, parent),

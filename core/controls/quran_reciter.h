@@ -35,6 +35,7 @@ public:
     void showVerseRangeSelector();
     void hideCurrentVerseSelector();
     void showCurrentVerseSelector();
+    void loadReciters();
 private slots:
     void on_cboChapter_currentIndexChanged(int index);
     
@@ -58,6 +59,8 @@ private slots:
     void on_btnReplayCurrentVerse_clicked();
     
     void on_cboReciter_currentIndexChanged(int index);
+    
+    void on_btnReloadReciters_clicked();
     
 signals:
     void chapterChanged(const quran::Chapter*);

@@ -89,7 +89,7 @@
     <rect>
      <x>90</x>
      <y>40</y>
-     <width>221</width>
+     <width>201</width>
      <height>23</height>
     </rect>
    </property>
@@ -203,6 +203,22 @@
      </property>
     </widget>
    </widget>
+  </widget>
+  <widget class="QPushButton" name="btnReloadReciters">
+   <property name="geometry">
+    <rect>
+     <x>290</x>
+     <y>40</y>
+     <width>16</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>↻</string>
+   </property>
+   <property name="flat">
+    <bool>true</bool>
+   </property>
   </widget>
  </widget>
  <resources/>

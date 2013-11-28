@@ -439,5 +439,6 @@ void QuranReciter::on_cboReciter_currentIndexChanged(int)
 
 void QuranReciter::on_btnReloadReciters_clicked()
 {
+    _TRACE;
     loadReciters();
 }

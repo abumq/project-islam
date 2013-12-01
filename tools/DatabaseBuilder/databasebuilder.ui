@@ -19,11 +19,11 @@
      <x>20</x>
      <y>10</y>
      <width>561</width>
-     <height>171</height>
+     <height>201</height>
     </rect>
    </property>
    <property name="title">
-    <string>Build Quran SQL File</string>
+    <string>Quran Data - &gt; SQL File</string>
    </property>
    <widget class="QSplitter" name="splitter">
     <property name="geometry">
@@ -100,12 +100,61 @@
      </property>
     </widget>
    </widget>
+   <widget class="QLabel" name="label_4">
+    <property name="geometry">
+     <rect>
+      <x>12</x>
+      <y>130</y>
+      <width>116</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Output File:</string>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="txtOutputFile">
+    <property name="geometry">
+     <rect>
+      <x>132</x>
+      <y>130</y>
+      <width>254</width>
+      <height>23</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="btnBrowse3">
+    <property name="geometry">
+     <rect>
+      <x>390</x>
+      <y>130</y>
+      <width>163</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>...</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButton">
+    <property name="geometry">
+     <rect>
+      <x>460</x>
+      <y>170</y>
+      <width>80</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Convert</string>
+    </property>
+   </widget>
   </widget>
   <widget class="QGroupBox" name="groupBox_2">
    <property name="geometry">
     <rect>
      <x>20</x>
-     <y>200</y>
+     <y>230</y>
      <width>561</width>
      <height>121</height>
     </rect>

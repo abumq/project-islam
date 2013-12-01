@@ -20,6 +20,10 @@ private slots:
     
     void on_btnBrowse2_clicked();
     
+    void on_btnBrowse3_clicked();
+    
+    void on_pushButton_clicked();
+    
 private:
     Ui::DatabaseBuilder *ui;
 };

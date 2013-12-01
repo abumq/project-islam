@@ -119,10 +119,10 @@ void QuranReader::hideVerseRangeSelector()
 
 void QuranReader::showVerseRangeSelector()
 {
-    ui->spnVerseFrom->hide();
-    ui->spnVerseTo->hide();
-    ui->lblVerseRange->hide();
-    ui->lblVerseRangeSeparator->hide();
+    ui->spnVerseFrom->show();
+    ui->spnVerseTo->show();
+    ui->lblVerseRange->show();
+    ui->lblVerseRangeSeparator->show();
 }
 
 void QuranReader::hideCurrentVerseSelector()
@@ -134,7 +134,7 @@ void QuranReader::hideCurrentVerseSelector()
 void QuranReader::showCurrentVerseSelector()
 {
     ui->spnVerse->show();
-    ui->lblVerse->hide();
+    ui->lblVerse->show();
 }
 
 

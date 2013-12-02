@@ -23,9 +23,14 @@ This project is still being developed and not ready for use just yet - but surel
 
 #### Future plans (Platform)
  - Auto-update installed extensions
+ - Downloadable data
 
 #### Future plans (Extensions API)
  - Word-by-word data from corpus.quran.com (contact these guys to get permission)
+
+#### Future plans (Extensions)
+ - Athaan (Call for prayer)
+ - Hadith collection
 
 #### Contribute
 
@@ -36,6 +41,7 @@ You contribute in many ways, some of them are:
  - Write extension (Programming)
  - Write API documentation
 
-If you wish to write programs, you must be able to write good C++ code that is efficient, memory friendly and easy to read. Every C++ code will go through code-review to ensure quality (readibility, memory efficient, fast algorithms) - 
+If you wish to program, you must be able to write good C++ code that is efficient, memory friendly and easy to read. Every C++ code will go through code-review to ensure quality (readibility, memory efficient, fast algorithms) - 
 
-Please note we prefer use of pointers over passing by references but you may find very little code that does it and will be refactored later if not sooner.
+Few notes on programming:
+ - Use pointers over passing by references

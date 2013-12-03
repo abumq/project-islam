@@ -48,8 +48,7 @@ public:
         return m_extensionInfo;
     }
 
-public slots:
-    
+public:
     /// @brief Slot that is connected to signal that is emitted when container
     /// geometry changes. This is pretty much similar to QWidget::resizeEvent().
     virtual void onContainerGeometryChanged(int width, int height) = 0;
@@ -60,8 +59,4 @@ private:
 
 Q_DECLARE_INTERFACE(ExtensionBase, "ProjectIslam.Api.ExtensionBase.v1.0")
 
-#define EXTENSION(UNIQ_NAME)  Q_OBJECT \
-    Q_INTERFACES(ExtensionBase) \
-    Q_PLUGIN_METADATA(IID UNIQ_NAME)
-    
 #endif // EXTENSION_BASE_H

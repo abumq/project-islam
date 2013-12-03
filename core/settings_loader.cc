@@ -5,7 +5,7 @@
 #include "core/logging.h"
 #include "core/constants.h"
 
-const QString SettingsLoader::kMasterSettingsFile = QString("master.settings");
+const QString SettingsLoader::kMasterSettingsFile = QString(".master.settings");
 const QString SettingsLoader::kSettingKeyTheme = "theme";
 const QString SettingsLoader::kSettingKeyQuranTranslationTable = "default_quran_translation";
 const QString SettingsLoader::kSettingKeyQuranTranslationFile = "default_quran_translation_db";
@@ -112,27 +112,26 @@ void SettingsLoader::updateDefaultHomeDir(const QString& dir)
             LOG(ERROR) << "Unable to write to [" << masterSettingsFile.fileName() << "]";
             s_defaultHomeDir = kDefaultHomeDir;
         }
-    } else {
-        // Update master settings
-        if (!s_defaultHomeDir.isEmpty() && s_defaultHomeDir != dir) {
-            if (masterSettingsFile.open(QFile::WriteOnly) || masterSettingsFile.isWritable()) {
-                masterSettingsFile.write(dir.toStdString().c_str());
-                masterSettingsFile.flush();
-                masterSettingsFile.close();
-            }
+    }
+    // Update master settings
+    if (!s_defaultHomeDir.isEmpty() && s_defaultHomeDir != dir) {
+        if (masterSettingsFile.open(QFile::WriteOnly) || masterSettingsFile.isWritable()) {
+            masterSettingsFile.write(dir.toStdString().c_str());
+            masterSettingsFile.flush();
+            masterSettingsFile.close();
         }
-        if (masterSettingsFile.open(QFile::ReadOnly)) {
-            QString l = masterSettingsFile.readAll();
-            if (!l.isEmpty()) {
-                LOG(INFO) << "Setting up home dir to [" << l << "]";
-                s_defaultHomeDir = l;
-            } else {
-                LOG(INFO) << "Setting up home dir to [" << kDefaultHomeDir << "]";
-                s_defaultHomeDir = kDefaultHomeDir;
-            }
+    }
+    if (masterSettingsFile.open(QFile::ReadOnly)) {
+        QString l = masterSettingsFile.readAll();
+        if (!l.isEmpty()) {
+            LOG(INFO) << "Setting up home dir to [" << l << "]";
+            s_defaultHomeDir = l;
         } else {
             LOG(INFO) << "Setting up home dir to [" << kDefaultHomeDir << "]";
             s_defaultHomeDir = kDefaultHomeDir;
         }
+    } else {
+        LOG(INFO) << "Setting up home dir to [" << kDefaultHomeDir << "]";
+        s_defaultHomeDir = kDefaultHomeDir;
     }
 }

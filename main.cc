@@ -9,6 +9,11 @@
 
 _INITIALIZE_EASYLOGGINGPP
 
+const int kExtraFilesCount = 1;
+const char* kExtraFiles[kExtraFilesCount] = {
+    "l.lg"
+};
+
 int main(int argc, char *argv[])
 {
     Q_INIT_RESOURCE(styles);
@@ -28,5 +33,14 @@ int main(int argc, char *argv[])
     MainWindow w(&a);
     w.show();
     
-    return a.exec();
+    int status = a.exec();
+    // clean extra files
+    LOG(DEBUG) << "Removing extra files";
+    for (int i = 0; i < kExtraFilesCount; ++i) {
+        QFile f(kExtraFiles[i]);
+        if (f.exists()) {
+            f.remove();
+        }
+    }
+    return status;
 }

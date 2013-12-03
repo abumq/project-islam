@@ -13,9 +13,7 @@ class Chapter;
 
 class Memorization : public ExtensionBase
 {
-    Q_OBJECT
-    Q_INTERFACES(ExtensionBase)
-    Q_PLUGIN_METADATA(IID "ProjectIslam.Api.ExtensionBase.Memorization.v1.0")
+   EXTENSION("ProjectIslam.Api.ExtensionBase.Memorization.v1.0")
 private:
     static const unsigned int kMajorVersion = 1;
     static const unsigned int kMinorVersion = 0;

@@ -1,4 +1,4 @@
-#include "memorization.h"
+#include "al_quran.h"
 
 #include <QLabel>
 
@@ -7,14 +7,12 @@
 
 _INITIALIZE_EASYLOGGINGPP
 
-const char* Memorization::kAuthor       = "Project Islam Authors";
-const char* Memorization::kName         = "Memorization";
-const char* Memorization::kTitle        = "Quran Memorization";
-const char* Memorization::kDescription  = "Memorize glorious Quran with help of this extension. " \
-                                            "This extension helps you keep track of your progress " \
-                                            "of Quran memorization.";
+const char* AlQuran::kAuthor       = "Project Islam Authors";
+const char* AlQuran::kName         = "Al-Quran";
+const char* AlQuran::kTitle        = "Al-Qur'an";
+const char* AlQuran::kDescription  = "Al-Qur'an recitation, reading and help memorize yourself.";
 
-Memorization::Memorization() :
+AlQuran::AlQuran() :
     m_reciter(nullptr),
     m_reader(nullptr)
 {
@@ -22,11 +20,11 @@ Memorization::Memorization() :
                                         QString(kName), QString(kTitle), QString(kDescription)));
 }
 
-Memorization::~Memorization()
+AlQuran::~AlQuran()
 {
 }
 
-bool Memorization::initialize()
+bool AlQuran::initialize()
 {
     if (!ExtensionBase::initialize()) {
         // Do not proceed
@@ -64,7 +62,7 @@ bool Memorization::initialize()
     return true;
 }
 
-void Memorization::onContainerGeometryChanged(int w, int h)
+void AlQuran::onContainerGeometryChanged(int w, int h)
 {
     if (m_reciter != nullptr) {
         int centerW = (w / 2) - (m_reciter->width() / 2);
@@ -74,35 +72,35 @@ void Memorization::onContainerGeometryChanged(int w, int h)
     m_reader->resize(w, h - m_reciter->height());
 }
 
-void Memorization::onChapterChangedReciter(const quran::Chapter* chapter)
+void AlQuran::onChapterChangedReciter(const quran::Chapter* chapter)
 {
     if (m_reader != nullptr) {
         m_reader->changeChapter(chapter->name());
     }
 }
 
-void Memorization::onVerseRangeChangedReciter(int from, int to)
+void AlQuran::onVerseRangeChangedReciter(int from, int to)
 {
     if (m_reader != nullptr) {
         m_reader->changeVerseRange(from, to);
     }
 }
 
-void Memorization::onChapterChangedReader(const quran::Chapter* chapter)
+void AlQuran::onChapterChangedReader(const quran::Chapter* chapter)
 {
     if (m_reciter != nullptr) {
         m_reciter->changeChapter(chapter->name());
     }
 }
 
-void Memorization::onVerseRangeChangedReader(int from, int to)
+void AlQuran::onVerseRangeChangedReader(int from, int to)
 {
     if (m_reciter != nullptr) {
         m_reciter->changeVerseRange(from, to);
     }
 }
 
-void Memorization::onSelectedVerseChangedReciter(int verseNumber)
+void AlQuran::onSelectedVerseChangedReciter(int verseNumber)
 {
     if (m_reader != nullptr) {
         if (m_reader->currentVerseNumber() != verseNumber) {
@@ -111,7 +109,7 @@ void Memorization::onSelectedVerseChangedReciter(int verseNumber)
     }
 }
 
-void Memorization::onSelectedVerseChangedReader(int index)
+void AlQuran::onSelectedVerseChangedReader(int index)
 {
     if (m_reciter != nullptr) {
         m_reciter->changeVerse(index);

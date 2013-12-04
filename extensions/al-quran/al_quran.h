@@ -1,7 +1,6 @@
-#ifndef MEMORIZATION_H
-#define MEMORIZATION_H
+#ifndef AL_QURAN_H
+#define AL_QURAN_H
 
-#include "memorization_global.h"
 #include "core/extension/extension_base.h"
 
 class QuranReciter;
@@ -11,11 +10,11 @@ namespace quran {
 class Chapter;
 }
 
-class Memorization : public ExtensionBase
+class AlQuran : public ExtensionBase
 {
     Q_OBJECT
     Q_INTERFACES(ExtensionBase)
-    Q_PLUGIN_METADATA(IID "ProjectIslam.Api.ExtensionBase.Memorization.v1.0")
+    Q_PLUGIN_METADATA(IID "ProjectIslam.Api.ExtensionBase.AlQuran.v1.0")
 private:
     static const unsigned int kMajorVersion = 1;
     static const unsigned int kMinorVersion = 0;
@@ -24,8 +23,8 @@ private:
     static const char* kTitle;
     static const char* kDescription;
 public:
-    Memorization();
-    virtual ~Memorization();
+    AlQuran();
+    virtual ~AlQuran();
     
     virtual bool initialize();
     
@@ -42,4 +41,4 @@ private:
     QuranReader* m_reader;
 };
 
-#endif // MEMORIZATION_H
+#endif // AL_QURAN_H

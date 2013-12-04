@@ -11,7 +11,7 @@ This project is still being developed and not ready for use just yet - but surel
 
 #### Extensions Being Developed
 
- - Quran Memorization (Memorization)
+ - Al-Quran
  
      Since full API is not yet available, so developing of this extension is a bit slow. Once whole API is done for Quran reading, reciting, this extension should be available and platform's first version will insha'Allah be released.
 

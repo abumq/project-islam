@@ -69,7 +69,8 @@ HEADERS  += mainwindow.h \
     core/data/data_holder.h \
     core/controls/quran_reciter.h \
     core/controls/quran_reader.h \
-    core/controls/quran_view.h
+    core/controls/quran_view.h \
+    core/easylogging++.h
 
 FORMS    += mainwindow.ui \
     settings_dialog.ui \

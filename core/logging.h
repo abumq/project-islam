@@ -1,8 +1,8 @@
 #ifndef LOGGING_H
 #define LOGGING_H
 
-#include <easylogging++.h>
-#include "settings_loader.h"
+#include "core/easylogging++.h"
+#include "core/settings_loader.h"
 
 class LoggingConfigurer {
 public:

@@ -1,6 +1,6 @@
 QT       += core gui widgets sql multimedia
  
-TARGET = $$qtLibraryTarget(Memorization)
+TARGET = $$qtLibraryTarget(AlQuran)
 TEMPLATE = lib
 
 QMAKE_CXXFLAGS += -std=c++0x -fPIC -g
@@ -22,7 +22,8 @@ INCLUDEPATH += "../../"
 # TODO: export LD_LIBRARY_PATH
 LIBS += -L/home/mkhan/intel/composer_xe_2013.5.192/compiler/lib/intel64/
 
-SOURCES +=  memorization.cc \
+SOURCES +=  \
+    al_quran.cc \
     ../../core/extension/abstract_extension.cc \
     ../../core/data/data_holder.cc \
     ../../core/controls/quran_view.cc \
@@ -33,8 +34,8 @@ SOURCES +=  memorization.cc \
     ../../core/quran/chapter.cc \
     ../../core/settings_loader.cc
 
-HEADERS += memorization.h \
-            memorization_global.h \
+HEADERS += \
+    al_quran.h \
     ../../core/extension/abstract_extension.h \
     ../../core/data/data_holder.h \
     ../../core/controls/quran_view.h \

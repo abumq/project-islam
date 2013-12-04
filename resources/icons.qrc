@@ -2,4 +2,8 @@
     <qresource prefix="/extensions">
         <file alias="memorization">images/brain.png</file>
     </qresource>
+    <qresource prefix="/">
+        <file alias="project-ico">images/project-islam.ico</file>
+        <file alias="project-png">images/project-islam.png</file>
+    </qresource>
 </RCC>

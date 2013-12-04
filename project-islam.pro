@@ -20,6 +20,8 @@ DEFINES += _ELPP_UNICODE \
            _ELPP_NO_DEFAULT_LOG_FILE \
            _ELPP_STACKTRACE_ON_CRASH
 
+DEFINES += # User macros
+
 # libimf for Intel C++
 # TODO: export LD_LIBRARY_PATH
 LIBS += -L/home/mkhan/intel/composer_xe_2013.5.192/compiler/lib/intel64/
@@ -79,6 +81,8 @@ OTHER_FILES += \
     resources/styles/extension_bar.style \
     resources/styles/extension.style \
     resources/styles/extension_item.style \
+    resources/images/project-islam.png \
+    resources/images/project-islam.ico \
     resources/images/brain.png \
     resources/data/sql/dua.sql \
     resources/data/sql/quran/quran_english.sql \
@@ -91,3 +95,5 @@ RESOURCES += \
     resources/styles.qrc \
     resources/icons.qrc \
     resources/sql_data.qrc
+
+ICON = resources/images/project-islam.ico

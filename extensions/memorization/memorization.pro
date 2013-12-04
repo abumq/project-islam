@@ -13,7 +13,7 @@ QMAKE_LINK = $$COMPILER
 DEFINES += _ELPP_UNICODE \
            _ELPP_QT_LOGGING \
            _ELPP_STL_LOGGING \
-           _ELPP_DEFAULT_LOG_FILE=\\\"l.lg\\\" \
+           _ELPP_DEFAULT_LOG_FILE=\\\".l.lg\\\" \
            _ELPP_STACKTRACE_ON_CRASH
            
 INCLUDEPATH += "../../"

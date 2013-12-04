@@ -11,7 +11,7 @@ _INITIALIZE_EASYLOGGINGPP
 
 const int kExtraFilesCount = 1;
 const char* kExtraFiles[kExtraFilesCount] = {
-    "l.lg"
+    ".l.lg"
 };
 
 int main(int argc, char *argv[])

@@ -2,8 +2,10 @@
 #define EXTENSION_INFO_H
 
 #include <QString>
+
 #include "core/logging.h"
 #include "core/extension/abstract_extension.h"
+
 class ExtensionInfo {
 public:
     ExtensionInfo() :

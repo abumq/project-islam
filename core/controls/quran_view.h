@@ -3,9 +3,10 @@
 
 #include <QGraphicsView>
 #include <QGraphicsTextItem>
+#include <QHash>
 
 #include "core/quran/chapter.h"
-#include <QHash>
+
 namespace quran {
 class Quran;
 }

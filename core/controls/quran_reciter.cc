@@ -1,14 +1,18 @@
 #include "quran_reciter.h"
 #include "ui_quran_reciter.h"
+
 #include <QDir>
 #include <QMediaPlayer>
 #include <QMediaPlaylist>
 #include <QUrl>
+#include <QSlider>
 #include <QObject>
+
 #include "core/settings_loader.h"
 #include "core/data/data_holder.h"
 #include "core/logging.h"
 #include "core/constants.h"
+
 QuranReciter::QuranReciter(quran::Quran* quran, QWidget *parent) :
     QWidget(parent),
     ui(new Ui::QuranReciter),
@@ -44,6 +48,18 @@ QuranReciter::QuranReciter(quran::Quran* quran, QWidget *parent) :
             m_mediaPlayer = new QMediaPlayer(this);
             m_playList = new QMediaPlaylist(this);
             m_mediaPlayer->setPlaylist(m_playList);
+            
+            // Volume
+            SettingsLoader settingsLoader;
+            int kDefaultVolume = 5;
+            bool volConvertedOk;
+            int v = settingsLoader.get(SettingsLoader::kSettingKeyRecitationVolume, QVariant(kDefaultVolume)).toInt(&volConvertedOk);
+            m_mediaPlayer->setVolume(volConvertedOk ? v : kDefaultVolume);
+            ui->volSlider->setValue(m_mediaPlayer->volume());
+            connect(ui->volSlider, SIGNAL(valueChanged(int)), this, SLOT(onVolumeChanged(int)));
+            connect(ui->volSlider, SIGNAL(sliderMoved(int)), this, SLOT(onVolumeChanged(int)));
+            ui->volSlider->setMaximum(5);
+            
             on_cboChapter_currentIndexChanged(0);
             ui->btnPause->setEnabled(false);
             ui->btnStop->setEnabled(false);
@@ -56,6 +72,7 @@ QuranReciter::QuranReciter(quran::Quran* quran, QWidget *parent) :
             ui->btnStop->setEnabled(false);
             ui->cboChapter->setEnabled(false);
             ui->chkRepeat->setEnabled(false);
+            ui->volSlider->hide();
         }
         ui->btnReplayCurrentVerse->hide();
         ui->chkRepeat->setChecked(false);
@@ -372,6 +389,16 @@ void QuranReciter::onVerseChanged(int)
     if (m_playList->currentIndex() > 0) {
         emit currentVerseChanged(m_playList->currentIndex());
         ui->spnVerse->setValue(m_playList->currentIndex());
+    }
+}
+
+void QuranReciter::onVolumeChanged(int v)
+{
+    _TRACE;
+    if (m_mediaPlayer != nullptr) {
+        m_mediaPlayer->setVolume(v);
+        SettingsLoader settingsLoader;
+        settingsLoader.saveSettings(SettingsLoader::kSettingKeyRecitationVolume, QVariant(v));
     }
 }
 

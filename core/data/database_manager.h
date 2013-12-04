@@ -6,9 +6,11 @@
 #include <QSqlRecord>
 #include <QSqlDatabase>
 #include <QVariantMap>
+
 #include "core/settings_loader.h"
 
 namespace data {
+
     typedef QList<QSqlRecord> QueryResult;
     
     static const QString kSqlCommentBegin = "--";

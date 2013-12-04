@@ -1,7 +1,9 @@
 #include "settings_loader.h"
+
 #include <QString>
 #include <QFile>
 #include <QSettings>
+
 #include "core/logging.h"
 #include "core/constants.h"
 
@@ -9,6 +11,7 @@ const QString SettingsLoader::kMasterSettingsFile = QString(".master.settings");
 const QString SettingsLoader::kSettingKeyTheme = "theme";
 const QString SettingsLoader::kSettingKeyQuranTranslationTable = "default_quran_translation";
 const QString SettingsLoader::kSettingKeyQuranTranslationFile = "default_quran_translation_db";
+const QString SettingsLoader::kSettingKeyRecitationVolume = "recitation_vol";
 
 QString SettingsLoader::s_defaultHomeDir = QString("");
 
@@ -45,6 +48,13 @@ void SettingsLoader::saveSettings(QMap<QString, QVariant>* map) const
             m_settings->setValue(setting, map->value(setting));
         }
     }
+}
+
+void SettingsLoader::saveSettings(const QString& key, const QVariant& value) const
+{
+    QMap<QString, QVariant> settingsMap;
+    settingsMap.insert(key, value);
+    saveSettings(&settingsMap);
 }
 
 QVariant SettingsLoader::get(const QString& key, const QVariant& defaultValue) const

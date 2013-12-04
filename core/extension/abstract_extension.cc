@@ -1,6 +1,8 @@
 #include "core/extension/abstract_extension.h"
+
 #include <QLabel>
 #include <QResizeEvent>
+
 #include "core/logging.h"
 #include "core/constants.h"
 #include "core/extension/extension_item.h"

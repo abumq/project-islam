@@ -4,6 +4,7 @@
 #include <vector>
 #include <map>
 #include <string>
+
 #include "core/logging.h"
 
 namespace quran {

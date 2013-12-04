@@ -64,8 +64,8 @@
   <widget class="QLabel" name="lblCboChapter">
    <property name="geometry">
     <rect>
-     <x>9</x>
-     <y>9</y>
+     <x>30</x>
+     <y>10</y>
      <width>61</width>
      <height>16</height>
     </rect>
@@ -77,9 +77,9 @@
   <widget class="QComboBox" name="cboChapter">
    <property name="geometry">
     <rect>
-     <x>90</x>
+     <x>110</x>
      <y>10</y>
-     <width>221</width>
+     <width>201</width>
      <height>23</height>
     </rect>
    </property>
@@ -87,7 +87,7 @@
   <widget class="QComboBox" name="cboReciter">
    <property name="geometry">
     <rect>
-     <x>90</x>
+     <x>110</x>
      <y>40</y>
      <width>201</width>
      <height>23</height>
@@ -97,7 +97,7 @@
   <widget class="QLabel" name="label_3">
    <property name="geometry">
     <rect>
-     <x>10</x>
+     <x>30</x>
      <y>40</y>
      <width>61</width>
      <height>16</height>
@@ -110,7 +110,7 @@
   <widget class="QSplitter" name="splitter">
    <property name="geometry">
     <rect>
-     <x>330</x>
+     <x>350</x>
      <y>40</y>
      <width>181</width>
      <height>24</height>
@@ -160,7 +160,7 @@
   <widget class="QSplitter" name="splitter_5">
    <property name="geometry">
     <rect>
-     <x>150</x>
+     <x>170</x>
      <y>80</y>
      <width>320</width>
      <height>23</height>
@@ -207,7 +207,7 @@
   <widget class="QPushButton" name="btnReloadReciters">
    <property name="geometry">
     <rect>
-     <x>290</x>
+     <x>310</x>
      <y>40</y>
      <width>16</width>
      <height>16</height>
@@ -218,6 +218,19 @@
    </property>
    <property name="flat">
     <bool>true</bool>
+   </property>
+  </widget>
+  <widget class="QSlider" name="volSlider">
+   <property name="geometry">
+    <rect>
+     <x>499</x>
+     <y>80</y>
+     <width>121</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="orientation">
+    <enum>Qt::Horizontal</enum>
    </property>
   </widget>
  </widget>

@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <string>
+
 #include "core/quran/verse.h"
 #include "core/quran/chapter.h"
 

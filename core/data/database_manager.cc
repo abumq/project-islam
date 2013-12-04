@@ -1,7 +1,9 @@
 #include "core/data/database_manager.h"
+
 #include <QSqlQuery>
 #include <QSqlError>
 #include <QDir>
+
 #include "core/logging.h"
 
 namespace data {

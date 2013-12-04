@@ -1,6 +1,8 @@
 #include "core/extension/extension_loader.h"
+
 #include <QPluginLoader>
 #include <QFileDialog>
+
 #include "core/logging.h"
 #include "core/extension/extension_base.h"
 #include "core/extension/abstract_extension.h"

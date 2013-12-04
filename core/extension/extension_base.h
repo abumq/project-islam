@@ -3,6 +3,7 @@
 
 #include <QtPlugin>
 #include <QObject>
+
 #include "core/logging.h"
 #include "core/extension/abstract_extension.h"
 #include "core/extension/extension_info.h"

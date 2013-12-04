@@ -1,6 +1,8 @@
 #include "quran_reader.h"
 #include "ui_quran_reader.h"
+
 #include <QResizeEvent>
+
 #include "core/quran/quran.h"
 #include "core/controls/quran_view.h"
 #include "core/logging.h"

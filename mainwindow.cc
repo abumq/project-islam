@@ -6,6 +6,7 @@
 #include <QLabel>
 #include <QProcess>
 
+#include "settings_dialog.h"
 #include "core/logging.h"
 #include "core/constants.h"
 #include "core/extension/abstract_extension.h"
@@ -13,8 +14,6 @@
 #include "core/extension/extension_bar.h"
 #include "core/extension/extension_item.h"
 #include "core/extension/extension_loader.h"
-
-#include "settings_dialog.h"
 
 MainWindow::MainWindow(QApplication* app) :
     QMainWindow(0),

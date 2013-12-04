@@ -1,8 +1,10 @@
 #include "colorbox.h"
 
+#include <algorithm>
+
 #include <QPixmap>
 #include <QPainter>
-#include <algorithm>
+
 #include "core/logging.h"
 
 ColorBox::ColorBox(const QColor& defaultColor, QWidget *parent) : 

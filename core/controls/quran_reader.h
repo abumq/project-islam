@@ -2,7 +2,9 @@
 #define QURAN_READER_H
 
 #include <QWidget>
+
 #include "core/quran/chapter.h"
+
 namespace Ui {
 class QuranReader;
 }
@@ -18,7 +20,7 @@ class QuranReader : public QWidget
     
 public:
     QuranReader(quran::Quran* quran, quran::Quran* quranTranslation = nullptr, 
-        quran::Quran* quranTransliteration = nullptr, QWidget *parent = 0);
+            quran::Quran* quranTransliteration = nullptr, QWidget *parent = 0);
     ~QuranReader();
     void changeChapter(quran::Chapter::Name chapterName);
     void changeVerseRange(int from, int to);

@@ -4,6 +4,7 @@
 #include "core/quran/quran.h"
 
 namespace data {
+
 class DataHolder
 {
 public:
@@ -17,5 +18,6 @@ private:
     quran::Quran m_quranTransliteration;
     quran::Quran m_quranTranslation;
 };
-} // namespace database
+
+} // namespace data
 #endif // DATA_HOLDER_HH

@@ -1,7 +1,9 @@
 #include "core/data/database_builder.h"
+
 #include <QFile>
 #include <QDir>
 #include <QTextStream>
+
 #include "core/logging.h"
 #include "core/data/database_manager.h"
 
@@ -34,8 +36,9 @@ bool DatabaseBuilder::build(const QString& sqlFile, bool stopOnFirstError)
     data::DatabaseManager manager("DatabaseBuilder");
     foreach (QString sql, sqlFromFile) {
         sql = sql.trimmed();
-        if (sql.isEmpty() || sql.startsWith(data::kSqlCommentBegin))
+        if (sql.isEmpty() || sql.startsWith(data::kSqlCommentBegin)) {
             continue;
+        }
         CLOG_EVERY_N(100, DEBUG, "data") << "Current iteration [" << ELPP_COUNTER_POS << "]; SQL: " << sql;
         manager.query(sql);
         if (stopOnFirstError && !manager.lastQuerySuccessful()) {

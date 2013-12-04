@@ -1,6 +1,9 @@
 #include "mainwindow.h"
+
 #include <QApplication>
+#include <QFile>
 #include <QResource>
+
 #include "core/logging.h"
 
 #if (QT_VERSION < QT_VERSION_CHECK(5, 0, 0))
@@ -34,6 +37,7 @@ int main(int argc, char *argv[])
     w.show();
     
     int status = a.exec();
+    
     // clean extra files
     LOG(DEBUG) << "Removing extra files";
     for (int i = 0; i < kExtraFilesCount; ++i) {
@@ -42,5 +46,6 @@ int main(int argc, char *argv[])
             f.remove();
         }
     }
+    
     return status;
 }

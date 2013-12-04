@@ -1,10 +1,12 @@
 #include "quran_view.h"
+
 #include <QGraphicsTextItem>
 #include <QGraphicsEllipseItem>
 #include <QTextDocument>
 #include <QTextBlockFormat>
 #include <QTextCursor>
 #include <QScrollBar>
+
 #include "core/quran/quran.h"
 
 const float QuranView::kDefaultZoom = 1.0f;

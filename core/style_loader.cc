@@ -1,6 +1,8 @@
 #include "core/style_loader.h"
-#include "core/logging.h"
+
 #include <QFile>
+
+#include "core/logging.h"
 
 const QString StyleLoader::kStylesDirectory = ":";
     

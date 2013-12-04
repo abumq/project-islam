@@ -5,6 +5,7 @@
 #include <QDir>
 #include <QMediaContent>
 #include <QMediaPlayer>
+
 #include "core/quran/chapter.h"
 
 namespace Ui {
@@ -50,6 +51,8 @@ private slots:
     void on_spnVerseTo_valueChanged(int);
     
     void onVerseChanged(int);
+    
+    void onVolumeChanged(int);
     
     void on_chkRepeat_clicked(bool checked);
     

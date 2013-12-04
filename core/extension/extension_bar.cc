@@ -1,6 +1,7 @@
-
 #include "core/extension/extension_bar.h"
+
 #include <QVector>
+
 #include "core/logging.h"
 #include "core/constants.h"
 #include "core/extension/abstract_extension.h"

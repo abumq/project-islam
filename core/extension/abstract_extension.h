@@ -2,6 +2,7 @@
 #define ABSTRACT_EXTENSION_H
 
 #include <QWidget>
+
 #include "core/logging.h"
 #include "core/constants.h"
 #include "core/data/data_holder.h"

@@ -2,9 +2,9 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+
 #include "core/style_loader.h"
 #include "core/settings_loader.h"
-
 #include "core/data/data_holder.h"
 
 namespace Ui {

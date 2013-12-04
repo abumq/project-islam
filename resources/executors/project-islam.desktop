@@ -1,0 +1,6 @@
+[Desktop Entry]
+Name=Project Islam
+Exec=/path/to/project-islam/project-islam
+Type=Application
+StartupNotify=true
+Icon=/path/to/project-islam/images/project-islam.png

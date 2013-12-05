@@ -10,6 +10,7 @@
 class ExtensionInfo;
 class ExtensionItem;
 class QLabel;
+class QMenu;
 
 class AbstractExtension : public QWidget
 {
@@ -38,7 +39,7 @@ public:
     ExtensionItem* extensionItem() const;
     
     QWidget* container();
-    void setParent(QWidget *container);
+    void setContainer(QWidget *container);
     
     void activate();
     void deactivate();
@@ -49,6 +50,8 @@ public:
     void setDataHolder(data::DataHolder* dataHolder);
     
     QLabel* titleLabel() const;
+    
+    QMenu* menu() const;
 signals:
     void containerGeometryChanged(int, int);
 protected:
@@ -60,6 +63,7 @@ private:
     QLabel* m_titleLabel;
     ExtensionInfo* m_info;
     ExtensionItem* m_extensionItem;
+    QMenu *m_menu;
     QString m_htmlFormattedDescription;
     bool m_isDefault;
     

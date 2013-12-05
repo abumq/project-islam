@@ -2,6 +2,8 @@
 
 #include <QPluginLoader>
 #include <QFileDialog>
+#include <QAction>
+#include <QMenuBar>
 
 #include "core/logging.h"
 #include "core/extension/extension_base.h"
@@ -14,7 +16,7 @@ ExtensionLoader::ExtensionLoader(data::DataHolder* dataHolder) :
 {
 }
 
-void ExtensionLoader::loadAll(const QString& appPath, ExtensionBar* extensionBar) const
+void ExtensionLoader::loadAll(const QString& appPath, ExtensionBar* extensionBar, QMenuBar* menuBar) const
 {
     _TRACE;
     LOG(INFO) << "Loading all the extensions. ExtensionBar [" << extensionBar << "]; application path: "
@@ -30,9 +32,10 @@ void ExtensionLoader::loadAll(const QString& appPath, ExtensionBar* extensionBar
             abstractExtension->extension()->setParent(extensionBar->container());
             // Extensions may change the configurations so we reconfigure them
             LoggingConfigurer::configureLoggers();
+            QAction* helpMenu = menuBar->actions().at(menuBar->actions().size() - 1);
+            menuBar->insertMenu(helpMenu, abstractExtension->extension()->menu());
             // initialize
             abstractExtension->initialize();
-            
             extensionBar->addExtension(abstractExtension->extension());
         } else {
             LOG(ERROR) << "Error occured while loading extension [" << loader.fileName() << "]: " << loader.errorString();

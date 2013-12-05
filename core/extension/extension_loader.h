@@ -4,6 +4,7 @@
 #include <QString>
 
 class ExtensionBar;
+class QMenuBar;
 namespace data {
 class DataHolder;
 }
@@ -12,7 +13,7 @@ class ExtensionLoader
 {
 public:
     explicit ExtensionLoader(data::DataHolder* m_dataHolder);
-    void loadAll(const QString& appPath, ExtensionBar* extensionBar) const;
+    void loadAll(const QString& appPath, ExtensionBar* extensionBar, QMenuBar *menuBar) const;
 private:
     data::DataHolder* m_dataHolder;
 };

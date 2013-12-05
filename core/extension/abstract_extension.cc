@@ -2,6 +2,7 @@
 
 #include <QLabel>
 #include <QResizeEvent>
+#include <QMenuBar>
 
 #include "core/logging.h"
 #include "core/constants.h"
@@ -15,11 +16,12 @@ AbstractExtension::AbstractExtension(QWidget *parent, ExtensionInfo *extensionIn
     m_dataHolder(nullptr),
     m_titleLabel(nullptr),
     m_info(extensionInfo),
+    m_menu(nullptr),
     m_isDefault(isDefault)
 {
     _TRACE;
     LOG(INFO) << "Loading extension [" << extensionInfo << "]";
-
+    
     hide();
     
     if (m_parent != nullptr) {
@@ -32,6 +34,8 @@ AbstractExtension::AbstractExtension(QWidget *parent, ExtensionInfo *extensionIn
     m_container = new QWidget(this);
     m_container->move(0, kExtensionStartTop);
     m_titleLabel->setGeometry(0, 0, m_container->width(), kExtensionStartTop);
+    m_menu = new QMenu(extensionInfo->name());
+    m_menu->menuAction()->setVisible(false);
 }
 
 AbstractExtension::~AbstractExtension()
@@ -39,6 +43,8 @@ AbstractExtension::~AbstractExtension()
     LOG(INFO) << "Unloading extension [" << info()->name() << "]";
     delete m_titleLabel;
     m_titleLabel = nullptr;
+    delete m_menu;
+    m_menu = nullptr;
     delete m_container;
     m_container = nullptr;
 }
@@ -113,7 +119,7 @@ QWidget* AbstractExtension::container()
     return m_container;
 }
 
-void AbstractExtension::setParent(QWidget *parent)
+void AbstractExtension::setContainer(QWidget *parent)
 {
     QWidget::setParent(parent);
     m_parent = parent;
@@ -127,6 +133,7 @@ void AbstractExtension::activate()
     m_extensionItem->select();
     show();
     m_extensionItem->extensionBar()->setCurrentExtension(this);
+    m_menu->menuAction()->setVisible(!m_menu->actions().isEmpty());
 }
 
 void AbstractExtension::deactivate()
@@ -134,6 +141,7 @@ void AbstractExtension::deactivate()
     m_extensionItem->deselect();
     hide();
     m_extensionItem->extensionBar()->setCurrentExtension(nullptr);
+    m_menu->menuAction()->setVisible(false);
 }
 
 data::DataHolder* AbstractExtension::dataHolder()
@@ -150,6 +158,11 @@ void AbstractExtension::setDataHolder(data::DataHolder *dataHolder)
 QLabel* AbstractExtension::titleLabel() const
 {
     return m_titleLabel;
+}
+
+QMenu *AbstractExtension::menu() const
+{
+    return m_menu;
 }
 
 void AbstractExtension::buildHtmlFormattedDescription()

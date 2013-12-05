@@ -1,6 +1,7 @@
 #include "al_quran.h"
 
 #include <QLabel>
+#include <QAction>
 
 #include "core/controls/quran_reciter.h"
 #include "core/controls/quran_reader.h"
@@ -57,9 +58,24 @@ bool AlQuran::initialize()
     QObject::connect(m_reader, SIGNAL(currentVerseChanged(int)), this, SLOT(onSelectedVerseChangedReader(int)));
     QObject::connect(m_reciter, SIGNAL(currentVerseChanged(int)), this, SLOT(onSelectedVerseChangedReciter(int)));
     
+    initializeMenu();
+    
     // Force trigger this slot
     onContainerGeometryChanged(extension()->container()->width(), extension()->container()->height());
     return true;
+}
+
+void AlQuran::initializeMenu()
+{
+    QAction* showReaderAction = extensionMenu()->addAction("Show Reader");
+    showReaderAction->setCheckable(true);
+    showReaderAction->setChecked(true);
+    QObject::connect(showReaderAction, SIGNAL(toggled(bool)), m_reader, SLOT(setVisible(bool)));
+    
+    QAction* showReciterAction = extensionMenu()->addAction("Show Reciter");
+    showReciterAction->setCheckable(true);
+    showReciterAction->setChecked(true);
+    QObject::connect(showReciterAction, SIGNAL(toggled(bool)), m_reciter, SLOT(setVisible(bool)));
 }
 
 void AlQuran::onContainerGeometryChanged(int w, int h)

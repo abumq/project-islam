@@ -3,6 +3,7 @@
 
 #include <QtPlugin>
 #include <QObject>
+#include <QMenu>
 
 #include "core/logging.h"
 #include "core/extension/abstract_extension.h"
@@ -47,6 +48,10 @@ public:
     
     const ExtensionInfo& extensionInfo() const {
         return m_extensionInfo;
+    }
+    
+    QMenu* extensionMenu() {
+        return m_extension->menu();
     }
 
 public:

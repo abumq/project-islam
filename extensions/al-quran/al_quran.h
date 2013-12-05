@@ -27,6 +27,7 @@ public:
     virtual ~AlQuran();
     
     virtual bool initialize();
+    void initializeMenu();
     
 public slots:
     void onChapterChangedReciter(const quran::Chapter* chapter);

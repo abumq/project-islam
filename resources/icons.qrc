@@ -7,4 +7,8 @@
         <file alias="project-ico">images/project-islam.ico</file>
         <file alias="project-png">images/project-islam.png</file>
     </qresource>
+    <qresource prefix="/extensions/elements">
+        <file alias="down_arrow_small">images/elements/down_arrow15x15.png</file>
+        <file alias="down_arrow_medium">images/elements/down_arrow32x32.png</file>
+    </qresource>
 </RCC>

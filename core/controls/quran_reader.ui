@@ -40,7 +40,11 @@
          <string>Chapter:</string>
         </property>
        </widget>
-       <widget class="QComboBox" name="cboChapter"/>
+       <widget class="QComboBox" name="cboChapter">
+        <property name="styleSheet">
+         <string notr="true"/>
+        </property>
+       </widget>
       </widget>
       <widget class="QSplitter" name="splitter_2">
        <property name="orientation">

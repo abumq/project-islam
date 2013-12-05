@@ -44,6 +44,11 @@ QString StyleLoader::load(StyleType type) const
     style.replace("[:menubarColor2]", rgba(m_r, m_g, m_b, 100));
     style.replace("[:menuBgColorPressed]", rgba(m_r, m_g, m_b, 255));
     style.replace("[:menuColorPressed]", rgba(255, 255, 255, 255));
+    
+    style.replace("[:elementColor1]", rgba(m_r, m_g, m_b, 50));
+    style.replace("[:elementColor2]", rgba(r2, g2, b2, 100));
+    style.replace("[:elementColor3]", rgba(m_r, m_g, m_b, 150));
+    style.replace("[:elementColor4]", rgba(r2, g2, b2, 200));
     return style;
 }
 

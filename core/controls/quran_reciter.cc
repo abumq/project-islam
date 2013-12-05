@@ -58,7 +58,7 @@ QuranReciter::QuranReciter(quran::Quran* quran, QWidget *parent) :
             ui->volSlider->setValue(m_mediaPlayer->volume());
             connect(ui->volSlider, SIGNAL(valueChanged(int)), this, SLOT(onVolumeChanged(int)));
             connect(ui->volSlider, SIGNAL(sliderMoved(int)), this, SLOT(onVolumeChanged(int)));
-            ui->volSlider->setMaximum(5);
+            ui->volSlider->setMaximum(100);
             
             on_cboChapter_currentIndexChanged(0);
             ui->btnPause->setEnabled(false);

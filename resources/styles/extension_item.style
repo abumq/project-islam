@@ -14,7 +14,7 @@ ExtensionItem:hover {
 ExtensionItem::checked {
     border: none;
     background-color: rgba(255, 255, 255, 125);
-    color: rgba(0, 0, 0, 125);
+    color: rgba(0, 0, 0, 225);
 }
 
 ExtensionItem::checked:hover {

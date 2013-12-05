@@ -42,7 +42,7 @@ public:
 
         configurations.set(el::Level::Global, el::ConfigurationType::Filename, 
             logFile);
-        configurations.set(el::Level::Trace, el::ConfigurationType::Format, "%datetime %level %func");
+        configurations.set(el::Level::Trace, el::ConfigurationType::Format, "%datetime %level %func %msg");
         configurations.set(el::Level::Debug, el::ConfigurationType::Format, "%datetime %level [%func] %msg");
         // 2mb max log file size
         configurations.set(el::Level::Global, el::ConfigurationType::MaxLogFileSize, "2048000");

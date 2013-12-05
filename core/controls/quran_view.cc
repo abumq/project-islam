@@ -6,6 +6,7 @@
 #include <QTextBlockFormat>
 #include <QTextCursor>
 #include <QScrollBar>
+#include <QResizeEvent>
 
 #include "core/quran/quran.h"
 
@@ -368,7 +369,7 @@ VerseTextItem::VerseTextItem(const QString& text, quran::Verse* verse, QGraphics
     m_alignment(Qt::AlignLeft)
 {
     unhighlight();
-    setTextWidth(boundingRect().width());
+    setTextWidth(boundingRect().width() * 1.1);
     setAlignment(m_alignment);
 }
 

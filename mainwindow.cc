@@ -58,8 +58,8 @@ void MainWindow::initialize()
     connect(m_extensionBar, SIGNAL(extensionChanged(AbstractExtension*)), this, SLOT(onExtensionChanged(AbstractExtension*)));
     addToolBar(Qt::LeftToolBarArea, m_extensionBar);
     
-    ExtensionLoader extensionLoader(&m_dataHolder);
-    extensionLoader.loadAll(m_app->applicationDirPath(), m_extensionBar, ui->menuBar);
+    ExtensionLoader extensionLoader(&m_dataHolder, ui->menuBar);
+    extensionLoader.loadAll(m_app->applicationDirPath(), m_extensionBar);
     
     ExtensionItem* defaultExtension = m_extensionBar->defaultExtensionItem();
     if (defaultExtension != nullptr) {

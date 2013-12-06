@@ -41,10 +41,7 @@ SOURCES += main.cc\
     core/quran/chapter.cc \
     core/data/database_manager.cc \
     core/data/database_builder.cc \
-    core/data/data_holder.cc \
-    core/controls/quran_reciter.cc \
-    core/controls/quran_reader.cc \
-    core/controls/quran_view.cc
+    core/data/data_holder.cc
 
 HEADERS  += mainwindow.h \
     core/constants.h \
@@ -67,9 +64,6 @@ HEADERS  += mainwindow.h \
     core/data/database_manager.h \
     core/data/database_builder.h \
     core/data/data_holder.h \
-    core/controls/quran_reciter.h \
-    core/controls/quran_reader.h \
-    core/controls/quran_view.h \
     core/easylogging++.h
 
 FORMS    += mainwindow.ui \

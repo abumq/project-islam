@@ -11,12 +11,13 @@
 #include "core/extension/extension_bar.h"
 #include "core/data/data_holder.h"
 
-ExtensionLoader::ExtensionLoader(data::DataHolder* dataHolder) :
-    m_dataHolder(dataHolder)
+ExtensionLoader::ExtensionLoader(data::DataHolder* dataHolder, QMenuBar* menuBar) :
+    m_dataHolder(dataHolder),
+    m_menuBar(menuBar)
 {
 }
 
-void ExtensionLoader::loadAll(const QString& appPath, ExtensionBar* extensionBar, QMenuBar* menuBar) const
+void ExtensionLoader::loadAll(const QString& appPath, ExtensionBar* extensionBar) const
 {
     _TRACE;
     LOG(INFO) << "Loading all the extensions. ExtensionBar [" << extensionBar << "]; application path: "
@@ -30,11 +31,11 @@ void ExtensionLoader::loadAll(const QString& appPath, ExtensionBar* extensionBar
         if (abstractExtension != nullptr) {
             abstractExtension->extension()->setDataHolder(m_dataHolder);
             abstractExtension->extension()->setParent(extensionBar->container());
+            QAction* helpMenu = m_menuBar->actions().at(m_menuBar->actions().size() - 1);
+            m_menuBar->insertMenu(helpMenu, abstractExtension->extension()->menu());
             // Extensions may change the configurations so we reconfigure them
             LoggingConfigurer::configureLoggers();
-            QAction* helpMenu = menuBar->actions().at(menuBar->actions().size() - 1);
-            menuBar->insertMenu(helpMenu, abstractExtension->extension()->menu());
-            // initialize
+            // initialize and add to extension bar
             abstractExtension->initialize();
             extensionBar->addExtension(abstractExtension->extension());
         } else {

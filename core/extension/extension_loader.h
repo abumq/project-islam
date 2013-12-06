@@ -12,10 +12,11 @@ class DataHolder;
 class ExtensionLoader
 {
 public:
-    explicit ExtensionLoader(data::DataHolder* m_dataHolder);
-    void loadAll(const QString& appPath, ExtensionBar* extensionBar, QMenuBar *menuBar) const;
+    explicit ExtensionLoader(data::DataHolder* m_dataHolder, QMenuBar *menuBar);
+    void loadAll(const QString& appPath, ExtensionBar* extensionBar) const;
 private:
     data::DataHolder* m_dataHolder;
+    QMenuBar* m_menuBar;
 };
 
 #endif // EXTENSION_LOADER_H

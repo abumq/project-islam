@@ -30,13 +30,18 @@ public:
     void initializeMenu();
     
 public slots:
+
+    // From interface
+    virtual void onContainerGeometryChanged(int, int);
+    virtual void onActivated();
+    virtual void onDeactivated();
+    
     void onChapterChangedReciter(const quran::Chapter* chapter);
     void onVerseRangeChangedReciter(int, int);
     void onChapterChangedReader(const quran::Chapter* chapter);
     void onVerseRangeChangedReader(int, int);
     void onSelectedVerseChangedReciter(int);
     void onSelectedVerseChangedReader(int);
-    void onContainerGeometryChanged(int, int);
 private:
     QuranReciter* m_reciter;
     QuranReader* m_reader;

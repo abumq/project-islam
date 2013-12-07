@@ -131,6 +131,7 @@ void AbstractExtension::activate()
     show();
     m_extensionItem->extensionBar()->setCurrentExtension(this);
     m_menu->menuAction()->setVisible(!m_menu->actions().isEmpty());
+    emit activated();
 }
 
 void AbstractExtension::deactivate()
@@ -139,6 +140,7 @@ void AbstractExtension::deactivate()
     hide();
     m_extensionItem->extensionBar()->setCurrentExtension(nullptr);
     m_menu->menuAction()->setVisible(false);
+    emit deactivated();
 }
 
 data::DataHolder* AbstractExtension::dataHolder()

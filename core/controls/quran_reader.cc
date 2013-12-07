@@ -3,6 +3,7 @@
 
 #include <QResizeEvent>
 
+#include "core/memory.h"
 #include "core/quran/quran.h"
 #include "core/controls/quran_view.h"
 #include "core/logging.h"
@@ -54,8 +55,7 @@ QuranReader::QuranReader(quran::Quran* quran, quran::Quran* quranTranslation,
 QuranReader::~QuranReader()
 {
     _TRACE;
-    delete m_quranView;
-    delete ui;
+    memory::deleteAll(m_quranView, ui);
 }
 
 void QuranReader::changeChapter(quran::Chapter::Name chapterName)

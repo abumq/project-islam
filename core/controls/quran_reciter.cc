@@ -8,10 +8,11 @@
 #include <QSlider>
 #include <QObject>
 
-#include "core/settings_loader.h"
-#include "core/data/data_holder.h"
+#include "core/memory.h"
 #include "core/logging.h"
 #include "core/constants.h"
+#include "core/settings_loader.h"
+#include "core/data/data_holder.h"
 
 QuranReciter::QuranReciter(quran::Quran* quran, QWidget *parent) :
     QWidget(parent),
@@ -83,7 +84,7 @@ QuranReciter::QuranReciter(quran::Quran* quran, QWidget *parent) :
 QuranReciter::~QuranReciter()
 {
     _TRACE;
-    delete ui;
+    memory::deleteAll(ui);
 }
 
 void QuranReciter::hideChapterSelector()
@@ -176,6 +177,13 @@ void QuranReciter::loadReciters()
         ui->cboReciter->addItem(noReciterAvailableText);
         ui->cboReciter->setEnabled(false);
     }
+}
+
+void QuranReciter::stopIfPlaying()
+{
+    _TRACE;
+    if (!m_ok) return;
+    on_btnStop_clicked();
 }
 
 void QuranReciter::changeChapter(quran::Chapter::Name chapter)

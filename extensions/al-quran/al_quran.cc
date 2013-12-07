@@ -80,6 +80,19 @@ void AlQuran::onContainerGeometryChanged(int w, int h)
     m_reader->resize(w, h - m_reciter->height());
 }
 
+void AlQuran::onActivated()
+{
+    
+}
+
+void AlQuran::onDeactivated()
+{
+    // Stop if reciting
+    if (m_reciter != nullptr) {
+        m_reciter->stopIfPlaying();
+    }
+}
+
 void AlQuran::onChapterChangedReciter(const quran::Chapter* chapter)
 {
     if (m_reader != nullptr) {

@@ -41,6 +41,8 @@ public:
     virtual bool initialize() {
         CHECK (m_extensionInfo.isInitialized()) << "Please initialize ExtensionInfo (using constructor) from constructor of your extension.";
         QObject::connect(extension(), SIGNAL(containerGeometryChanged(int, int)), this, SLOT(onContainerGeometryChanged(int, int)));
+        QObject::connect(extension(), SIGNAL(activated()), this, SLOT(onActivated()));
+        QObject::connect(extension(), SIGNAL(deactivated()), this, SLOT(onDeactivated()));
         return true;
     }
     
@@ -70,6 +72,12 @@ public:
     /// @brief Slot that is connected to signal that is emitted when container
     /// geometry changes. This is pretty much similar to QWidget::resizeEvent().
     virtual void onContainerGeometryChanged(int width, int height) = 0;
+    
+    /// @brief Slot that is connected to signal emmited when extension is activated
+    virtual void onActivated(int width, int height) = 0;
+    
+    /// @brief Slot that is connected to signal emmited when extension is deactivated
+    virtual void onDeactivated() = 0;
 private:
     AbstractExtension* m_extension;
     ExtensionInfo m_extensionInfo;

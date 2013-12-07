@@ -58,6 +58,8 @@ public:
     SettingsLoader* settingsLoader() const;
 signals:
     void containerGeometryChanged(int, int);
+    void activated();
+    void deactivated();
 protected:
     void resizeEvent(QResizeEvent *);
 private:

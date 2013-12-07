@@ -37,6 +37,7 @@ public:
     void hideCurrentVerseSelector();
     void showCurrentVerseSelector();
     void loadReciters();
+    void stopIfPlaying();
 private slots:
     void on_cboChapter_currentIndexChanged(int index);
     

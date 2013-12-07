@@ -16,6 +16,7 @@ AbstractExtension::AbstractExtension(QWidget *parent, ExtensionInfo *extensionIn
     m_dataHolder(nullptr),
     m_titleLabel(nullptr),
     m_info(extensionInfo),
+    m_settingsLoader(nullptr),
     m_menu(nullptr),
     m_isDefault(isDefault)
 {

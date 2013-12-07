@@ -67,8 +67,8 @@ private:
     QLabel* m_titleLabel;
     ExtensionInfo* m_info;
     ExtensionItem* m_extensionItem;
-    QMenu *m_menu;
     SettingsLoader* m_settingsLoader;
+    QMenu *m_menu;
     QString m_htmlFormattedDescription;
     bool m_isDefault;
     

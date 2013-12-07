@@ -74,7 +74,7 @@ public:
     virtual void onContainerGeometryChanged(int width, int height) = 0;
     
     /// @brief Slot that is connected to signal emmited when extension is activated
-    virtual void onActivated(int width, int height) = 0;
+    virtual void onActivated() = 0;
     
     /// @brief Slot that is connected to signal emmited when extension is deactivated
     virtual void onDeactivated() = 0;

@@ -254,23 +254,20 @@ void QuranReciter::on_cboChapter_currentIndexChanged(int index)
 {
     _TRACE;
     if (!m_ok) return;
-    int resetIndex = 0;
     QMediaPlayer::State resumeState = QMediaPlayer::StoppedState;
     int chapterId = index + 1;
     bool isChapterChanged = m_currentChapter != nullptr && 
             static_cast<quran::Chapter::Name>(chapterId) != m_currentChapter->name();
-    if (m_mediaPlayer->state() == m_mediaPlayer->PlayingState ||
-        m_mediaPlayer->state() == m_mediaPlayer->PausedState) {
-        if (!isChapterChanged) {
-            // This is case when chapter index is not chaged instead it's same chapter
-            // but slot is triggered manually
-            resumeState = m_mediaPlayer->state();
-            m_mediaPlayer->pause();
-            resetIndex = ui->spnVerse->value();
-        } else {
-            m_mediaPlayer->stop();
-        }
+    if (m_mediaPlayer->state() != m_mediaPlayer->PlayingState &&
+        m_mediaPlayer->state() != m_mediaPlayer->PausedState) {
+        m_mediaPlayer->stop();
+    } else {
+        // This is case when chapter index is not chaged instead it's same chapter
+        // but slot is triggered manually
+        resumeState = m_mediaPlayer->state();
+        m_mediaPlayer->pause();
     }
+    int resetIndex = isChapterChanged ? 0 : ui->spnVerse->value();
     m_playList->clear();
     
     QString zeroPaddedId;

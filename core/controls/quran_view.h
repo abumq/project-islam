@@ -74,6 +74,9 @@ public:
     bool hasTranslation() const;
     bool hasTransliteration() const;
     
+    void jumpTo(const QString& jumpToText);
+    QString jumpToText() const;
+    
     static QString arabicNumber(int n);
 signals:
     void chapterChanged(const quran::Chapter*);

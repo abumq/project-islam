@@ -167,10 +167,10 @@
          </property>
          <widget class="QLabel" name="label">
           <property name="text">
-           <string>Search</string>
+           <string>Jump:</string>
           </property>
          </widget>
-         <widget class="QLineEdit" name="lineEdit"/>
+         <widget class="QLineEdit" name="txtJumpTo"/>
         </widget>
        </item>
       </layout>

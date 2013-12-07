@@ -84,6 +84,8 @@ void QuranReader::changeVerseRange(int from, int to)
     ui->spnVerseTo->setValue(to);
     ui->spnVerseFrom->setMaximum(to);
     ui->spnVerseFrom->setValue(from);
+    
+    ui->txtJumpTo->setText(m_quranView->jumpToText());
 }
 
 void QuranReader::highlightVerse(int verseNumber)
@@ -182,6 +184,7 @@ void QuranReader::on_cboChapter_currentIndexChanged(int index)
         ui->spnVerse->setMinimum(1);
         ui->spnVerse->setMaximum(chapter->versesCount());
         ui->spnVerse->setValue(1);
+        ui->txtJumpTo->setText(m_quranView->jumpToText());
     }
 }
 
@@ -257,4 +260,12 @@ void QuranReader::on_chkTranslation_clicked(bool checked)
         turnOffTranslation();
     }
     
+}
+
+void QuranReader::on_txtJumpTo_returnPressed()
+{
+    _TRACE;
+    if (m_quranView != nullptr) {
+        m_quranView->jumpTo(ui->txtJumpTo->text());
+    }
 }

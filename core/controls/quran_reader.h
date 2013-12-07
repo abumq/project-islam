@@ -57,6 +57,8 @@ private slots:
     
     void on_chkTranslation_clicked(bool checked);
     
+    void on_txtJumpTo_returnPressed();
+    
 signals:
     void chapterChanged(const quran::Chapter*);
     void verseRangeChanged(int, int);

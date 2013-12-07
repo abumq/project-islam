@@ -110,11 +110,18 @@ void QuranView::update(quran::Chapter* chapter, int from, int to)
     m_ok = m_currentChapter != nullptr;
     m_currFrom = from;
     m_currTo = to;
-    DCHECK(from <= m_currentChapter->versesCount()) << "Chapter: [" << m_currentChapter->arabicName() <<
-                                                       "] only has [" << m_currentChapter->versesCount() << "] verses, requested verse [" << from << "]";
-    DCHECK(to <= m_currentChapter->versesCount()) << "Chapter: [" << m_currentChapter->arabicName() <<
-                                                     "] only has [" << m_currentChapter->versesCount() << "] verses, requested verse [" << to << "]";
-    DCHECK(from <= to) << "Invalid range. Verses from [" << from << "] to [" << to << "] requested.";
+    if (from > m_currentChapter->versesCount()) {
+        LOG(WARNING) << "Updating verseFrom from [" << from << "] to [" << m_currentChapter->versesCount() << "], invalid range";
+        from = m_currentChapter->versesCount();
+    }
+    if (to > m_currentChapter->versesCount()) {
+        LOG(WARNING) << "Updating verseTo from [" << to << "] to [" << m_currentChapter->versesCount() << "], invalid range";
+        to = m_currentChapter->versesCount();
+    }
+    if (to < from) {
+        LOG(WARNING) << "Updating verseTo from [" << to << "] to [" << from << "]";
+        to = from;
+    }
     DVLOG(7) << "Updating reader for chapter [" << m_currentChapter->arabicName() 
              << "] verses [" << from << " - " << to << "]";
     int locY = 0;
@@ -340,6 +347,43 @@ bool QuranView::hasTranslation() const
 bool QuranView::hasTransliteration() const
 {
     return m_quranTransliteration != nullptr && m_quranTransliteration->ready();
+}
+
+void QuranView::jumpTo(const QString& jumpToText)
+{
+    int chapter = m_currentChapter == nullptr ? 1 : static_cast<int>(m_currentChapter->name());
+    int verseFrom = m_currFrom;
+    int verseTo = m_currTo;
+    bool ok = false;
+    QStringList tokens1 = jumpToText.split(":");
+    if (tokens1.size() == 2) {
+        // We expect at least format 
+        // 1:1
+        chapter = tokens1.at(0).toInt(&ok);
+        if (ok) {
+            ok = chapter >= 1 && chapter <= quran::Quran::kChapterCount;
+            QStringList tokensVerses = tokens1.at(1).split("-");
+            verseFrom = tokensVerses.at(0).toInt(&ok);
+            if (ok && tokensVerses.size() >= 2) {
+                verseTo = tokensVerses.at(1).toInt(&ok);
+            }
+        }
+    }
+    if (ok) {
+        update(static_cast<quran::Chapter::Name>(chapter), verseFrom, verseTo);
+    } else {
+        LOG(ERROR) << "Unable to parse [" << jumpToText << "] as Qur'anic verse";
+    }
+}
+
+QString QuranView::jumpToText() const
+{
+    if (m_currentChapter == nullptr) {
+        DLOG(INFO) << "Current chapter is null";
+        return QString();
+    }
+    return QString::number(static_cast<int>(m_currentChapter->name())) + 
+        ":" + QString::number(m_currFrom) + "-" + QString::number(m_currTo);
 }
 
 QString QuranView::arabicNumber(int n)

@@ -5,6 +5,7 @@
 #include <QSettings>
 
 #include "core/logging.h"
+#include "core/memory.h"
 #include "core/constants.h"
 
 const QString SettingsLoader::kMasterSettingsFile = QString(".master.settings");
@@ -15,24 +16,21 @@ const QString SettingsLoader::kSettingKeyRecitationVolume = "recitation_vol";
 
 QString SettingsLoader::s_defaultHomeDir = QString("");
 
-SettingsLoader::SettingsLoader()
+SettingsLoader::SettingsLoader(const char* settingsFilename) :
+    m_settings(nullptr)
 {
-    initialize();
+    initialize(settingsFilename);
 }
 
 SettingsLoader::~SettingsLoader()
 {
-    if (m_settings != nullptr) {
-        delete m_settings;
-        m_settings = nullptr;
-    }
+    memory::deleteAll(m_settings);
 }
 
-void SettingsLoader::initialize()
+void SettingsLoader::initialize(const char* settingsFilename)
 {
     _TRACE;
-    m_settingsFile = defaultHomeDir() + "basic_settings.ini";
-    m_settings = nullptr;
+    m_settingsFile = defaultHomeDir() + settingsFilename;
     changeSettingsFile(m_settingsFile);
 }
 

@@ -21,14 +21,14 @@ public:
     static const QString kSettingKeyQuranTranslationFile;
     static const QString kSettingKeyRecitationVolume;
     
-    SettingsLoader();
+    explicit SettingsLoader(const char* settingsFilename = "basic_settings.ini");
     ~SettingsLoader();
     void saveSettings(QMap<QString, QVariant>* map) const;
     void saveSettings(const QString &key, const QVariant &value) const;
     QVariant get(const QString &key, const QVariant &defaultValue = QVariant()) const;
     void changeSettingsFile(const QString& filename);
     QString settingsFile() const;
-    void initialize();
+    void initialize(const char* settingsFilename);
     QString defaultHomeDir();
     void updateDefaultHomeDir(const QString&);
 private:

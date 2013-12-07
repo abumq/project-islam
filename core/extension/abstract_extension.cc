@@ -6,6 +6,7 @@
 
 #include "core/logging.h"
 #include "core/constants.h"
+#include "core/memory.h"
 #include "core/extension/extension_item.h"
 #include "core/extension/extension_bar.h"
 #include "core/extension/extension_info.h"
@@ -42,12 +43,7 @@ AbstractExtension::AbstractExtension(QWidget *parent, ExtensionInfo *extensionIn
 AbstractExtension::~AbstractExtension()
 {
     LOG(INFO) << "Unloading extension [" << info()->name() << "]";
-    delete m_titleLabel;
-    m_titleLabel = nullptr;
-    delete m_menu;
-    m_menu = nullptr;
-    delete m_container;
-    m_container = nullptr;
+    memory::deleteAll(m_titleLabel, m_menu, m_container);
 }
 
 bool AbstractExtension::operator ==(const AbstractExtension &ex)

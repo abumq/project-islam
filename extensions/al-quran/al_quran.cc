@@ -62,6 +62,7 @@ bool AlQuran::initialize()
     
     // Force trigger this slot
     onContainerGeometryChanged(extension()->container()->width(), extension()->container()->height());
+    
     return true;
 }
 

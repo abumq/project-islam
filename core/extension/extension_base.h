@@ -54,6 +54,10 @@ public:
     QMenu* extensionMenu() {
         return m_extension->menu();
     }
+    
+    SettingsLoader* settingsLoader() {
+        return m_extension->settingsLoader();
+    }
 
 public:
     /// @brief Slot that is connected to signal that is emitted when container

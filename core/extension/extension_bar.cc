@@ -4,6 +4,7 @@
 
 #include "core/logging.h"
 #include "core/constants.h"
+#include "core/memory.h"
 #include "core/extension/abstract_extension.h"
 #include "core/extension/extension_info.h"
 #include "core/extension/extension_item.h"
@@ -25,20 +26,10 @@ ExtensionBar::ExtensionBar(QWidget *parent, QWidget* container) :
 ExtensionBar::~ExtensionBar()
 {
     _TRACE;
-    for (int i = m_extensionItems.size() - 1; i >= 0; --i) {
-        delete m_extensionItems.at(i);
-        m_extensionItems.remove(i);
-    }
-    for (int i = m_extensions.size() - 1; i >= 0; --i) {
-        delete m_extensions.at(i);
-        m_extensions.remove(i);
-    }
+    memory::clearPointerContainer(m_extensionItems.begin(), m_extensionItems.end(), &m_extensionItems);
     CHECK(m_extensionItems.empty()) << "Unable to retain memory from the extensions items. "
                                 << "Memory leak from [" << m_extensionItems.size() << "] extensions items.";
-    for (int i = m_extensions.size() - 1; i >= 0; --i) {
-        delete m_extensions.at(i);
-        m_extensions.remove(i);
-    }
+    memory::clearPointerContainer(m_extensions.begin(), m_extensions.end(), &m_extensions);
     CHECK(m_extensions.empty()) << "Unable to retain memory from the extensions. "
                                 << "Memory leak from [" << m_extensions.size() << "] extensions.";
 }

@@ -70,7 +70,8 @@ HEADERS  += mainwindow.h \
     core/data/database_manager.h \
     core/data/database_builder.h \
     core/data/data_holder.h \
-    core/easylogging++.h
+    core/easylogging++.h \
+    core/memory.h
 
 FORMS    += mainwindow.ui \
     settings_dialog.ui \

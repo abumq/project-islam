@@ -8,6 +8,7 @@
 
 #include "settings_dialog.h"
 #include "core/logging.h"
+#include "core/memory.h"
 #include "core/constants.h"
 #include "core/extension/abstract_extension.h"
 #include "core/extension/extension_info.h"
@@ -30,12 +31,7 @@ MainWindow::MainWindow(QApplication* app) :
 MainWindow::~MainWindow()
 {
     _TRACE;
-    
-    delete m_extensionBar;
-    m_extensionBar = nullptr;
-    delete m_container;
-    m_container = nullptr;
-    delete ui;
+    memory::deleteAll(m_extensionBar, m_container, ui);
 }
 
 void MainWindow::initialize()

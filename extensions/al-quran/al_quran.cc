@@ -34,15 +34,7 @@ bool AlQuran::initialize()
 
     // Do not trace location before calling parent's initialize
     _TRACE;
-
-    if (m_reciter != nullptr) {
-        delete m_reciter;
-        m_reciter = nullptr;
-    }
-    if (m_reader != nullptr) {
-        delete m_reader;
-        m_reader = nullptr;
-    }
+    memory::deleteAll(m_reciter, m_reader);
     m_reciter = new QuranReciter(extension()->dataHolder()->quranArabic(), extension()->container());
     m_reader = new QuranReader(extension()->dataHolder()->quranArabic(), 
         extension()->dataHolder()->quranTranslation(), extension()->dataHolder()->quranTransliteration(), 
@@ -62,7 +54,6 @@ bool AlQuran::initialize()
     
     // Force trigger this slot
     onContainerGeometryChanged(extension()->container()->width(), extension()->container()->height());
-    
     return true;
 }
 

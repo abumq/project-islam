@@ -6,6 +6,7 @@
 #include <QMenu>
 
 #include "core/logging.h"
+#include "core/memory.h"
 #include "core/settings_loader.h"
 #include "core/extension/abstract_extension.h"
 #include "core/extension/extension_info.h"
@@ -55,10 +56,16 @@ public:
         return m_extension->menu();
     }
     
-    SettingsLoader* settingsLoader() {
-        return m_extension->settingsLoader();
+    QVariant setting(const QString& key, const QVariant& defaultValue = QVariant()) {
+        return m_extension->settingsLoader()->get("extension_setting__" + m_extensionInfo.name().replace(" ", "") 
+                                                  + "__" + key, defaultValue);
     }
-
+    
+    void saveSetting(const QString &key, const QVariant &value) {
+        m_extension->settingsLoader()->saveSettings("extension_setting__" + m_extensionInfo.name().replace(" ", "") 
+                                                    + "__" + key, value);
+    }
+    
 public:
     /// @brief Slot that is connected to signal that is emitted when container
     /// geometry changes. This is pretty much similar to QWidget::resizeEvent().

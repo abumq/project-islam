@@ -50,6 +50,7 @@ void SettingsLoader::saveSettings(QMap<QString, QVariant>* map) const
 
 void SettingsLoader::saveSettings(const QString& key, const QVariant& value) const
 {
+    _TRACE << "Key: " << key << "; Value: " << value.toString();
     QMap<QString, QVariant> settingsMap;
     settingsMap.insert(key, value);
     saveSettings(&settingsMap);

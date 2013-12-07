@@ -5,10 +5,16 @@ greaterThan(QT_MAJOR_VERSION, 4):
 TARGET = project-islam
 TEMPLATE = app
 
+## Standard
+QMAKE_CXXFLAGS += -std=c++0x
 
-QMAKE_CXXFLAGS += -std=c++0x -fPIE -g
+## Warning suppressions
+QMAKE_CXXFLAGS += -Wno-sign-compare
 
-COMPILER = icpc
+## Other flags
+QMAKE_CXXFLAGS += -fPIC -g
+
+COMPILER = g++
 QMAKE_CC = $$COMPILER
 QMAKE_CXX = $$COMPILER
 QMAKE_LINK = $$COMPILER

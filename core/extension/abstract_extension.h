@@ -11,6 +11,7 @@ class ExtensionInfo;
 class ExtensionItem;
 class QLabel;
 class QMenu;
+class SettingsLoader;
 
 class AbstractExtension : public QWidget
 {
@@ -52,6 +53,9 @@ public:
     QLabel* titleLabel() const;
     
     QMenu* menu() const;
+    
+    void setSettingsLoader(SettingsLoader* settingsLoader);
+    SettingsLoader* settingsLoader() const;
 signals:
     void containerGeometryChanged(int, int);
 protected:
@@ -64,10 +68,11 @@ private:
     ExtensionInfo* m_info;
     ExtensionItem* m_extensionItem;
     QMenu *m_menu;
+    SettingsLoader* m_settingsLoader;
     QString m_htmlFormattedDescription;
     bool m_isDefault;
     
     void buildHtmlFormattedDescription();
 };
-                    
+
 #endif // ABSTRACT_EXTENSION_H

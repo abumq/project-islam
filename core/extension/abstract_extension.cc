@@ -165,6 +165,16 @@ QMenu *AbstractExtension::menu() const
     return m_menu;
 }
 
+void AbstractExtension::setSettingsLoader(SettingsLoader* settingsLoader)
+{
+    m_settingsLoader = settingsLoader;
+}
+
+SettingsLoader*AbstractExtension::settingsLoader() const
+{
+    return m_settingsLoader;
+}
+
 void AbstractExtension::buildHtmlFormattedDescription()
 {
     if (info()->description().isEmpty()) {

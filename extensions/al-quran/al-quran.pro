@@ -3,9 +3,16 @@ QT       += core gui widgets sql multimedia
 TARGET = $$qtLibraryTarget(AlQuran)
 TEMPLATE = lib
 
-QMAKE_CXXFLAGS += -std=c++0x -fPIC -g
+## Standard
+QMAKE_CXXFLAGS += -std=c++0x
 
-COMPILER = icpc
+## Warning suppressions
+QMAKE_CXXFLAGS += -Wno-sign-compare
+
+## Other flags
+QMAKE_CXXFLAGS += -fPIC -g
+
+COMPILER = g++
 QMAKE_CC = $$COMPILER
 QMAKE_CXX = $$COMPILER
 QMAKE_LINK = $$COMPILER

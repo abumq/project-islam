@@ -16,6 +16,7 @@ const float QuranView::kDefaultZoomFactor = 1.1f;
 QuranView::QuranView(quran::Quran* quran, quran::Quran* quranTranslation, 
                      quran::Quran* quranTransliteration, QWidget *parent) :
     QGraphicsView(new QGraphicsScene(parent), parent),
+    m_ok(false),
     m_quran(quran),
     m_quranTranslation(quranTranslation),
     m_quranTransliteration(quranTransliteration),
@@ -23,8 +24,7 @@ QuranView::QuranView(quran::Quran* quran, quran::Quran* quranTranslation,
     m_selectedVerseTextItem(nullptr),
     m_showVerseNumbers(true),
     m_currFrom(1),
-    m_currTo(1),
-    m_ok(false)
+    m_currTo(1)
 {
     _TRACE;
     const QRectF rect = QRectF(0, 0, 1, 1);

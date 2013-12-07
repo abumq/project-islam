@@ -80,6 +80,7 @@ signals:
     void verseRangeChanged(int, int);
     void currentVerseChanged(int);
 private:
+    bool m_ok;
     quran::Quran* m_quran;
     quran::Quran* m_quranTranslation;
     quran::Quran* m_quranTransliteration;
@@ -89,7 +90,6 @@ private:
     QMap<int, VerseTextItem*> m_verseTextTransliterationItems;
     VerseTextItem* m_selectedVerseTextItem;
     bool m_showVerseNumbers;
-    bool m_ok;
     int m_currFrom;
     int m_currTo;
     float m_zoomValue;

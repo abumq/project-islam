@@ -11,9 +11,9 @@
 
 SettingsDialog::SettingsDialog(MainWindow* mainWindow, QWidget* parent) :
     QDialog(parent),
+    homeDirectoryChanged(false),
     ui(new Ui::SettingsDialog),
-    m_mainWindow(mainWindow),
-    homeDirectoryChanged(false)
+    m_mainWindow(mainWindow)
 {
     ui->setupUi(this);
     ui->tabWidget->setCurrentIndex(0);

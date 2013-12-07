@@ -94,6 +94,15 @@ void AbstractExtension::resizeEvent(QResizeEvent* event)
     event->accept();
     update();
 }
+int AbstractExtension::containerHeight() const
+{
+    return m_containerHeight;
+}
+
+int AbstractExtension::containerWidth() const
+{
+    return m_containerWidth;
+}
 
 void AbstractExtension::update()
 {
@@ -107,6 +116,8 @@ void AbstractExtension::update()
         LOG(DEBUG) << "Resizing container to [" << w << " x " << h << "]";
         m_container->setMinimumSize(w, h);
         m_container->setMaximumSize(w, h);
+        m_containerWidth = w;
+        m_containerHeight = h;
         emit containerGeometryChanged(w, h);
     }
 }

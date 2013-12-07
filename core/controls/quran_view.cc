@@ -383,7 +383,8 @@ QString QuranView::jumpToText() const
         return QString();
     }
     return QString::number(static_cast<int>(m_currentChapter->name())) + 
-        ":" + QString::number(m_currFrom) + "-" + QString::number(m_currTo);
+        ":" + QString::number(m_currFrom) + 
+            (m_currFrom < m_currTo ? "-" + QString::number(m_currTo) : "");
 }
 
 QString QuranView::arabicNumber(int n)

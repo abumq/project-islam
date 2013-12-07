@@ -2,9 +2,11 @@
 #define AL_QURAN_H
 
 #include "core/extension/extension_base.h"
+#include "bookmarks_bar.h"
 
 class QuranReciter;
 class QuranReader;
+class Bookmark;
 
 namespace quran {
 class Chapter;
@@ -42,9 +44,15 @@ public slots:
     void onVerseRangeChangedReader(int, int);
     void onSelectedVerseChangedReciter(int);
     void onSelectedVerseChangedReader(int);
+    void onBookmarkChanged(Bookmark* bookmark);
+    
+    bool toggleReciter(bool);
+    bool toggleReader(bool);
+    bool toggleBookmarkBar(bool);
 private:
     QuranReciter* m_reciter;
     QuranReader* m_reader;
+    BookmarksBar* m_bookmarkBar;
 };
 
 #endif // AL_QURAN_H

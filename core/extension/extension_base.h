@@ -46,26 +46,29 @@ public:
         return true;
     }
     
-    void setExtensionInfo(const ExtensionInfo& extensionInfo) {
+    inline void setExtensionInfo(const ExtensionInfo& extensionInfo) {
         m_extensionInfo = extensionInfo;
     }
     
-    const ExtensionInfo& extensionInfo() const {
+    inline const ExtensionInfo& extensionInfo() const {
         return m_extensionInfo;
     }
     
-    QMenu* extensionMenu() {
+    inline QMenu* extensionMenu() {
         return m_extension->menu();
     }
     
-    QVariant setting(const QString& key, const QVariant& defaultValue = QVariant()) {
-        return m_extension->settingsLoader()->get("extension_setting__" + m_extensionInfo.name().replace(" ", "") 
-                                                  + "__" + key, defaultValue);
+    inline QString settingsKeyPrefix() {
+        return "extension_setting__" + m_extensionInfo.name().replace(" ", "") 
+                                                  + "__";
     }
     
-    void saveSetting(const QString &key, const QVariant &value) {
-        m_extension->settingsLoader()->saveSettings("extension_setting__" + m_extensionInfo.name().replace(" ", "") 
-                                                    + "__" + key, value);
+    inline QVariant setting(const QString& key, const QVariant& defaultValue = QVariant()) {
+        return m_extension->settingsLoader()->get(settingsKeyPrefix() + key, defaultValue);
+    }
+    
+    inline void saveSetting(const QString &key, const QVariant &value) {
+        m_extension->settingsLoader()->saveSettings(settingsKeyPrefix() + key, value);
     }
     
 public:

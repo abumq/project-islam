@@ -56,6 +56,10 @@ public:
     
     void setSettingsLoader(SettingsLoader* settingsLoader);
     SettingsLoader* settingsLoader() const;
+    
+    int containerWidth() const;
+    int containerHeight() const;
+    
 signals:
     void containerGeometryChanged(int, int);
     void activated();
@@ -73,6 +77,9 @@ private:
     QMenu *m_menu;
     QString m_htmlFormattedDescription;
     bool m_isDefault;
+    
+    int m_containerWidth;
+    int m_containerHeight;
     
     void buildHtmlFormattedDescription();
 };

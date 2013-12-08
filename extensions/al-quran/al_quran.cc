@@ -24,6 +24,7 @@ AlQuran::AlQuran()
 
 AlQuran::~AlQuran()
 {
+    // m_reader, m_reciter not available! deleted on ~extension()->container()
 }
 
 bool AlQuran::initialize()
@@ -48,6 +49,8 @@ bool AlQuran::initialize()
     QObject::connect(m_reader, SIGNAL(chapterChanged(const quran::Chapter*)), this, SLOT(onChapterChangedReader(const quran::Chapter*)));
     QObject::connect(m_reader, SIGNAL(verseRangeChanged(int,int)), this, SLOT(onVerseRangeChangedReader(int,int)));
     QObject::connect(m_reader, SIGNAL(currentVerseChanged(int)), this, SLOT(onSelectedVerseChangedReader(int)));
+    QObject::connect(m_reader, SIGNAL(translationToggled(bool)), this, SLOT(onToggledTranslation(bool)));
+    QObject::connect(m_reader, SIGNAL(transliterationOnToggled(bool)), this, SLOT(onToggledTransliteration(bool)));
     QObject::connect(m_reciter, SIGNAL(currentVerseChanged(int)), this, SLOT(onSelectedVerseChangedReciter(int)));
     
     // Bookmarks bar
@@ -61,6 +64,18 @@ bool AlQuran::initialize()
     
     initializeMenu();
     
+    // Translation
+    if (setting("load_translation", QVariant(true)).toBool()) {
+        m_reader->turnOnTranslation();
+    } else {
+        m_reader->turnOffTranslation();
+    }
+    // Transliteration
+    if (setting("load_transliteration", QVariant(true)).toBool()) {
+        m_reader->turnOnTransliteration();
+    } else {
+        m_reader->turnOffTransliteration();
+    }
     // Force trigger this slot
     onContainerGeometryChanged(extension()->container()->width(), extension()->container()->height());
     return true;
@@ -169,15 +184,14 @@ void AlQuran::onBookmarkChanged(Bookmark* bookmark)
     m_reader->changeVerseRange(bookmark->verseFrom(), bookmark->verseTo());
 }
 
-bool AlQuran::toggleReciter(bool val)
+void AlQuran::toggleReciter(bool val)
 {
     _TRACE;
     m_reciter->setVisible(val);
     saveSetting("show_reciter", QVariant(val));
-    return val;
 }
 
-bool AlQuran::toggleReader(bool val)
+void AlQuran::toggleReader(bool val)
 {
     _TRACE;
     m_reader->setVisible(val);
@@ -191,14 +205,23 @@ bool AlQuran::toggleReader(bool val)
         m_reciter->hideVerseRangeSelector();
         m_reciter->hideCurrentVerseSelector();
     }
-    return val;
 }
 
-bool AlQuran::toggleBookmarkBar(bool val)
+void AlQuran::toggleBookmarkBar(bool val)
 {
     _TRACE;
     m_bookmarkBar->setVisible(val);
     onContainerGeometryChanged(extension()->containerWidth(), extension()->containerHeight());
     saveSetting("show_bookmarks", QVariant(val));
-    return val;
+}
+
+void AlQuran::onToggledTranslation(bool val)
+{
+    _TRACE;
+    saveSetting("load_translation", QVariant(val));
+}
+
+void AlQuran::onToggledTransliteration(bool val)
+{
+    saveSetting("load_transliteration", QVariant(val));
 }

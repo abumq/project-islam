@@ -46,6 +46,8 @@ QuranReader::QuranReader(quran::Quran* quran, quran::Quran* quranTranslation,
         connect(m_quranView, SIGNAL(chapterChanged(const quran::Chapter*)), this, SIGNAL(chapterChanged(const quran::Chapter*)));
         connect(m_quranView, SIGNAL(verseRangeChanged(int,int)), this, SIGNAL(verseRangeChanged(int,int)));
         connect(m_quranView, SIGNAL(currentVerseChanged(int)), this, SIGNAL(currentVerseChanged(int)));
+        connect(m_quranView, SIGNAL(translationToggled(bool)), this, SIGNAL(translationToggled(bool)));
+        connect(m_quranView, SIGNAL(transliterationOnToggled(bool)), this, SIGNAL(transliterationOnToggled(bool)));
         on_btnMoreControls_clicked(false);
         
         ui->lblZoomValue->setText(QString::number(m_quranView->zoomValue()) + "%");
@@ -140,7 +142,6 @@ void QuranReader::showCurrentVerseSelector()
     ui->spnVerse->show();
     ui->lblVerse->show();
 }
-
 
 void QuranReader::turnOnTranslation()
 {

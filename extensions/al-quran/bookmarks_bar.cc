@@ -10,69 +10,53 @@
 BookmarksBar::BookmarksBar(const QString& settingsKeyPrefix, QWidget *parent) :
     QWidget(parent),
     ui(new Ui::BookmarksBar),
-    m_contextMenu(nullptr),
-    m_model(nullptr),
     m_settingsKeyPrefix(settingsKeyPrefix)
 {
+    memory::turnToNullPtr(m_contextMenu, m_model, m_bookmarksList);
     ui->setupUi(this);
     
     m_bookmarksList = new BookmarksList(this);
     ui->gridLayout->addWidget(m_bookmarksList, 0, 0, 1, 1);
     
+    m_contextMenu = new QMenu();
+    m_contextMenu->hide();
+    
     m_model = new QStandardItemModel(this);
     m_model->setColumnCount(2);
     m_model->setHorizontalHeaderLabels(QStringList() << "Name" << "Location");
+    
     m_bookmarksList->setModel(m_model);
     m_bookmarksList->setContextMenuPolicy(Qt::CustomContextMenu);
+    m_bookmarksList->setEditTriggers(BookmarksList::NoEditTriggers);
     
-    // Load bookmarks
-    QString bookmarksStr = SettingsLoader().get(m_settingsKeyPrefix + "bookmarks").toString();
-    if (!bookmarksStr.isEmpty()) {
-        QStringList allBookmarksStr = bookmarksStr.split(",");
-        for (QString bookmarkStr : allBookmarksStr) {
-            Bookmark bm;
-            if (bm.deserialize(bookmarkStr)) {
-                LOG(INFO) << "Loading bookmark [" << bm << "]";
-                BookmarkItem* name = new BookmarkItem;
-                name->setText(bm.name());
-                name->setName(bm.name());
-                name->setChapter(bm.chapter());
-                name->setVerseFrom(bm.verseFrom());
-                name->setVerseTo(bm.verseTo());
-                QString locationStr = bm.serialize().mid(bm.name().length() + 1 /* name= */);
-                QStandardItem* location = new QStandardItem(locationStr);
-                m_bookmarksList->setEditTriggers(BookmarksList::NoEditTriggers);
-                
-                int currRow = m_model->rowCount();
-                m_model->setItem(currRow, 0, name);
-                m_model->setItem(currRow, 1, location);
-            }
-        }
-    }
-    QObject::connect(m_bookmarksList, SIGNAL(doubleClicked(QModelIndex)),
-                     this, SLOT(onSelectionChanged(QModelIndex)));
-    QObject::connect(m_bookmarksList, SIGNAL(customContextMenuRequested(QPoint)),
-                     this, SLOT(onCustomContextMenuRequested(QPoint)));
-    m_contextMenu = new QMenu();
+    load();
+    
     QAction* actionOpen = m_contextMenu->addAction("Open");
     QObject::connect(actionOpen, SIGNAL(triggered()), this, SLOT(openSelected()));
     QAction* actionEdit = m_contextMenu->addAction("Edit");
     QObject::connect(actionEdit, SIGNAL(triggered()), this, SLOT(editSelected()));
     QAction* actionDelete = m_contextMenu->addAction("Delete");
     QObject::connect(actionDelete, SIGNAL(triggered()), this, SLOT(deleteSelected()));
-    m_contextMenu->hide();
+    QObject::connect(m_bookmarksList, SIGNAL(doubleClicked(QModelIndex)),
+                     this, SLOT(onSelectionChanged(QModelIndex)));
+    QObject::connect(m_bookmarksList, SIGNAL(customContextMenuRequested(QPoint)),
+                     this, SLOT(onCustomContextMenuRequested(QPoint)));
 }
 
 BookmarksBar::~BookmarksBar()
 {
-    // Save
+    save();
+    memory::deleteAll(m_contextMenu, ui);
+}
+
+void BookmarksBar::save()
+{
     QString serializedForm;
     for (int i = 0; i < m_bookmarksList->model()->rowCount(); ++i) {
         BookmarkItem* item = static_cast<BookmarkItem*>(static_cast<QStandardItemModel*>(
-                                                  m_bookmarksList->model())->item(i));
+                                                            m_bookmarksList->model())->item(i));
         Bookmark* bm = static_cast<Bookmark*>(item);
         LOG(INFO) << bm->serialize();
-        // FIXME : This will work when we sync item->name with item->text
         serializedForm.append(item->serialize());
         if (i < m_bookmarksList->model()->rowCount() - 1) {
             serializedForm.append(",");
@@ -80,14 +64,43 @@ BookmarksBar::~BookmarksBar()
     }
     LOG(DEBUG) << "Saving bookmarks to: " << serializedForm;
     SettingsLoader().saveSettings(m_settingsKeyPrefix + "bookmarks", serializedForm);
-    memory::deleteAll(m_contextMenu, ui);
+}
+
+void BookmarksBar::load()
+{
+    m_model->clear();
+    QString bookmarksStr = SettingsLoader().get(m_settingsKeyPrefix + "bookmarks").toString();
+    if (!bookmarksStr.isEmpty()) {
+        QStringList allBookmarksStr = bookmarksStr.split(",");
+        for (QString bookmarkStr : allBookmarksStr) {
+            Bookmark bm;
+            if (bm.deserialize(bookmarkStr)) {
+                LOG(INFO) << "Loading bookmark [" << bm << "]";
+                BookmarkItem* bookmarkItem = new BookmarkItem(
+                            bm.serialize().mid(bm.name().length() + 1 /* name= */)
+                            );
+                bookmarkItem->setText(bm.name());
+                bookmarkItem->setName(bm.name());
+                bookmarkItem->setChapter(bm.chapter());
+                bookmarkItem->setVerseFrom(bm.verseFrom());
+                bookmarkItem->setVerseTo(bm.verseTo());
+                
+                int currRow = m_model->rowCount();
+                m_model->setItem(currRow, 0, bookmarkItem);
+                m_model->setItem(currRow, 1, bookmarkItem->locationItem());
+            }
+        }
+    }
+    // Only connect this signal when bookmarks are loaded
+    QObject::connect(m_model, SIGNAL(itemChanged(QStandardItem*)), 
+                     this, SLOT(onItemChanged(QStandardItem*)));
 }
 
 void BookmarksBar::onSelectionChanged(const QModelIndex& modelIndex)
 {
     for (int i = 0; i < m_bookmarksList->model()->rowCount(); ++i) {
         BookmarkItem* item = static_cast<BookmarkItem*>(static_cast<QStandardItemModel*>(
-                                                  m_bookmarksList->model())->item(i));
+                                                            m_bookmarksList->model())->item(i));
         Bookmark* bm = static_cast<Bookmark*>(item);
         QString serialized = modelIndex.sibling(modelIndex.row(), 0).data().toString() + "=" +
                 modelIndex.sibling(modelIndex.row(), 1).data().toString();
@@ -119,4 +132,25 @@ void BookmarksBar::editSelected()
 void BookmarksBar::deleteSelected()
 {
     m_bookmarksList->model()->removeRow(m_bookmarksList->currentIndex().row());
+}
+
+void BookmarksBar::onItemChanged(QStandardItem* item)
+{
+    if (item == nullptr) {
+        return;
+    }
+    _TRACE;
+    if (item->index().column() == 1) {
+        LOG(DEBUG) << "Editing location to [" << item->text() << "]";
+        BookmarkItem* bm = static_cast<BookmarkItem*>(
+                    item->model()->item(item->index().row(), 0));
+        QString deserializeText = bm->name() + "=" + item->text();
+        if (!bm->deserialize(deserializeText)) {
+            
+        }
+    } else {
+        BookmarkItem* bm = static_cast<BookmarkItem*>(item);
+        LOG(DEBUG) << "Editing name to [" << bm->text() << "]";
+        bm->setName(bm->text());
+    }
 }

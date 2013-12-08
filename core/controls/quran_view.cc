@@ -319,24 +319,28 @@ void QuranView::turnOnTranslation(quran::Quran* translationQuran)
 {
     m_quranTranslation = translationQuran;
     update(m_currFrom, m_currTo);
+    emit translationToggled(true);
 }
 
 void QuranView::turnOffTranslation()
 {
     m_quranTranslation = nullptr;
     update(m_currFrom, m_currTo);
+    emit translationToggled(false);
 }
 
 void QuranView::turnOffTransliteration()
 {
     m_quranTransliteration = nullptr;
     update(m_currFrom, m_currTo);
+    emit transliterationOnToggled(false);
 }
 
 void QuranView::turnOnTransliteration(quran::Quran* transliterationQuran)
 {
     m_quranTransliteration = transliterationQuran;
     update(m_currFrom, m_currTo);
+    emit transliterationOnToggled(true);
 }
 
 bool QuranView::hasTranslation() const

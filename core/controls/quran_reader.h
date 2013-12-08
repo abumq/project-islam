@@ -63,6 +63,8 @@ signals:
     void chapterChanged(const quran::Chapter*);
     void verseRangeChanged(int, int);
     void currentVerseChanged(int);
+    void translationToggled(bool);
+    void transliterationOnToggled(bool);
 protected:
     void resizeEvent(QResizeEvent *);
 private:

@@ -46,9 +46,12 @@ public slots:
     void onSelectedVerseChangedReader(int);
     void onBookmarkChanged(Bookmark* bookmark);
     
-    bool toggleReciter(bool);
-    bool toggleReader(bool);
-    bool toggleBookmarkBar(bool);
+    void toggleReciter(bool);
+    void toggleReader(bool);
+    void toggleBookmarkBar(bool);
+    
+    void onToggledTranslation(bool);
+    void onToggledTransliteration(bool);
 private:
     QuranReciter* m_reciter;
     QuranReader* m_reader;

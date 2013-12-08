@@ -82,6 +82,8 @@ signals:
     void chapterChanged(const quran::Chapter*);
     void verseRangeChanged(int, int);
     void currentVerseChanged(int);
+    void translationToggled(bool);
+    void transliterationOnToggled(bool);
 private:
     bool m_ok;
     quran::Quran* m_quran;

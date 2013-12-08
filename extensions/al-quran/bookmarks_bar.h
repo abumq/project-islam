@@ -3,10 +3,11 @@
 
 #include <QWidget>
 #include <QVector>
-#include "bookmark.h"
 #include <QTreeView>
 #include <QStandardItemModel>
 #include <QStandardItem>
+#include "core/memory.h"
+#include "bookmark.h"
 
 class QMenu;
 namespace Ui {
@@ -14,7 +15,21 @@ class BookmarksBar;
 }
 
 class BookmarkItem : public QStandardItem, public Bookmark {
+public:
+    BookmarkItem(const QString& locationStr) :
+        m_location(new QStandardItem(locationStr)) {
+    }
     
+    QStandardItem* locationItem() {
+        return m_location;
+    }
+    
+    virtual ~BookmarkItem() {
+        memory::deleteAll(m_location);
+    }
+
+private:
+    QStandardItem* m_location;
 };
 
 class BookmarksList : public QTreeView {
@@ -39,6 +54,8 @@ public:
     static const int kBookmarkBarWidth = 400;
     BookmarksBar(const QString& settingsKeyPrefix, QWidget *parent = 0);
     ~BookmarksBar();
+    void save();
+    void load();
 signals:
     void selectionChanged(Bookmark* bookmark);
 public slots:
@@ -47,6 +64,7 @@ public slots:
     void openSelected();
     void editSelected();
     void deleteSelected();
+    void onItemChanged(QStandardItem*);
 private:
     Ui::BookmarksBar *ui;
     BookmarksList* m_bookmarksList;

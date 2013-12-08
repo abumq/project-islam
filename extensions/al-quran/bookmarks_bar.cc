@@ -18,7 +18,7 @@ BookmarksBar::BookmarksBar(const QString& settingsKeyPrefix, QWidget *parent) :
     
     m_bookmarksList = new BookmarksList(this);
     ui->gridLayout->addWidget(m_bookmarksList, 0, 0, 1, 1);
-
+    
     m_model = new QStandardItemModel(this);
     m_model->setColumnCount(2);
     m_model->setHorizontalHeaderLabels(QStringList() << "Name" << "Location");
@@ -33,17 +33,19 @@ BookmarksBar::BookmarksBar(const QString& settingsKeyPrefix, QWidget *parent) :
             Bookmark bm;
             if (bm.deserialize(bookmarkStr)) {
                 LOG(INFO) << "Loading bookmark [" << bm << "]";
-                m_bookmarks.push_back(bm);
-                
-                QStandardItem* bookmarkStandardItemName = new QStandardItem(bm.name());
-                QString location = bm.serialize().mid(bm.name().length() + 1 /* name= */);
-                QStandardItem* bookmarkStandardItemLocation = new QStandardItem(location);
-                bookmarkStandardItemName->setData(bm.serialize());
+                BookmarkItem* name = new BookmarkItem;
+                name->setText(bm.name());
+                name->setName(bm.name());
+                name->setChapter(bm.chapter());
+                name->setVerseFrom(bm.verseFrom());
+                name->setVerseTo(bm.verseTo());
+                QString locationStr = bm.serialize().mid(bm.name().length() + 1 /* name= */);
+                QStandardItem* location = new QStandardItem(locationStr);
                 m_bookmarksList->setEditTriggers(BookmarksList::NoEditTriggers);
-    
+                
                 int currRow = m_model->rowCount();
-                m_model->setItem(currRow, 0, bookmarkStandardItemName);
-                m_model->setItem(currRow, 1, bookmarkStandardItemLocation);
+                m_model->setItem(currRow, 0, name);
+                m_model->setItem(currRow, 1, location);
             }
         }
     }
@@ -65,27 +67,33 @@ BookmarksBar::~BookmarksBar()
 {
     // Save
     QString serializedForm;
-    int i = 0;
-    for (Bookmark bm : m_bookmarks) {
-        serializedForm.append(bm.serialize());
-        if (++i != m_bookmarks.size()) {
+    for (int i = 0; i < m_bookmarksList->model()->rowCount(); ++i) {
+        BookmarkItem* item = static_cast<BookmarkItem*>(static_cast<QStandardItemModel*>(
+                                                  m_bookmarksList->model())->item(i));
+        Bookmark* bm = static_cast<Bookmark*>(item);
+        LOG(INFO) << bm->serialize();
+        // FIXME : This will work when we sync item->name with item->text
+        serializedForm.append(item->serialize());
+        if (i < m_bookmarksList->model()->rowCount() - 1) {
             serializedForm.append(",");
         }
     }
+    LOG(DEBUG) << "Saving bookmarks to: " << serializedForm;
     SettingsLoader().saveSettings(m_settingsKeyPrefix + "bookmarks", serializedForm);
     memory::deleteAll(m_contextMenu, ui);
 }
 
 void BookmarksBar::onSelectionChanged(const QModelIndex& modelIndex)
 {
-    QVector<Bookmark>::Iterator bmIter = 
-            std::find_if(m_bookmarks.begin(), m_bookmarks.end(), [&](const Bookmark& b) {
+    for (int i = 0; i < m_bookmarksList->model()->rowCount(); ++i) {
+        BookmarkItem* item = static_cast<BookmarkItem*>(static_cast<QStandardItemModel*>(
+                                                  m_bookmarksList->model())->item(i));
+        Bookmark* bm = static_cast<Bookmark*>(item);
         QString serialized = modelIndex.sibling(modelIndex.row(), 0).data().toString() + "=" +
                 modelIndex.sibling(modelIndex.row(), 1).data().toString();
-        return b.serialize() == serialized;
-    });
-    if (bmIter != m_bookmarks.end()) {
-        emit selectionChanged(bmIter);
+        if (bm->serialize() == serialized) {
+            emit selectionChanged(bm);
+        }
     }
 }
 
@@ -101,7 +109,7 @@ void BookmarksBar::openSelected()
 
 void BookmarksBar::editSelected()
 {
-    QStandardItem* selectedItem = m_bookmarksList->selectedItem();
+    BookmarkItem* selectedItem = m_bookmarksList->selectedItem();
     if (selectedItem == nullptr) {
         return;
     }
@@ -110,4 +118,5 @@ void BookmarksBar::editSelected()
 
 void BookmarksBar::deleteSelected()
 {
+    m_bookmarksList->model()->removeRow(m_bookmarksList->currentIndex().row());
 }

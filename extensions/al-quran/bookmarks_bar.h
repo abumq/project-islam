@@ -6,12 +6,16 @@
 #include "bookmark.h"
 #include <QTreeView>
 #include <QStandardItemModel>
+#include <QStandardItem>
 
-class QStandardItem;
 class QMenu;
 namespace Ui {
 class BookmarksBar;
 }
+
+class BookmarkItem : public QStandardItem, public Bookmark {
+    
+};
 
 class BookmarksList : public QTreeView {
     Q_OBJECT
@@ -20,8 +24,10 @@ public:
         QTreeView(parent) {
     }
     
-    QStandardItem* selectedItem() {
-        return static_cast<QStandardItemModel*>(model())->itemFromIndex(currentIndex());
+    BookmarkItem* selectedItem() {
+        return static_cast<BookmarkItem*>(
+                    static_cast<QStandardItemModel*>(
+                        model())->itemFromIndex(currentIndex()));
     }
 };
 
@@ -47,7 +53,6 @@ private:
     QMenu* m_contextMenu;
     QStandardItemModel* m_model;
     QString m_settingsKeyPrefix;
-    QVector<Bookmark> m_bookmarks;
 };
 
 #endif // BOOKMARKSBAR_H

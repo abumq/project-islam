@@ -27,7 +27,11 @@
     <number>0</number>
    </property>
    <item row="0" column="0">
-    <widget class="QTreeView" name="treeBookmarks"/>
+    <widget class="QTreeView" name="treeBookmarks">
+     <property name="contextMenuPolicy">
+      <enum>Qt::ActionsContextMenu</enum>
+     </property>
+    </widget>
    </item>
   </layout>
  </widget>

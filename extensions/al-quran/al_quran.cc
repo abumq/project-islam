@@ -2,8 +2,7 @@
 
 #include <QLabel>
 #include <QAction>
-#include <QGridLayout>
-#include <QListWidget>
+#include <QDockWidget>
 
 #include "bookmarks_bar.h"
 #include "core/controls/quran_reciter.h"
@@ -52,8 +51,13 @@ bool AlQuran::initialize()
     QObject::connect(m_reciter, SIGNAL(currentVerseChanged(int)), this, SLOT(onSelectedVerseChangedReciter(int)));
     
     // Bookmarks bar
-    m_bookmarkBar = new BookmarksBar(settingsKeyPrefix(), extension()->container());
-    QObject::connect(m_bookmarkBar, SIGNAL(selectionChanged(Bookmark*)), this, SLOT(onBookmarkChanged(Bookmark*)));
+    m_bookmarkBar = new QDockWidget("Bookmarks", extension()->container());
+    BookmarksBar* bar = new BookmarksBar(settingsKeyPrefix());
+    m_bookmarkBar->setAllowedAreas(Qt::RightDockWidgetArea);
+    m_bookmarkBar->setWidget(bar);
+    m_bookmarkBar->setFeatures(QDockWidget::NoDockWidgetFeatures);
+    
+    QObject::connect(bar, SIGNAL(selectionChanged(Bookmark*)), this, SLOT(onBookmarkChanged(Bookmark*)));
     
     initializeMenu();
     

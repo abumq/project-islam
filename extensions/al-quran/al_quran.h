@@ -6,7 +6,7 @@
 class QuranReciter;
 class QuranReader;
 class Bookmark;
-class BookmarksBar;
+class QDockWidget;
 
 namespace quran {
 class Chapter;
@@ -52,7 +52,8 @@ public slots:
 private:
     QuranReciter* m_reciter;
     QuranReader* m_reader;
-    BookmarksBar* m_bookmarkBar;
+    //BookmarksBar* m_bookmarkBar;
+    QDockWidget* m_bookmarkBar;
 };
 
 #endif // AL_QURAN_H

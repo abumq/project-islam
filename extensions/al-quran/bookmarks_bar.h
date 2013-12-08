@@ -22,6 +22,7 @@ signals:
     void selectionChanged(Bookmark* bookmark);
 public slots:
     void onSelectionChanged(const QModelIndex&);
+    void customContextMenuRequested(const QPoint &pos);
 private:
     Ui::BookmarksBar *ui;
     QString m_settingsKeyPrefix;

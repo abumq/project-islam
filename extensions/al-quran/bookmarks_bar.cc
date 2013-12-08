@@ -16,12 +16,14 @@ BookmarksBar::BookmarksBar(const QString& settingsKeyPrefix, QWidget *parent) :
 {
     ui->setupUi(this);
     
+    m_bookmarksList = new BookmarksList(this);
+    ui->gridLayout->addWidget(m_bookmarksList, 0, 0, 1, 1);
+
     m_model = new QStandardItemModel(this);
     m_model->setColumnCount(2);
     m_model->setHorizontalHeaderLabels(QStringList() << "Name" << "Location");
-    ui->treeBookmarks->setModel(m_model);
-    
-    ui->treeBookmarks->setContextMenuPolicy(Qt::CustomContextMenu);
+    m_bookmarksList->setModel(m_model);
+    m_bookmarksList->setContextMenuPolicy(Qt::CustomContextMenu);
     
     // Load bookmarks
     QString bookmarksStr = SettingsLoader().get(m_settingsKeyPrefix + "bookmarks").toString();
@@ -37,18 +39,17 @@ BookmarksBar::BookmarksBar(const QString& settingsKeyPrefix, QWidget *parent) :
                 QString location = bm.serialize().mid(bm.name().length() + 1 /* name= */);
                 QStandardItem* bookmarkStandardItemLocation = new QStandardItem(location);
                 bookmarkStandardItemName->setData(bm.serialize());
-                bookmarkStandardItemName->setFlags(bookmarkStandardItemName->flags() & ~Qt::ItemIsEditable);
-                bookmarkStandardItemLocation->setFlags(bookmarkStandardItemLocation->flags() & ~Qt::ItemIsEditable);
-                
+                m_bookmarksList->setEditTriggers(BookmarksList::NoEditTriggers);
+    
                 int currRow = m_model->rowCount();
                 m_model->setItem(currRow, 0, bookmarkStandardItemName);
                 m_model->setItem(currRow, 1, bookmarkStandardItemLocation);
             }
         }
     }
-    QObject::connect(ui->treeBookmarks, SIGNAL(doubleClicked(QModelIndex)),
+    QObject::connect(m_bookmarksList, SIGNAL(doubleClicked(QModelIndex)),
                      this, SLOT(onSelectionChanged(QModelIndex)));
-    QObject::connect(ui->treeBookmarks, SIGNAL(customContextMenuRequested(QPoint)),
+    QObject::connect(m_bookmarksList, SIGNAL(customContextMenuRequested(QPoint)),
                      this, SLOT(onCustomContextMenuRequested(QPoint)));
     m_contextMenu = new QMenu();
     QAction* actionOpen = m_contextMenu->addAction("Open");
@@ -88,26 +89,25 @@ void BookmarksBar::onSelectionChanged(const QModelIndex& modelIndex)
     }
 }
 
-void BookmarksBar::onCustomContextMenuRequested(const QPoint& pos)
+void BookmarksBar::onCustomContextMenuRequested(const QPoint&)
 {
-    int x = pos.x();
-    int y = pos.y();
-    x += parentWidget()->pos().x() + 75;
-    y += parentWidget()->pos().y() + 150;
-    m_contextMenu->move(x, y);
-    m_contextMenu->show();
+    m_contextMenu->exec(QCursor::pos());
 }
 
 void BookmarksBar::openSelected()
 {
+    onSelectionChanged(m_bookmarksList->currentIndex());
 }
 
 void BookmarksBar::editSelected()
 {
-    
+    QStandardItem* selectedItem = m_bookmarksList->selectedItem();
+    if (selectedItem == nullptr) {
+        return;
+    }
+    m_bookmarksList->edit(m_bookmarksList->currentIndex());
 }
 
 void BookmarksBar::deleteSelected()
 {
-    
 }

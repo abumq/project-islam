@@ -1,6 +1,8 @@
 #include "bookmarks_bar.h"
 #include "ui_bookmarks_bar.h"
 #include <QStandardItemModel>
+#include <QMenu>
+#include <QAction>
 #include "core/settings_loader.h"
 #include "core/memory.h"
 #include "core/quran/chapter.h"
@@ -8,14 +10,18 @@
 BookmarksBar::BookmarksBar(const QString& settingsKeyPrefix, QWidget *parent) :
     QWidget(parent),
     ui(new Ui::BookmarksBar),
+    m_contextMenu(nullptr),
+    m_model(nullptr),
     m_settingsKeyPrefix(settingsKeyPrefix)
 {
     ui->setupUi(this);
     
-    QStandardItemModel* model = new QStandardItemModel(this);
-    model->setColumnCount(2);
-    model->setHorizontalHeaderLabels(QStringList() << "Name" << "Location");
-    ui->treeBookmarks->setModel(model);
+    m_model = new QStandardItemModel(this);
+    m_model->setColumnCount(2);
+    m_model->setHorizontalHeaderLabels(QStringList() << "Name" << "Location");
+    ui->treeBookmarks->setModel(m_model);
+    
+    ui->treeBookmarks->setContextMenuPolicy(Qt::CustomContextMenu);
     
     // Load bookmarks
     QString bookmarksStr = SettingsLoader().get(m_settingsKeyPrefix + "bookmarks").toString();
@@ -34,16 +40,24 @@ BookmarksBar::BookmarksBar(const QString& settingsKeyPrefix, QWidget *parent) :
                 bookmarkStandardItemName->setFlags(bookmarkStandardItemName->flags() & ~Qt::ItemIsEditable);
                 bookmarkStandardItemLocation->setFlags(bookmarkStandardItemLocation->flags() & ~Qt::ItemIsEditable);
                 
-                int currRow = model->rowCount();
-                model->setItem(currRow, 0, bookmarkStandardItemName);
-                model->setItem(currRow, 1, bookmarkStandardItemLocation);
+                int currRow = m_model->rowCount();
+                m_model->setItem(currRow, 0, bookmarkStandardItemName);
+                m_model->setItem(currRow, 1, bookmarkStandardItemLocation);
             }
         }
     }
     QObject::connect(ui->treeBookmarks, SIGNAL(doubleClicked(QModelIndex)),
                      this, SLOT(onSelectionChanged(QModelIndex)));
-    
-    
+    QObject::connect(ui->treeBookmarks, SIGNAL(customContextMenuRequested(QPoint)),
+                     this, SLOT(onCustomContextMenuRequested(QPoint)));
+    m_contextMenu = new QMenu();
+    QAction* actionOpen = m_contextMenu->addAction("Open");
+    QObject::connect(actionOpen, SIGNAL(triggered()), this, SLOT(openSelected()));
+    QAction* actionEdit = m_contextMenu->addAction("Edit");
+    QObject::connect(actionEdit, SIGNAL(triggered()), this, SLOT(editSelected()));
+    QAction* actionDelete = m_contextMenu->addAction("Delete");
+    QObject::connect(actionDelete, SIGNAL(triggered()), this, SLOT(deleteSelected()));
+    m_contextMenu->hide();
 }
 
 BookmarksBar::~BookmarksBar()
@@ -58,7 +72,7 @@ BookmarksBar::~BookmarksBar()
         }
     }
     SettingsLoader().saveSettings(m_settingsKeyPrefix + "bookmarks", serializedForm);
-    memory::deleteAll(ui);
+    memory::deleteAll(m_contextMenu, ui);
 }
 
 void BookmarksBar::onSelectionChanged(const QModelIndex& modelIndex)
@@ -72,4 +86,28 @@ void BookmarksBar::onSelectionChanged(const QModelIndex& modelIndex)
     if (bmIter != m_bookmarks.end()) {
         emit selectionChanged(bmIter);
     }
+}
+
+void BookmarksBar::onCustomContextMenuRequested(const QPoint& pos)
+{
+    int x = pos.x();
+    int y = pos.y();
+    x += parentWidget()->pos().x() + 75;
+    y += parentWidget()->pos().y() + 150;
+    m_contextMenu->move(x, y);
+    m_contextMenu->show();
+}
+
+void BookmarksBar::openSelected()
+{
+}
+
+void BookmarksBar::editSelected()
+{
+    
+}
+
+void BookmarksBar::deleteSelected()
+{
+    
 }

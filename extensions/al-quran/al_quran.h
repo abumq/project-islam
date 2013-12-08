@@ -2,11 +2,11 @@
 #define AL_QURAN_H
 
 #include "core/extension/extension_base.h"
-#include "bookmarks_bar.h"
 
 class QuranReciter;
 class QuranReader;
 class Bookmark;
+class BookmarksBar;
 
 namespace quran {
 class Chapter;

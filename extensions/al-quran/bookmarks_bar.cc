@@ -1,5 +1,6 @@
 #include "bookmarks_bar.h"
-#include "ui_bookmarksbar.h"
+#include "ui_bookmarks_bar.h"
+#include <QStandardItemModel>
 #include "core/settings_loader.h"
 #include "core/memory.h"
 #include "core/quran/chapter.h"
@@ -11,6 +12,11 @@ BookmarksBar::BookmarksBar(const QString& settingsKeyPrefix, QWidget *parent) :
 {
     ui->setupUi(this);
     
+    QStandardItemModel* model = new QStandardItemModel(this);
+    model->setColumnCount(2);
+    model->setHorizontalHeaderLabels(QStringList() << "Name" << "Location");
+    ui->treeBookmarks->setModel(model);
+    
     // Load bookmarks
     QString bookmarksStr = SettingsLoader().get(m_settingsKeyPrefix + "bookmarks").toString();
     if (!bookmarksStr.isEmpty()) {
@@ -20,13 +26,24 @@ BookmarksBar::BookmarksBar(const QString& settingsKeyPrefix, QWidget *parent) :
             if (bm.deserialize(bookmarkStr)) {
                 LOG(INFO) << "Loading bookmark [" << bm << "]";
                 m_bookmarks.push_back(bm);
-                QListWidgetItem* bookmarkItem = new QListWidgetItem(bm.name(), ui->lstBookmark);
-                bookmarkItem->setToolTip(bm.serialize());
+                
+                QStandardItem* bookmarkStandardItemName = new QStandardItem(bm.name());
+                QString location = bm.serialize().mid(bm.name().length() + 1 /* name= */);
+                QStandardItem* bookmarkStandardItemLocation = new QStandardItem(location);
+                bookmarkStandardItemName->setData(bm.serialize());
+                bookmarkStandardItemName->setFlags(bookmarkStandardItemName->flags() & ~Qt::ItemIsEditable);
+                bookmarkStandardItemLocation->setFlags(bookmarkStandardItemLocation->flags() & ~Qt::ItemIsEditable);
+                
+                int currRow = model->rowCount();
+                model->setItem(currRow, 0, bookmarkStandardItemName);
+                model->setItem(currRow, 1, bookmarkStandardItemLocation);
             }
         }
     }
-    QObject::connect(ui->lstBookmark, SIGNAL(itemDoubleClicked(QListWidgetItem*)), 
-                     this, SLOT(onSelectionChanged(QListWidgetItem*)));
+    QObject::connect(ui->treeBookmarks, SIGNAL(doubleClicked(QModelIndex)),
+                     this, SLOT(onSelectionChanged(QModelIndex)));
+    
+    
 }
 
 BookmarksBar::~BookmarksBar()
@@ -44,11 +61,13 @@ BookmarksBar::~BookmarksBar()
     memory::deleteAll(ui);
 }
 
-void BookmarksBar::onSelectionChanged(QListWidgetItem* item)
+void BookmarksBar::onSelectionChanged(const QModelIndex& modelIndex)
 {
     QVector<Bookmark>::Iterator bmIter = 
             std::find_if(m_bookmarks.begin(), m_bookmarks.end(), [&](const Bookmark& b) {
-        return b.serialize() == item->toolTip();
+        QString serialized = modelIndex.sibling(modelIndex.row(), 0).data().toString() + "=" +
+                modelIndex.sibling(modelIndex.row(), 1).data().toString();
+        return b.serialize() == serialized;
     });
     if (bmIter != m_bookmarks.end()) {
         emit selectionChanged(bmIter);

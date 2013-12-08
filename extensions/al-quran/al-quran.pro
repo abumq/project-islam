@@ -25,7 +25,7 @@ DEFINES += _ELPP_UNICODE \
            
 INCLUDEPATH += "../../"
 
-# libimf for Intel C++
+# libimf so for Intel C++
 # TODO: export LD_LIBRARY_PATH
 LIBS += -L/home/mkhan/intel/composer_xe_2013.5.192/compiler/lib/intel64/
 

@@ -5,7 +5,7 @@
 #include <QVector>
 #include "bookmark.h"
 
-class QListWidgetItem;
+class QTreeWidgetItem;
 namespace Ui {
 class BookmarksBar;
 }
@@ -21,7 +21,7 @@ public:
 signals:
     void selectionChanged(Bookmark* bookmark);
 public slots:
-    void onSelectionChanged(QListWidgetItem* item);
+    void onSelectionChanged(const QModelIndex&);
 private:
     Ui::BookmarksBar *ui;
     QString m_settingsKeyPrefix;

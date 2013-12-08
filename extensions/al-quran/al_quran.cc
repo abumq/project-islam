@@ -5,6 +5,7 @@
 #include <QGridLayout>
 #include <QListWidget>
 
+#include "bookmarks_bar.h"
 #include "core/controls/quran_reciter.h"
 #include "core/controls/quran_reader.h"
 
@@ -67,20 +68,24 @@ void AlQuran::initializeMenu()
     QAction* showReaderAction = extensionMenu()->addAction("Show Reader");
     QObject::connect(showReaderAction, SIGNAL(toggled(bool)), this, SLOT(toggleReader(bool)));
     showReaderAction->setCheckable(true);
-    showReaderAction->setChecked(
-                toggleReader(setting("show_reader", QVariant(true)).toBool()));
+    bool reader = setting("show_reader", QVariant(true)).toBool();
+    showReaderAction->setChecked(reader);
+    toggleReader(reader);
     
     QAction* showReciterAction = extensionMenu()->addAction("Show Reciter");
     QObject::connect(showReciterAction, SIGNAL(toggled(bool)), this, SLOT(toggleReciter(bool)));
     showReciterAction->setCheckable(true);
-    showReciterAction->setChecked(
-                toggleReciter(setting("show_reciter", QVariant(true)).toBool()));
+    bool reciter = setting("show_reciter", QVariant(true)).toBool();
+    showReciterAction->setChecked(reciter);
+    toggleReciter(reciter);
     
     QAction* showBookmarksAction = extensionMenu()->addAction("Bookmarks");
     QObject::connect(showBookmarksAction, SIGNAL(toggled(bool)), this, SLOT(toggleBookmarkBar(bool)));
     showBookmarksAction->setCheckable(true);
-    showBookmarksAction->setChecked(
-                toggleBookmarkBar(setting("show_bookmarks", QVariant(true)).toBool()));
+    bool bookmarks = setting("show_bookmarks", QVariant(true)).toBool();
+    showBookmarksAction->setChecked(bookmarks);
+    toggleBookmarkBar(bookmarks);
+    
 }
 
 void AlQuran::onContainerGeometryChanged(int w, int h)

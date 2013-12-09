@@ -45,6 +45,7 @@ public slots:
     void onSelectedVerseChangedReciter(int);
     void onSelectedVerseChangedReader(int);
     void onBookmarkChanged(Bookmark* bookmark);
+    void onJumpToTextChanged(const QString&);
     
     void toggleReciter(bool);
     void toggleReader(bool);

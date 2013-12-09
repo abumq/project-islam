@@ -9,6 +9,7 @@
 #include "core/memory.h"
 #include "bookmark.h"
 
+class QPushButton;
 class QMenu;
 namespace Ui {
 class BookmarksBar;
@@ -51,11 +52,14 @@ class BookmarksBar : public QWidget
     Q_OBJECT
     
 public:
+    static const char* kBookmarkSeparator;
     static const int kBookmarkBarWidth = 400;
     BookmarksBar(const QString& settingsKeyPrefix, QWidget *parent = 0);
     ~BookmarksBar();
     void save();
     void load();
+    QString currentJumpText() const;
+    void setCurrentJumpText(const QString& currentJumpText);
 signals:
     void selectionChanged(Bookmark* bookmark);
 public slots:
@@ -65,12 +69,17 @@ public slots:
     void editSelected();
     void deleteSelected();
     void onItemChanged(QStandardItem*);
+    void add();
 private:
     Ui::BookmarksBar *ui;
     BookmarksList* m_bookmarksList;
     QMenu* m_contextMenu;
     QStandardItemModel* m_model;
     QString m_settingsKeyPrefix;
+    QString m_currentJumpText;
+    QPushButton* m_addButton;
+    
+    bool add(const QString&);
 };
 
 #endif // BOOKMARKSBAR_H

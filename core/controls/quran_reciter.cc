@@ -259,7 +259,7 @@ void QuranReciter::on_cboChapter_currentIndexChanged(int index)
     bool isChapterChanged = m_currentChapter != nullptr && 
             static_cast<quran::Chapter::Name>(chapterId) != m_currentChapter->name();
     if (m_mediaPlayer->state() != m_mediaPlayer->PlayingState &&
-        m_mediaPlayer->state() != m_mediaPlayer->PausedState) {
+            m_mediaPlayer->state() != m_mediaPlayer->PausedState) {
         m_mediaPlayer->stop();
     } else {
         // This is case when chapter index is not chaged instead it's same chapter
@@ -291,7 +291,9 @@ void QuranReciter::on_cboChapter_currentIndexChanged(int index)
     }
     QString recitationFolder = ui->cboReciter->itemData(ui->cboReciter->currentIndex()).toString();
     DVLOG(8) << "Loading recitation data from [" << recitationFolder << "]";
-    m_currentRecitationDir = QDir(recitationFolder, zeroPaddedId, QDir::Name | QDir::IgnoreCase, QDir::Dirs | QDir::NoDotAndDotDot);
+    m_currentRecitationDir = QDir(recitationFolder, zeroPaddedId, 
+                                  QDir::Name | QDir::IgnoreCase, 
+                                  QDir::Dirs | QDir::NoDotAndDotDot);
     QStringList entries = m_currentRecitationDir.entryList();
     if (entries.isEmpty()) {
         DLOG(ERROR) << "Chapters not found [" << m_currentRecitationDir.absolutePath() << "]";
@@ -299,7 +301,9 @@ void QuranReciter::on_cboChapter_currentIndexChanged(int index)
     } else {
         for (QString chapterFolder : entries) {
             DVLOG(8) << "Loading chapter [" << chapterFolder << "]";
-            QDir chapterDir(m_currentRecitationDir.absolutePath() + QDir::separator() + chapterFolder, "*.mp3", QDir::Name | QDir::IgnoreCase, QDir::Files | QDir::NoDotAndDotDot);
+            QDir chapterDir(m_currentRecitationDir.absolutePath() + QDir::separator() + chapterFolder, "*.mp3", 
+                            QDir::Name | QDir::IgnoreCase, 
+                            QDir::Files | QDir::NoDotAndDotDot);
             QStringList verseEntries = chapterDir.entryList();
             if (verseEntries.isEmpty()) {
                 DVLOG(8) << "Chapter verses not found for [" << chapterFolder << "]";
@@ -378,7 +382,7 @@ void QuranReciter::onVerseChanged(int)
         return;
     }
     if (m_playList->currentIndex() == -1 || 
-        m_playList->currentIndex() > ui->spnVerseTo->value()) {
+            m_playList->currentIndex() > ui->spnVerseTo->value()) {
         m_playList->setCurrentIndex(ui->spnVerseFrom->value());
         if (ui->chkRepeat->isChecked() && ui->spnRepeat->value() > 1) {
             ui->spnRepeat->setValue(ui->spnRepeat->value() - 1);
@@ -456,7 +460,7 @@ void QuranReciter::on_btnReplayCurrentVerse_clicked()
     _TRACE;
     if (!m_ok) return;
     if (m_mediaPlayer->state() == QMediaPlayer::PlayingState
-        || m_mediaPlayer->state() == QMediaPlayer::PausedState) {
+            || m_mediaPlayer->state() == QMediaPlayer::PausedState) {
         DVLOG(7) << "Re-reciting verse [" << m_playList->currentIndex() << "]";
         m_mediaPlayer->setPosition(0);
     }
@@ -464,6 +468,7 @@ void QuranReciter::on_btnReplayCurrentVerse_clicked()
 
 void QuranReciter::on_cboReciter_currentIndexChanged(int)
 {
+    _TRACE;
     if (m_currentChapter != nullptr && ui->cboChapter->count() == quran::Quran::kChapterCount) {
         on_cboChapter_currentIndexChanged(static_cast<int>(m_currentChapter->name()) - 1);
     }
@@ -472,5 +477,7 @@ void QuranReciter::on_cboReciter_currentIndexChanged(int)
 void QuranReciter::on_btnReloadReciters_clicked()
 {
     _TRACE;
+    ui->btnReloadReciters->setEnabled(false);
     loadReciters();
+    ui->btnReloadReciters->setEnabled(true);
 }

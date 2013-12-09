@@ -52,7 +52,7 @@ bool AlQuran::initialize()
     QObject::connect(m_reader, SIGNAL(translationToggled(bool)), this, SLOT(onToggledTranslation(bool)));
     QObject::connect(m_reader, SIGNAL(transliterationOnToggled(bool)), this, SLOT(onToggledTransliteration(bool)));
     QObject::connect(m_reciter, SIGNAL(currentVerseChanged(int)), this, SLOT(onSelectedVerseChangedReciter(int)));
-    
+    QObject::connect(m_reader, SIGNAL(jumpToTextChanged(QString)), this, SLOT(onJumpToTextChanged(QString)));
     // Bookmarks bar
     m_bookmarkBar = new QDockWidget("Bookmarks", extension()->container());
     BookmarksBar* bar = new BookmarksBar(settingsKeyPrefix());
@@ -180,8 +180,19 @@ void AlQuran::onSelectedVerseChangedReader(int index)
 
 void AlQuran::onBookmarkChanged(Bookmark* bookmark)
 {
+    if (bookmark == nullptr) {
+        return;
+    }
     m_reader->changeChapter(static_cast<quran::Chapter::Name>(bookmark->chapter()));
     m_reader->changeVerseRange(bookmark->verseFrom(), bookmark->verseTo());
+}
+
+void AlQuran::onJumpToTextChanged(const QString& txt)
+{
+    _TRACE;
+    if (m_bookmarkBar != nullptr) {
+        static_cast<BookmarksBar*>(m_bookmarkBar->widget())->setCurrentJumpText(txt);
+    }
 }
 
 void AlQuran::toggleReciter(bool val)
@@ -223,5 +234,6 @@ void AlQuran::onToggledTranslation(bool val)
 
 void AlQuran::onToggledTransliteration(bool val)
 {
+    _TRACE;
     saveSetting("load_transliteration", QVariant(val));
 }

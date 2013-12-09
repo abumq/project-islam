@@ -213,6 +213,9 @@
      <height>16</height>
     </rect>
    </property>
+   <property name="toolTip">
+    <string>Reload list of reciters</string>
+   </property>
    <property name="text">
     <string>↻</string>
    </property>

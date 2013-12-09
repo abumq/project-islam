@@ -65,6 +65,7 @@ signals:
     void currentVerseChanged(int);
     void translationToggled(bool);
     void transliterationOnToggled(bool);
+    void jumpToTextChanged(const QString&);
 protected:
     void resizeEvent(QResizeEvent *);
 private:

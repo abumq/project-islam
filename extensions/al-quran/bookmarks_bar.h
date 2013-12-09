@@ -70,6 +70,8 @@ public slots:
     void deleteSelected();
     void onItemChanged(QStandardItem*);
     void add();
+    void moveUp();
+    void moveDown();
 private:
     Ui::BookmarksBar *ui;
     BookmarksList* m_bookmarksList;

@@ -44,15 +44,27 @@ BookmarksBar::BookmarksBar(const QString& settingsKeyPrefix, QWidget *parent) :
     load();
     
     QAction* actionOpen = m_contextMenu->addAction("Open");
-    QObject::connect(actionOpen, SIGNAL(triggered()), this, SLOT(openSelected()));
+    QObject::connect(actionOpen, SIGNAL(triggered()), 
+                     this, SLOT(openSelected()));
     QAction* actionEdit = m_contextMenu->addAction("Edit");
-    QObject::connect(actionEdit, SIGNAL(triggered()), this, SLOT(editSelected()));
+    QObject::connect(actionEdit, SIGNAL(triggered()), 
+                     this, SLOT(editSelected()));
     QAction* actionDelete = m_contextMenu->addAction("Delete");
-    QObject::connect(actionDelete, SIGNAL(triggered()), this, SLOT(deleteSelected()));
+    QObject::connect(actionDelete, SIGNAL(triggered()), 
+                     this, SLOT(deleteSelected()));
     QObject::connect(m_bookmarksList, SIGNAL(doubleClicked(QModelIndex)),
                      this, SLOT(onSelectionChanged(QModelIndex)));
     QObject::connect(m_bookmarksList, SIGNAL(customContextMenuRequested(QPoint)),
                      this, SLOT(onCustomContextMenuRequested(QPoint)));
+    m_contextMenu->addSeparator();
+    QAction* actionMoveUp = m_contextMenu->addAction("Move Up");
+    actionMoveUp->setObjectName("actionMoveUp");
+    QObject::connect(actionMoveUp, SIGNAL(triggered()), 
+                     this, SLOT(moveUp()));
+    QAction* actionMoveDown = m_contextMenu->addAction("Move Down");
+    actionMoveDown->setObjectName("actionMoveDown");
+    QObject::connect(actionMoveDown, SIGNAL(triggered()), 
+                     this, SLOT(moveDown()));
 }
 
 BookmarksBar::~BookmarksBar()
@@ -97,6 +109,7 @@ void BookmarksBar::load()
 
 bool BookmarksBar::add(const QString& bookmarkStr) 
 {
+    _TRACE;
     Bookmark bm;
     if (bm.deserialize(bookmarkStr)) {
         LOG(INFO) << "Adding bookmark [" << bm << "]";
@@ -119,6 +132,7 @@ bool BookmarksBar::add(const QString& bookmarkStr)
 
 void BookmarksBar::add()
 {
+    _TRACE;
     QInputDialog nameDialog(this);
     nameDialog.setWindowTitle("Enter bookmark name:");
     nameDialog.exec();
@@ -129,6 +143,36 @@ void BookmarksBar::add()
     } else {
         LOG(ERROR) << "Unable to deserialize: " << serializedText;
     }
+}
+
+void BookmarksBar::moveUp()
+{
+    _TRACE;
+    QStandardItemModel* model = static_cast<QStandardItemModel*>(m_bookmarksList->model());
+    int currRow = m_bookmarksList->currentIndex().row();
+    BookmarkItem* itemName = static_cast<BookmarkItem*>(model->takeItem(currRow, 0));
+    QStandardItem* itemLoc = model->takeItem(currRow, 1);
+    BookmarkItem* item2Name = static_cast<BookmarkItem*>(model->takeItem(currRow - 1, 0));
+    QStandardItem* item2Loc = model->takeItem(currRow - 1, 1);
+    m_model->setItem(currRow, 0, item2Name);
+    m_model->setItem(currRow , 1, item2Loc);
+    m_model->setItem(currRow - 1, 0, itemName);
+    m_model->setItem(currRow - 1, 1, itemLoc);
+}
+
+void BookmarksBar::moveDown()
+{
+    _TRACE;
+    QStandardItemModel* model = static_cast<QStandardItemModel*>(m_bookmarksList->model());
+    int currRow = m_bookmarksList->currentIndex().row();
+    BookmarkItem* itemName = static_cast<BookmarkItem*>(model->takeItem(currRow, 0));
+    QStandardItem* itemLoc = model->takeItem(currRow, 1);
+    BookmarkItem* item2Name = static_cast<BookmarkItem*>(model->takeItem(currRow + 1, 0));
+    QStandardItem* item2Loc = model->takeItem(currRow + 1, 1);
+    m_model->setItem(currRow, 0, item2Name);
+    m_model->setItem(currRow , 1, item2Loc);
+    m_model->setItem(currRow + 1, 0, itemName);
+    m_model->setItem(currRow + 1, 1, itemLoc);
 }
 
 void BookmarksBar::onSelectionChanged(const QModelIndex& modelIndex)
@@ -149,6 +193,23 @@ void BookmarksBar::onSelectionChanged(const QModelIndex& modelIndex)
 void BookmarksBar::onCustomContextMenuRequested(const QPoint&)
 {
     _TRACE;
+    for (QAction* act : m_contextMenu->actions()) {
+        act->setEnabled(true);
+    }
+    if (m_bookmarksList->currentIndex().row() == 0) {
+        for (QAction* act : m_contextMenu->actions()) {
+            if (act->objectName() == "actionMoveUp") {
+                act->setEnabled(false);
+            }
+        }
+    } else if (m_bookmarksList->currentIndex().row() == 
+               m_bookmarksList->model()->rowCount() - 1) {
+        for (QAction* act : m_contextMenu->actions()) {
+            if (act->objectName() == "actionMoveDown") {
+                act->setEnabled(false);
+            }
+        }
+    }
     m_contextMenu->exec(QCursor::pos());
 }
 
@@ -196,6 +257,7 @@ void BookmarksBar::onItemChanged(QStandardItem* item)
 }
 QString BookmarksBar::currentJumpText() const
 {
+    _TRACE;
     return m_currentJumpText;
 }
 

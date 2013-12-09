@@ -7,6 +7,8 @@
 class Bookmark : public el::Loggable
 {
 public:
+    static const int kBookmarkNameLength = 30;
+    
     Bookmark();
     Bookmark(const QString& name, int chapter, int verseFrom, int verseTo);
     QString name() const;

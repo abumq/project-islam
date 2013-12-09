@@ -5,6 +5,7 @@
 #include <QAction>
 #include <QPushButton>
 #include <QInputDialog>
+#include <QSplitter>
 #include "core/settings_loader.h"
 #include "core/memory.h"
 #include "core/quran/chapter.h"
@@ -28,14 +29,22 @@ BookmarksBar::BookmarksBar(const QString& settingsKeyPrefix, QWidget *parent) :
     m_model->setColumnCount(2);
     m_model->setHorizontalHeaderLabels(QStringList() << "Name" << "Location");
     
-    m_addButton = new QPushButton("+", this);
+    m_addButton = new QPushButton(" + ", this);
     m_addButton->resize(20, 20);
     m_addButton->hide();
+    QFont font;
+    font.setFamily(QStringLiteral("FreeSerif"));
+    font.setPointSize(16);
+    font.setBold(true);
+    font.setWeight(75);
+    m_addButton->setFont(font);
     
     QObject::connect(m_addButton, SIGNAL(clicked()), this, SLOT(add()));
     
-    ui->gridLayout->addWidget(m_addButton, 0, 0, 1, 1);
-    ui->gridLayout->addWidget(m_bookmarksList, 1, 0, 1, 1);
+    QSplitter* splitter = new QSplitter(this);
+    ui->gridLayout->addWidget(splitter, 0, 0, 1, 1);
+    ui->gridLayout->addWidget(m_addButton, 0, 1, 1, 1);
+    ui->gridLayout->addWidget(m_bookmarksList, 1, 0, 1, 2);
     
     m_bookmarksList->setModel(m_model);
     m_bookmarksList->setContextMenuPolicy(Qt::CustomContextMenu);
@@ -134,9 +143,17 @@ void BookmarksBar::add()
 {
     _TRACE;
     QInputDialog nameDialog(this);
-    nameDialog.setWindowTitle("Enter bookmark name:");
-    nameDialog.exec();
+    nameDialog.setWindowTitle("Add Bookmark");
+    nameDialog.setTextValue("Bookmark");
+    nameDialog.setLabelText("Enter bookmark name:");
+    if (nameDialog.exec() == QInputDialog::Rejected) {
+        return;
+    }
     QString name = nameDialog.textValue().replace(kBookmarkSeparator, ",");
+    if (name.isEmpty()) {
+        return;
+    }
+    name = name.mid(0, Bookmark::kBookmarkNameLength);
     QString serializedText = name + "=" + m_currentJumpText;
     if (add(serializedText)) {
         save();

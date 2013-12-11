@@ -7,6 +7,8 @@
 #include "core/settings_loader.h"
 #include "core/data/data_holder.h"
 
+#include "core/update/update_manager.h"
+
 namespace Ui {
 class MainWindow;
 }
@@ -50,6 +52,8 @@ private:
     SettingsLoader m_settingsLoader;
     Qt::WindowStates m_previousWindowsState;
     data::DataHolder m_dataHolder;
+    
+    UpdateManager m_updateManager;
 };
 
 #endif // MAINWINDOW_H

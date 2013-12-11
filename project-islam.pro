@@ -1,4 +1,4 @@
-QT       += core gui widgets sql multimedia
+QT       += core gui widgets sql multimedia network
 
 greaterThan(QT_MAJOR_VERSION, 4):
 
@@ -14,7 +14,7 @@ QMAKE_CXXFLAGS += -Wno-sign-compare
 ## Other flags
 QMAKE_CXXFLAGS += -fPIC -g
 
-COMPILER = icpc
+COMPILER = g++
 QMAKE_CC = $$COMPILER
 QMAKE_CXX = $$COMPILER
 QMAKE_LINK = $$COMPILER
@@ -24,7 +24,8 @@ DEFINES += _ELPP_UNICODE \
            _ELPP_STL_LOGGING \
            _ELPP_LOG_UNORDERED_MAP \
            _ELPP_NO_DEFAULT_LOG_FILE \
-           _ELPP_STACKTRACE_ON_CRASH
+           _ELPP_STACKTRACE_ON_CRASH \
+           _ELPP_THREAD_SAFE
 
 DEFINES += # User macros
 
@@ -47,7 +48,8 @@ SOURCES += main.cc\
     core/quran/chapter.cc \
     core/data/database_manager.cc \
     core/data/database_builder.cc \
-    core/data/data_holder.cc
+    core/data/data_holder.cc \
+    core/update/update_manager.cc
 
 HEADERS  += mainwindow.h \
     core/constants.h \
@@ -71,7 +73,8 @@ HEADERS  += mainwindow.h \
     core/data/database_builder.h \
     core/data/data_holder.h \
     core/easylogging++.h \
-    core/memory.h
+    core/memory.h \
+    core/update/update_manager.h
 
 FORMS    += mainwindow.ui \
     settings_dialog.ui \

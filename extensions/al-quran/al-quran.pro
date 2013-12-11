@@ -1,4 +1,4 @@
-QT       += core gui widgets sql multimedia
+QT       += core gui widgets sql multimedia network
  
 TARGET = $$qtLibraryTarget(AlQuran)
 TEMPLATE = lib
@@ -12,7 +12,7 @@ QMAKE_CXXFLAGS += -Wno-sign-compare
 ## Other flags
 QMAKE_CXXFLAGS += -fPIC -g
 
-COMPILER = icpc
+COMPILER = g++
 QMAKE_CC = $$COMPILER
 QMAKE_CXX = $$COMPILER
 QMAKE_LINK = $$COMPILER
@@ -21,7 +21,8 @@ DEFINES += _ELPP_UNICODE \
            _ELPP_QT_LOGGING \
            _ELPP_STL_LOGGING \
            _ELPP_DEFAULT_LOG_FILE=\\\".l.lg\\\" \
-           _ELPP_STACKTRACE_ON_CRASH
+           _ELPP_STACKTRACE_ON_CRASH \
+           _ELPP_THREAD_SAFE
            
 INCLUDEPATH += "../../"
 

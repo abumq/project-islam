@@ -1,5 +1,7 @@
 #include "core/update/update_manager.h"
 
+#include <memory.h>
+
 #include <QApplication>
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
@@ -26,10 +28,10 @@ const char* UpdateManager::kServerUrlBase = "http://www.icplusplus.com";
 const char* UpdateManager::kVersionInfoFilename = "tools/project-islam/vinfo.txt";
 
 UpdateManager::UpdateManager(QObject *parent) :
-    m_networkManager(new QNetworkAccessManager(parent))
+    QObject(parent)
 {
     // Logger
-    el::Loggers::getLogger(UPDATE_MANAGER_LOGGER_ID);
+    el::Logger* updateManagerLogger = el::Loggers::getLogger(UPDATE_MANAGER_LOGGER_ID);
     
     // Load m_lastChecked
     const QDate defaultDate = QDate::currentDate().addDays(-1);
@@ -49,7 +51,6 @@ UpdateManager::~UpdateManager()
         _LOG(WARNING) << "Updater was running while killed process.";
         m_future.cancel();
     }
-    memory::deleteAll(m_networkManager);
 }
 
 void UpdateManager::initialize(QApplication* app, ExtensionBar* extensionBar)
@@ -126,6 +127,8 @@ bool UpdateManager::update()
         return true;
     }
     TIMED_SCOPE(timer, "Update");
+    m_networkManager = std::unique_ptr<QNetworkAccessManager>(new QNetworkAccessManager());
+    
     bool result = false;
     _LOG(INFO) << "Checking for updates...";
     
@@ -155,7 +158,6 @@ bool UpdateManager::update()
             } else {
                 _LOG(ERROR) << "No downloadable update available for [" 
                             << currOs << "]";
-                
             }
             
         } else {

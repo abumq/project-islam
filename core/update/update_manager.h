@@ -1,6 +1,8 @@
 #ifndef UPDATE_MANAGER_H
 #define UPDATE_MANAGER_H
 
+#include <memory>
+
 #include <QObject>
 #include <QDate>
 #include <QTimer>
@@ -27,7 +29,7 @@ protected:
 private slots:
     void performAsyncUpdate();
 private:
-    QNetworkAccessManager* m_networkManager;
+    std::unique_ptr<QNetworkAccessManager> m_networkManager;
     QDate m_lastChecked;
     QTimer m_updateTimer;
     QFuture<void> m_future;

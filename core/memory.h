@@ -35,5 +35,22 @@ inline void clearPointerContainer(Iterator b, Iterator e, Container* container) 
     container->clear();
 }
 
+template <typename T>
+class scopedAlloc {
+public:
+    explicit scopedAlloc(T* t) :
+        m_t(t) {
+    }
+    virtual ~scopedAlloc() {
+        memory::deleteAll(m_t);
+    }
+    T* operator()() {
+        return m_t;
+    }
+
+private:
+    T* m_t;
+};
+
 } // namespace memory
 #endif // MEMORY_H

@@ -12,12 +12,15 @@ class UpdateManager : public QObject
 {
     Q_OBJECT
     static const qint64 kDaysToCheck = 1;
-    static const int kCheckIntervalInMs = 100;
+    static const qint64 kCheckIntervalInMs = 7200000; // Every 3 hours
+    static const char* kServerUrlBase;
+    static const char* kVersionInfoFilename;
 public:
     explicit UpdateManager(QObject* parent = 0);
     virtual ~UpdateManager();
 protected:
-    bool downloadFile(const QString&, const QString&);
+    bool downloadFile(const QString& url, const QString& path);
+    QByteArray downloadBytes(const QString& url, bool* ok = nullptr);
 private slots:
     bool synchronousUpdate();
     void performAsyncUpdate();
@@ -29,6 +32,7 @@ private:
     QFutureWatcher<void> m_futureWatcher;
     
     bool needToCheckForUpdates() const;
+    QString versionInfoUrl() const;
 };
 
 #endif // UPDATE_MANAGER_H

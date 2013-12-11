@@ -1,0 +1,8 @@
+{
+    "platform": "1.0.0a",
+    "extensions": [
+        {
+            "al-quran": "1.0.0"
+        }
+    ]
+}

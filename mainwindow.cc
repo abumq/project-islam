@@ -17,12 +17,11 @@
 #include "core/extension/extension_loader.h"
 
 MainWindow::MainWindow(QApplication* app) :
-    QMainWindow(0),
+    QMainWindow(nullptr),
     ui(new Ui::MainWindow),
-    m_app(app),
-    m_container(nullptr),
-    m_extensionBar(nullptr)
+    m_app(app)
 {
+    memory::turnToNullPtr(m_container, m_extensionBar);
     ui->setupUi(this);
     
     initialize();
@@ -95,7 +94,7 @@ void MainWindow::loadSettings()
     int b = rgbList.at(2).trimmed().toInt();
     m_styleLoader = StyleLoader(r, g, b);
     
-    // TODO Update log settings also update LoggingConfigurer::baseConfiguration() so that when
+    // TODO: Update log settings also update LoggingConfigurer::baseConfiguration() so that when
     // in future LoggingConfigurer::configureLoggers() is used we default it to this new log file and other configurations
     
 }

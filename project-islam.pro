@@ -74,7 +74,8 @@ HEADERS  += mainwindow.h \
     core/data/data_holder.h \
     core/easylogging++.h \
     core/memory.h \
-    core/update/update_manager.h
+    core/update/update_manager.h \
+    core/version.h
 
 FORMS    += mainwindow.ui \
     settings_dialog.ui \

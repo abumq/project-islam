@@ -5,6 +5,7 @@
 #include <QResource>
 
 #include "core/logging.h"
+#include "core/version.h"
 
 #if (QT_VERSION < QT_VERSION_CHECK(5, 0, 0))
 #   error This project requires Qt 5.x
@@ -30,7 +31,7 @@ int main(int argc, char *argv[])
     LoggingConfigurer::configureLoggers();
     
     a.setApplicationName("Project Islam Platform");
-    a.setApplicationVersion("v0.1");
+    a.setApplicationVersion(version::versionString());
     a.setApplicationDisplayName("Project Islam Platform");
 
     MainWindow w(&a);

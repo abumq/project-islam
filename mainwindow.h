@@ -52,8 +52,9 @@ private:
     SettingsLoader m_settingsLoader;
     Qt::WindowStates m_previousWindowsState;
     data::DataHolder m_dataHolder;
-    
+#if !defined(DISABLE_AUTO_UPDATE)
     UpdateManager m_updateManager;
+#endif // DISABLE_AUTO_UPDATE
 };
 
 #endif // MAINWINDOW_H

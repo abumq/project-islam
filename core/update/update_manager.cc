@@ -1,4 +1,5 @@
 #include "core/update/update_manager.h"
+
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
 #include <QUrl>
@@ -6,11 +7,15 @@
 #include <QFileInfo>
 #include <QEventLoop>
 #include <QtConcurrent/QtConcurrent>
-#include <QJsonValue>
+#include <QJsonDocument>
+
 #include "core/logging.h"
 #include "core/memory.h"
 #include "core/version.h"
 #include "core/settings_loader.h"
+#include "core/extension/abstract_extension.h"
+#include "core/extension/extension_info.h"
+#include "core/extension/extension_bar.h"
 
 #define UPDATE_MANAGER_LOGGER_ID "update_manager"
 #undef _LOG
@@ -35,13 +40,6 @@ UpdateManager::UpdateManager(QObject *parent) :
         m_lastChecked = defaultDate;
     }
     SettingsLoader().saveSettings("update_checked", QVariant(m_lastChecked.toString()));
-    
-    // Update timer
-    m_updateTimer.setInterval(kCheckIntervalInMs);
-    connect(&m_updateTimer, SIGNAL(timeout()), this, SLOT(performAsyncUpdate()));
-    // Single shot anyway!
-    performAsyncUpdate();
-    m_updateTimer.start(kCheckIntervalInMs);
 }
 
 UpdateManager::~UpdateManager()
@@ -51,6 +49,17 @@ UpdateManager::~UpdateManager()
         m_future.cancel();
     }
     memory::deleteAll(m_networkManager);
+}
+
+void UpdateManager::initialize(ExtensionBar* extensionBar)
+{
+    m_extensionBar = CHECK_NOTNULL(extensionBar);
+    // Update timer
+    m_updateTimer.setInterval(kCheckIntervalInMs);
+    connect(&m_updateTimer, SIGNAL(timeout()), this, SLOT(performAsyncUpdate()));
+    // Single shot anyway!
+    performAsyncUpdate();
+    m_updateTimer.start(kCheckIntervalInMs);
 }
 
 bool UpdateManager::downloadFile(const QString& url, const QString& downloadPath)
@@ -106,27 +115,101 @@ QString UpdateManager::versionInfoUrl() const
     return QString(kServerUrlBase) + "/" + QString(kVersionInfoFilename);
 }
 
-bool UpdateManager::synchronousUpdate()
+bool UpdateManager::update()
 {
     if (!needToCheckForUpdates()) {
         _LOG(DEBUG) << "Ignorning updater";
         return true;
     }
+    TIMED_SCOPE(timer, "Update");
     bool result = false;
     _LOG(INFO) << "Checking for updates...";
     
     bool downloadOk = false;
-    QString vinfoContents = QString(downloadBytes(versionInfoUrl(), &downloadOk));
+    QString jsonVInfo = QString(downloadBytes(versionInfoUrl(), &downloadOk));
     if (downloadOk) {
-        _LOG(DEBUG) << "VInfo downloaded from server: " << std::endl << vinfoContents;
+        _LOG(DEBUG) << "VInfo downloaded from server: " << std::endl << jsonVInfo;
         // Deserialize json
+        QJsonParseError jsonError;
+        QJsonDocument jsonDocument = QJsonDocument::fromJson(jsonVInfo.toUtf8(), &jsonError);
+        if (jsonError.error == QJsonParseError::NoError) {
+            QJsonObject jsonObject = jsonDocument.object();
+            QString currOs;
+#if defined(Q_OS_LINUX)
+            currOs = "linux";
+#elif defined(Q_OS_WIN32) || defined(Q_OS_WIN64)
+            currOs = "win";
+#elif defined(Q_OS_MAC)
+            currOs = "mac";
+#else
+            _LOG(ERROR) << "Operating system not supported for update";
+            return false;
+#endif // defined(Q_OS_LINUX)
+            QJsonObject osObj = jsonObject[currOs].toObject();
+            if (osObj["available"].toBool()) {
+                result = updatePlatform(&osObj) && updateExtensions(&osObj);
+            } else {
+                _LOG(ERROR) << "No downloadable update available for [" 
+                            << currOs << "]";
+                
+            }
+            
+        } else {
+            _LOG(ERROR) << "Error while parsing json. Error [" 
+                        << jsonError.errorString() << "]";
+        }
     }
-    
     if (result) {
         m_lastChecked = QDate::currentDate();
         SettingsLoader().saveSettings("update_checked", QVariant(m_lastChecked.toString()));
     }
     return result;
+}
+
+bool UpdateManager::updatePlatform(QJsonObject* jsonObject)
+{    
+    QJsonObject platformObj = (*jsonObject)["platform"].toObject();
+    QString ver = platformObj["version"].toString();
+    bool forceUpdate = platformObj["force_update"].toBool();
+    bool startUpgrade = !version::isCurrentVersion(ver) || forceUpdate;
+    if (startUpgrade) {
+        _LOG(INFO) << "Upgrading platform from [" << version::versionString() 
+                   << "] to [" << ver << "]" << (forceUpdate ? " (FORCED)" : "");
+        QString baseUrl = platformObj["base"].toString();
+        QStringList filesList = platformObj["files"].toString().split(',');
+        for (QString fileUrl : filesList) {
+            _LOG(INFO) << "Downloading platform file [" 
+                       << fileUrl << "] from [" + baseUrl + "]";
+        }
+    }
+    return true;
+}
+
+bool UpdateManager::updateExtensions(QJsonObject* jsonObject)
+{
+    QJsonArray extensionsArr = (*jsonObject)["extensions"].toArray();
+    foreach (const QJsonValue& value, extensionsArr) {
+        QJsonObject extensionobj = value.toObject();
+        QString name = extensionobj["name"].toString();
+        AbstractExtension* ex = m_extensionBar->hasExtension(name);
+        if (ex != nullptr) {
+            QString ver = extensionobj["version"].toString();
+            bool forceUpdate = extensionobj["force_update"].toBool();
+            bool startUpgrade = !ex->info()->isCurrentVersion(ver) || forceUpdate;
+            if (startUpgrade) {
+                _LOG(INFO) << "Upgrading [" << name << "] from [" 
+                           << ex->info()->versionString() 
+                           << "] to [" << ver << "]" << (forceUpdate ? " (FORCED)" : "");
+                QString baseUrl = extensionobj["base"].toString();
+                QStringList filesList = extensionobj["files"].toString().split(',');
+                for (QString fileUrl : filesList) {
+                    _LOG(INFO) << "Downloading extension file [" 
+                               << fileUrl << "] from [" + baseUrl + "]";
+                }
+            }
+        }
+    }
+    return true;
 }
 
 void UpdateManager::performAsyncUpdate()
@@ -135,6 +218,6 @@ void UpdateManager::performAsyncUpdate()
         // Already updating!
         return;
     }
-    m_future = QtConcurrent::run(this, &UpdateManager::synchronousUpdate);
+    m_future = QtConcurrent::run(this, &UpdateManager::update);
     m_futureWatcher.setFuture(m_future);
 }

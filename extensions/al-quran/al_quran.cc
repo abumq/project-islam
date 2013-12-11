@@ -18,8 +18,9 @@ const char* AlQuran::kDescription  = "Al-Qur'an recitation, reading and help mem
 AlQuran::AlQuran()
 {
     memory::turnToNullPtr(m_reciter, m_reader, m_bookmarkBar);
-    setExtensionInfo(ExtensionInfo(kMajorVersion, kMinorVersion, QString(kAuthor), 
-                                   QString(kName), QString(kTitle), QString(kDescription)));
+    setExtensionInfo(ExtensionInfo(kMajorVersion, kMinorVersion, kPatchVersion, 
+                                   QString(kAuthor), QString(kName), 
+                                   QString(kTitle), QString(kDescription)));
 }
 
 AlQuran::~AlQuran()

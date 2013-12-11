@@ -20,6 +20,7 @@ class AlQuran : public ExtensionBase
 private:
     static const unsigned int kMajorVersion = 1;
     static const unsigned int kMinorVersion = 0;
+    static const unsigned int kPatchVersion = 0;
     static const char* kAuthor;
     static const char* kName;
     static const char* kTitle;

@@ -3,6 +3,7 @@
 
 #include "core/easylogging++.h"
 #include "core/settings_loader.h"
+#include <QVariant>
 
 class LoggingConfigurer {
 public:
@@ -49,6 +50,11 @@ public:
         return configurations;
     }
 };
+
+inline MAKE_LOGGABLE(QVariant, qvariant, os) {
+    os << qvariant.toString().toStdString().c_str();
+    return os;
+}
 
 #define DATA_LOG(LEVEL) CLOG(LEVEL, "data")
 #define DDATA_LOG(LEVEL) DCLOG(LEVEL, "data")

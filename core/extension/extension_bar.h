@@ -29,6 +29,7 @@ public:
     
     const QVector<ExtensionItem*>* extensionItems() const;
     const QVector<AbstractExtension*>* extensions() const;
+    AbstractExtension* hasExtension(const QString& name) const;
 signals:
     void extensionChanged(AbstractExtension* extension);
 private:

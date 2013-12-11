@@ -63,6 +63,10 @@ void MainWindow::initialize()
         LOG(ERROR) << "Default extension not found";
     }
     
+#if !defined(DISABLE_AUTO_UPDATE)
+    m_updateManager.initialize(m_extensionBar);
+#endif // DISABLE_AUTO_UPDATE
+
     setWindowState(Qt::WindowMaximized);
     m_previousWindowsState = Qt::WindowMaximized;
     

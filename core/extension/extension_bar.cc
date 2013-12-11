@@ -103,3 +103,13 @@ const QVector<AbstractExtension*>* ExtensionBar::extensions() const
 {
     return &m_extensions;
 }
+
+AbstractExtension* ExtensionBar::hasExtension(const QString& name) const
+{
+    for (AbstractExtension* e : m_extensions) {
+        if (e->info()->name().toLower() == name.toLower()) {
+            return e;
+        }
+    }
+    return nullptr;
+}

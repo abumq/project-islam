@@ -7,7 +7,8 @@
 #include <QFuture>
 #include <QFutureWatcher>
 class QNetworkAccessManager;
-
+class QJsonObject;
+class ExtensionBar;
 class UpdateManager : public QObject
 {
     Q_OBJECT
@@ -18,11 +19,11 @@ class UpdateManager : public QObject
 public:
     explicit UpdateManager(QObject* parent = 0);
     virtual ~UpdateManager();
+    void initialize(ExtensionBar* extensionBar);
 protected:
     bool downloadFile(const QString& url, const QString& path);
     QByteArray downloadBytes(const QString& url, bool* ok = nullptr);
 private slots:
-    bool synchronousUpdate();
     void performAsyncUpdate();
 private:
     QNetworkAccessManager* m_networkManager;
@@ -30,9 +31,14 @@ private:
     QTimer m_updateTimer;
     QFuture<void> m_future;
     QFutureWatcher<void> m_futureWatcher;
+    ExtensionBar* m_extensionBar;
     
     bool needToCheckForUpdates() const;
     QString versionInfoUrl() const;
+    
+    bool update();
+    bool updatePlatform(QJsonObject* jsonObject);
+    bool updateExtensions(QJsonObject* jsonObject);
 };
 
 #endif // UPDATE_MANAGER_H

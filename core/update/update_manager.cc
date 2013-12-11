@@ -1,5 +1,6 @@
 #include "core/update/update_manager.h"
 
+#include <QApplication>
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
 #include <QUrl>
@@ -51,8 +52,9 @@ UpdateManager::~UpdateManager()
     memory::deleteAll(m_networkManager);
 }
 
-void UpdateManager::initialize(ExtensionBar* extensionBar)
+void UpdateManager::initialize(QApplication* app, ExtensionBar* extensionBar)
 {
+    m_app = CHECK_NOTNULL(app);
     m_extensionBar = CHECK_NOTNULL(extensionBar);
     // Update timer
     m_updateTimer.setInterval(kCheckIntervalInMs);
@@ -62,24 +64,26 @@ void UpdateManager::initialize(ExtensionBar* extensionBar)
     m_updateTimer.start(kCheckIntervalInMs);
 }
 
-bool UpdateManager::downloadFile(const QString& url, const QString& downloadPath)
+bool UpdateManager::downloadFile(const QString& url, const QString& filename)
 {
     QNetworkReply *networkReply = m_networkManager->get(QNetworkRequest(url));
     QEventLoop loop;
     QObject::connect(networkReply, SIGNAL(finished()), &loop, SLOT(quit()));
     loop.exec();
     
-    QUrl aUrl(url);
-    QFileInfo fileInfo=aUrl.path();
-    
     bool returnVal;
-    QFile file(downloadPath + QString(QDir::separator()) + fileInfo.fileName());
+    QFile file(filename);
     if (!file.open(QIODevice::WriteOnly)) {
         returnVal = false;
     } else {
         file.write(downloadBytes(url, &returnVal));
         file.close();
-        returnVal = true;
+        if (file.size() == 0) {
+            file.remove();
+            returnVal = false;
+        } else {
+            returnVal = true;
+        }
     }
     memory::deleteAll(networkReply);
     return returnVal;
@@ -172,22 +176,27 @@ bool UpdateManager::updatePlatform(QJsonObject* jsonObject)
     QString ver = platformObj["version"].toString();
     bool forceUpdate = platformObj["force_update"].toBool();
     bool startUpgrade = !version::isCurrentVersion(ver) || forceUpdate;
+    bool result = true; // We will mark it false if download fail
     if (startUpgrade) {
         _LOG(INFO) << "Upgrading platform from [" << version::versionString() 
                    << "] to [" << ver << "]" << (forceUpdate ? " (FORCED)" : "");
         QString baseUrl = platformObj["base"].toString();
         QStringList filesList = platformObj["files"].toString().split(',');
-        for (QString fileUrl : filesList) {
+        for (QString filename : filesList) {
             _LOG(INFO) << "Downloading platform file [" 
-                       << fileUrl << "] from [" + baseUrl + "]";
+                       << filename << "] from [" + baseUrl + "]";
+            QString targetDir = m_app->applicationDirPath() + "/";
+            QString tempFilename = targetDir + filename + ".updated";
+            result = result && downloadFile(baseUrl + filename, tempFilename);
         }
     }
-    return true;
+    return result;
 }
 
 bool UpdateManager::updateExtensions(QJsonObject* jsonObject)
 {
     QJsonArray extensionsArr = (*jsonObject)["extensions"].toArray();
+    bool result = true; // We will mark it false if download fail
     foreach (const QJsonValue& value, extensionsArr) {
         QJsonObject extensionobj = value.toObject();
         QString name = extensionobj["name"].toString();
@@ -202,14 +211,17 @@ bool UpdateManager::updateExtensions(QJsonObject* jsonObject)
                            << "] to [" << ver << "]" << (forceUpdate ? " (FORCED)" : "");
                 QString baseUrl = extensionobj["base"].toString();
                 QStringList filesList = extensionobj["files"].toString().split(',');
-                for (QString fileUrl : filesList) {
+                for (QString filename : filesList) {
                     _LOG(INFO) << "Downloading extension file [" 
-                               << fileUrl << "] from [" + baseUrl + "]";
+                               << filename << "] from [" + baseUrl + "]";
+                    QString targetDir = m_app->applicationDirPath() + "/extensions/";
+                    QString tempFilename = targetDir + filename + ".updated";
+                    result = result && downloadFile(baseUrl + filename, tempFilename);
                 }
             }
         }
     }
-    return true;
+    return result;
 }
 
 void UpdateManager::performAsyncUpdate()

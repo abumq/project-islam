@@ -9,6 +9,7 @@
 class QNetworkAccessManager;
 class QJsonObject;
 class ExtensionBar;
+class QApplication;
 class UpdateManager : public QObject
 {
     Q_OBJECT
@@ -19,9 +20,9 @@ class UpdateManager : public QObject
 public:
     explicit UpdateManager(QObject* parent = 0);
     virtual ~UpdateManager();
-    void initialize(ExtensionBar* extensionBar);
+    void initialize(QApplication* app, ExtensionBar* extensionBar);
 protected:
-    bool downloadFile(const QString& url, const QString& path);
+    bool downloadFile(const QString& url, const QString& filename);
     QByteArray downloadBytes(const QString& url, bool* ok = nullptr);
 private slots:
     void performAsyncUpdate();
@@ -31,6 +32,7 @@ private:
     QTimer m_updateTimer;
     QFuture<void> m_future;
     QFutureWatcher<void> m_futureWatcher;
+    QApplication* m_app;
     ExtensionBar* m_extensionBar;
     
     bool needToCheckForUpdates() const;

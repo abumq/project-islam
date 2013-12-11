@@ -5,7 +5,7 @@
             "version": "1.0.0",
             "force_update" : true,
              "base"  : "http://www.icplusplus.com/tools/project-islam/",
-             "files" : "project-islam,f"
+             "files" : "project-islam"
         },
         "extensions": [
             {

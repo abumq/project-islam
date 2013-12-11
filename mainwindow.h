@@ -21,6 +21,7 @@ class MainWindow : public QMainWindow
 public:
     MainWindow(QApplication* app);
     ~MainWindow();
+
     void initialize();
     void reloadStyles();
     void loadSettings();
@@ -38,6 +39,7 @@ private slots:
     void on_action_Settings_triggered();
     
     void on_actionFull_Screen_triggered(bool checked);
+    void restart();
     
 private:
     Ui::MainWindow *ui;
@@ -46,9 +48,7 @@ private:
     ExtensionBar* m_extensionBar;
     StyleLoader m_styleLoader;
     SettingsLoader m_settingsLoader;
-    
     Qt::WindowStates m_previousWindowsState;
-    
     data::DataHolder m_dataHolder;
 };
 

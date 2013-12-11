@@ -67,6 +67,7 @@ void MainWindow::initialize()
     setWindowState(Qt::WindowMaximized);
     m_previousWindowsState = Qt::WindowMaximized;
     
+    QObject::connect(ui->actionRestart, SIGNAL(triggered()), this, SLOT(restart()));
     reloadStyles();
 }
 
@@ -148,8 +149,7 @@ void MainWindow::on_action_Settings_triggered()
     settingsDialog.exec();
     if (settingsDialog.homeDirectoryChanged) {
         LOG(INFO) << "Home directory has been updated - restarting";
-        m_app->quit();
-        QProcess::startDetached(m_app->arguments()[0], m_app->arguments());
+        restart();
     } else {
         reloadStyles();
     }
@@ -163,4 +163,10 @@ void MainWindow::on_actionFull_Screen_triggered(bool checked)
     } else {
         setWindowState(m_previousWindowsState);
     }
+}
+
+void MainWindow::restart()
+{
+    m_app->quit();
+    QProcess::startDetached(m_app->arguments()[0], m_app->arguments());
 }

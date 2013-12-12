@@ -2,7 +2,7 @@
 #define BOOKMARK_H
 
 #include <QString>
-#include "core/logging.h"
+#include "core/logging/logging.h"
 
 class Bookmark : public el::Loggable
 {
@@ -11,6 +11,7 @@ public:
     
     Bookmark();
     Bookmark(const QString& name, int chapter, int verseFrom, int verseTo);
+    
     QString name() const;
     void setName(const QString& name);
     

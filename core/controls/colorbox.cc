@@ -5,7 +5,7 @@
 #include <QPixmap>
 #include <QPainter>
 
-#include "core/logging.h"
+#include "core/logging/logging.h"
 
 ColorBox::ColorBox(const QColor& defaultColor, QWidget *parent) : 
     QComboBox(parent), 

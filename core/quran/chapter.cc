@@ -1,3 +1,12 @@
+
+#ifndef _LOGGER
+#   define _LOGGER "quran"
+#endif
+#ifndef _PERFORMANCE_LOGGER
+#   define _PERFORMANCE_LOGGER _LOGGER
+#endif
+
+#include <ostream>
 #include "core/quran/chapter.h"
 
 namespace quran {
@@ -12,9 +21,10 @@ Chapter::Chapter(Classification classification, Name name, std::wstring&& arabic
     
 }
 
-void Chapter::log(el::base::type::ostream_t &os) const 
+std::wostream& Chapter::operator<<(std::wostream& os) const
 {
     os << m_arabicName;
+    return os;
 }
 
 Chapter::Name Chapter::name(void) const

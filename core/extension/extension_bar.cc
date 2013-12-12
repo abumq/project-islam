@@ -2,7 +2,7 @@
 
 #include <QVector>
 
-#include "core/logging.h"
+#include "core/logging/logging.h"
 #include "core/constants.h"
 #include "core/memory.h"
 #include "core/extension/abstract_extension.h"

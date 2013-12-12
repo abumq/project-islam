@@ -8,8 +8,8 @@
 #include <QSlider>
 #include <QObject>
 
+#include "core/logging/logging.h"
 #include "core/memory.h"
-#include "core/logging.h"
 #include "core/constants.h"
 #include "core/settings_loader.h"
 #include "core/data/data_holder.h"

@@ -7,7 +7,6 @@
 #include <QProcess>
 
 #include "settings_dialog.h"
-#include "core/logging.h"
 #include "core/memory.h"
 #include "core/constants.h"
 #include "core/extension/abstract_extension.h"
@@ -15,6 +14,7 @@
 #include "core/extension/extension_bar.h"
 #include "core/extension/extension_item.h"
 #include "core/extension/extension_loader.h"
+#include "core/logging/logging.h"
 
 MainWindow::MainWindow(QApplication* app) :
     QMainWindow(nullptr),
@@ -35,14 +35,7 @@ MainWindow::~MainWindow()
 
 void MainWindow::initialize()
 {
-    if (m_extensionBar != nullptr) {
-        delete m_extensionBar;
-        m_extensionBar = nullptr;
-    }
-    if (m_container != nullptr) {
-        delete m_container;
-        m_container = nullptr;
-    }
+    memory::deleteAll(m_extensionBar, m_container);
     loadSettings();
     
     m_container = new QWidget(this);

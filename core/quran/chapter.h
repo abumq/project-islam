@@ -4,13 +4,13 @@
 #include <vector>
 #include <map>
 #include <string>
+#include <ostream>
 
-#include "core/logging.h"
 #include "core/quran/verse.h"
 
 namespace quran {
 class Quran;
-class Chapter : public el::Loggable {
+class Chapter {
 public:
     enum class Classification : unsigned short { Meccan = 1, Medinan = 2 };
     enum class Name : unsigned short {
@@ -134,7 +134,7 @@ public:
             std::wstring&& arabicName, std::wstring&& englishName, int rukuhCount, int versesCount, 
             int sajdahCount, std::vector<int>&& positions, std::wstring&& muqattaat);
     
-    void log(el::base::type::ostream_t& os) const;
+    std::wostream& operator<<(std::wostream& os) const;
     
     Chapter::Classification classification(void) const;
     Chapter::Name name(void) const;

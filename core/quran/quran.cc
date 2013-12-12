@@ -1,6 +1,14 @@
+#ifndef _LOGGER
+#   define _LOGGER "quran"
+#endif
+#ifndef _PERFORMANCE_LOGGER
+#   define _PERFORMANCE_LOGGER _LOGGER
+#endif
+
 #include "core/quran/quran.h"
 #include "core/quran/verse.h"
 #include "core/quran/chapter.h"
+#include "core/logging/logging.h"
 #include "core/data/database_manager.h"
 
 namespace quran {
@@ -17,7 +25,7 @@ Quran::Quran(void) :
 
 void Quran::load(const Quran::TextType &textType, const std::string& databaseTable)
 {
-    QURAN_LOG(DEBUG) << "Loading Quran...";
+    LOG(DEBUG) << "Loading Quran...";
     TIMED_SCOPE(quranLoadTimer, "Load Complete Quran");
     m_textType = textType;
     data::DatabaseManager d("QuranDataManager", 

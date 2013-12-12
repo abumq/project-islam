@@ -125,10 +125,12 @@ void AlQuran::onContainerGeometryChanged(int w, int h)
 
 void AlQuran::onActivated()
 {
+    _TRACE;
 }
 
 void AlQuran::onDeactivated()
 {
+    _TRACE;
     // Stop if reciting
     if (m_reciter != nullptr) {
         m_reciter->stopIfPlaying();
@@ -137,6 +139,7 @@ void AlQuran::onDeactivated()
 
 void AlQuran::onChapterChangedReciter(const quran::Chapter* chapter)
 {
+    _TRACE;
     if (m_reader != nullptr) {
         m_reader->changeChapter(chapter->name());
     }
@@ -144,6 +147,7 @@ void AlQuran::onChapterChangedReciter(const quran::Chapter* chapter)
 
 void AlQuran::onVerseRangeChangedReciter(int from, int to)
 {
+    _TRACE;
     if (m_reader != nullptr) {
         m_reader->changeVerseRange(from, to);
     }
@@ -151,6 +155,7 @@ void AlQuran::onVerseRangeChangedReciter(int from, int to)
 
 void AlQuran::onChapterChangedReader(const quran::Chapter* chapter)
 {
+    _TRACE;
     if (m_reciter != nullptr) {
         m_reciter->changeChapter(chapter->name());
     }
@@ -158,6 +163,7 @@ void AlQuran::onChapterChangedReader(const quran::Chapter* chapter)
 
 void AlQuran::onVerseRangeChangedReader(int from, int to)
 {
+    _TRACE;
     if (m_reciter != nullptr) {
         m_reciter->changeVerseRange(from, to);
     }
@@ -165,6 +171,7 @@ void AlQuran::onVerseRangeChangedReader(int from, int to)
 
 void AlQuran::onSelectedVerseChangedReciter(int verseNumber)
 {
+    _TRACE;
     if (m_reader != nullptr) {
         if (m_reader->currentVerseNumber() != verseNumber) {
             m_reader->highlightVerse(verseNumber);
@@ -174,6 +181,7 @@ void AlQuran::onSelectedVerseChangedReciter(int verseNumber)
 
 void AlQuran::onSelectedVerseChangedReader(int index)
 {
+    _TRACE;
     if (m_reciter != nullptr) {
         m_reciter->changeVerse(index);
     }
@@ -181,6 +189,7 @@ void AlQuran::onSelectedVerseChangedReader(int index)
 
 void AlQuran::onBookmarkChanged(Bookmark* bookmark)
 {
+    _TRACE;
     if (bookmark == nullptr) {
         return;
     }

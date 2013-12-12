@@ -1,6 +1,9 @@
 #ifndef AL_QURAN_H
 #define AL_QURAN_H
 
+#define _LOGGER "al-quran"
+#define _PERFORMANCE_LOGGER _LOGGER
+
 #include "core/extension/extension_base.h"
 
 class QuranReciter;
@@ -27,7 +30,7 @@ private:
     static const char* kDescription;
 public:
     AlQuran();
-    virtual ~AlQuran();
+    ~AlQuran();
     
     virtual bool initialize();
     void initializeMenu();

@@ -55,7 +55,8 @@ HEADERS  += mainwindow.h \
     core/constants.h \
     core/style_loader.h \
     core/settings_loader.h \
-    core/logging.h \
+    core/logging/logging.h \
+    core/logging/easylogging++.h \
     core/extension/extension_info.h \
     core/extension/extension_base.h \
     core/extension/abstract_extension.h \
@@ -72,7 +73,6 @@ HEADERS  += mainwindow.h \
     core/data/database_manager.h \
     core/data/database_builder.h \
     core/data/data_holder.h \
-    core/easylogging++.h \
     core/memory.h \
     core/update/update_manager.h \
     core/version.h

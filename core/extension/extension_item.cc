@@ -5,6 +5,7 @@
 #include <QPixmap>
 #include <QSize>
 
+#include "core/logging/logging.h"
 #include "core/constants.h"
 #include "core/extension/abstract_extension.h"
 #include "core/extension/extension_info.h"

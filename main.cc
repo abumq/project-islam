@@ -4,7 +4,7 @@
 #include <QFile>
 #include <QResource>
 
-#include "core/logging.h"
+#include "core/logging/logging.h"
 #include "core/version.h"
 
 #if (QT_VERSION < QT_VERSION_CHECK(5, 0, 0))

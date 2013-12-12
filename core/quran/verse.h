@@ -4,16 +4,16 @@
 #include <vector>
 #include <map>
 #include <string>
-
-#include "core/logging.h"
+#include <ostream>
 
 namespace quran {
 class Quran;
 class Chapter;
-class Verse : public el::Loggable {
+class Verse {
 public:
     Verse(int id, int number, std::wstring&& text, Chapter* chapter, bool rukuh = false, bool sajdah = false);
-    void log(el::base::type::ostream_t& os) const;
+    
+    std::wostream& operator<<(std::wostream& os) const;
 
     int id(void) const;
     int number(void) const;

@@ -1,11 +1,19 @@
+#ifndef _LOGGER
+#   define _LOGGER "data"
+#endif
+#ifndef _PERFORMANCE_LOGGER
+#   define _PERFORMANCE_LOGGER _LOGGER
+#endif
+
 #include "core/data/database_builder.h"
 
 #include <QFile>
 #include <QDir>
 #include <QTextStream>
 
-#include "core/logging.h"
+#include "core/logging/logging.h"
 #include "core/data/database_manager.h"
+
 
 namespace data {
 
@@ -21,7 +29,7 @@ bool DatabaseBuilder::build(const QString& sqlFile, bool stopOnFirstError)
     
     QTextStream in(&file);
     
-    DDATA_LOG(INFO) << "Reading SQL file...";
+    DLOG(INFO) << "Reading SQL file...";
     QStringList sqlFromFile;
     while(!in.atEnd()) {
         sqlFromFile.append(in.readLine());
@@ -29,17 +37,17 @@ bool DatabaseBuilder::build(const QString& sqlFile, bool stopOnFirstError)
     
     file.close();
     if (!QDir(kDefaultDatabasePath).exists()) {
-        DDATA_LOG(INFO) << "Creating path [" << kDefaultDatabasePath << "]";
+        DLOG(INFO) << "Creating path [" << kDefaultDatabasePath << "]";
         QDir(kDefaultDatabasePath).mkdir(kDefaultDatabasePath);
     }
-    DDATA_LOG(INFO) << "Building database... [" << kDefaultDatabaseName << "]";
+    DLOG(INFO) << "Building database... [" << kDefaultDatabaseName << "]";
     data::DatabaseManager manager("DatabaseBuilder");
     foreach (QString sql, sqlFromFile) {
         sql = sql.trimmed();
         if (sql.isEmpty() || sql.startsWith(data::kSqlCommentBegin)) {
             continue;
         }
-        CLOG_EVERY_N(100, DEBUG, "data") << "Current iteration [" << ELPP_COUNTER_POS << "]; SQL: " << sql;
+        LOG_EVERY_N(100, DEBUG) << "Current iteration [" << ELPP_COUNTER_POS << "]; SQL: " << sql;
         manager.query(sql);
         if (stopOnFirstError && !manager.lastQuerySuccessful()) {
             return false;

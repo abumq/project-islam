@@ -4,7 +4,7 @@
 #include <QFile>
 #include <QSettings>
 
-#include "core/logging.h"
+#include "core/logging/logging.h"
 #include "core/memory.h"
 #include "core/constants.h"
 

@@ -1,6 +1,11 @@
-#include "core/update/update_manager.h"
+#ifndef _LOGGER
+#   define _LOGGER "update_manager"
+#endif
+#ifndef _PERFORMANCE_LOGGER
+#   define _PERFORMANCE_LOGGER _LOGGER
+#endif
 
-#include <memory.h>
+#include "core/update/update_manager.h"
 
 #include <QApplication>
 #include <QNetworkAccessManager>
@@ -12,17 +17,14 @@
 #include <QtConcurrent/QtConcurrent>
 #include <QJsonDocument>
 
-#include "core/logging.h"
+
 #include "core/memory.h"
 #include "core/version.h"
 #include "core/settings_loader.h"
 #include "core/extension/abstract_extension.h"
 #include "core/extension/extension_info.h"
 #include "core/extension/extension_bar.h"
-
-#define UPDATE_MANAGER_LOGGER_ID "update_manager"
-#undef _LOG
-#define _LOG(LEVEL) CLOG(LEVEL, UPDATE_MANAGER_LOGGER_ID)
+#include "core/logging/logging.h"
 
 const char* UpdateManager::kServerUrlBase = "http://www.icplusplus.com";
 const char* UpdateManager::kVersionInfoFilename = "tools/project-islam/vinfo.txt";
@@ -30,9 +32,6 @@ const char* UpdateManager::kVersionInfoFilename = "tools/project-islam/vinfo.txt
 UpdateManager::UpdateManager(QObject *parent) :
     QObject(parent)
 {
-    // Logger
-    el::Logger* updateManagerLogger = el::Loggers::getLogger(UPDATE_MANAGER_LOGGER_ID);
-    
     // Load m_lastChecked
     const QDate defaultDate = QDate::currentDate().addDays(-1);
     QString lastCheckedStr = 
@@ -47,8 +46,9 @@ UpdateManager::UpdateManager(QObject *parent) :
 
 UpdateManager::~UpdateManager()
 {
+    _TRACE;
     if (m_future.isRunning()) {
-        _LOG(WARNING) << "Updater was running while killed process.";
+        LOG(WARNING) << "Updater was running while killed process.";
         m_future.cancel();
     }
 }
@@ -102,7 +102,7 @@ QByteArray UpdateManager::downloadBytes(const QString& url, bool* ok)
         }
         return networkReply->readAll();
     }
-    _LOG(ERROR) << "Network error occured while downloading bytes from URL [" <<
+    LOG(ERROR) << "Network error occured while downloading bytes from URL [" <<
                    url << "], error [" << networkReply->errorString() << "]";
     if (ok != nullptr) {
         *ok = false;
@@ -123,19 +123,19 @@ QString UpdateManager::versionInfoUrl() const
 bool UpdateManager::update()
 {
     if (!needToCheckForUpdates()) {
-        _LOG(DEBUG) << "Ignorning updater";
+        LOG(DEBUG) << "Ignorning updater";
         return true;
     }
     TIMED_SCOPE(timer, "Update");
     m_networkManager = std::unique_ptr<QNetworkAccessManager>(new QNetworkAccessManager());
     
     bool result = false;
-    _LOG(INFO) << "Checking for updates...";
+    LOG(INFO) << "Checking for updates...";
     
     bool downloadOk = false;
     QString jsonVInfo = QString(downloadBytes(versionInfoUrl(), &downloadOk));
     if (downloadOk) {
-        _LOG(DEBUG) << "VInfo downloaded from server: " << std::endl << jsonVInfo;
+        LOG(DEBUG) << "VInfo downloaded from server: " << std::endl << jsonVInfo;
         // Deserialize json
         QJsonParseError jsonError;
         QJsonDocument jsonDocument = QJsonDocument::fromJson(jsonVInfo.toUtf8(), &jsonError);
@@ -149,19 +149,19 @@ bool UpdateManager::update()
 #elif defined(Q_OS_MAC)
             currOs = "mac";
 #else
-            _LOG(ERROR) << "Operating system not supported for update";
+            LOG(ERROR) << "Operating system not supported for update";
             return false;
 #endif // defined(Q_OS_LINUX)
             QJsonObject osObj = jsonObject[currOs].toObject();
             if (osObj["available"].toBool()) {
                 result = updatePlatform(&osObj) && updateExtensions(&osObj);
             } else {
-                _LOG(ERROR) << "No downloadable update available for [" 
+                LOG(ERROR) << "No downloadable update available for [" 
                             << currOs << "]";
             }
             
         } else {
-            _LOG(ERROR) << "Error while parsing json. Error [" 
+            LOG(ERROR) << "Error while parsing json. Error [" 
                         << jsonError.errorString() << "]";
         }
     }
@@ -180,12 +180,12 @@ bool UpdateManager::updatePlatform(QJsonObject* jsonObject)
     bool startUpgrade = !version::isCurrentVersion(ver) || forceUpdate;
     bool result = true; // We will mark it false if download fail
     if (startUpgrade) {
-        _LOG(INFO) << "Upgrading platform from [" << version::versionString() 
+        LOG(INFO) << "Upgrading platform from [" << version::versionString() 
                    << "] to [" << ver << "]" << (forceUpdate ? " (FORCED)" : "");
         QString baseUrl = platformObj["base"].toString();
         QStringList filesList = platformObj["files"].toString().split(',');
         for (QString filename : filesList) {
-            _LOG(INFO) << "Downloading platform file [" 
+            LOG(INFO) << "Downloading platform file [" 
                        << filename << "] from [" + baseUrl + "]";
             QString targetDir = m_app->applicationDirPath() + "/";
             QString tempFilename = targetDir + filename + ".updated";
@@ -208,13 +208,13 @@ bool UpdateManager::updateExtensions(QJsonObject* jsonObject)
             bool forceUpdate = extensionobj["force_update"].toBool();
             bool startUpgrade = !ex->info()->isCurrentVersion(ver) || forceUpdate;
             if (startUpgrade) {
-                _LOG(INFO) << "Upgrading [" << name << "] from [" 
+                LOG(INFO) << "Upgrading [" << name << "] from [" 
                            << ex->info()->versionString() 
                            << "] to [" << ver << "]" << (forceUpdate ? " (FORCED)" : "");
                 QString baseUrl = extensionobj["base"].toString();
                 QStringList filesList = extensionobj["files"].toString().split(',');
                 for (QString filename : filesList) {
-                    _LOG(INFO) << "Downloading extension file [" 
+                    LOG(INFO) << "Downloading extension file [" 
                                << filename << "] from [" + baseUrl + "]";
                     QString targetDir = m_app->applicationDirPath() + "/extensions/";
                     QString tempFilename = targetDir + filename + ".updated";

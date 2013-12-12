@@ -3,7 +3,7 @@
 
 #include <QString>
 
-#include "core/logging.h"
+#include "core/logging/logging.h"
 #include "core/extension/abstract_extension.h"
 
 class ExtensionInfo {

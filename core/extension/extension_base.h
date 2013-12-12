@@ -5,7 +5,7 @@
 #include <QObject>
 #include <QMenu>
 
-#include "core/logging.h"
+#include "core/logging/logging.h"
 #include "core/memory.h"
 #include "core/settings_loader.h"
 #include "core/extension/abstract_extension.h"
@@ -39,7 +39,13 @@ public:
     /// @brief Need to call this in extension and only proceed if this returns true
     /// Returns true if successfully initialized
     virtual bool initialize() {
-        CHECK (m_extensionInfo.isInitialized()) << "Please initialize ExtensionInfo (using constructor) from constructor of your extension.";
+#ifdef _LOGGER
+        el::Loggers::getLogger(_LOGGER);
+#endif
+#ifdef _PERFORMANCE_LOGGER
+        el::Loggers::getLogger(_PERFORMANCE_LOGGER);
+#endif
+        CHECK(m_extensionInfo.isInitialized()) << "Please initialize ExtensionInfo (using constructor) from constructor of your extension.";
         QObject::connect(extension(), SIGNAL(containerGeometryChanged(int, int)), this, SLOT(onContainerGeometryChanged(int, int)));
         QObject::connect(extension(), SIGNAL(activated()), this, SLOT(onActivated()));
         QObject::connect(extension(), SIGNAL(deactivated()), this, SLOT(onDeactivated()));
@@ -87,5 +93,5 @@ private:
 };
 
 Q_DECLARE_INTERFACE(ExtensionBase, "ProjectIslam.Api.ExtensionBase.v1.0")
-
+    
 #endif // EXTENSION_BASE_H

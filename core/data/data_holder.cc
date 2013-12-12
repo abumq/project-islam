@@ -1,5 +1,11 @@
+#ifndef _LOGGER
+#   define _LOGGER "data"
+#endif
+#ifndef _PERFORMANCE_LOGGER
+#   define _PERFORMANCE_LOGGER _LOGGER
+#endif
 #include "core/data/data_holder.h"
-#include "core/logging.h"
+#include "core/logging/logging.h"
 
 namespace data {
 

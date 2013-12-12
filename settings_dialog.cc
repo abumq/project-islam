@@ -1,8 +1,8 @@
 #include "settings_dialog.h"
 #include "ui_settings_dialog.h"
 
+#include "core/logging/logging.h"
 #include "mainwindow.h"
-#include "core/logging.h"
 #include "core/style_loader.h"
 #include "core/controls/colorbox.h"
 #include "core/data/database_builder.h"
@@ -160,7 +160,7 @@ void SettingsDialog::on_chkLevelGlobal_clicked(bool checked)
 
 void SettingsDialog::on_buildQuranEnglish_clicked()
 {
-    DATA_LOG(INFO) << "Building data: Quran English (Sahih International)";
+    LOG(INFO) << "Building data: Quran English (Sahih International)";
     data::DatabaseBuilder::build(data::DatabaseBuilder::DataType::QuranSahihTranslation);
     m_mainWindow->dataHolder()->quranTranslation()->load(quran::Quran::TextType::Translation,
                                                          quran::Quran::kQuranTransliterationDatabaseTable);
@@ -168,7 +168,7 @@ void SettingsDialog::on_buildQuranEnglish_clicked()
 
 void SettingsDialog::on_buildQuranArabic_clicked()
 {
-    DATA_LOG(INFO) << "Building data: Quran Arabic";
+    LOG(INFO) << "Building data: Quran Arabic";
     data::DatabaseBuilder::build(data::DatabaseBuilder::DataType::QuranArabic);
     m_mainWindow->dataHolder()->quranArabic()->load(quran::Quran::TextType::Original,
                                                     quran::Quran::kQuranArabicDatabaseTable);
@@ -176,19 +176,19 @@ void SettingsDialog::on_buildQuranArabic_clicked()
 
 void SettingsDialog::on_buildQuranChapters_clicked()
 {
-    DATA_LOG(INFO) << "Building data: Quran Chapters";
+    LOG(INFO) << "Building data: Quran Chapters";
     data::DatabaseBuilder::build(data::DatabaseBuilder::DataType::QuranChapters);
 }
 
 void SettingsDialog::on_buildDua_clicked()
 {
-    DATA_LOG(INFO) << "Building data: Dua";
+    LOG(INFO) << "Building data: Dua";
     data::DatabaseBuilder::build(data::DatabaseBuilder::DataType::Dua);
 }
 
 void SettingsDialog::on_buildQuranTransliterationEnglish_clicked()
 {
-    DATA_LOG(INFO) << "Building data: Quran Tranliteration (English)";
+    LOG(INFO) << "Building data: Quran Tranliteration (English)";
     data::DatabaseBuilder::build(data::DatabaseBuilder::DataType::QuranTransliteration);
     m_mainWindow->dataHolder()->quranTransliteration()->load(quran::Quran::TextType::Transliteration, quran::Quran::kQuranTransliterationDatabaseTable);
 }

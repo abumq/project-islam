@@ -1,5 +1,5 @@
 #include "bookmark.h"
-#include "core/logging.h"
+#include "core/logging/logging.h"
 #include "core/quran/quran.h"
 
 Bookmark::Bookmark() :

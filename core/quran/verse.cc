@@ -1,3 +1,11 @@
+
+#ifndef _LOGGER
+#   define _LOGGER "quran"
+#endif
+#ifndef _PERFORMANCE_LOGGER
+#   define _PERFORMANCE_LOGGER _LOGGER
+#endif
+
 #include "core/quran/verse.h"
 
 namespace quran {
@@ -7,9 +15,10 @@ Verse::Verse(int id, int number, std::wstring&& text, Chapter* chapter, bool ruk
 {
 }
 
-void Verse::log(el::base::type::ostream_t& os) const
+std::wostream& Verse::operator<<(std::wostream& os) const
 {
     os << m_text;
+    return os;
 }
 
 int Verse::id(void) const 

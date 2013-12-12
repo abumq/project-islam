@@ -8,6 +8,7 @@
 #include <QScrollBar>
 #include <QResizeEvent>
 
+#include "core/logging/logging.h"
 #include "core/quran/quran.h"
 
 const float QuranView::kDefaultZoom = 1.0f;
@@ -271,7 +272,6 @@ void QuranView::updateView()
         // Check max width from translation
         if (!m_verseTextTranslationItems.empty() && m_verseTextTranslationItems.contains(key)) {
             curr = m_verseTextTranslationItems.value(key);
-            LOG(INFO) << curr;
             if (maxWidth < curr->textWidth()) {
                 maxWidth = curr->textWidth();
             }

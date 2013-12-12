@@ -2,7 +2,7 @@
 
 #include <QFile>
 
-#include "core/logging.h"
+#include "core/logging/logging.h"
 
 const QString StyleLoader::kStylesDirectory = ":";
 

@@ -18,7 +18,7 @@ BookmarksBar::BookmarksBar(const QString& settingsKeyPrefix, QWidget *parent) :
     ui(new Ui::BookmarksBar),
     m_settingsKeyPrefix(settingsKeyPrefix)
 {
-    memory::turnToNullPtr(m_contextMenu, m_model, m_bookmarksList, m_addButton);
+    memory::turnToNullPtr(m_contextMenu, m_model, m_bookmarksList, m_addButton, m_mergeButton);
     ui->setupUi(this);
     
     m_contextMenu = new QMenu();
@@ -175,7 +175,20 @@ void BookmarksBar::add()
 void BookmarksBar::merge()
 {
     BookmarkItem* curr = static_cast<BookmarkItem*>(m_model->item(m_bookmarksList->currentIndex().row()));
-    LOG(INFO) << curr;
+    if (curr == nullptr) {
+        return;
+    }
+    Bookmark bm;
+    QString serializedText = curr->name() + "=" + currentJumpText();
+    
+    if (bm.deserialize(serializedText)) {
+        LOG(INFO) << "Merging bookmark [" << serializedText << "]";
+        curr->setLocationStr(serializedText.mid(bm.name().length() + 1));
+        curr->setChapter(bm.chapter());
+        curr->setVerseFrom(bm.verseFrom());
+        curr->setVerseTo(bm.verseTo());
+        save();
+    }
 }
 
 void BookmarksBar::moveUp()
@@ -225,8 +238,14 @@ void BookmarksBar::onSelectionChanged(const QModelIndex& modelIndex)
 
 void BookmarksBar::onActivated(const QModelIndex& modelIndex)
 {
+    if (m_mergeButton == nullptr) {
+        return;
+    }
     if (!currentJumpText().isEmpty()) {
         BookmarkItem* selection = static_cast<BookmarkItem*>(m_model->item(modelIndex.row()));
+        if (selection == nullptr) {
+            return;
+        }
         m_mergeButton->setToolTip("Merge [" + currentJumpText() + "] to " + selection->name());
         m_mergeButton->setEnabled(true);
     } else {

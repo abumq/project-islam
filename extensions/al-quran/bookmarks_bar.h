@@ -21,6 +21,10 @@ public:
         m_location(new QStandardItem(locationStr)) {
     }
     
+    void setLocationStr(const QString& locationStr) {
+        m_location->setText(locationStr);
+    }
+    
     QStandardItem* locationItem() {
         return m_location;
     }

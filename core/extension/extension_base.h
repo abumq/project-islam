@@ -21,6 +21,13 @@ public:
         el::Loggers::reconfigureAllLoggers(el::ConfigurationType::ToFile, "false");
         // Do not call initialize() here since we dont want to run into FATAL error
         // of __not__ initializing extensionInfo
+#ifdef _LOGGER
+        el::Loggers::getLogger(_LOGGER);
+#endif
+#ifdef _PERFORMANCE_LOGGER
+        el::Loggers::getLogger(_PERFORMANCE_LOGGER);
+#endif
+        el::Loggers::setDefaultConfigurations(LoggingConfigurer::baseConfiguration(), true);
     }
     
     virtual ~ExtensionBase() {
@@ -40,12 +47,6 @@ public:
     /// Returns true if successfully initialized
     virtual bool initialize(int argc, const char** argv) {
         el::Helpers::setArgs(argc, argv);
-#ifdef _LOGGER
-        el::Loggers::getLogger(_LOGGER);
-#endif
-#ifdef _PERFORMANCE_LOGGER
-        el::Loggers::getLogger(_PERFORMANCE_LOGGER);
-#endif
         CHECK(m_extensionInfo.isInitialized()) << "Please initialize ExtensionInfo (using constructor) from constructor of your extension.";
         QObject::connect(extension(), SIGNAL(containerGeometryChanged(int, int)), this, SLOT(onContainerGeometryChanged(int, int)));
         QObject::connect(extension(), SIGNAL(activated()), this, SLOT(onActivated()));

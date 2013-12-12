@@ -1,7 +1,13 @@
+
+COMPILER = g++
+DEFINES += # User macros
+
+## Modules
 QT       += core gui widgets sql multimedia network
 
 greaterThan(QT_MAJOR_VERSION, 4):
 
+## Target
 TARGET = project-islam
 TEMPLATE = app
 
@@ -12,9 +18,8 @@ QMAKE_CXXFLAGS += -std=c++0x
 QMAKE_CXXFLAGS += -Wno-sign-compare
 
 ## Other flags
-QMAKE_CXXFLAGS += -fPIC -g -gdwarf-3
+QMAKE_CXXFLAGS += -fPIC -g
 
-COMPILER = g++
 QMAKE_CC = $$COMPILER
 QMAKE_CXX = $$COMPILER
 QMAKE_LINK = $$COMPILER
@@ -26,8 +31,6 @@ DEFINES += _ELPP_UNICODE \
            _ELPP_NO_DEFAULT_LOG_FILE \
            _ELPP_STACKTRACE_ON_CRASH \
            _ELPP_THREAD_SAFE
-
-DEFINES += # User macros
 
 # libimf for Intel C++
 # TODO: export LD_LIBRARY_PATH

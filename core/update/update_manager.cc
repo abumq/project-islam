@@ -16,11 +16,13 @@
 #include <QEventLoop>
 #include <QtConcurrent/QtConcurrent>
 #include <QJsonDocument>
-
+#include <QPluginLoader>
 
 #include "core/memory.h"
 #include "core/version.h"
 #include "core/settings_loader.h"
+#include "core/extension/extension_loader.h"
+#include "core/extension/extension_base.h"
 #include "core/extension/abstract_extension.h"
 #include "core/extension/extension_info.h"
 #include "core/extension/extension_bar.h"
@@ -67,11 +69,6 @@ void UpdateManager::initialize(QApplication* app, ExtensionBar* extensionBar)
 
 bool UpdateManager::downloadFile(const QString& url, const QString& filename)
 {
-    QNetworkReply *networkReply = m_networkManager->get(QNetworkRequest(url));
-    QEventLoop loop;
-    QObject::connect(networkReply, SIGNAL(finished()), &loop, SLOT(quit()));
-    loop.exec();
-    
     bool returnVal;
     QFile file(filename);
     if (!file.open(QIODevice::WriteOnly)) {
@@ -86,7 +83,6 @@ bool UpdateManager::downloadFile(const QString& url, const QString& filename)
             returnVal = true;
         }
     }
-    memory::deleteAll(networkReply);
     return returnVal;
 }
 
@@ -95,6 +91,8 @@ QByteArray UpdateManager::downloadBytes(const QString& url, bool* ok)
     QNetworkReply *networkReply = m_networkManager->get(QNetworkRequest(url));
     QEventLoop loop;
     QObject::connect(networkReply, SIGNAL(finished()), &loop, SLOT(quit()));
+    QObject::connect(networkReply, SIGNAL(downloadProgress(qint64,qint64)), 
+                     this, SLOT(downloadProgressUpdated(qint64,qint64)));
     loop.exec();
     if (networkReply->error() == QNetworkReply::NoError) {
         if (ok != nullptr) {
@@ -103,7 +101,7 @@ QByteArray UpdateManager::downloadBytes(const QString& url, bool* ok)
         return networkReply->readAll();
     }
     LOG(ERROR) << "Network error occured while downloading bytes from URL [" <<
-                   url << "], error [" << networkReply->errorString() << "]";
+                  url << "], error [" << networkReply->errorString() << "]";
     if (ok != nullptr) {
         *ok = false;
     }
@@ -154,15 +152,18 @@ bool UpdateManager::update()
 #endif // defined(Q_OS_LINUX)
             QJsonObject osObj = jsonObject[currOs].toObject();
             if (osObj["available"].toBool()) {
-                result = updatePlatform(&osObj) && updateExtensions(&osObj);
+                result = updatePlatform(&osObj);
+                // Following order should not change since we want to 
+                // try to update both platform and extensions before we return
+                result = updateExtensions(&osObj) && result;
             } else {
                 LOG(ERROR) << "No downloadable update available for [" 
-                            << currOs << "]";
+                           << currOs << "]";
             }
             
         } else {
             LOG(ERROR) << "Error while parsing json. Error [" 
-                        << jsonError.errorString() << "]";
+                       << jsonError.errorString() << "]";
         }
     }
     if (result) {
@@ -181,15 +182,15 @@ bool UpdateManager::updatePlatform(QJsonObject* jsonObject)
     bool result = true; // We will mark it false if download fail
     if (startUpgrade) {
         LOG(INFO) << "Upgrading platform from [" << version::versionString() 
-                   << "] to [" << ver << "]" << (forceUpdate ? " (FORCED)" : "");
+                  << "] to [" << ver << "]" << (forceUpdate ? " (FORCED)" : "");
         QString baseUrl = platformObj["base"].toString();
         QStringList filesList = platformObj["files"].toString().split(',');
         for (QString filename : filesList) {
-            LOG(INFO) << "Downloading platform file [" 
-                       << filename << "] from [" + baseUrl + "]";
             QString targetDir = m_app->applicationDirPath() + "/";
             QString tempFilename = targetDir + filename + ".updated";
-            result = result && downloadFile(baseUrl + filename, tempFilename);
+            LOG(INFO) << "Downloading platform file [" 
+                      << filename << "] from [" + baseUrl + "] to [" << targetDir << "]";
+            result = downloadFile(baseUrl + filename, tempFilename) && result;
         }
     }
     return result;
@@ -209,16 +210,26 @@ bool UpdateManager::updateExtensions(QJsonObject* jsonObject)
             bool startUpgrade = !ex->info()->isCurrentVersion(ver) || forceUpdate;
             if (startUpgrade) {
                 LOG(INFO) << "Upgrading [" << name << "] from [" 
-                           << ex->info()->versionString() 
-                           << "] to [" << ver << "]" << (forceUpdate ? " (FORCED)" : "");
+                          << ex->info()->versionString() 
+                          << "] to [" << ver << "]" << (forceUpdate ? " (FORCED)" : "");
                 QString baseUrl = extensionobj["base"].toString();
                 QStringList filesList = extensionobj["files"].toString().split(',');
                 for (QString filename : filesList) {
-                    LOG(INFO) << "Downloading extension file [" 
-                               << filename << "] from [" + baseUrl + "]";
                     QString targetDir = m_app->applicationDirPath() + "/extensions/";
                     QString tempFilename = targetDir + filename + ".updated";
-                    result = result && downloadFile(baseUrl + filename, tempFilename);
+                    LOG(INFO) << "Downloading extension file [" 
+                              << filename << "] from [" + baseUrl + "] to [" << targetDir << "]";
+                    result = downloadFile(baseUrl + filename, tempFilename) && result;
+                    if (!ExtensionLoader::verifyExtension(tempFilename)) {
+                        LOG(WARNING) << "Removing [" << tempFilename << "]";
+                        QFile file(tempFilename);
+                        if (file.open(QIODevice::ReadWrite)) {
+                            file.remove();
+                            file.close();
+                        }
+                    } else {
+                        // Extension ready to be updated! Filename: file.zip.updated
+                    }
                 }
             }
         }
@@ -234,4 +245,14 @@ void UpdateManager::performAsyncUpdate()
     }
     m_future = QtConcurrent::run(this, &UpdateManager::update);
     m_futureWatcher.setFuture(m_future);
+}
+
+void UpdateManager::downloadProgressUpdated(qint64 bytesReceived, qint64 bytesTotal)
+{
+    if (sender() != nullptr && static_cast<QNetworkReply*>(sender())->error() == QNetworkReply::NoError) {
+        float percentage = (static_cast<float>(bytesReceived) / static_cast<float>(bytesTotal)) * 100;
+        VLOG(9) << "Download progress [" << bytesReceived << "/" << bytesTotal << "] (" 
+                  << percentage << "%)";
+    }
+    
 }

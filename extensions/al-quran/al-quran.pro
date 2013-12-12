@@ -12,7 +12,7 @@ QMAKE_CXXFLAGS += -Wno-sign-compare
 ## Other flags
 QMAKE_CXXFLAGS += -fPIC -g
 
-COMPILER = icpc
+COMPILER = g++
 QMAKE_CC = $$COMPILER
 QMAKE_CXX = $$COMPILER
 QMAKE_LINK = $$COMPILER

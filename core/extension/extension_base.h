@@ -38,7 +38,8 @@ public:
     
     /// @brief Need to call this in extension and only proceed if this returns true
     /// Returns true if successfully initialized
-    virtual bool initialize() {
+    virtual bool initialize(int argc, const char** argv) {
+        el::Helpers::setArgs(argc, argv);
 #ifdef _LOGGER
         el::Loggers::getLogger(_LOGGER);
 #endif

@@ -28,6 +28,7 @@ protected:
     QByteArray downloadBytes(const QString& url, bool* ok = nullptr);
 private slots:
     void performAsyncUpdate();
+    void downloadProgressUpdated(qint64, qint64);
 private:
     std::unique_ptr<QNetworkAccessManager> m_networkManager;
     QDate m_lastChecked;

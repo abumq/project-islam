@@ -28,9 +28,9 @@ AlQuran::~AlQuran()
     // m_reader, m_reciter not available! deleted on ~extension()->container()
 }
 
-bool AlQuran::initialize()
+bool AlQuran::initialize(int argc, const char** argv)
 {
-    if (!ExtensionBase::initialize()) {
+    if (!ExtensionBase::initialize(argc, argv)) {
         // Do not proceed
         return false;
     }

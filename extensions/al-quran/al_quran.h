@@ -32,7 +32,7 @@ public:
     AlQuran();
     ~AlQuran();
     
-    virtual bool initialize();
+    virtual bool initialize(int argc, const char **argv);
     void initializeMenu();
     
 public slots:

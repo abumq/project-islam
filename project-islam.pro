@@ -12,7 +12,7 @@ QMAKE_CXXFLAGS += -std=c++0x
 QMAKE_CXXFLAGS += -Wno-sign-compare
 
 ## Other flags
-QMAKE_CXXFLAGS += -fPIC -g
+QMAKE_CXXFLAGS += -fPIC -g -gdwarf-3
 
 COMPILER = g++
 QMAKE_CC = $$COMPILER

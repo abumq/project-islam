@@ -64,12 +64,14 @@ signals:
     void selectionChanged(Bookmark* bookmark);
 public slots:
     void onSelectionChanged(const QModelIndex&);
+    void onActivated(const QModelIndex&);
     void onCustomContextMenuRequested(const QPoint &);
     void openSelected();
     void editSelected();
     void deleteSelected();
     void onItemChanged(QStandardItem*);
     void add();
+    void merge();
     void moveUp();
     void moveDown();
 private:
@@ -80,6 +82,7 @@ private:
     QString m_settingsKeyPrefix;
     QString m_currentJumpText;
     QPushButton* m_addButton;
+    QPushButton* m_mergeButton;
     
     bool add(const QString&);
 };

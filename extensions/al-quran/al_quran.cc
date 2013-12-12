@@ -21,6 +21,7 @@ AlQuran::AlQuran()
     setExtensionInfo(ExtensionInfo(kMajorVersion, kMinorVersion, kPatchVersion, 
                                    QString(kAuthor), QString(kName), 
                                    QString(kTitle), QString(kDescription)));
+    Q_INIT_RESOURCE(icons);
 }
 
 AlQuran::~AlQuran()

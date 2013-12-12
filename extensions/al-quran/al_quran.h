@@ -1,9 +1,6 @@
 #ifndef AL_QURAN_H
 #define AL_QURAN_H
 
-#define _LOGGER "al-quran"
-#define _PERFORMANCE_LOGGER _LOGGER
-
 #include "core/extension/extension_base.h"
 
 class QuranReciter;

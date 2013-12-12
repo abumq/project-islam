@@ -6,6 +6,7 @@
 #include <QPushButton>
 #include <QInputDialog>
 #include <QSplitter>
+#include "core/logging/logging.h"
 #include "core/settings_loader.h"
 #include "core/memory.h"
 #include "core/quran/chapter.h"
@@ -20,35 +21,39 @@ BookmarksBar::BookmarksBar(const QString& settingsKeyPrefix, QWidget *parent) :
     memory::turnToNullPtr(m_contextMenu, m_model, m_bookmarksList, m_addButton);
     ui->setupUi(this);
     
-    m_bookmarksList = new BookmarksList(this);
-    
     m_contextMenu = new QMenu();
     m_contextMenu->hide();
     
     m_model = new QStandardItemModel(this);
-    m_model->setColumnCount(2);
-    m_model->setHorizontalHeaderLabels(QStringList() << "Name" << "Location");
     
-    m_addButton = new QPushButton(" + ", this);
-    m_addButton->resize(20, 20);
-    m_addButton->hide();
+    m_bookmarksList = new BookmarksList(this);
+    m_bookmarksList->setModel(m_model);
+    m_bookmarksList->setContextMenuPolicy(Qt::CustomContextMenu);
+    m_bookmarksList->setEditTriggers(BookmarksList::NoEditTriggers);
+    
     QFont font;
     font.setFamily(QStringLiteral("FreeSerif"));
     font.setPointSize(16);
     font.setBold(true);
     font.setWeight(75);
+    
+    m_addButton = new QPushButton(QIcon(":/icons/add"), "", this);
+    m_addButton->resize(20, 20);
+    m_addButton->setEnabled(false);
     m_addButton->setFont(font);
     
+    m_mergeButton = new QPushButton(QIcon(":/icons/merge"), "", this);
+    m_mergeButton->resize(20, 20);
+    m_mergeButton->setEnabled(false);
+    m_mergeButton->setFont(font);
+    
     QObject::connect(m_addButton, SIGNAL(clicked()), this, SLOT(add()));
+    QObject::connect(m_mergeButton, SIGNAL(clicked()), this, SLOT(merge()));
     
-    QSplitter* splitter = new QSplitter(this);
-    ui->gridLayout->addWidget(splitter, 0, 0, 1, 1);
-    ui->gridLayout->addWidget(m_addButton, 0, 1, 1, 1);
-    ui->gridLayout->addWidget(m_bookmarksList, 1, 0, 1, 2);
-    
-    m_bookmarksList->setModel(m_model);
-    m_bookmarksList->setContextMenuPolicy(Qt::CustomContextMenu);
-    m_bookmarksList->setEditTriggers(BookmarksList::NoEditTriggers);
+    ui->gridLayout->addWidget(new QSplitter(this), 0, 0, 1, 1);
+    ui->gridLayout->addWidget(m_mergeButton, 0, 1, 1, 1);
+    ui->gridLayout->addWidget(m_addButton, 0, 3, 1, 1);
+    ui->gridLayout->addWidget(m_bookmarksList, 1, 0, 1, 4);
     
     load();
     
@@ -61,6 +66,8 @@ BookmarksBar::BookmarksBar(const QString& settingsKeyPrefix, QWidget *parent) :
     QAction* actionDelete = m_contextMenu->addAction("Delete");
     QObject::connect(actionDelete, SIGNAL(triggered()), 
                      this, SLOT(deleteSelected()));
+    QObject::connect(m_bookmarksList, SIGNAL(activated(QModelIndex)),
+                     this, SLOT(onActivated(QModelIndex)));             
     QObject::connect(m_bookmarksList, SIGNAL(doubleClicked(QModelIndex)),
                      this, SLOT(onSelectionChanged(QModelIndex)));
     QObject::connect(m_bookmarksList, SIGNAL(customContextMenuRequested(QPoint)),
@@ -104,6 +111,9 @@ void BookmarksBar::load()
 {
     _TRACE;
     m_model->clear();
+    QStringList columnHeaders = QStringList() << "Name" << "Location";
+    m_model->setColumnCount(columnHeaders.size());
+    m_model->setHorizontalHeaderLabels(columnHeaders);
     QString bookmarksStr = SettingsLoader().get(m_settingsKeyPrefix + "bookmarks").toString();
     if (!bookmarksStr.isEmpty()) {
         QStringList allBookmarksStr = bookmarksStr.split(kBookmarkSeparator);
@@ -121,7 +131,7 @@ bool BookmarksBar::add(const QString& bookmarkStr)
     _TRACE;
     Bookmark bm;
     if (bm.deserialize(bookmarkStr)) {
-        LOG(INFO) << "Adding bookmark [" << bm << "]";
+        LOG(INFO) << "Adding bookmark [" << bm.serialize() << "]";
         BookmarkItem* bookmarkItem = new BookmarkItem(
                     bm.serialize().mid(bm.name().length() + 1 /* name= */)
                     );
@@ -160,6 +170,12 @@ void BookmarksBar::add()
     } else {
         LOG(ERROR) << "Unable to deserialize: " << serializedText;
     }
+}
+
+void BookmarksBar::merge()
+{
+    BookmarkItem* curr = static_cast<BookmarkItem*>(m_model->item(m_bookmarksList->currentIndex().row()));
+    LOG(INFO) << curr;
 }
 
 void BookmarksBar::moveUp()
@@ -204,6 +220,17 @@ void BookmarksBar::onSelectionChanged(const QModelIndex& modelIndex)
         if (bm->serialize() == serialized) {
             emit selectionChanged(bm);
         }
+    }
+}
+
+void BookmarksBar::onActivated(const QModelIndex& modelIndex)
+{
+    if (!currentJumpText().isEmpty()) {
+        BookmarkItem* selection = static_cast<BookmarkItem*>(m_model->item(modelIndex.row()));
+        m_mergeButton->setToolTip("Merge [" + currentJumpText() + "] to " + selection->name());
+        m_mergeButton->setEnabled(true);
+    } else {
+        m_mergeButton->setEnabled(false);
     }
 }
 
@@ -258,16 +285,17 @@ void BookmarksBar::onItemChanged(QStandardItem* item)
     if (item == nullptr) {
         return;
     }
+    BookmarkItem* bm;
     if (item->index().column() == 1) {
         LOG(DEBUG) << "Editing location to [" << item->text() << "]";
-        BookmarkItem* bm = static_cast<BookmarkItem*>(
+        bm = static_cast<BookmarkItem*>(
                     item->model()->item(item->index().row(), 0));
         QString deserializeText = bm->name() + "=" + item->text();
         if (!bm->deserialize(deserializeText)) {
             
         }
     } else {
-        BookmarkItem* bm = static_cast<BookmarkItem*>(item);
+        bm = static_cast<BookmarkItem*>(item);
         LOG(DEBUG) << "Editing name to [" << bm->text() << "]";
         bm->setName(bm->text());
     }
@@ -281,10 +309,11 @@ QString BookmarksBar::currentJumpText() const
 void BookmarksBar::setCurrentJumpText(const QString& currentJumpText)
 {
     _TRACE;
-    if (!currentJumpText.isEmpty()) {
-        m_addButton->show();
-        m_addButton->setToolTip("Add [" + currentJumpText + "] to bookmarks");
-    }
     m_currentJumpText = currentJumpText;
+    if (!currentJumpText.isEmpty()) {
+        m_addButton->setToolTip("Add [" + currentJumpText + "] to bookmarks");
+        m_addButton->setEnabled(true);
+    }
+    onActivated(m_bookmarksList->currentIndex());
 }
 

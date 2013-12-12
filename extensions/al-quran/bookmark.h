@@ -2,9 +2,9 @@
 #define BOOKMARK_H
 
 #include <QString>
-#include "core/logging/logging.h"
+#include <ostream>
 
-class Bookmark : public el::Loggable
+class Bookmark
 {
 public:
     static const int kBookmarkNameLength = 30;
@@ -27,7 +27,6 @@ public:
     QString serialize() const;
     bool deserialize(const QString& serializedText);
     
-    void log(el::base::type::ostream_t &) const;
     bool operator==(const Bookmark& other) {
         return serialize() == other.serialize();
     }

@@ -1,8 +1,6 @@
 #ifndef LOGGING_H
 #define LOGGING_H
 
-#define _ELPP_DISABLE_TRACE_LOGS
-
 #include "core/logging/easylogging++.h"
 #include "core/settings_loader.h"
 
@@ -48,6 +46,7 @@ public:
         configurations.set(el::Level::Debug, el::ConfigurationType::Format, "%datetime %level [%logger] [%func] %msg");
         // 2mb max log file size
         configurations.set(el::Level::Global, el::ConfigurationType::MaxLogFileSize, "2048000");
+        
         return configurations;
     }
 };

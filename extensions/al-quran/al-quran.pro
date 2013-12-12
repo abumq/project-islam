@@ -10,20 +10,25 @@ QMAKE_CXXFLAGS += -std=c++0x
 QMAKE_CXXFLAGS += -Wno-sign-compare
 
 ## Other flags
-QMAKE_CXXFLAGS += -fPIC -g
+QMAKE_CXXFLAGS += -fPIC -g -gdwarf-3
 
 COMPILER = g++
 QMAKE_CC = $$COMPILER
 QMAKE_CXX = $$COMPILER
 QMAKE_LINK = $$COMPILER
 
+DEFAULT_LOG_FILE = '\\".l.lg\\"'
+LOGGER_ID = '\\"al-quran\\"'
+
 DEFINES += _ELPP_UNICODE \
            _ELPP_QT_LOGGING \
            _ELPP_STL_LOGGING \
-           _ELPP_DEFAULT_LOG_FILE=\\\".l.lg\\\" \
+           _ELPP_DEFAULT_LOG_FILE=$$DEFAULT_LOG_FILE \
            _ELPP_STACKTRACE_ON_CRASH \
-           _ELPP_THREAD_SAFE
-           
+           _ELPP_THREAD_SAFE \
+           _LOGGER=$$LOGGER_ID \
+           _PERFORMANCE_LOGGER=$$LOGGER_ID
+
 INCLUDEPATH += "../../"
 
 # libimf so for Intel C++
@@ -62,3 +67,8 @@ FORMS += \
     ../../core/controls/quran_reciter.ui \
     ../../core/controls/quran_reader.ui \
     bookmarks_bar.ui
+
+OTHER_FILES +=
+
+RESOURCES += \
+    icons.qrc

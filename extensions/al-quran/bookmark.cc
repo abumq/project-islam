@@ -89,8 +89,3 @@ bool Bookmark::deserialize(const QString& serializedText)
     }
     return false;
 }
-
-void Bookmark::log(el::base::type::ostream_t& os) const
-{
-    os << serialize().toStdString().c_str();
-}

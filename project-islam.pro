@@ -1,41 +1,10 @@
+include(master.pri)
 
-COMPILER = g++
-DEFINES += # User macros
+DEFINES += _ELPP_NO_DEFAULT_LOG_FILE \
 
-## Modules
-QT       += core gui widgets sql multimedia network
-
-greaterThan(QT_MAJOR_VERSION, 4):
-
-## Target
 TARGET = project-islam
 TEMPLATE = app
 
-## Standard
-QMAKE_CXXFLAGS += -std=c++0x
-
-## Warning suppressions
-QMAKE_CXXFLAGS += -Wno-sign-compare
-
-## Other flags
-QMAKE_CXXFLAGS += -fPIC -g
-
-QMAKE_CC = $$COMPILER
-QMAKE_CXX = $$COMPILER
-QMAKE_LINK = $$COMPILER
-
-DEFINES += _ELPP_UNICODE \
-           _ELPP_QT_LOGGING \
-           _ELPP_STL_LOGGING \
-           _ELPP_LOG_UNORDERED_MAP \
-           _ELPP_NO_DEFAULT_LOG_FILE \
-           _ELPP_STACKTRACE_ON_CRASH \
-           _ELPP_THREAD_SAFE
-
-# libimf for Intel C++
-# TODO: export LD_LIBRARY_PATH
-LIBS += -L/home/mkhan/intel/composer_xe_2013.5.192/compiler/lib/intel64/
- 
 SOURCES += main.cc\
         mainwindow.cc \
     core/style_loader.cc \
@@ -81,9 +50,7 @@ HEADERS  += mainwindow.h \
     core/version.h
 
 FORMS    += mainwindow.ui \
-    settings_dialog.ui \
-    core/controls/quran_reciter.ui \
-    core/controls/quran_reader.ui
+    settings_dialog.ui
 
 OTHER_FILES += \
     resources/styles/menu.style \
@@ -98,7 +65,9 @@ OTHER_FILES += \
     resources/data/sql/quran/quran_chapter.sql \
     resources/data/sql/quran/quran_arabic.sql \
     resources/configs/logging.linux.config \
-    resources/configs/logging.win.config
+    resources/configs/logging.win.config \
+    extension.pri \
+    master.pri
 
 RESOURCES += \
     resources/styles.qrc \

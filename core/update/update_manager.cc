@@ -92,7 +92,7 @@ QByteArray UpdateManager::downloadBytes(const QString& url, bool* ok)
     QEventLoop loop;
     QObject::connect(networkReply, SIGNAL(finished()), &loop, SLOT(quit()));
     QObject::connect(networkReply, SIGNAL(downloadProgress(qint64,qint64)), 
-                     this, SLOT(downloadProgressUpdated(qint64,qint64)));
+                     this, SLOT(downloadProgressupgrade(qint64,qint64)));
     loop.exec();
     if (networkReply->error() == QNetworkReply::NoError) {
         if (ok != nullptr) {
@@ -187,7 +187,7 @@ bool UpdateManager::updatePlatform(QJsonObject* jsonObject)
         QStringList filesList = platformObj["files"].toString().split(',');
         for (QString filename : filesList) {
             QString targetDir = m_app->applicationDirPath() + "/";
-            QString tempFilename = targetDir + filename + ".updated";
+            QString tempFilename = targetDir + filename + ".upgrade";
             LOG(INFO) << "Downloading platform file [" 
                       << filename << "] from [" + baseUrl + "] to [" << targetDir << "]";
             result = downloadFile(baseUrl + filename, tempFilename) && result;
@@ -216,7 +216,7 @@ bool UpdateManager::updateExtensions(QJsonObject* jsonObject)
                 QStringList filesList = extensionobj["files"].toString().split(',');
                 for (QString filename : filesList) {
                     QString targetDir = m_app->applicationDirPath() + "/extensions/";
-                    QString tempFilename = targetDir + filename + ".updated";
+                    QString tempFilename = targetDir + filename + ".upgrade";
                     LOG(INFO) << "Downloading extension file [" 
                               << filename << "] from [" + baseUrl + "] to [" << targetDir << "]";
                     result = downloadFile(baseUrl + filename, tempFilename) && result;
@@ -228,7 +228,7 @@ bool UpdateManager::updateExtensions(QJsonObject* jsonObject)
                             file.close();
                         }
                     } else {
-                        // Extension ready to be updated! Filename: file.zip.updated
+                        // Extension ready to be upgrade! Filename: file.zip.upgrade
                     }
                 }
             }

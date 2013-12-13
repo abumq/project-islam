@@ -394,7 +394,7 @@ void QuranReciter::onVerseChanged(int)
             m_mediaPlayer->stop();
         }
     }
-    DVLOG(7) << "Playing verse [" << m_playList->currentIndex() << "]";
+    DVLOG(7) << "Reciting verse [" << static_cast<int>(m_currentChapter->name()) << ":" << m_playList->currentIndex() << "]";
     if (m_playList->currentIndex() > 0) {
         emit currentVerseChanged(m_playList->currentIndex());
         ui->spnVerse->setValue(m_playList->currentIndex());

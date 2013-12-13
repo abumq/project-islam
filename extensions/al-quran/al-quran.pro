@@ -1,14 +1,8 @@
 
 NAME = AlQuran
-COMPILER = g++
-DEFINES +=  # User macros
+include(../../extension.pri)
 
-
-#################################################################################
-# libimf so for Intel C++
-# TODO: export LD_LIBRARY_PATH
-LIBS += -L/home/mkhan/intel/composer_xe_2013.5.192/compiler/lib/intel64/
-
+DEFINES += # User macros
 
 SOURCES +=  \
     al_quran.cc \
@@ -43,46 +37,5 @@ FORMS += \
     ../../core/controls/quran_reader.ui \
     bookmarks_bar.ui
 
-OTHER_FILES +=
-
 RESOURCES += \
     icons.qrc
-
-
-################################################
-###### DO NOT CHANGE ANY LINE BELOW ############
-################################################
-
-## Modules
-QT       += core gui widgets sql multimedia network
-
-## Target
-TARGET = $$qtLibraryTarget($$NAME)
-TEMPLATE = lib
-
-## Standard
-QMAKE_CXXFLAGS += -std=c++0x
-
-## Warning suppressions
-QMAKE_CXXFLAGS += -Wno-sign-compare
-
-## Other flags
-QMAKE_CXXFLAGS += -fPIC -g
-
-QMAKE_CC = $$COMPILER
-QMAKE_CXX = $$COMPILER
-QMAKE_LINK = $$COMPILER
-
-DEFAULT_LOG_FILE = '\\".l.lg\\"'
-LOGGER_ID = '\\"$$NAME\\"'
-
-DEFINES += _ELPP_UNICODE \
-           _ELPP_QT_LOGGING \
-           _ELPP_STL_LOGGING \
-           _ELPP_DEFAULT_LOG_FILE=$$DEFAULT_LOG_FILE \
-           _ELPP_STACKTRACE_ON_CRASH \
-           _ELPP_THREAD_SAFE \
-           _LOGGER=$$LOGGER_ID \
-           _PERFORMANCE_LOGGER=$$LOGGER_ID
-
-INCLUDEPATH += "../../"

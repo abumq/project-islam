@@ -170,6 +170,9 @@
     <enum>Qt::Horizontal</enum>
    </property>
    <widget class="QPushButton" name="btnReplayCurrentVerse">
+    <property name="toolTip">
+     <string>Restart current verse</string>
+    </property>
     <property name="text">
      <string>↶</string>
     </property>

@@ -58,7 +58,10 @@ QString Bookmark::serialize() const
 {
     return m_name + "=" + QString::number(m_chapter) + ":" + 
             QString::number(m_verseFrom) + 
-            (m_verseFrom < m_verseTo ? "-" + QString::number(m_verseTo) : "");
+            (m_verseFrom < m_verseTo ? "-" + QString::number(m_verseTo) : "") +
+            (m_selected >= m_verseFrom && m_selected <= m_verseTo
+             ? (":" + QString::number(m_selected)) 
+             : "");
 }
 
 bool Bookmark::deserialize(const QString& serializedText)
@@ -71,17 +74,21 @@ bool Bookmark::deserialize(const QString& serializedText)
     if (tokens1.size() >= 2) {
         m_name = tokens1.at(0).trimmed();
         bool ok = false;
-        QStringList tokens2 = tokens1.at(1).trimmed().split(":");
-        if (tokens2.size() == 2) {
+        QStringList tokensChapRangeSelected = tokens1.at(1).trimmed().split(":");
+        if (tokensChapRangeSelected.size() >= 2) {
             // We expect at least format 
             // 1:1
-            m_chapter = tokens2.at(0).trimmed().toInt(&ok);
+            m_chapter = tokensChapRangeSelected.at(0).trimmed().toInt(&ok);
             if (ok) {
                 ok = m_chapter >= 1 && m_chapter <= quran::Quran::kChapterCount;
-                QStringList tokensVerses = tokens2.at(1).split("-");
+                QStringList tokensVerses = tokensChapRangeSelected.at(1).split("-");
                 m_verseFrom = tokensVerses.at(0).trimmed().toInt(&ok);
+                m_selected = m_verseFrom;
                 if (ok && tokensVerses.size() >= 2) {
                     m_verseTo = tokensVerses.at(1).trimmed().toInt(&ok);
+                    if (ok && tokensChapRangeSelected.size() >= 3) {
+                        m_selected = tokensChapRangeSelected.at(2).toInt(&ok);
+                    }
                 }
             }
         }
@@ -89,3 +96,13 @@ bool Bookmark::deserialize(const QString& serializedText)
     }
     return false;
 }
+int Bookmark::selected() const
+{
+    return m_selected;
+}
+
+void Bookmark::setSelected(int selected)
+{
+    m_selected = selected;
+}
+

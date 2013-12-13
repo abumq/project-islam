@@ -196,6 +196,7 @@ void AlQuran::onBookmarkChanged(Bookmark* bookmark)
     }
     m_reader->changeChapter(static_cast<quran::Chapter::Name>(bookmark->chapter()));
     m_reader->changeVerseRange(bookmark->verseFrom(), bookmark->verseTo());
+    m_reader->highlightVerse(bookmark->selected());
 }
 
 void AlQuran::onJumpToTextChanged(const QString& txt)

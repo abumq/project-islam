@@ -97,7 +97,7 @@ void QuranView::update(quran::Chapter* chapter, int from, int to)
     // Either we highlight previously selected verse or if none is selected
     // we highlight 'from'
     int verseNumberToHighlight = m_selectedVerseTextItem != nullptr ? 
-        m_selectedVerseTextItem->verse()->number() : from;
+                m_selectedVerseTextItem->verse()->number() : from;
     // If previously selected verse is out of range we highlight 'from
     if (verseNumberToHighlight < from || verseNumberToHighlight > to) {
         verseNumberToHighlight = from;
@@ -358,9 +358,10 @@ void QuranView::jumpTo(const QString& jumpToText)
     int chapter = m_currentChapter == nullptr ? 1 : static_cast<int>(m_currentChapter->name());
     int verseFrom = m_currFrom;
     int verseTo = m_currTo;
+    int selected = m_currFrom;
     bool ok = false;
     QStringList tokens1 = jumpToText.split(":");
-    if (tokens1.size() == 2) {
+    if (tokens1.size() >= 2) {
         // We expect at least format 
         // 1:1
         chapter = tokens1.at(0).toInt(&ok);
@@ -370,11 +371,15 @@ void QuranView::jumpTo(const QString& jumpToText)
             verseFrom = tokensVerses.at(0).toInt(&ok);
             if (ok && tokensVerses.size() >= 2) {
                 verseTo = tokensVerses.at(1).toInt(&ok);
+                if (ok && tokens1.size() >= 3) {
+                    selected = tokens1.at(2).toInt(&ok);
+                }
             }
         }
     }
     if (ok) {
         update(static_cast<quran::Chapter::Name>(chapter), verseFrom, verseTo);
+        selectVerse(selected);
     } else {
         LOG(ERROR) << "Unable to parse [" << jumpToText << "] as Qur'anic verse";
     }
@@ -387,8 +392,11 @@ QString QuranView::jumpToText() const
         return QString();
     }
     return QString::number(static_cast<int>(m_currentChapter->name())) + 
-        ":" + QString::number(m_currFrom) + 
-            (m_currFrom < m_currTo ? "-" + QString::number(m_currTo) : "");
+            ":" + QString::number(m_currFrom) + 
+            (m_currFrom < m_currTo ? "-" + QString::number(m_currTo) : "") + 
+            (m_selectedVerseTextItem != nullptr 
+                ? (":" + QString::number(m_selectedVerseTextItem->verse()->number())) 
+                : "");
 }
 
 QString QuranView::arabicNumber(int n)

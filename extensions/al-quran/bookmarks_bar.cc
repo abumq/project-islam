@@ -140,6 +140,7 @@ bool BookmarksBar::add(const QString& bookmarkStr)
         bookmarkItem->setChapter(bm.chapter());
         bookmarkItem->setVerseFrom(bm.verseFrom());
         bookmarkItem->setVerseTo(bm.verseTo());
+        bookmarkItem->setSelected(bm.selected());
         
         int currRow = m_model->rowCount();
         m_model->setItem(currRow, 0, bookmarkItem);
@@ -187,6 +188,7 @@ void BookmarksBar::merge()
         curr->setChapter(bm.chapter());
         curr->setVerseFrom(bm.verseFrom());
         curr->setVerseTo(bm.verseTo());
+        curr->setSelected(bm.selected());
         save();
     }
 }

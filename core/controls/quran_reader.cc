@@ -101,7 +101,9 @@ void QuranReader::highlightVerse(int verseNumber)
 int QuranReader::currentVerseNumber() const
 {
     _TRACE;
-    return m_quranView->selectedVerse() == nullptr ? -1 : m_quranView->selectedVerse()->number();
+    int result = m_quranView->selectedVerse() == nullptr ? -1 : m_quranView->selectedVerse()->number();
+    ui->txtJumpTo->setText(m_quranView->jumpToText());
+    return result;
 }
 
 void QuranReader::hideChapterSelector()

@@ -23,7 +23,7 @@
       <enum>QTabWidget::North</enum>
      </property>
      <property name="currentIndex">
-      <number>1</number>
+      <number>2</number>
      </property>
      <property name="elideMode">
       <enum>Qt::ElideNone</enum>
@@ -232,7 +232,7 @@
        </property>
        <widget class="QLabel" name="label_4">
         <property name="text">
-         <string>Translation</string>
+         <string>Translation *</string>
         </property>
        </widget>
        <widget class="QComboBox" name="cboQuranTranslations"/>
@@ -251,10 +251,23 @@
        </property>
        <widget class="QLabel" name="label_5">
         <property name="text">
-         <string>Tafseer</string>
+         <string>Tafseer *</string>
         </property>
        </widget>
        <widget class="QComboBox" name="cboQuranTafseers"/>
+      </widget>
+      <widget class="QLabel" name="label_6">
+       <property name="geometry">
+        <rect>
+         <x>40</x>
+         <y>380</y>
+         <width>681</width>
+         <height>16</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>* = Requires restart (Application -&gt; Restart)</string>
+       </property>
       </widget>
      </widget>
     </widget>

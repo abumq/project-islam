@@ -261,69 +261,6 @@
       <attribute name="title">
        <string>Data</string>
       </attribute>
-      <widget class="QGroupBox" name="groupBox_4">
-       <property name="enabled">
-        <bool>true</bool>
-       </property>
-       <property name="geometry">
-        <rect>
-         <x>20</x>
-         <y>30</y>
-         <width>311</width>
-         <height>211</height>
-        </rect>
-       </property>
-       <property name="title">
-        <string>Rebuild Data</string>
-       </property>
-       <layout class="QVBoxLayout" name="verticalLayout_2">
-        <item>
-         <widget class="QPushButton" name="buildQuranArabic">
-          <property name="text">
-           <string>Quran Arabic</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QPushButton" name="buildQuranChapters">
-          <property name="text">
-           <string>Quran Chapters</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QPushButton" name="buildQuranEnglish">
-          <property name="text">
-           <string>Quran English (Sahih International)</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QPushButton" name="buildQuranTransliterationEnglish">
-          <property name="text">
-           <string>Quran Transliteration (English)</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QPushButton" name="pushButton_2">
-          <property name="enabled">
-           <bool>true</bool>
-          </property>
-          <property name="text">
-           <string>Quran Tafseer (Arabic)</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QPushButton" name="buildDua">
-          <property name="text">
-           <string>Dua</string>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </widget>
      </widget>
     </widget>
    </item>

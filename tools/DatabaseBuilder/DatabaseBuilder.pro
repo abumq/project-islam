@@ -5,11 +5,16 @@ greaterThan(QT_MAJOR_VERSION, 4):
 TARGET = DatabaseBuilder
 TEMPLATE = app
 
+DEFINES += _ELPP_QT_LOGGING
 
 SOURCES += main.cc\
-        databasebuilder.cc
+        databasebuilder.cc \
+    dataconverter.cc \
+    databuilder.cc
 
-HEADERS  += databasebuilder.h
+HEADERS  += databasebuilder.h \
+    dataconverter.h \
+    databuilder.h
 
 FORMS    += databasebuilder.ui
 

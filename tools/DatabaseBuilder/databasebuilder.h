@@ -24,8 +24,19 @@ private slots:
     
     void on_pushButton_clicked();
     
+    void on_btnBrowse4_clicked();
+    
+    void on_btnBrowse5_clicked();
+    
+    void on_btnBuild_clicked();
+    
+    void on_btnReset_clicked();
+    
+    void on_btnReset_2_clicked();
+    
 private:
     Ui::DatabaseBuilder *ui;
+    
 };
 
 #endif // DATABASEBUILDER_H

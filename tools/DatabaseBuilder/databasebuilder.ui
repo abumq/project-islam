@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>599</width>
-    <height>515</height>
+    <height>415</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -25,81 +25,6 @@
    <property name="title">
     <string>Quran Data - &gt; SQL File</string>
    </property>
-   <widget class="QSplitter" name="splitter">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>30</y>
-      <width>541</width>
-      <height>23</height>
-     </rect>
-    </property>
-    <property name="orientation">
-     <enum>Qt::Horizontal</enum>
-    </property>
-    <widget class="QLabel" name="label">
-     <property name="text">
-      <string>Data File:</string>
-     </property>
-    </widget>
-    <widget class="QLineEdit" name="txtDataFile"/>
-    <widget class="QPushButton" name="btnBrowse">
-     <property name="text">
-      <string>...</string>
-     </property>
-    </widget>
-   </widget>
-   <widget class="QSplitter" name="splitter_2">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>60</y>
-      <width>541</width>
-      <height>23</height>
-     </rect>
-    </property>
-    <property name="orientation">
-     <enum>Qt::Horizontal</enum>
-    </property>
-    <widget class="QLabel" name="label_2">
-     <property name="text">
-      <string>Rukuh / Sajdah List File</string>
-     </property>
-    </widget>
-    <widget class="QLineEdit" name="txtRukuhSajdahFile">
-     <property name="text">
-      <string/>
-     </property>
-    </widget>
-    <widget class="QPushButton" name="btnBrowse2">
-     <property name="text">
-      <string>...</string>
-     </property>
-    </widget>
-   </widget>
-   <widget class="QSplitter" name="splitter_3">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>90</y>
-      <width>531</width>
-      <height>23</height>
-     </rect>
-    </property>
-    <property name="orientation">
-     <enum>Qt::Horizontal</enum>
-    </property>
-    <widget class="QLabel" name="label_3">
-     <property name="text">
-      <string>Table Name</string>
-     </property>
-    </widget>
-    <widget class="QLineEdit" name="txtTableName">
-     <property name="text">
-      <string>Quran__English_Translation_</string>
-     </property>
-    </widget>
-   </widget>
    <widget class="QLabel" name="label_4">
     <property name="geometry">
      <rect>
@@ -118,17 +43,20 @@
      <rect>
       <x>132</x>
       <y>130</y>
-      <width>254</width>
+      <width>381</width>
       <height>23</height>
      </rect>
+    </property>
+    <property name="text">
+     <string>/media/majid/devil-inside/working-dir/Dropbox/project-islam/resources/data/sql/quran/quran_english_yusuf_ali.sql</string>
     </property>
    </widget>
    <widget class="QPushButton" name="btnBrowse3">
     <property name="geometry">
      <rect>
-      <x>390</x>
+      <x>522</x>
       <y>130</y>
-      <width>163</width>
+      <width>31</width>
       <height>23</height>
      </rect>
     </property>
@@ -149,19 +77,240 @@
      <string>Convert</string>
     </property>
    </widget>
+   <widget class="QLabel" name="label_2">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>60</y>
+      <width>139</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Rukuh / Sajdah List File</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="btnBrowse2">
+    <property name="geometry">
+     <rect>
+      <x>519</x>
+      <y>60</y>
+      <width>31</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>...</string>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="txtRukuhSajdahFile">
+    <property name="geometry">
+     <rect>
+      <x>160</x>
+      <y>60</y>
+      <width>351</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>/media/majid/devil-inside/working-dir/Dropbox/project-islam/resources/data/quran/rukuh_sajdah_list</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="btnBrowse">
+    <property name="geometry">
+     <rect>
+      <x>519</x>
+      <y>30</y>
+      <width>31</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>...</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>30</y>
+      <width>57</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Data File:</string>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="txtDataFile">
+    <property name="geometry">
+     <rect>
+      <x>130</x>
+      <y>30</y>
+      <width>381</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>/media/majid/devil-inside/working-dir/Dropbox/project-islam/resources/data/quran/English_Yusuf_Ali</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_3">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>90</y>
+      <width>71</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Table Name</string>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="txtTableName">
+    <property name="geometry">
+     <rect>
+      <x>130</x>
+      <y>90</y>
+      <width>421</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Quran__English_Translation_Yusuf_Ali</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="btnReset">
+    <property name="geometry">
+     <rect>
+      <x>370</x>
+      <y>170</y>
+      <width>80</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Reset</string>
+    </property>
+   </widget>
   </widget>
   <widget class="QGroupBox" name="groupBox_2">
    <property name="geometry">
     <rect>
      <x>20</x>
-     <y>230</y>
+     <y>210</y>
      <width>561</width>
-     <height>121</height>
+     <height>171</height>
     </rect>
    </property>
    <property name="title">
     <string>Build Database File</string>
    </property>
+   <widget class="QPushButton" name="btnBuild">
+    <property name="geometry">
+     <rect>
+      <x>460</x>
+      <y>130</y>
+      <width>80</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Build</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_5">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>40</y>
+      <width>91</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>SQLite File:</string>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="txtSqliteFilename">
+    <property name="geometry">
+     <rect>
+      <x>102</x>
+      <y>40</y>
+      <width>411</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>/media/majid/devil-inside/working-dir/Dropbox/project-islam/resources/data/sql/quran/quran_english_yusuf_ali.sql</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="btnBrowse4">
+    <property name="geometry">
+     <rect>
+      <x>520</x>
+      <y>40</y>
+      <width>31</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>...</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_6">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>80</y>
+      <width>57</width>
+      <height>15</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>SQL File:</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="btnBrowse5">
+    <property name="geometry">
+     <rect>
+      <x>518</x>
+      <y>70</y>
+      <width>31</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>...</string>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="txtSqFilename">
+    <property name="geometry">
+     <rect>
+      <x>100</x>
+      <y>70</y>
+      <width>411</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>/media/majid/devil-inside/working-dir/Dropbox/project-islam/resources/data/sql/quran/quran_english_yusuf_ali.sql</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="btnReset_2">
+    <property name="geometry">
+     <rect>
+      <x>370</x>
+      <y>130</y>
+      <width>80</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Reset</string>
+    </property>
+   </widget>
   </widget>
  </widget>
  <layoutdefault spacing="6" margin="11"/>

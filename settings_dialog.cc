@@ -5,7 +5,6 @@
 #include "mainwindow.h"
 #include "core/style_loader.h"
 #include "core/controls/colorbox.h"
-#include "core/data/database_builder.h"
 #include "core/data/database_manager.h"
 #include "core/data/data_holder.h"
 
@@ -148,45 +147,4 @@ void SettingsDialog::on_chkLevelGlobal_clicked(bool checked)
     ui->chkLevelFatal->setEnabled(!checked);
     ui->chkLevelDebug->setEnabled(!checked);
     ui->chkLevelVerbose->setEnabled(!checked);
-}
-
-void SettingsDialog::on_buildQuranEnglish_clicked()
-{
-    LOG(INFO) << "Building data: Quran English (Sahih International)";
-    data::DatabaseBuilder::build(data::DatabaseBuilder::DataType::QuranSahihTranslation);
-    m_mainWindow->dataHolder()->quranTranslation()->load(quran::Quran::TextType::Translation,
-                                                         quran::Quran::kQuranTransliterationDatabaseTable);
-}
-
-void SettingsDialog::on_buildQuranArabic_clicked()
-{
-    LOG(INFO) << "Building data: Quran Arabic";
-    data::DatabaseBuilder::build(data::DatabaseBuilder::DataType::QuranArabic);
-    m_mainWindow->dataHolder()->quranArabic()->load(quran::Quran::TextType::Original,
-                                                    quran::Quran::kQuranArabicDatabaseTable);
-}
-
-void SettingsDialog::on_buildQuranChapters_clicked()
-{
-    LOG(INFO) << "Building data: Quran Chapters";
-    data::DatabaseBuilder::build(data::DatabaseBuilder::DataType::QuranChapters);
-}
-
-void SettingsDialog::on_buildDua_clicked()
-{
-    LOG(INFO) << "Building data: Dua";
-    data::DatabaseBuilder::build(data::DatabaseBuilder::DataType::Dua);
-}
-
-void SettingsDialog::on_buildQuranTransliterationEnglish_clicked()
-{
-    LOG(INFO) << "Building data: Quran Tranliteration (English)";
-    data::DatabaseBuilder::build(data::DatabaseBuilder::DataType::QuranTransliteration);
-    m_mainWindow->dataHolder()->quranTransliteration()->load(quran::Quran::TextType::Transliteration, quran::Quran::kQuranTransliterationDatabaseTable);
-}
-
-void SettingsDialog::on_pushButton_2_clicked()
-{
-      LOG(INFO) << "Building data: Tafseer";
-    data::DatabaseBuilder::build(data::DatabaseBuilder::DataType::QuranArabicTafseer);
 }

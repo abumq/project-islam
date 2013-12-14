@@ -2,12 +2,16 @@
 #include "ui_databasebuilder.h"
 #include <QFileDialog>
 #include <QMessageBox>
+#include "dataconverter.h"
+#include "databuilder.h"
 
 DatabaseBuilder::DatabaseBuilder(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::DatabaseBuilder)
 {
     ui->setupUi(this);
+    on_btnReset_clicked();
+    on_btnReset_clicked();
 }
 
 DatabaseBuilder::~DatabaseBuilder()
@@ -39,7 +43,7 @@ void DatabaseBuilder::on_btnBrowse3_clicked()
 void DatabaseBuilder::on_pushButton_clicked()
 {
     if (ui->txtDataFile->text().isEmpty() || ui->txtRukuhSajdahFile->text().isEmpty() || 
-        ui->txtRukuhSajdahFile->text().isEmpty() || ui->txtTableName->text().isEmpty()) {
+            ui->txtTableName->text().isEmpty() || ui->txtOutputFile->text().isEmpty()) {
         QMessageBox::critical(this, tr("Field required"), tr("All fields are required"));
         return;
     }
@@ -48,11 +52,57 @@ void DatabaseBuilder::on_pushButton_clicked()
     ui->txtTableName->setEnabled(false);
     ui->txtOutputFile->setEnabled(false);
     
+    DataConverter dc;
     
+    dc.startConvert(ui->txtRukuhSajdahFile->text().toStdString(),
+                    ui->txtTableName->text().toStdString(), ui->txtDataFile->text().toStdString(),
+                    ui->txtOutputFile->text().toStdString());
     
     ui->txtDataFile->setEnabled(true);
     ui->txtRukuhSajdahFile->setEnabled(true);
     ui->txtTableName->setEnabled(true);
     ui->txtOutputFile->setEnabled(true);
+    QMessageBox msg;
+    msg.setText("Successfully converted!");
+    msg.exec();
+}
+
+void DatabaseBuilder::on_btnBrowse4_clicked()
+{
+    QFileDialog d;
+    ui->txtSqliteFilename->setText(d.getOpenFileName(this, "Browse SQLite 3 File"));
+}
+
+void DatabaseBuilder::on_btnBrowse5_clicked()
+{
+    QFileDialog d;
+    ui->txtSqFilename->setText(d.getOpenFileName(this, "Browse SQL File"));
+}
+
+void DatabaseBuilder::on_btnBuild_clicked()
+{
+    ui->txtSqFilename->setEnabled(false);
+    ui->txtSqliteFilename->setEnabled(false);
     
+    DataBuilder db(ui->txtSqFilename->text().toStdString(),
+             ui->txtSqliteFilename->text().toStdString());
+    
+    db.build();
+    ui->txtSqFilename->setEnabled(true);
+    ui->txtSqliteFilename->setEnabled(true);
+    QMessageBox msg;
+    msg.setText("Successfully built!");
+    msg.exec();
+}
+
+void DatabaseBuilder::on_btnReset_clicked()
+{
+    ui->txtDataFile->setText("");
+    ui->txtTableName->setText("Quran__English_Translation_");
+    ui->txtOutputFile->setText("");
+}
+
+void DatabaseBuilder::on_btnReset_2_clicked()
+{
+    ui->txtSqFilename->setText("");
 }

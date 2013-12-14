@@ -19,7 +19,6 @@ SOURCES += main.cc\
     core/quran/quran.cc \
     core/quran/chapter.cc \
     core/data/database_manager.cc \
-    core/data/database_builder.cc \
     core/data/data_holder.cc \
     core/update/update_manager.cc
 
@@ -41,9 +40,7 @@ HEADERS  += mainwindow.h \
     core/quran/quran.h \
     core/quran/verse.h \
     core/data/database_manager.h \
-    core/data/database_builder.h \
     core/data/database_manager.h \
-    core/data/database_builder.h \
     core/data/data_holder.h \
     core/memory.h \
     core/update/update_manager.h \

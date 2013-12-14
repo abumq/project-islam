@@ -41,9 +41,7 @@ public:
 private slots:
     void on_cboChapter_currentIndexChanged(int index);
     
-    void on_btnPlay_clicked();
-    
-    void on_btnPause_clicked();
+    void on_btnPlayPause_clicked();
     
     void on_btnStop_clicked();
     

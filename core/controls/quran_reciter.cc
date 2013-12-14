@@ -62,14 +62,12 @@ QuranReciter::QuranReciter(quran::Quran* quran, QWidget *parent) :
             ui->volSlider->setMaximum(100);
             
             on_cboChapter_currentIndexChanged(0);
-            ui->btnPause->setEnabled(false);
             ui->btnStop->setEnabled(false);
             ui->chkRepeat->setChecked(false);
             connect(m_playList, SIGNAL(currentIndexChanged(int)), this, SLOT(onVerseChanged(int)));
             connect(m_mediaPlayer, SIGNAL(stateChanged(QMediaPlayer::State)), this, SLOT(onMediaStateChanged(QMediaPlayer::State)));
         } else {
-            ui->btnPause->setEnabled(false);
-            ui->btnPlay->setEnabled(false);
+            ui->btnPlayPause->setEnabled(false);
             ui->btnStop->setEnabled(false);
             ui->cboChapter->setEnabled(false);
             ui->chkRepeat->setEnabled(false);
@@ -339,18 +337,15 @@ void QuranReciter::on_cboChapter_currentIndexChanged(int index)
     }
 }
 
-void QuranReciter::on_btnPlay_clicked()
+void QuranReciter::on_btnPlayPause_clicked()
 {
     _TRACE;
     if (!m_ok) return;
-    m_mediaPlayer->play();
-}
-
-void QuranReciter::on_btnPause_clicked()
-{
-    _TRACE;
-    if (!m_ok) return;
-    m_mediaPlayer->pause();
+    if (m_mediaPlayer->state() == QMediaPlayer::PlayingState) {
+        m_mediaPlayer->pause();
+    } else {
+        m_mediaPlayer->play();
+    }
 }
 
 void QuranReciter::on_btnStop_clicked()
@@ -423,21 +418,18 @@ void QuranReciter::onMediaStateChanged(QMediaPlayer::State state)
     if (!m_ok) return;
     switch (state) {
     case QMediaPlayer::PlayingState:
-        ui->btnPlay->setEnabled(false);
-        ui->btnPause->setEnabled(true);
+        ui->btnPlayPause->setText("▮▮");
         ui->btnStop->setEnabled(true);
         ui->btnReplayCurrentVerse->show();
         DVLOG(7) << "Playing verse [" << m_playList->currentIndex() << "]";
         break;
     case QMediaPlayer::PausedState:
-        ui->btnPlay->setEnabled(true);
-        ui->btnPause->setEnabled(false);
-        ui->btnStop->setEnabled(false);
+        ui->btnPlayPause->setText("▶");
+        ui->btnStop->setEnabled(true);
         ui->btnReplayCurrentVerse->show();
         break;
     case QMediaPlayer::StoppedState:
-        ui->btnPlay->setEnabled(true);
-        ui->btnPause->setEnabled(false);
+        ui->btnPlayPause->setText("▶");
         ui->btnStop->setEnabled(false);
         DVLOG(7) << "Player stopped";
         ui->btnReplayCurrentVerse->hide();

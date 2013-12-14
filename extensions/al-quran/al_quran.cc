@@ -3,6 +3,7 @@
 #include <QLabel>
 #include <QAction>
 #include <QDockWidget>
+#include <QApplication>
 
 #include "bookmarks_bar.h"
 #include "core/controls/quran_reciter.h"
@@ -61,7 +62,6 @@ bool AlQuran::initialize(int argc, const char** argv)
     m_bookmarkBar->setAllowedAreas(Qt::RightDockWidgetArea);
     m_bookmarkBar->setWidget(bar);
     m_bookmarkBar->setFeatures(QDockWidget::NoDockWidgetFeatures);
-    
     QObject::connect(bar, SIGNAL(selectionChanged(Bookmark*)), this, SLOT(onBookmarkChanged(Bookmark*)));
     
     initializeMenu();
@@ -101,8 +101,10 @@ void AlQuran::initializeMenu()
     toggleReciter(reciter);
     
     QAction* showBookmarksAction = extensionMenu()->addAction("Bookmarks");
+    showBookmarksAction->setObjectName("showBookmarksAction");
     QObject::connect(showBookmarksAction, SIGNAL(toggled(bool)), this, SLOT(toggleBookmarkBar(bool)));
     showBookmarksAction->setCheckable(true);
+    showBookmarksAction->setShortcut(QApplication::translate("Bookmarks", "Ctrl+b", 0));
     bool bookmarks = setting("show_bookmarks", QVariant(true)).toBool();
     showBookmarksAction->setChecked(bookmarks);
     toggleBookmarkBar(bookmarks);

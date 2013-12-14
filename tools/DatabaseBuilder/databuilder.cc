@@ -14,7 +14,7 @@
 
 DataBuilder::DataBuilder(const std::string& sqlFilename, 
                          const std::string& sqliteFilename) :
-                         m_lastQuerySuccessful(false), m_connections(0)
+    m_lastQuerySuccessful(false), m_connections(0)
 {
     m_databaseFile = QString(sqliteFilename.c_str());
     m_sqlFile = QString(sqlFilename.c_str());
@@ -35,35 +35,42 @@ DataBuilder::~DataBuilder()
     if (m_sqlDatabase.isOpen()) m_sqlDatabase.close();
 }
 
-bool DataBuilder::build()
+bool DataBuilder::build(const QStringList& sqlFiles)
 {
-    QFile file(m_sqlFile);
-    DCHECK(file.open(QIODevice::ReadOnly)) 
-            << "Unable to open SQL file [" << m_sqlFile << "]";
-    
-    QTextStream in(&file);
-    
-    DLOG(INFO) << "Reading SQL file...";
-    QStringList sqlFromFile;
-    while(!in.atEnd()) {
-        sqlFromFile.append(in.readLine());
+    QStringList sqlListForProcess = sqlFiles;
+    if (sqlFiles.isEmpty()) {
+        sqlListForProcess.push_back(m_sqlFile);
     }
-    
-    file.close();
-    DLOG(INFO) << "Building database... [" << m_databaseFile << "]";
-    foreach (QString sql, sqlFromFile) {
-        sql = sql.trimmed();
-        if (sql.isEmpty() || sql.startsWith("--")) {
-            continue;
+    for (QString sqlFile : sqlListForProcess) {
+        QFile file(sqlFile);
+        DCHECK(file.open(QIODevice::ReadOnly)) 
+                << "Unable to open SQL file [" << sqlFile << "]";
+        
+        QTextStream in(&file);
+        
+        DLOG(INFO) << "Reading SQL file...";
+        QStringList sqlFromFile;
+        while(!in.atEnd()) {
+            sqlFromFile.append(in.readLine());
         }
-        LOG_EVERY_N(100, DEBUG) << "Current iteration [" 
-                                << ELPP_COUNTER_POS << "]; SQL: " << sql;
-        query(sql);
-        if (!m_lastQuerySuccessful) {
-            return false;
+        
+        file.close();
+        DLOG(INFO) << "Building database... [" << m_databaseFile << "]";
+        foreach (QString sql, sqlFromFile) {
+            sql = sql.trimmed();
+            if (sql.isEmpty() || sql.startsWith("--")) {
+                continue;
+            }
+            LOG_EVERY_N(100, DEBUG) << "Current iteration [" 
+                                    << ELPP_COUNTER_POS << "]; SQL: " << sql;
+            query(sql);
+            if (!m_lastQuerySuccessful) {
+                LOG(ERROR) << "Error while running query [" << sql << "]";
+                return false;
+            }
         }
     }
-    return m_lastQuerySuccessful;
+    return true;
 }
 
 const QList<QSqlRecord>& DataBuilder::query(const QString& query, 

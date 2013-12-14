@@ -6,6 +6,7 @@
 #include <QVariantMap>
 #include <QSqlDatabase>
 #include <QList>
+#include <QStringList>
 
 class DataBuilder
 {
@@ -13,7 +14,7 @@ public:
     DataBuilder(const std::string& sqlFilename, 
                 const std::string& sqliteFilename);
     ~DataBuilder();
-    bool build();
+    bool build(const QStringList& sqlFiles);
 private:
     QString m_databaseFile;
     QString m_sqlFile;

@@ -34,7 +34,12 @@ private slots:
     
     void on_btnReset_2_clicked();
     
+    void on_btnAdd_clicked();
+    
+    void on_pushButton_2_clicked();
+    
 private:
+    QStringList m_sqlFiles;
     Ui::DatabaseBuilder *ui;
     
 };

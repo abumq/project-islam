@@ -2,6 +2,7 @@
 #include "ui_databasebuilder.h"
 #include <QFileDialog>
 #include <QMessageBox>
+#include <QTreeWidgetItem>
 #include "dataconverter.h"
 #include "databuilder.h"
 
@@ -81,13 +82,18 @@ void DatabaseBuilder::on_btnBrowse5_clicked()
 
 void DatabaseBuilder::on_btnBuild_clicked()
 {
+    if (ui->txtSqFilename->text().isEmpty() || 
+            ui->txtSqliteFilename->text().isEmpty()) {
+        QMessageBox::critical(this, tr("Field required"), tr("All fields are required"));
+        return;
+    }
     ui->txtSqFilename->setEnabled(false);
     ui->txtSqliteFilename->setEnabled(false);
     
     DataBuilder db(ui->txtSqFilename->text().toStdString(),
-             ui->txtSqliteFilename->text().toStdString());
+                   ui->txtSqliteFilename->text().toStdString());
     
-    db.build();
+    db.build(m_sqlFiles);
     ui->txtSqFilename->setEnabled(true);
     ui->txtSqliteFilename->setEnabled(true);
     QMessageBox msg;
@@ -105,4 +111,18 @@ void DatabaseBuilder::on_btnReset_clicked()
 void DatabaseBuilder::on_btnReset_2_clicked()
 {
     ui->txtSqFilename->setText("");
+}
+
+void DatabaseBuilder::on_btnAdd_clicked()
+{
+    m_sqlFiles.append(ui->txtSqFilename->text());
+    QTreeWidgetItem* item = new QTreeWidgetItem(ui->treeSqlFiles);
+    item->setText(0, ui->txtSqFilename->text());
+}
+
+void DatabaseBuilder::on_pushButton_2_clicked()
+{
+    m_sqlFiles.clear();
+    while (ui->treeSqlFiles->topLevelItemCount() > 0)
+        ui->treeSqlFiles->takeTopLevelItem(0); 
 }

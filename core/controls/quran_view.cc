@@ -64,6 +64,10 @@ void QuranView::selectVerse(int verseNumber)
         if (hasTranslation()) {
             m_verseTextTranslationItems.value(m_selectedVerseTextItem->verse()->number())->unhighlight();
         }
+        // unhighlight tafseer
+        if (hasTafseer()) {
+            m_verseTextTafseerItems.value(m_selectedVerseTextItem->verse()->number())->unhighlight();
+        }
     }
     DVLOG(8) << "Selecting verse [" << verseNumber << "]";
     // Change currently selected verse and hightlight
@@ -77,6 +81,10 @@ void QuranView::selectVerse(int verseNumber)
     // highlight translation
     if (hasTranslation()) {
         m_verseTextTranslationItems.value(verseNumber)->highlight();
+    }
+    // highlight tafseer
+    if (hasTafseer()) {
+        m_verseTextTafseerItems.value(verseNumber)->highlight();
     }
     // Only scroll vertical bar
     verticalScrollBar()->setValue(m_selectedVerseTextItem->pos().y() * (m_zoomValue / 100));

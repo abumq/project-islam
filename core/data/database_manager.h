@@ -14,10 +14,10 @@ namespace data {
     typedef QList<QSqlRecord> QueryResult;
     
     static const QString kSqlCommentBegin = "--";
-    
+    static const QString kDefaultDatabaseFilename = "project-islam.db";
 class DatabaseManager {
 public:
-    DatabaseManager(const QString& uniqueId = "DefaultDataManager", const QString& dbFilename = "project-islam.db");
+    DatabaseManager(const QString& uniqueId = "DefaultDataManager", const QString& dbFilename = kDefaultDatabaseFilename);
     virtual ~DatabaseManager(void);
     const data::QueryResult& query(const QString& query, const QVariantMap& arguments = QVariantMap());
     void reset(void);

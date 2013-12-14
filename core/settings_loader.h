@@ -18,9 +18,7 @@ public:
     
     static const QString kSettingKeyTheme;
     static const QString kSettingKeyQuranTranslationTable;
-    static const QString kSettingKeyQuranTranslationFile;
     static const QString kSettingKeyQuranTafseerTable;
-    static const QString kSettingKeyQuranTafseerFile;
     static const QString kSettingKeyRecitationVolume;
     
     explicit SettingsLoader(const char* settingsFilename = "basic_settings.ini");

@@ -6,9 +6,9 @@
 
 namespace version {
 
-const int kMajorVersion = 1;
+const int kMajorVersion = 0;
 const int kMinorVersion = 0;
-const int kPatchVersion = 0;
+const int kPatchVersion = 1;
 
 /**
  * @brief versionString Formats current version and returns

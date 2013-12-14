@@ -7,6 +7,12 @@
              "base"  : "http://www.icplusplus.com/tools/project-islam/",
              "files" : "project-islam.zip"
         },
+        "database": {
+             "version": "1.0.0",
+             "force_update" : false,
+             "base" : "http://www.icplusplus.com/tools/project-islam/",
+             "files" : "project-islam.db.zip"
+        },
         "extensions": [
             {
                 "name"   : "al-quran",

@@ -27,6 +27,7 @@
 #include "core/extension/extension_info.h"
 #include "core/extension/extension_bar.h"
 #include "core/logging/logging.h"
+#include "core/data/database_manager.h"
 
 const char* UpdateManager::kServerUrlBase = "http://www.icplusplus.com";
 const char* UpdateManager::kVersionInfoFilename = "tools/project-islam/vinfo.txt";
@@ -92,7 +93,7 @@ QByteArray UpdateManager::downloadBytes(const QString& url, bool* ok)
     QEventLoop loop;
     QObject::connect(networkReply, SIGNAL(finished()), &loop, SLOT(quit()));
     QObject::connect(networkReply, SIGNAL(downloadProgress(qint64,qint64)), 
-                     this, SLOT(downloadProgressupgrade(qint64,qint64)));
+                     this, SLOT(downloadProgressUpdated(qint64,qint64)));
     loop.exec();
     if (networkReply->error() == QNetworkReply::NoError) {
         if (ok != nullptr) {
@@ -161,7 +162,6 @@ bool UpdateManager::update()
                 LOG(ERROR) << "No downloadable update available for [" 
                            << currOs << "]";
             }
-            
         } else {
             LOG(ERROR) << "Error while parsing json. Error [" 
                        << jsonError.errorString() << "]";
@@ -187,11 +187,33 @@ bool UpdateManager::updatePlatform(QJsonObject* jsonObject)
         QString baseUrl = platformObj["base"].toString();
         QStringList filesList = platformObj["files"].toString().split(',');
         for (QString filename : filesList) {
-            QString targetDir = m_app->applicationDirPath() + "/";
+            
+            QString targetDir = (QStringList() << m_app->applicationDirPath())
+                    .join(QDir::separator()).append(QDir::separator());
             QString tempFilename = targetDir + filename + ".upgrade";
             LOG(INFO) << "Downloading platform file [" 
                       << filename << "] from [" + baseUrl + "] to [" << targetDir << "]";
             result = downloadFile(baseUrl + filename, tempFilename) && result;
+        }
+        if (result) {
+            for (QString filename : filesList) {
+                QString fullFilenameOrig = 
+                        (QStringList() << m_app->applicationDirPath() << filename + ".upgrade")
+                        .join(QDir::separator());
+                QString fullFilename = fullFilenameOrig.mid(0, 
+                                                            fullFilenameOrig.length() - QString(".zip.upgrade").length());
+                
+                QFile fullFile(fullFilename);
+                QFile::Permissions perms;
+                if (fullFile.exists()) {
+                    perms = fullFile.permissions();
+                    fullFile.rename(fullFilename + ".old");
+                    fullFile.close();
+                }
+                QFile fullFileOrig(fullFilenameOrig);
+                fullFileOrig.rename(fullFilename);
+                fullFileOrig.setPermissions(perms);
+            }
         }
     }
     return result;
@@ -199,7 +221,38 @@ bool UpdateManager::updatePlatform(QJsonObject* jsonObject)
 
 bool UpdateManager::updateDatabase(QJsonObject* jsonObject)
 {
-    // TODO: Implement this!
+    QJsonObject databaseObj = (*jsonObject)["database"].toObject();
+    QString ver = databaseObj["version"].toString();
+    QString currVer = SettingsLoader().get("curr_db_ver", QVariant(QString("1.0.0"))).toString();
+    bool forceUpdate = databaseObj["force_update"].toBool();
+    bool startUpgrade = currVer != ver || forceUpdate;
+    bool result = true; // We will mark it false if download fail
+    if (startUpgrade) {
+        LOG(INFO) << "Upgrading database from [" << currVer 
+                  << "] to [" << ver << "]" << (forceUpdate ? " (FORCED)" : "");
+        QString baseUrl = databaseObj["base"].toString();
+        QStringList filesList = databaseObj["files"].toString().split(',');
+        for (QString filename : filesList) {
+            QString targetDir = (QStringList() << SettingsLoader().defaultHomeDir() << "data")
+                    .join(QDir::separator()).append(QDir::separator());
+            QString tempFilename = targetDir + filename + ".upgrade";
+            LOG(INFO) << "Downloading database file [" 
+                      << filename << "] from [" + baseUrl + "] to [" << targetDir << "]";
+            result = downloadFile(baseUrl + filename, tempFilename) && result;
+            if (result) {
+                // Updated, replace tempFilename with db
+                QFile newFile(tempFilename);
+                QFile oldFile(targetDir + data::kDefaultDatabaseFilename);
+                QFile::Permissions perms = oldFile.permissions();
+                oldFile.remove();
+                oldFile.close();
+                newFile.rename(oldFile.fileName());
+                newFile.setPermissions(perms);
+                SettingsLoader().saveSettings("curr_db_ver", QVariant(ver));
+            }
+        }
+    }
+    return result;
 }
 
 bool UpdateManager::updateExtensions(QJsonObject* jsonObject)
@@ -221,12 +274,13 @@ bool UpdateManager::updateExtensions(QJsonObject* jsonObject)
                 QString baseUrl = extensionobj["base"].toString();
                 QStringList filesList = extensionobj["files"].toString().split(',');
                 for (QString filename : filesList) {
-                    QString targetDir = m_app->applicationDirPath() + "/extensions/";
+                    QString targetDir = (QStringList() << m_app->applicationDirPath() << "extensions")
+                            .join(QDir::separator()).append(QDir::separator());
                     QString tempFilename = targetDir + filename + ".upgrade";
                     LOG(INFO) << "Downloading extension file [" 
                               << filename << "] from [" + baseUrl + "] to [" << targetDir << "]";
                     result = downloadFile(baseUrl + filename, tempFilename) && result;
-                    if (!ExtensionLoader::verifyExtension(tempFilename)) {
+                    if (!result || !ExtensionLoader::verifyExtension(tempFilename)) {
                         LOG(WARNING) << "Removing [" << tempFilename << "]";
                         QFile file(tempFilename);
                         if (file.open(QIODevice::ReadWrite)) {
@@ -235,6 +289,24 @@ bool UpdateManager::updateExtensions(QJsonObject* jsonObject)
                         }
                     } else {
                         // Extension ready to be upgrade! Filename: file.zip.upgrade
+                        for (QString filename : filesList) {
+                            QString fullFilenameOrig = 
+                                    (QStringList() << m_app->applicationDirPath() << "extensions")
+                                    .join(QDir::separator()).append(QDir::separator()) + filename + ".upgrade";
+                            QString fullFilename = fullFilenameOrig.mid(0, 
+                                                                        fullFilenameOrig.length() - QString(".zip.upgrade").length());
+                            
+                            QFile fullFile(fullFilename);
+                            QFile::Permissions perms;
+                            if (fullFile.exists()) {
+                                perms = fullFile.permissions();
+                                fullFile.rename(fullFilename + ".old");
+                                fullFile.close();
+                            }
+                            QFile fullFileOrig(fullFilenameOrig);
+                            fullFileOrig.rename(fullFilename);
+                            fullFileOrig.setPermissions(perms);
+                        }
                     }
                 }
             }
@@ -258,7 +330,7 @@ void UpdateManager::downloadProgressUpdated(qint64 bytesReceived, qint64 bytesTo
     if (sender() != nullptr && static_cast<QNetworkReply*>(sender())->error() == QNetworkReply::NoError) {
         float percentage = (static_cast<float>(bytesReceived) / static_cast<float>(bytesTotal)) * 100;
         VLOG(9) << "Download progress [" << bytesReceived << "/" << bytesTotal << "] (" 
-                  << percentage << "%)";
+                << percentage << "%)";
     }
     
 }

@@ -92,8 +92,8 @@ void SettingsDialog::loadSettingsInUi()
     int selectedIndex = 0;
     int i = 0;
     for (QSqlRecord rec : result) {
-        QString name = rec.value(1).toString();
-        QString displayName = name;
+        QString nameTranslationTable = rec.value(1).toString();
+        QString displayName = nameTranslationTable;
         displayName = displayName.mid(QString("Quran__").length());
         displayName.replace("_", " ");
         int index = ui->cboQuranTranslations->findText(displayName);
@@ -101,12 +101,12 @@ void SettingsDialog::loadSettingsInUi()
             // No duplication!
             continue;
         }
+        
         QMap<QString, QVariant> m;
-        m.insert(SettingsLoader::kSettingKeyQuranTranslationFile, "project-islam.db");
-        m.insert(SettingsLoader::kSettingKeyQuranTranslationTable, name);
+        m.insert(SettingsLoader::kSettingKeyQuranTranslationTable, nameTranslationTable);
         ui->cboQuranTranslations->addItem(displayName, m);
         if (SettingsLoader().get(SettingsLoader::kSettingKeyQuranTranslationTable, 
-                                 QString(quran::Quran::kQuranDefaultTranslationDatabaseTable)) == name) {
+                                 QString(quran::Quran::kQuranDefaultTranslationDatabaseTable)) == nameTranslationTable) {
             selectedIndex = i;
         }
         ++i;
@@ -118,8 +118,8 @@ void SettingsDialog::loadSettingsInUi()
     selectedIndex = 0;
     i = 0;
     for (QSqlRecord rec : result) {
-        QString name = rec.value(1).toString();
-        QString displayName = name;
+        QString nameTafseerTable = rec.value(1).toString();
+        QString displayName = nameTafseerTable;
         displayName = displayName.mid(QString("Quran__").length());
         displayName.replace("_", " ");
         int index = ui->cboQuranTafseers->findText(displayName);
@@ -128,11 +128,10 @@ void SettingsDialog::loadSettingsInUi()
             continue;
         }
         QMap<QString, QVariant> m;
-        m.insert(SettingsLoader::kSettingKeyQuranTafseerFile, "project-islam.db");
-        m.insert(SettingsLoader::kSettingKeyQuranTafseerFile, name);
+        m.insert(SettingsLoader::kSettingKeyQuranTafseerTable, nameTafseerTable);
         ui->cboQuranTafseers->addItem(displayName, m);
-        if (SettingsLoader().get(SettingsLoader::kSettingKeyQuranTafseerFile, 
-                                 QString(quran::Quran::kQuranDefaultTafseerDatabaseTable)) == name) {
+        if (SettingsLoader().get(SettingsLoader::kSettingKeyQuranTafseerTable, 
+                                 QString(quran::Quran::kQuranDefaultTafseerDatabaseTable)) == nameTafseerTable) {
             selectedIndex = i;
         }
         ++i;

@@ -11,9 +11,7 @@
 const QString SettingsLoader::kMasterSettingsFile = QString(".master.settings");
 const QString SettingsLoader::kSettingKeyTheme = "theme";
 const QString SettingsLoader::kSettingKeyQuranTranslationTable = "default_quran_translation";
-const QString SettingsLoader::kSettingKeyQuranTranslationFile = "default_quran_translation_db";
 const QString SettingsLoader::kSettingKeyQuranTafseerTable = "default_quran_tafseer";
-const QString SettingsLoader::kSettingKeyQuranTafseerFile = "default_quran_tafseer_db";
 const QString SettingsLoader::kSettingKeyRecitationVolume = "recitation_vol";
 
 QString SettingsLoader::s_defaultHomeDir = QString("");

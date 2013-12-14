@@ -29,8 +29,7 @@ void Quran::load(const Quran::TextType &textType, const std::string& databaseTab
     LOG(DEBUG) << "Loading Quran...";
     TIMED_SCOPE(quranLoadTimer, "Load Complete Quran");
     m_textType = textType;
-    data::DatabaseManager d("QuranDataManager", 
-                            SettingsLoader().get(SettingsLoader::kSettingKeyQuranTranslationFile, "project-islam.db").toString());
+    data::DatabaseManager d("QuranDataManager");
     data::QueryResult result = d.query("SELECT * FROM " + QString(kQuranChapterDatabaseTable) + " ORDER BY ID");
     for (int i = 0; i < result.size(); ++i) {
         int cid = result.at(i).value("ID").toInt();

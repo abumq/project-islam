@@ -1,5 +1,5 @@
 ## Compiler
-COMPILER = g++
+COMPILER = clang++
 
 ## Modules
 QT       += core gui widgets sql multimedia network

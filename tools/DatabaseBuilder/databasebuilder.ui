@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>DatabaseBuilder</string>
+   <string>Database Builder v0.1</string>
   </property>
   <widget class="QGroupBox" name="groupBox">
    <property name="geometry">

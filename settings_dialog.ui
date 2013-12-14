@@ -23,7 +23,7 @@
       <enum>QTabWidget::North</enum>
      </property>
      <property name="currentIndex">
-      <number>3</number>
+      <number>1</number>
      </property>
      <property name="elideMode">
       <enum>Qt::ElideNone</enum>
@@ -256,11 +256,6 @@
        </widget>
        <widget class="QComboBox" name="cboQuranTafseers"/>
       </widget>
-     </widget>
-     <widget class="QWidget" name="tabData">
-      <attribute name="title">
-       <string>Data</string>
-      </attribute>
      </widget>
     </widget>
    </item>

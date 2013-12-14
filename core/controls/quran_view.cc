@@ -362,7 +362,10 @@ void QuranView::turnOnTranslation(quran::Quran* translationQuran)
 void QuranView::turnOffTranslation()
 {
     m_quranTranslation = nullptr;
-    // FIXME: Delete each text item?
+    QList<VerseTextItem*> list = m_verseTextTranslationItems.values();
+    for (int i = list.size() - 1; i >= 0; --i) {
+        delete list.at(i);
+    }
     m_verseTextTranslationItems.clear();
     update(m_currFrom, m_currTo);
     emit translationToggled(false);
@@ -371,7 +374,10 @@ void QuranView::turnOffTranslation()
 void QuranView::turnOffTransliteration()
 {
     m_quranTransliteration = nullptr;
-    // FIXME: Delete each text item?
+    QList<VerseTextItem*> list = m_verseTextTransliterationItems.values();
+    for (int i = list.size() - 1; i >= 0; --i) {
+        delete list.at(i);
+    }
     m_verseTextTransliterationItems.clear();
     update(m_currFrom, m_currTo);
     emit transliterationOnToggled(false);
@@ -387,7 +393,10 @@ void QuranView::turnOnTransliteration(quran::Quran* transliterationQuran)
 void QuranView::turnOffTafseer()
 {   
     m_quranTafseer = nullptr;
-    // FIXME: Delete each text item?
+    QList<VerseTextItem*> list = m_verseTextTafseerItems.values();
+    for (int i = list.size() - 1; i >= 0; --i) {
+        delete list.at(i);
+    }
     m_verseTextTafseerItems.clear();
     update(m_currFrom, m_currTo);
     emit tafseerToggled(false);

@@ -43,7 +43,8 @@ public:
     
     static const float kDefaultZoom;
     static const float kDefaultZoomFactor;
-    QuranView(quran::Quran* quran, quran::Quran* quranTranslation, quran::Quran* quranTransliteration, QWidget* parent);    
+    QuranView(quran::Quran* quran, quran::Quran* quranTranslation, 
+    quran::Quran* quranTransliteration, quran::Quran* quranTafseer, QWidget* parent);    
     virtual ~QuranView();
     
     quran::Chapter* currentChapter() const;
@@ -71,8 +72,12 @@ public:
     void turnOffTransliteration();
     void turnOnTransliteration(quran::Quran* transliterationQuran);
     
+    void turnOffTafseer();
+    void turnOnTafseer(quran::Quran* tafseerQuran);
+    
     bool hasTranslation() const;
     bool hasTransliteration() const;
+    bool hasTafseer() const;
     
     void jumpTo(const QString& jumpToText);
     QString jumpToText() const;
@@ -84,15 +89,18 @@ signals:
     void currentVerseChanged(int);
     void translationToggled(bool);
     void transliterationOnToggled(bool);
+    void tafseerToggled(bool);
 private:
     bool m_ok;
     quran::Quran* m_quran;
     quran::Quran* m_quranTranslation;
     quran::Quran* m_quranTransliteration;
+    quran::Quran* m_quranTafseer;
     quran::Chapter* m_currentChapter;
     QMap<int, VerseTextItem*> m_verseTextItems;
     QMap<int, VerseTextItem*> m_verseTextTranslationItems;
     QMap<int, VerseTextItem*> m_verseTextTransliterationItems;
+    QMap<int, VerseTextItem*> m_verseTextTafseerItems;
     VerseTextItem* m_selectedVerseTextItem;
     bool m_showVerseNumbers;
     int m_currFrom;

@@ -78,6 +78,9 @@ QString DatabaseBuilder::dataTypeToFilename(const DatabaseBuilder::DataType &typ
     if (type == DataType::Dua) {
         return ":dua";
     }
+    if (type == DataType::QuranArabicTafseer) {
+        return ":quran/quran_tafseer_muyassar";
+    }
     return QString();
 }
 

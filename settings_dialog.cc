@@ -184,3 +184,9 @@ void SettingsDialog::on_buildQuranTransliterationEnglish_clicked()
     data::DatabaseBuilder::build(data::DatabaseBuilder::DataType::QuranTransliteration);
     m_mainWindow->dataHolder()->quranTransliteration()->load(quran::Quran::TextType::Transliteration, quran::Quran::kQuranTransliterationDatabaseTable);
 }
+
+void SettingsDialog::on_pushButton_2_clicked()
+{
+      LOG(INFO) << "Building data: Tafseer";
+    data::DatabaseBuilder::build(data::DatabaseBuilder::DataType::QuranArabicTafseer);
+}

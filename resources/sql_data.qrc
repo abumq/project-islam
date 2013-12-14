@@ -2,9 +2,9 @@
     <qresource prefix="/quran">
         <file alias="quran_arabic">data/sql/quran/quran_arabic.sql</file>
         <file alias="quran_chapters">data/sql/quran/quran_chapter.sql</file>
-        
         <file alias="quran_transliteration_english">data/sql/quran/quran_transliteration_english.sql</file>
         <file alias="quran_english_sahih">data/sql/quran/quran_english_sahih_international.sql</file>
+        <file alias="quran_tafseer_muyassar">data/sql/quran/quran_tafseer_muyassar.sql</file>
     </qresource>
     <qresource prefix="/">
         <file alias="dua">data/sql/dua.sql</file>

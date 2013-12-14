@@ -44,7 +44,7 @@ void DataHolder::initialize()
                                                   QString(quran::Quran::kQuranDefaultTranslationDatabaseTable)).toString().toStdString());
     
     quranTransliteration()->load(quran::Quran::TextType::Transliteration, quran::Quran::kQuranTransliterationDatabaseTable);
-    quranTranslation()->load(quran::Quran::TextType::Tafseer, 
+    quranTafseer()->load(quran::Quran::TextType::Tafseer, 
                              SettingsLoader().get(QString(SettingsLoader::kSettingKeyQuranTafseerTable), 
                                                   QString(quran::Quran::kQuranDefaultTafseerDatabaseTable)).toString().toStdString());
     

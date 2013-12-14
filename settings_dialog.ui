@@ -23,7 +23,7 @@
       <enum>QTabWidget::North</enum>
      </property>
      <property name="currentIndex">
-      <number>2</number>
+      <number>3</number>
      </property>
      <property name="elideMode">
       <enum>Qt::ElideNone</enum>
@@ -263,7 +263,7 @@
       </attribute>
       <widget class="QGroupBox" name="groupBox_4">
        <property name="enabled">
-        <bool>false</bool>
+        <bool>true</bool>
        </property>
        <property name="geometry">
         <rect>
@@ -302,6 +302,16 @@
          <widget class="QPushButton" name="buildQuranTransliterationEnglish">
           <property name="text">
            <string>Quran Transliteration (English)</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="pushButton_2">
+          <property name="enabled">
+           <bool>true</bool>
+          </property>
+          <property name="text">
+           <string>Quran Tafseer (Arabic)</string>
           </property>
          </widget>
         </item>

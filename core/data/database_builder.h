@@ -8,7 +8,7 @@ namespace data {
 class DatabaseBuilder {
 public:
     enum class DataType {
-        QuranChapters, QuranArabic, QuranTransliteration, QuranSahihTranslation, Dua
+        QuranChapters, QuranArabic, QuranTransliteration, QuranSahihTranslation, QuranArabicTafseer, Dua
     };
 
     static bool build(const DataType& type,  bool stopOnFirstError = true);

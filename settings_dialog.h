@@ -33,6 +33,8 @@ private slots:
     
     void on_buildQuranTransliterationEnglish_clicked();
     
+    void on_pushButton_2_clicked();
+    
 private:
     Ui::SettingsDialog *ui;
     MainWindow* m_mainWindow;

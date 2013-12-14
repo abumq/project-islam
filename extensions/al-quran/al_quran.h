@@ -54,6 +54,7 @@ public slots:
     
     void onToggledTranslation(bool);
     void onToggledTransliteration(bool);
+    void onToggledTafseer(bool);
 private:
     QuranReciter* m_reciter;
     QuranReader* m_reader;

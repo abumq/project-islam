@@ -20,7 +20,8 @@ class QuranReader : public QWidget
     
 public:
     QuranReader(quran::Quran* quran, quran::Quran* quranTranslation = nullptr, 
-            quran::Quran* quranTransliteration = nullptr, QWidget *parent = 0);
+            quran::Quran* quranTransliteration = nullptr, quran::Quran* quranTafseer = nullptr, 
+            QWidget *parent = 0);
     ~QuranReader();
     void changeChapter(quran::Chapter::Name chapterName);
     void changeVerseRange(int from, int to);
@@ -35,6 +36,10 @@ public:
     
     void turnOffTranslation();
     void turnOnTranslation();
+    
+    
+    void turnOffTafseer();
+    void turnOnTafseer();
     
     void turnOffTransliteration();
     void turnOnTransliteration();
@@ -61,12 +66,15 @@ private slots:
     
     void on_btnMenu_toggled(bool checked);
     
+    void on_chkTafseer_clicked(bool checked);
+    
 signals:
     void chapterChanged(const quran::Chapter*);
     void verseRangeChanged(int, int);
     void currentVerseChanged(int);
     void translationToggled(bool);
     void transliterationOnToggled(bool);
+    void tafseerToggled(bool);
     void jumpToTextChanged(const QString&);
 protected:
     void resizeEvent(QResizeEvent *);
@@ -75,6 +83,7 @@ private:
     quran::Quran* m_quran;
     quran::Quran* m_quranTranslation;
     quran::Quran* m_quranTransliteration;
+    quran::Quran* m_quranTafseer;
     QuranView* m_quranView;
 };
 

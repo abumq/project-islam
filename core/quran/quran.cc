@@ -17,7 +17,7 @@ const char* Quran::kQuranArabicDatabaseTable = "QuranArabic";
 const char* Quran::kQuranChapterDatabaseTable = "QuranChapter";
 const char* Quran::kQuranTransliterationDatabaseTable = "Quran__English_Transliteration";
 const char* Quran::kQuranDefaultTranslationDatabaseTable = "Quran__English_Translation_Sahih_International";
-const char* Quran::kQuranDefaultTafseerDatabaseTable = "Quran__English_Tafseer_Tafseer_Ibn_Kathir";
+const char* Quran::kQuranDefaultTafseerDatabaseTable = "Quran__Arabic_Tafseer_Muyassar";
 
 Quran::Quran(void) : 
     m_ready(false) 
@@ -57,7 +57,9 @@ void Quran::load(const Quran::TextType &textType, const std::string& databaseTab
         if (textType == TextType::Original) {
             table = kQuranArabicDatabaseTable;
             m_readingDirection = ReadingDirection::RightToLeft;
-        } else if (textType == TextType::Translation || textType == TextType::Transliteration) {
+        } else if (textType == TextType::Translation 
+                   || textType == TextType::Transliteration 
+                   || textType == TextType::Tafseer) {
             table = QString(databaseTable.empty() ? kQuranDefaultTranslationDatabaseTable : databaseTable.c_str());
             m_readingDirection = ReadingDirection::LeftToRight;
         }

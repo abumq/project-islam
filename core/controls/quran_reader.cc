@@ -11,12 +11,14 @@
 #include "core/constants.h"
 
 QuranReader::QuranReader(quran::Quran* quran, quran::Quran* quranTranslation, 
-        quran::Quran* quranTransliteration, QWidget *parent) :
+                         quran::Quran* quranTransliteration,
+                         quran::Quran* quranTafseer, QWidget *parent) :
     QWidget(parent),
     ui(new Ui::QuranReader),
     m_quran(quran),
     m_quranTranslation(quranTranslation),
     m_quranTransliteration(quranTransliteration),
+    m_quranTafseer(quranTafseer),
     m_quranView(nullptr)
 {
     _TRACE;
@@ -29,7 +31,7 @@ QuranReader::QuranReader(quran::Quran* quran, quran::Quran* quranTranslation,
             ui->spnVerseFrom->setEnabled(false);
             ui->spnVerseTo->setEnabled(false);
         }
-        m_quranView = new QuranView(m_quran, m_quranTranslation, m_quranTransliteration, this);
+        m_quranView = new QuranView(m_quran, m_quranTranslation, m_quranTransliteration, m_quranTafseer, this);
         m_quranView->setGeometry(5, 
                                  ui->grpControls->geometry().top() + ui->grpControls->geometry().height(),
                                  621, 
@@ -49,6 +51,7 @@ QuranReader::QuranReader(quran::Quran* quran, quran::Quran* quranTranslation,
         connect(m_quranView, SIGNAL(currentVerseChanged(int)), this, SIGNAL(currentVerseChanged(int)));
         connect(m_quranView, SIGNAL(translationToggled(bool)), this, SIGNAL(translationToggled(bool)));
         connect(m_quranView, SIGNAL(transliterationOnToggled(bool)), this, SIGNAL(transliterationOnToggled(bool)));
+        connect(m_quranView, SIGNAL(tafseerToggled(bool)), this, SIGNAL(tafseerToggled(bool)));
         connect(ui->txtJumpTo, SIGNAL(textChanged(QString)), this, SIGNAL(jumpToTextChanged(QString)));
         on_btnMoreControls_clicked(false);
     }
@@ -159,6 +162,21 @@ void QuranReader::turnOffTranslation()
     m_quranView->turnOffTranslation();
 }
 
+
+void QuranReader::turnOnTafseer()
+{
+    _TRACE;
+    ui->chkTafseer->setChecked(true);
+    m_quranView->turnOnTafseer(m_quranTafseer);
+}
+
+void QuranReader::turnOffTafseer()
+{
+    _TRACE;
+    ui->chkTafseer->setChecked(false);
+    m_quranView->turnOffTafseer();
+}
+
 void QuranReader::turnOffTransliteration()
 {
     _TRACE;
@@ -250,7 +268,7 @@ void QuranReader::on_btnZoomIn_clicked()
 
 void QuranReader::on_chkTransliteration_clicked(bool checked)
 {
-        if (checked) {
+    if (checked) {
         turnOnTransliteration();
     } else {
         turnOffTransliteration();
@@ -272,5 +290,14 @@ void QuranReader::on_txtJumpTo_returnPressed()
     _TRACE;
     if (m_quranView != nullptr) {
         m_quranView->jumpTo(ui->txtJumpTo->text());
+    }
+}
+
+void QuranReader::on_chkTafseer_clicked(bool checked)
+{
+    if (checked) {
+        turnOnTafseer();
+    } else {
+        turnOffTafseer();
     }
 }

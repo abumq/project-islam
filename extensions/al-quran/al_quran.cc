@@ -42,7 +42,9 @@ bool AlQuran::initialize(int argc, const char** argv)
     memory::deleteAll(m_reciter, m_reader, m_bookmarkBar);
     m_reciter = new QuranReciter(extension()->dataHolder()->quranArabic(), extension()->container());
     m_reader = new QuranReader(extension()->dataHolder()->quranArabic(), 
-                               extension()->dataHolder()->quranTranslation(), extension()->dataHolder()->quranTransliteration(), 
+                               extension()->dataHolder()->quranTranslation(), 
+                               extension()->dataHolder()->quranTransliteration(),
+                               extension()->dataHolder()->quranTafseer(),
                                extension()->container());    
     m_reciter->hideChapterSelector();
     m_reciter->hideVerseRangeSelector();
@@ -54,6 +56,7 @@ bool AlQuran::initialize(int argc, const char** argv)
     QObject::connect(m_reader, SIGNAL(currentVerseChanged(int)), this, SLOT(onSelectedVerseChangedReader(int)));
     QObject::connect(m_reader, SIGNAL(translationToggled(bool)), this, SLOT(onToggledTranslation(bool)));
     QObject::connect(m_reader, SIGNAL(transliterationOnToggled(bool)), this, SLOT(onToggledTransliteration(bool)));
+    QObject::connect(m_reader, SIGNAL(tafseerToggled(bool)), this, SLOT(onToggledTafseer(bool)));
     QObject::connect(m_reciter, SIGNAL(currentVerseChanged(int)), this, SLOT(onSelectedVerseChangedReciter(int)));
     QObject::connect(m_reader, SIGNAL(jumpToTextChanged(QString)), this, SLOT(onJumpToTextChanged(QString)));
     // Bookmarks bar
@@ -77,6 +80,12 @@ bool AlQuran::initialize(int argc, const char** argv)
         m_reader->turnOnTransliteration();
     } else {
         m_reader->turnOffTransliteration();
+    }
+    // Transliteration
+    if (setting("load_tafseer", QVariant(true)).toBool()) {
+        m_reader->turnOnTafseer();
+    } else {
+        m_reader->turnOffTafseer();
     }
     // Force trigger this slot
     onContainerGeometryChanged(extension()->container()->width(), extension()->container()->height());
@@ -250,4 +259,10 @@ void AlQuran::onToggledTransliteration(bool val)
 {
     _TRACE;
     saveSetting("load_transliteration", QVariant(val));
+}
+
+void AlQuran::onToggledTafseer(bool val)
+{
+    _TRACE;
+    saveSetting("load_tafseer", QVariant(val));
 }

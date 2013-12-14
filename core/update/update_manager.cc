@@ -213,6 +213,9 @@ bool UpdateManager::updatePlatform(QJsonObject* jsonObject)
                 QFile fullFileOrig(fullFilenameOrig);
                 fullFileOrig.rename(fullFilename);
                 fullFileOrig.setPermissions(perms);
+                if (fullFile.exists()) {
+                    fullFile.remove();
+                }
             }
         }
     }
@@ -248,9 +251,9 @@ bool UpdateManager::updateDatabase(QJsonObject* jsonObject)
                 oldFile.close();
                 newFile.rename(oldFile.fileName());
                 newFile.setPermissions(perms);
-                SettingsLoader().saveSettings("curr_db_ver", QVariant(ver));
             }
         }
+        SettingsLoader().saveSettings("curr_db_ver", QVariant(ver));
     }
     return result;
 }
@@ -306,6 +309,9 @@ bool UpdateManager::updateExtensions(QJsonObject* jsonObject)
                             QFile fullFileOrig(fullFilenameOrig);
                             fullFileOrig.rename(fullFilename);
                             fullFileOrig.setPermissions(perms);
+                            if (fullFile.exists()) {
+                                fullFile.remove();
+                            }
                         }
                     }
                 }

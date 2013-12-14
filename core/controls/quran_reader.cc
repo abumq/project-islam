@@ -2,6 +2,7 @@
 #include "ui_quran_reader.h"
 
 #include <QResizeEvent>
+#include <QMenu>
 
 #include "core/logging/logging.h"
 #include "core/memory.h"
@@ -50,8 +51,6 @@ QuranReader::QuranReader(quran::Quran* quran, quran::Quran* quranTranslation,
         connect(m_quranView, SIGNAL(transliterationOnToggled(bool)), this, SIGNAL(transliterationOnToggled(bool)));
         connect(ui->txtJumpTo, SIGNAL(textChanged(QString)), this, SIGNAL(jumpToTextChanged(QString)));
         on_btnMoreControls_clicked(false);
-        
-        ui->lblZoomValue->setText(QString::number(m_quranView->zoomValue()) + "%");
     }
 }
 
@@ -241,14 +240,12 @@ void QuranReader::on_btnMoreControls_clicked(bool checked)
 void QuranReader::on_btnZoomOut_clicked()
 {
     m_quranView->zoomOut();
-    ui->lblZoomValue->setText(QString::number(m_quranView->zoomValue()) + "%");
 }
 
 void QuranReader::on_btnZoomIn_clicked()
 {
     
     m_quranView->zoomIn();
-    ui->lblZoomValue->setText(QString::number(m_quranView->zoomValue()) + "%");
 }
 
 void QuranReader::on_chkTransliteration_clicked(bool checked)

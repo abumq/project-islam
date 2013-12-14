@@ -59,9 +59,9 @@ QString Bookmark::serialize() const
     return m_name + "=" + QString::number(m_chapter) + ":" + 
             QString::number(m_verseFrom) + 
             (m_verseFrom < m_verseTo ? "-" + QString::number(m_verseTo) : "") +
-            (m_selected >= m_verseFrom && m_selected <= m_verseTo
-             ? (":" + QString::number(m_selected)) 
-             : "");
+            (m_selected > m_verseFrom && m_selected <= m_verseTo
+                ? (":" + QString::number(m_selected)) 
+                : "");
 }
 
 bool Bookmark::deserialize(const QString& serializedText)

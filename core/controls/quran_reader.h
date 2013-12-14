@@ -2,7 +2,7 @@
 #define QURAN_READER_H
 
 #include <QWidget>
-
+#include <QAction>
 #include "core/quran/chapter.h"
 
 namespace Ui {
@@ -58,6 +58,8 @@ private slots:
     void on_chkTranslation_clicked(bool checked);
     
     void on_txtJumpTo_returnPressed();
+    
+    void on_btnMenu_toggled(bool checked);
     
 signals:
     void chapterChanged(const quran::Chapter*);

@@ -119,17 +119,6 @@
            <string>-</string>
           </property>
          </widget>
-         <widget class="QLabel" name="lblZoomValue">
-          <property name="enabled">
-           <bool>false</bool>
-          </property>
-          <property name="text">
-           <string>100%</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignCenter</set>
-          </property>
-         </widget>
          <widget class="QPushButton" name="btnZoomIn">
           <property name="text">
            <string>+</string>

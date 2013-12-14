@@ -395,6 +395,8 @@ QString QuranView::jumpToText() const
             ":" + QString::number(m_currFrom) + 
             (m_currFrom < m_currTo ? "-" + QString::number(m_currTo) : "") + 
             (m_selectedVerseTextItem != nullptr 
+                && m_selectedVerseTextItem->verse()->number() > m_currFrom
+                && m_selectedVerseTextItem->verse()->number() <= m_currTo
                 ? (":" + QString::number(m_selectedVerseTextItem->verse()->number())) 
                 : "");
 }

@@ -17,6 +17,7 @@ const char* Quran::kQuranArabicDatabaseTable = "QuranArabic";
 const char* Quran::kQuranChapterDatabaseTable = "QuranChapter";
 const char* Quran::kQuranTransliterationDatabaseTable = "Quran__English_Transliteration";
 const char* Quran::kQuranDefaultTranslationDatabaseTable = "Quran__English_Translation_Sahih_International";
+const char* Quran::kQuranDefaultTafseerDatabaseTable = "Quran__English_Tafseer_Tafseer_Ibn_Kathir";
 
 Quran::Quran(void) : 
     m_ready(false) 

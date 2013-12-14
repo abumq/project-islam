@@ -25,6 +25,11 @@ quran::Quran* DataHolder::quranTransliteration()
     return &m_quranTransliteration;
 }
 
+quran::Quran* DataHolder::quranTafseer()
+{
+    return &m_quranTafseer;
+}
+
 quran::Quran* DataHolder::quranTranslation()
 {
     return &m_quranTranslation;
@@ -37,8 +42,12 @@ void DataHolder::initialize()
     quranTranslation()->load(quran::Quran::TextType::Translation, 
                              SettingsLoader().get(QString(SettingsLoader::kSettingKeyQuranTranslationTable), 
                                                   QString(quran::Quran::kQuranDefaultTranslationDatabaseTable)).toString().toStdString());
-                                                  
+    
     quranTransliteration()->load(quran::Quran::TextType::Transliteration, quran::Quran::kQuranTransliterationDatabaseTable);
+    quranTranslation()->load(quran::Quran::TextType::Tafseer, 
+                             SettingsLoader().get(QString(SettingsLoader::kSettingKeyQuranTafseerTable), 
+                                                  QString(quran::Quran::kQuranDefaultTafseerDatabaseTable)).toString().toStdString());
+    
 }
 
 } // namespace data

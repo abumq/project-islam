@@ -12,11 +12,13 @@ public:
     quran::Quran* quranArabic();
     quran::Quran* quranTranslation();
     quran::Quran* quranTransliteration();
+    quran::Quran* quranTafseer();
     void initialize();
 private:
     quran::Quran m_quranArabic;
     quran::Quran m_quranTransliteration;
     quran::Quran m_quranTranslation;
+    quran::Quran m_quranTafseer;
 };
 
 } // namespace data

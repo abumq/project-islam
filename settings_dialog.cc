@@ -112,40 +112,32 @@ void SettingsDialog::loadSettingsInUi()
         }
         ++i;
     }
-    // Now look at data/quran_translations folder for other translations
-    QDir translationsDir((QStringList() << SettingsLoader().defaultHomeDir() << "data" << "translations").join(QDir::separator()));
-    if (translationsDir.exists() && !translationsDir.entryList(QStringList() << "*.db").empty()) {
-        QStringList translationsAvailable = translationsDir.entryList(QStringList() << "*.db");
-        for (QString t : translationsAvailable) {
-            QString dbfilename = "translations/" + t;
-            data::DatabaseManager dbManager2("TranslationFinderData", dbfilename);
-            result = dbManager2.query(
-                        QString("SELECT * FROM sqlite_master WHERE type='table' AND name like 'Quran%Translation%' AND name != 'Quran__English_Transliteration';"));
-            for (QSqlRecord rec : result) {
-                QString name = rec.value(1).toString();
-                QString displayName = name;
-                displayName = displayName.mid(QString("Quran__").length());
-                displayName.replace("_", " ");
-                int index = ui->cboQuranTranslations->findText(displayName);
-                if (index != -1) {
-                    // No duplication!
-                    continue;
-                }
-                QMap<QString, QVariant> m;
-                m.insert(SettingsLoader::kSettingKeyQuranTranslationFile, dbfilename);
-                m.insert(SettingsLoader::kSettingKeyQuranTranslationTable, name);
-                ui->cboQuranTranslations->addItem(displayName, m);
-                if (SettingsLoader().get(SettingsLoader::kSettingKeyQuranTranslationTable, 
-                                         QString(quran::Quran::kQuranDefaultTranslationDatabaseTable)) == name &&
-                        SettingsLoader().get(SettingsLoader::kSettingKeyQuranTranslationFile, 
-                                             QString("project-islam.db")) == dbfilename) {
-                    selectedIndex = i;
-                }
-                ++i;
-            }
-        }
-    }
     ui->cboQuranTranslations->setCurrentIndex(selectedIndex);
+    // Tafseer
+    result = dbManager.query(
+                QString("SELECT * FROM sqlite_master WHERE type='table' AND name like 'Quran%Tafseer%';"));
+    selectedIndex = 0;
+    i = 0;
+    for (QSqlRecord rec : result) {
+        QString name = rec.value(1).toString();
+        QString displayName = name;
+        displayName = displayName.mid(QString("Quran__").length());
+        displayName.replace("_", " ");
+        int index = ui->cboQuranTafseers->findText(displayName);
+        if (index != -1) {
+            // No duplication!
+            continue;
+        }
+        QMap<QString, QVariant> m;
+        m.insert(SettingsLoader::kSettingKeyQuranTafseerFile, "project-islam.db");
+        m.insert(SettingsLoader::kSettingKeyQuranTafseerFile, name);
+        ui->cboQuranTafseers->addItem(displayName, m);
+        if (SettingsLoader().get(SettingsLoader::kSettingKeyQuranTafseerFile, 
+                                 QString(quran::Quran::kQuranDefaultTafseerDatabaseTable)) == name) {
+            selectedIndex = i;
+        }
+        ++i;
+    }
 }
 
 void SettingsDialog::on_chkLevelGlobal_clicked(bool checked)

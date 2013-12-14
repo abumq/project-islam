@@ -44,6 +44,7 @@ private:
     bool update();
     bool updatePlatform(QJsonObject* jsonObject);
     bool updateExtensions(QJsonObject* jsonObject);
+    bool updateDatabase(QJsonObject* jsonObject);
 };
 
 #endif // UPDATE_MANAGER_H

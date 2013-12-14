@@ -155,6 +155,7 @@ bool UpdateManager::update()
                 result = updatePlatform(&osObj);
                 // Following order should not change since we want to 
                 // try to update both platform and extensions before we return
+                result = updateDatabase(&osObj) && result;
                 result = updateExtensions(&osObj) && result;
             } else {
                 LOG(ERROR) << "No downloadable update available for [" 
@@ -194,6 +195,11 @@ bool UpdateManager::updatePlatform(QJsonObject* jsonObject)
         }
     }
     return result;
+}
+
+bool UpdateManager::updateDatabase(QJsonObject* jsonObject)
+{
+    // TODO: Implement this!
 }
 
 bool UpdateManager::updateExtensions(QJsonObject* jsonObject)

@@ -59,15 +59,10 @@
        </property>
        <widget class="QLabel" name="label_2">
         <property name="text">
-         <string>Home Directory</string>
+         <string>Home Directory &lt;b&gt;*&lt;/b&gt;</string>
         </property>
        </widget>
        <widget class="QLineEdit" name="txtHomeDir"/>
-       <widget class="QLabel" name="label_3">
-        <property name="text">
-         <string>(Requires restart)</string>
-        </property>
-       </widget>
       </widget>
      </widget>
      <widget class="QWidget" name="tabLogging">
@@ -75,6 +70,9 @@
        <string>Logging</string>
       </attribute>
       <widget class="QGroupBox" name="groupBox">
+       <property name="enabled">
+        <bool>false</bool>
+       </property>
        <property name="geometry">
         <rect>
          <x>10</x>
@@ -212,64 +210,60 @@
       <attribute name="title">
        <string>Qur'an</string>
       </attribute>
-      <widget class="QSplitter" name="splitter_2">
+      <widget class="QComboBox" name="cboQuranTranslations">
+       <property name="geometry">
+        <rect>
+         <x>140</x>
+         <y>30</y>
+         <width>591</width>
+         <height>23</height>
+        </rect>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_4">
        <property name="geometry">
         <rect>
          <x>50</x>
          <y>30</y>
-         <width>681</width>
-         <height>23</height>
-        </rect>
-       </property>
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
-       </property>
-       <widget class="QLabel" name="label_4">
-        <property name="text">
-         <string>Translation *</string>
-        </property>
-       </widget>
-       <widget class="QComboBox" name="cboQuranTranslations"/>
-      </widget>
-      <widget class="QSplitter" name="splitter_3">
-       <property name="geometry">
-        <rect>
-         <x>50</x>
-         <y>60</y>
-         <width>681</width>
-         <height>23</height>
-        </rect>
-       </property>
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
-       </property>
-       <widget class="QLabel" name="label_5">
-        <property name="text">
-         <string>Tafseer *</string>
-        </property>
-       </widget>
-       <widget class="QComboBox" name="cboQuranTafseers"/>
-      </widget>
-      <widget class="QLabel" name="label_6">
-       <property name="geometry">
-        <rect>
-         <x>40</x>
-         <y>380</y>
-         <width>681</width>
+         <width>75</width>
          <height>16</height>
         </rect>
        </property>
        <property name="text">
-        <string>* = Requires restart (Application -&gt; Restart)</string>
+        <string>Translation &lt;b&gt;*&lt;/b&gt;</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_5">
+       <property name="geometry">
+        <rect>
+         <x>50</x>
+         <y>60</y>
+         <width>53</width>
+         <height>16</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Tafseer &lt;b&gt;*&lt;/b&gt;</string>
+       </property>
+      </widget>
+      <widget class="QComboBox" name="cboQuranTafseers">
+       <property name="geometry">
+        <rect>
+         <x>140</x>
+         <y>60</y>
+         <width>591</width>
+         <height>23</height>
+        </rect>
        </property>
       </widget>
      </widget>
+    </widget>
+   </item>
+   <item>
+    <widget class="QLabel" name="label_6">
+     <property name="text">
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;* = Requires restart (Application -&amp;gt; Restart)&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     </property>
     </widget>
    </item>
    <item>

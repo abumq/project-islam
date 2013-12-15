@@ -23,19 +23,19 @@ DatabaseBuilder::~DatabaseBuilder()
 void DatabaseBuilder::on_btnBrowse_clicked()
 {
     QFileDialog d;
-    ui->txtDataFile->setText(d.getOpenFileName(this, "Browse Quran Data File"));
+    ui->txtDataFile->setText(d.getOpenFileName(this, "Browse Quran Data File", ui->txtDataFile->text()));
 }
 
 void DatabaseBuilder::on_btnBrowse2_clicked()
 {
     QFileDialog d;
-    ui->txtRukuhSajdahFile->setText(d.getOpenFileName(this, "Browse Rukuh / Sajdah File"));
+    ui->txtRukuhSajdahFile->setText(d.getOpenFileName(this, "Browse Rukuh / Sajdah File", ui->txtRukuhSajdahFile->text()));
 }
 
 void DatabaseBuilder::on_btnBrowse3_clicked()
 {
     QFileDialog d;
-    ui->txtOutputFile->setText(d.getSaveFileName(this, "Output File", QString(), "*.sql"));
+    ui->txtOutputFile->setText(d.getSaveFileName(this, "Output File", ui->txtOutputFile->text(), "*.sql"));
     if (!ui->txtOutputFile->text().endsWith(".sql")) {
         ui->txtOutputFile->setText(ui->txtOutputFile->text().append(".sql"));
     }
@@ -71,13 +71,13 @@ void DatabaseBuilder::on_pushButton_clicked()
 void DatabaseBuilder::on_btnBrowse4_clicked()
 {
     QFileDialog d;
-    ui->txtSqliteFilename->setText(d.getOpenFileName(this, "Browse SQLite 3 File"));
+    ui->txtSqliteFilename->setText(d.getOpenFileName(this, "Browse SQLite 3 File", ui->txtSqliteFilename->text()));
 }
 
 void DatabaseBuilder::on_btnBrowse5_clicked()
 {
     QFileDialog d;
-    ui->txtSqFilename->setText(d.getOpenFileName(this, "Browse SQL File"));
+    ui->txtSqFilename->setText(d.getOpenFileName(this, "Browse SQL File", ui->txtSqFilename->text()));
 }
 
 void DatabaseBuilder::on_btnBuild_clicked()

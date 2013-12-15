@@ -22,7 +22,6 @@ int main(int argc, char *argv[])
 {
     Q_INIT_RESOURCE(styles);
     Q_INIT_RESOURCE(icons);
-    Q_INIT_RESOURCE(sql_data);
     
     QApplication a(argc, argv);
 

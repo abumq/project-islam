@@ -16,7 +16,7 @@ public:
 private:
     std::vector<std::string> &split(const std::string &s, char delim, 
                                     std::vector<std::string> &elems);
-    std::string convertLine(const std::string& line);
+    std::string convertLine(const std::string& line, std::vector<std::string>* sajdahList, std::vector<std::string>* rukuhList);
     std::string chapVerse(const std::string& line);
 };
 

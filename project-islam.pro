@@ -72,7 +72,6 @@ OTHER_FILES += \
 
 RESOURCES += \
     resources/styles.qrc \
-    resources/icons.qrc \
-    resources/sql_data.qrc
+    resources/icons.qrc
 
 ICON = resources/images/project-islam.ico

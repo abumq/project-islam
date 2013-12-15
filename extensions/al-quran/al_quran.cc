@@ -27,7 +27,7 @@ AlQuran::AlQuran()
 
 AlQuran::~AlQuran()
 {
-    // m_reader, m_reciter not available! deleted on ~extension()->container()
+    // m_reader, m_reciter not available! deleted on ~container()
 }
 
 bool AlQuran::initialize(int argc, const char** argv)
@@ -40,12 +40,12 @@ bool AlQuran::initialize(int argc, const char** argv)
     // Do not trace location before calling parent's initialize
     _TRACE;
     memory::deleteAll(m_reciter, m_reader, m_bookmarkBar);
-    m_reciter = new QuranReciter(extension()->dataHolder()->quranArabic(), extension()->container());
-    m_reader = new QuranReader(extension()->dataHolder()->quranArabic(), 
-                               extension()->dataHolder()->quranTranslation(), 
-                               extension()->dataHolder()->quranTransliteration(),
-                               extension()->dataHolder()->quranTafseer(),
-                               extension()->container());    
+    m_reciter = new QuranReciter(data()->quranArabic(), container());
+    m_reader = new QuranReader(data()->quranArabic(), 
+                               data()->quranTranslation(), 
+                               data()->quranTransliteration(),
+                               data()->quranTafseer(),
+                               container());    
     m_reciter->hideChapterSelector();
     m_reciter->hideVerseRangeSelector();
     m_reciter->hideCurrentVerseSelector();
@@ -60,7 +60,7 @@ bool AlQuran::initialize(int argc, const char** argv)
     QObject::connect(m_reciter, SIGNAL(currentVerseChanged(int)), this, SLOT(onSelectedVerseChangedReciter(int)));
     QObject::connect(m_reader, SIGNAL(jumpToTextChanged(QString)), this, SLOT(onJumpToTextChanged(QString)));
     // Bookmarks bar
-    m_bookmarkBar = new QDockWidget("Bookmarks", extension()->container());
+    m_bookmarkBar = new QDockWidget("Bookmarks", container());
     BookmarksBar* bar = new BookmarksBar(settingsKeyPrefix());
     m_bookmarkBar->setAllowedAreas(Qt::RightDockWidgetArea);
     m_bookmarkBar->setWidget(bar);
@@ -88,7 +88,7 @@ bool AlQuran::initialize(int argc, const char** argv)
         m_reader->turnOffTafseer();
     }
     // Force trigger this slot
-    onContainerGeometryChanged(extension()->container()->width(), extension()->container()->height());
+    onContainerGeometryChanged(container()->width(), container()->height());
     return true;
 }
 

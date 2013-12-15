@@ -36,11 +36,19 @@ public:
         // will cause segmentation fault
     }
     
-    AbstractExtension *extension() {
+    inline AbstractExtension *extension() {
         if (m_extension == nullptr) {
             m_extension = new AbstractExtension(0, &m_extensionInfo);
         }
         return m_extension;
+    }
+    
+    inline QWidget* container() {
+        return extension()->container();
+    }
+    
+    inline data::DataHolder* data() {
+        return extension()->dataHolder();
     }
     
     /// @brief Need to call this in extension and only proceed if this returns true
@@ -63,7 +71,7 @@ public:
     }
     
     inline QMenu* extensionMenu() {
-        return m_extension->menu();
+        return extension()->menu();
     }
     
     inline QString settingsKeyPrefix() {
@@ -72,11 +80,11 @@ public:
     }
     
     inline QVariant setting(const QString& key, const QVariant& defaultValue = QVariant()) {
-        return m_extension->settingsLoader()->get(settingsKeyPrefix() + key, defaultValue);
+        return extension()->settingsLoader()->get(settingsKeyPrefix() + key, defaultValue);
     }
     
     inline void saveSetting(const QString &key, const QVariant &value) {
-        m_extension->settingsLoader()->saveSettings(settingsKeyPrefix() + key, value);
+        extension()->settingsLoader()->saveSettings(settingsKeyPrefix() + key, value);
     }
     
 public:

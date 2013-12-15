@@ -83,7 +83,7 @@ QuranReciter::QuranReciter(quran::Quran* quran, QWidget *parent) :
 QuranReciter::~QuranReciter()
 {
     _TRACE;
-    memory::deleteAll(ui);
+    memory::deleteAll(m_mediaPlayer, m_playList, ui);
 }
 
 void QuranReciter::hideChapterSelector()

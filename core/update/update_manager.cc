@@ -180,6 +180,7 @@ bool UpdateManager::updatePlatform(QJsonObject* jsonObject)
                 if (result && currFile.exists()) {
                     currFile.remove();
                 }
+                LOG(INFO) << "Platform has been successfully updated!";
             }
         }
     } else {
@@ -217,12 +218,13 @@ bool UpdateManager::updateDatabase(QJsonObject* jsonObject)
                 oldFile.close();
                 result = newFile.rename(oldFile.fileName());
                 result = newFile.setPermissions(perms) && result;
+                LOG(INFO) << "Database has been successfully updated!";
             }
         }
-        SettingsLoader().saveSettings("curr_db_ver", QVariant(ver));
     } else {
         LOG(INFO) << "Database is up to date!";
     }
+    SettingsLoader().saveSettings("curr_db_ver", QVariant(ver));
     return result;
 }
 
@@ -281,6 +283,7 @@ bool UpdateManager::updateExtensions(QJsonObject* jsonObject)
                                 currFile.remove();
                             }
                         }
+                        LOG(INFO) << "Extension [" << name << "] has been successfully updated!";
                     }
                 }
             } else {

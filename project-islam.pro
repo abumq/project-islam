@@ -1,6 +1,6 @@
 include(master.pri)
 
-DEFINES += _ELPP_NO_DEFAULT_LOG_FILE \
+DEFINES += _ELPP_NO_DEFAULT_LOG_FILE
 
 TARGET = project-islam
 TEMPLATE = app

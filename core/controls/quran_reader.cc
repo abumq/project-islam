@@ -98,14 +98,18 @@ void QuranReader::highlightVerse(int verseNumber)
     _TRACE;
     ui->spnVerse->setValue(verseNumber);
     m_quranView->selectVerse(verseNumber);
+    refreshJumpToText();
+}
+
+void QuranReader::refreshJumpToText() {
+    _TRACE;
+    ui->txtJumpTo->setText(m_quranView->jumpToText());
 }
 
 int QuranReader::currentVerseNumber() const
 {
     _TRACE;
-    int result = m_quranView->selectedVerse() == nullptr ? -1 : m_quranView->selectedVerse()->number();
-    ui->txtJumpTo->setText(m_quranView->jumpToText());
-    return result;
+    return m_quranView->selectedVerse() == nullptr ? -1 : m_quranView->selectedVerse()->number();
 }
 
 void QuranReader::hideChapterSelector()

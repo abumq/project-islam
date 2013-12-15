@@ -362,6 +362,7 @@ bool QuranView::showVerseNumbers() const
 
 void QuranView::turnOnTranslation(quran::Quran* translationQuran)
 {
+    _TRACE;
     m_quranTranslation = translationQuran;
     update(m_currFrom, m_currTo);
     emit translationToggled(true);
@@ -369,6 +370,7 @@ void QuranView::turnOnTranslation(quran::Quran* translationQuran)
 
 void QuranView::turnOffTranslation()
 {
+    _TRACE;
     m_quranTranslation = nullptr;
     QList<VerseTextItem*> list = m_verseTextTranslationItems.values();
     for (int i = list.size() - 1; i >= 0; --i) {
@@ -381,6 +383,7 @@ void QuranView::turnOffTranslation()
 
 void QuranView::turnOffTransliteration()
 {
+    _TRACE;
     m_quranTransliteration = nullptr;
     QList<VerseTextItem*> list = m_verseTextTransliterationItems.values();
     for (int i = list.size() - 1; i >= 0; --i) {
@@ -393,6 +396,7 @@ void QuranView::turnOffTransliteration()
 
 void QuranView::turnOnTransliteration(quran::Quran* transliterationQuran)
 {
+    _TRACE;
     m_quranTransliteration = transliterationQuran;
     update(m_currFrom, m_currTo);
     emit transliterationOnToggled(true);
@@ -400,6 +404,7 @@ void QuranView::turnOnTransliteration(quran::Quran* transliterationQuran)
 
 void QuranView::turnOffTafseer()
 {   
+    _TRACE;
     m_quranTafseer = nullptr;
     QList<VerseTextItem*> list = m_verseTextTafseerItems.values();
     for (int i = list.size() - 1; i >= 0; --i) {
@@ -413,6 +418,7 @@ void QuranView::turnOffTafseer()
 
 void QuranView::turnOnTafseer(quran::Quran* tafseerQuran)
 {
+    _TRACE;
     m_quranTafseer = tafseerQuran;
     update(m_currFrom, m_currTo);
     emit tafseerToggled(true);
@@ -435,6 +441,7 @@ bool QuranView::hasTafseer() const
 
 void QuranView::jumpTo(const QString& jumpToText)
 {
+    _TRACE;
     int chapter = m_currentChapter == nullptr ? 1 : static_cast<int>(m_currentChapter->name());
     int verseFrom = m_currFrom;
     int verseTo = m_currTo;
@@ -467,6 +474,7 @@ void QuranView::jumpTo(const QString& jumpToText)
 
 QString QuranView::jumpToText() const
 {
+    _TRACE;
     if (m_currentChapter == nullptr) {
         DLOG(INFO) << "Current chapter is null";
         return QString();

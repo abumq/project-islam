@@ -188,6 +188,7 @@ void AlQuran::onSelectedVerseChangedReciter(int verseNumber)
         if (m_reader->currentVerseNumber() != verseNumber) {
             m_reader->highlightVerse(verseNumber);
         }
+        m_reader->refreshJumpToText();
     }
 }
 

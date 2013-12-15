@@ -44,6 +44,8 @@ public:
     void turnOffTransliteration();
     void turnOnTransliteration();
     
+    void refreshJumpToText();
+    
 private slots:
     void on_cboChapter_currentIndexChanged(int index);
     

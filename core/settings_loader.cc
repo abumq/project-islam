@@ -5,7 +5,7 @@
 #include <QSettings>
 
 #include "core/logging/logging.h"
-#include "core/memory.h"
+#include "core/utils/memory.h"
 #include "core/constants.h"
 
 const QString SettingsLoader::kMasterSettingsFile = QString(".master.settings");

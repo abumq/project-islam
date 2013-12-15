@@ -20,7 +20,10 @@ SOURCES += main.cc\
     core/quran/chapter.cc \
     core/data/database_manager.cc \
     core/data/data_holder.cc \
-    core/update/update_manager.cc
+    core/update/update_manager.cc \
+    core/utils/memory.h \
+    core/utils/version.h \
+    core/utils/utils.h
 
 HEADERS  += mainwindow.h \
     core/constants.h \
@@ -44,7 +47,8 @@ HEADERS  += mainwindow.h \
     core/data/data_holder.h \
     core/memory.h \
     core/update/update_manager.h \
-    core/version.h
+    core/version.h \
+    core/utils.h
 
 FORMS    += mainwindow.ui \
     settings_dialog.ui

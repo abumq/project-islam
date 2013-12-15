@@ -5,7 +5,7 @@
 #include <QResource>
 
 #include "core/logging/logging.h"
-#include "core/version.h"
+#include "core/utils/version.h"
 
 #if (QT_VERSION < QT_VERSION_CHECK(5, 0, 0))
 #   error This project requires Qt 5.x

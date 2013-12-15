@@ -9,7 +9,8 @@
 #include <QObject>
 
 #include "core/logging/logging.h"
-#include "core/memory.h"
+#include "core/utils/memory.h"
+#include "core/utils/utils.h"
 #include "core/constants.h"
 #include "core/settings_loader.h"
 #include "core/data/data_holder.h"
@@ -135,9 +136,10 @@ void QuranReciter::loadReciters()
     ui->cboReciter->clear();
     // Reciters
     const QString noReciterAvailableText = " -- NO RECITER AVAILABLE -- ";
-    m_recitationsDir = QDir(
-                (QStringList() << SettingsLoader().defaultHomeDir() << "data" << "recitations").join(QDir::separator()), 
-                QString(), QDir::Name | QDir::IgnoreCase, QDir::Dirs | QDir::NoDotAndDotDot);
+    m_recitationsDir = QDir(utils::buildPath(QStringList() 
+                                             << SettingsLoader().defaultHomeDir() 
+                                             << "data" << "recitations"), 
+                            QString(), QDir::Name | QDir::IgnoreCase, QDir::Dirs | QDir::NoDotAndDotDot);
     if (!m_recitationsDir.exists()) {
         DLOG(ERROR) << "Recitations directory [" << m_recitationsDir.absolutePath() << "] not found";
         ui->cboReciter->addItem(noReciterAvailableText);

@@ -8,7 +8,7 @@
 #include <QSplitter>
 #include "core/logging/logging.h"
 #include "core/settings_loader.h"
-#include "core/memory.h"
+#include "core/utils/memory.h"
 #include "core/quran/chapter.h"
 
 const char* BookmarksBar::kBookmarkSeparator = ";";

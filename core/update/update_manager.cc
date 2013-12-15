@@ -18,8 +18,9 @@
 #include <QJsonDocument>
 #include <QPluginLoader>
 
-#include "core/memory.h"
-#include "core/version.h"
+#include "core/utils/memory.h"
+#include "core/utils/version.h"
+#include "core/utils/utils.h"
 #include "core/settings_loader.h"
 #include "core/extension/extension_loader.h"
 #include "core/extension/extension_base.h"
@@ -188,8 +189,7 @@ bool UpdateManager::updatePlatform(QJsonObject* jsonObject)
         QStringList filesList = platformObj["files"].toString().split(',');
         for (QString filename : filesList) {
             
-            QString targetDir = (QStringList() << m_app->applicationDirPath())
-                    .join(QDir::separator()).append(QDir::separator());
+            QString targetDir = utils::buildPath(QStringList() << m_app->applicationDirPath());
             QString tempFilename = targetDir + filename + ".upgrade";
             LOG(INFO) << "Downloading platform file [" 
                       << filename << "] from [" + baseUrl + "] to [" << targetDir << "]";
@@ -197,27 +197,29 @@ bool UpdateManager::updatePlatform(QJsonObject* jsonObject)
         }
         if (result) {
             for (QString filename : filesList) {
-                QString fullFilenameOrig = 
-                        (QStringList() << m_app->applicationDirPath() << filename + ".upgrade")
-                        .join(QDir::separator());
-                QString fullFilename = fullFilenameOrig.mid(0, 
-                                                            fullFilenameOrig.length() - QString(".zip.upgrade").length());
+                QString downloadedFilename = utils::buildFilename(
+                            QStringList() << m_app->applicationDirPath() << filename + ".upgrade");
+                QString currFilename = downloadedFilename.mid(0, 
+                                                            downloadedFilename.length() - 
+                                                            QString(".zip.upgrade").length());
                 
-                QFile fullFile(fullFilename);
+                QFile currFile(currFilename);
                 QFile::Permissions perms;
-                if (fullFile.exists()) {
-                    perms = fullFile.permissions();
-                    fullFile.rename(fullFilename + ".old");
-                    fullFile.close();
+                if (currFile.exists()) {
+                    perms = currFile.permissions();
+                    currFile.rename(currFilename + ".old");
+                    currFile.close();
                 }
-                QFile fullFileOrig(fullFilenameOrig);
-                fullFileOrig.rename(fullFilename);
-                fullFileOrig.setPermissions(perms);
-                if (fullFile.exists()) {
-                    fullFile.remove();
+                QFile downloadedFile(downloadedFilename);
+                result = downloadedFile.rename(currFilename);
+                result = downloadedFile.setPermissions(perms) && result;
+                if (result && currFile.exists()) {
+                    currFile.remove();
                 }
             }
         }
+    } else {
+        LOG(INFO) << "Platform is up to date!";
     }
     return result;
 }
@@ -236,8 +238,7 @@ bool UpdateManager::updateDatabase(QJsonObject* jsonObject)
         QString baseUrl = databaseObj["base"].toString();
         QStringList filesList = databaseObj["files"].toString().split(',');
         for (QString filename : filesList) {
-            QString targetDir = (QStringList() << SettingsLoader().defaultHomeDir() << "data")
-                    .join(QDir::separator()).append(QDir::separator());
+            QString targetDir = utils::buildPath(QStringList() << SettingsLoader().defaultHomeDir() << "data");
             QString tempFilename = targetDir + filename + ".upgrade";
             LOG(INFO) << "Downloading database file [" 
                       << filename << "] from [" + baseUrl + "] to [" << targetDir << "]";
@@ -249,11 +250,13 @@ bool UpdateManager::updateDatabase(QJsonObject* jsonObject)
                 QFile::Permissions perms = oldFile.permissions();
                 oldFile.remove();
                 oldFile.close();
-                newFile.rename(oldFile.fileName());
-                newFile.setPermissions(perms);
+                result = newFile.rename(oldFile.fileName());
+                result = newFile.setPermissions(perms) && result;
             }
         }
         SettingsLoader().saveSettings("curr_db_ver", QVariant(ver));
+    } else {
+        LOG(INFO) << "Database is up to date!";
     }
     return result;
 }
@@ -277,8 +280,8 @@ bool UpdateManager::updateExtensions(QJsonObject* jsonObject)
                 QString baseUrl = extensionobj["base"].toString();
                 QStringList filesList = extensionobj["files"].toString().split(',');
                 for (QString filename : filesList) {
-                    QString targetDir = (QStringList() << m_app->applicationDirPath() << "extensions")
-                            .join(QDir::separator()).append(QDir::separator());
+                    QString targetDir = utils::buildPath(QStringList() 
+                                                         << m_app->applicationDirPath() << "extensions");
                     QString tempFilename = targetDir + filename + ".upgrade";
                     LOG(INFO) << "Downloading extension file [" 
                               << filename << "] from [" + baseUrl + "] to [" << targetDir << "]";
@@ -293,28 +296,29 @@ bool UpdateManager::updateExtensions(QJsonObject* jsonObject)
                     } else {
                         // Extension ready to be upgrade! Filename: file.zip.upgrade
                         for (QString filename : filesList) {
-                            QString fullFilenameOrig = 
-                                    (QStringList() << m_app->applicationDirPath() << "extensions")
-                                    .join(QDir::separator()).append(QDir::separator()) + filename + ".upgrade";
-                            QString fullFilename = fullFilenameOrig.mid(0, 
-                                                                        fullFilenameOrig.length() - QString(".zip.upgrade").length());
+                            QString downloadedFilename = utils::buildFilename(
+                                        QStringList() << m_app->applicationDirPath() << "extensions" << filename + ".upgrade");
+                            QString currFilename = downloadedFilename.mid(0, 
+                                                                        downloadedFilename.length() - QString(".zip.upgrade").length());
                             
-                            QFile fullFile(fullFilename);
+                            QFile currFile(currFilename);
                             QFile::Permissions perms;
-                            if (fullFile.exists()) {
-                                perms = fullFile.permissions();
-                                fullFile.rename(fullFilename + ".old");
-                                fullFile.close();
+                            if (currFile.exists()) {
+                                perms = currFile.permissions();
+                                currFile.rename(currFilename + ".old");
+                                currFile.close();
                             }
-                            QFile fullFileOrig(fullFilenameOrig);
-                            fullFileOrig.rename(fullFilename);
-                            fullFileOrig.setPermissions(perms);
-                            if (fullFile.exists()) {
-                                fullFile.remove();
+                            QFile downloadedFile(downloadedFilename);
+                            result = downloadedFile.rename(currFilename);
+                            result = downloadedFile.setPermissions(perms) && result;
+                            if (result && currFile.exists()) {
+                                currFile.remove();
                             }
                         }
                     }
                 }
+            } else {
+                LOG(INFO) << "Extension [" << name << "] is up to date!";
             }
         }
     }

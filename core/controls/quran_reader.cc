@@ -5,7 +5,7 @@
 #include <QMenu>
 
 #include "core/logging/logging.h"
-#include "core/memory.h"
+#include "core/utils/memory.h"
 #include "core/quran/quran.h"
 #include "core/controls/quran_view.h"
 #include "core/constants.h"

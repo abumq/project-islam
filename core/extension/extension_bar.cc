@@ -4,7 +4,7 @@
 
 #include "core/logging/logging.h"
 #include "core/constants.h"
-#include "core/memory.h"
+#include "core/utils/memory.h"
 #include "core/extension/abstract_extension.h"
 #include "core/extension/extension_info.h"
 #include "core/extension/extension_item.h"

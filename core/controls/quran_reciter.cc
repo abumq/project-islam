@@ -262,10 +262,12 @@ void QuranReciter::on_cboChapter_currentIndexChanged(int index)
             m_mediaPlayer->state() != m_mediaPlayer->PausedState) {
         m_mediaPlayer->stop();
     } else {
-        // This is case when chapter index is not chaged instead it's same chapter
+        // This is case when chapter index is not changed instead it's same chapter
         // but slot is triggered manually
-        resumeState = m_mediaPlayer->state();
-        m_mediaPlayer->pause();
+        if (!isChapterChanged) {
+            resumeState = m_mediaPlayer->state();
+            m_mediaPlayer->pause();
+        }
     }
     int resetIndex = isChapterChanged ? 0 : ui->spnVerse->value();
     m_playList->clear();

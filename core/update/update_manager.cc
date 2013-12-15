@@ -8,15 +8,12 @@
 #include "core/update/update_manager.h"
 
 #include <QApplication>
-#include <QNetworkAccessManager>
-#include <QNetworkReply>
-#include <QUrl>
 #include <QFile>
 #include <QFileInfo>
-#include <QEventLoop>
 #include <QtConcurrent/QtConcurrent>
 #include <QJsonDocument>
 #include <QPluginLoader>
+#include <QNetworkReply>
 
 #include "core/utils/memory.h"
 #include "core/utils/version.h"
@@ -34,8 +31,9 @@ const char* UpdateManager::kServerUrlBase = "http://www.icplusplus.com";
 const char* UpdateManager::kVersionInfoFilename = "tools/project-islam/vinfo.txt";
 
 UpdateManager::UpdateManager(QObject *parent) :
-    QObject(parent)
+    DownloadManager(parent)
 {
+    _TRACE;
     // Load m_lastChecked
     const QDate defaultDate = QDate::currentDate().addDays(-1);
     QString lastCheckedStr = 
@@ -59,8 +57,11 @@ UpdateManager::~UpdateManager()
 
 void UpdateManager::initialize(QApplication* app, ExtensionBar* extensionBar)
 {
+    _TRACE;
     m_app = CHECK_NOTNULL(app);
     m_extensionBar = CHECK_NOTNULL(extensionBar);
+    QObject::connect(this, SIGNAL(downloadProgress(qint64,qint64)), 
+                     this, SLOT(downloadProgressUpdated(qint64,qint64)));
     // Update timer
     m_updateTimer.setInterval(kCheckIntervalInMs);
     connect(&m_updateTimer, SIGNAL(timeout()), this, SLOT(performAsyncUpdate()));
@@ -69,65 +70,27 @@ void UpdateManager::initialize(QApplication* app, ExtensionBar* extensionBar)
     m_updateTimer.start(kCheckIntervalInMs);
 }
 
-bool UpdateManager::downloadFile(const QString& url, const QString& filename)
-{
-    bool returnVal;
-    QFile file(filename);
-    if (!file.open(QIODevice::WriteOnly)) {
-        returnVal = false;
-    } else {
-        file.write(downloadBytes(url, &returnVal));
-        file.close();
-        if (file.size() == 0) {
-            file.remove();
-            returnVal = false;
-        } else {
-            returnVal = true;
-        }
-    }
-    return returnVal;
-}
-
-QByteArray UpdateManager::downloadBytes(const QString& url, bool* ok)
-{
-    QNetworkReply *networkReply = m_networkManager->get(QNetworkRequest(url));
-    QEventLoop loop;
-    QObject::connect(networkReply, SIGNAL(finished()), &loop, SLOT(quit()));
-    QObject::connect(networkReply, SIGNAL(downloadProgress(qint64,qint64)), 
-                     this, SLOT(downloadProgressUpdated(qint64,qint64)));
-    loop.exec();
-    if (networkReply->error() == QNetworkReply::NoError) {
-        if (ok != nullptr) {
-            *ok = true;
-        }
-        return networkReply->readAll();
-    }
-    LOG(ERROR) << "Network error occured while downloading bytes from URL [" <<
-                  url << "], error [" << networkReply->errorString() << "]";
-    if (ok != nullptr) {
-        *ok = false;
-    }
-    return QByteArray();
-}
-
 bool UpdateManager::needToCheckForUpdates() const
 {
+    _TRACE;
     return m_lastChecked.daysTo(QDate::currentDate()) >= kDaysToCheck;
 }
 
 QString UpdateManager::versionInfoUrl() const
 {
+    _TRACE;
     return QString(kServerUrlBase) + "/" + QString(kVersionInfoFilename);
 }
 
 bool UpdateManager::update()
 {
+    _TRACE;
     if (!needToCheckForUpdates()) {
         LOG(DEBUG) << "Ignorning updater";
         return true;
     }
     TIMED_SCOPE(timer, "Update");
-    m_networkManager = std::unique_ptr<QNetworkAccessManager>(new QNetworkAccessManager());
+    
     
     bool result = false;
     LOG(INFO) << "Checking for updates...";
@@ -177,6 +140,7 @@ bool UpdateManager::update()
 
 bool UpdateManager::updatePlatform(QJsonObject* jsonObject)
 {    
+    _TRACE;
     QJsonObject platformObj = (*jsonObject)["platform"].toObject();
     QString ver = platformObj["version"].toString();
     bool forceUpdate = platformObj["force_update"].toBool();
@@ -200,8 +164,8 @@ bool UpdateManager::updatePlatform(QJsonObject* jsonObject)
                 QString downloadedFilename = utils::buildFilename(
                             QStringList() << m_app->applicationDirPath() << filename + ".upgrade");
                 QString currFilename = downloadedFilename.mid(0, 
-                                                            downloadedFilename.length() - 
-                                                            QString(".zip.upgrade").length());
+                                                              downloadedFilename.length() - 
+                                                              QString(".zip.upgrade").length());
                 
                 QFile currFile(currFilename);
                 QFile::Permissions perms;
@@ -226,6 +190,7 @@ bool UpdateManager::updatePlatform(QJsonObject* jsonObject)
 
 bool UpdateManager::updateDatabase(QJsonObject* jsonObject)
 {
+    _TRACE;
     QJsonObject databaseObj = (*jsonObject)["database"].toObject();
     QString ver = databaseObj["version"].toString();
     QString currVer = SettingsLoader().get("curr_db_ver", QVariant(QString("1.0.0"))).toString();
@@ -263,6 +228,7 @@ bool UpdateManager::updateDatabase(QJsonObject* jsonObject)
 
 bool UpdateManager::updateExtensions(QJsonObject* jsonObject)
 {
+    _TRACE;
     QJsonArray extensionsArr = (*jsonObject)["extensions"].toArray();
     bool result = true; // We will mark it false if download fail
     foreach (const QJsonValue& value, extensionsArr) {
@@ -299,7 +265,7 @@ bool UpdateManager::updateExtensions(QJsonObject* jsonObject)
                             QString downloadedFilename = utils::buildFilename(
                                         QStringList() << m_app->applicationDirPath() << "extensions" << filename + ".upgrade");
                             QString currFilename = downloadedFilename.mid(0, 
-                                                                        downloadedFilename.length() - QString(".zip.upgrade").length());
+                                                                          downloadedFilename.length() - QString(".zip.upgrade").length());
                             
                             QFile currFile(currFilename);
                             QFile::Permissions perms;
@@ -327,6 +293,7 @@ bool UpdateManager::updateExtensions(QJsonObject* jsonObject)
 
 void UpdateManager::performAsyncUpdate()
 {
+    _TRACE;
     if (m_future.isRunning()) {
         // Already updating!
         return;

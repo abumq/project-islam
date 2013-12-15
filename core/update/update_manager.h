@@ -1,18 +1,16 @@
 #ifndef UPDATE_MANAGER_H
 #define UPDATE_MANAGER_H
-
-#include <memory>
-
 #include <QObject>
 #include <QDate>
 #include <QTimer>
 #include <QFuture>
 #include <QFutureWatcher>
-class QNetworkAccessManager;
+#include "core/download_manager.h"
+
 class QJsonObject;
 class ExtensionBar;
 class QApplication;
-class UpdateManager : public QObject
+class UpdateManager : public DownloadManager
 {
     Q_OBJECT
     static const qint64 kDaysToCheck = 1;
@@ -23,14 +21,10 @@ public:
     explicit UpdateManager(QObject* parent = 0);
     virtual ~UpdateManager();
     void initialize(QApplication* app, ExtensionBar* extensionBar);
-protected:
-    bool downloadFile(const QString& url, const QString& filename);
-    QByteArray downloadBytes(const QString& url, bool* ok = nullptr);
 private slots:
     void performAsyncUpdate();
     void downloadProgressUpdated(qint64, qint64);
 private:
-    std::unique_ptr<QNetworkAccessManager> m_networkManager;
     QDate m_lastChecked;
     QTimer m_updateTimer;
     QFuture<void> m_future;

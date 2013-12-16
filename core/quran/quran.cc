@@ -73,7 +73,9 @@ void Quran::load(const Quran::TextType &textType, const std::string& databaseTab
             std::wstring text = verses.at(i).value("VerseText").toString().toStdWString();
             bool rukuh = verses.at(i).value("Rukuh").toBool();
             bool sajdah  = verses.at(i).value("Sajdah").toBool();
-            quran::Verse verse(id, number, std::move(text), chapterPtr, rukuh, sajdah);
+            bool manzil = verses.at(i).value("Manzil").toBool();
+            bool hizbQuarter  = verses.at(i).value("HizbQuarter").toBool();
+            quran::Verse verse(id, number, std::move(text), chapterPtr, rukuh, sajdah, manzil, hizbQuarter);
             chapterPtr->m_verses.insert(std::make_pair(number, std::move(verse)));
         }
     }

@@ -30,20 +30,27 @@ void DataConverter::startConvert(const std::string& rukuhSajdahFile,
                   --     Rukuh \n\
                   --     Sajdah \n\
                   DROP TABLE IF EXISTS " << tableName << "; \n\
-            CREATE TABLE IF NOT EXISTS " << tableName << " (ID INTEGER PRIMARY KEY ASC, QuranChapterID INTEGER NOT NULL, VerseNumber INTEGER NOT NULL, Rukuh BOOLEAN NOT NULL, Sajdah BOOLEAN NOT NULL, VerseText STRING NOT NULL);" << std::endl;
+            CREATE TABLE IF NOT EXISTS " << tableName << " (ID INTEGER PRIMARY KEY ASC, QuranChapterID INTEGER NOT NULL, VerseNumber INTEGER NOT NULL, Rukuh BOOLEAN NOT NULL, Sajdah BOOLEAN NOT NULL, Manzil BOOLEAN NOT NULL, HizbQuarter BOOLEAN NOT NULL, VerseText STRING NOT NULL);" << std::endl;
     
-    std::string insertStatement = "INSERT INTO " + tableName + " (QuranChapterID, VerseNumber, Rukuh, Sajdah, VerseText) VALUES (";
+    std::string insertStatement = "INSERT INTO " + tableName + " (QuranChapterID, VerseNumber, Rukuh, Sajdah, Manzil, HizbQuarter, VerseText) VALUES (";
     
     std::vector<std::string> rukuhList;
     std::vector<std::string> sajdahList;
+    std::vector<std::string> manzilList;
+    std::vector<std::string> hizbQuarterList;
     std::string rslLine;
-    bool s = false, r = false;
+    bool s = false, r = false, m = false, hq = false; // Sajdah, Rukuh, Manzil, Hizb-Quarter, Juz
     while (rslFile.good()) {
         std::getline(rslFile, rslLine);
-        if (rslLine == "-rukuh") { s = false; r = true; continue; }
-        else if (rslLine == "-sajdah") { r = false; s = true; continue; }
+        if (rslLine.empty() || rslLine[0] == '#') continue; // Comment!
+        if (rslLine == "-rukuh") { s = false; m = false; hq = false; r = true; continue; }
+        else if (rslLine == "-sajdah") { r = false; m = false; hq = false; s = true; continue; }
+        else if (rslLine == "-manzil") { r = false; m = true; hq = false; s = false; continue; }
+        else if (rslLine == "-hizb-quarter") { r = false; m = false; hq = true; s = false; continue; }
         if (s) sajdahList.push_back(rslLine);
         if (r) rukuhList.push_back(rslLine);
+        if (m) manzilList.push_back(rslLine);
+        if (hq) hizbQuarterList.push_back(rslLine);
     }
     
     std::string line;
@@ -51,9 +58,9 @@ void DataConverter::startConvert(const std::string& rukuhSajdahFile,
         std::getline(dataFile, line);
         if (line.empty()) continue;
         outputFile << insertStatement;
-            // Single quotes to double
-            std::replace(line.begin(), line.end(), '\'', '\"');
-        outputFile << convertLine(line, &sajdahList, &rukuhList);
+        // Single quotes to double
+        std::replace(line.begin(), line.end(), '\'', '\"');
+        outputFile << convertLine(line, &sajdahList, &rukuhList, &manzilList, &hizbQuarterList);
         outputFile << ");";
         outputFile << std::endl;
     }
@@ -74,7 +81,9 @@ std::vector<std::string> & DataConverter::split(const std::string &s, char delim
 
 std::string DataConverter::convertLine(const std::string& line, 
                                        std::vector<std::string>* sajdahList,
-                                       std::vector<std::string>* rukuhList) {
+                                       std::vector<std::string>* rukuhList,
+                                       std::vector<std::string>* manzilList,
+                                       std::vector<std::string>* hizbQuarterList) {
     std::vector<std::string> e;
     std::stringstream ss;
     split(line, '|', e);
@@ -95,6 +104,18 @@ std::string DataConverter::convertLine(const std::string& line,
             }
             if (std::find(sajdahList->begin(), sajdahList->end(), chapVerse(line)) != sajdahList->end()) {
                 LOG(INFO) << "Found sajdah in " << line;
+                ss << "'1', ";
+            } else {
+                ss << "'0', ";
+            }
+            if (std::find(manzilList->begin(), manzilList->end(), chapVerse(line)) != manzilList->end()) {
+                LOG(INFO) << "Found manzil in " << line;
+                ss << "'1', ";
+            } else {
+                ss << "'0', ";
+            }
+            if (std::find(hizbQuarterList->begin(), hizbQuarterList->end(), chapVerse(line)) != hizbQuarterList->end()) {
+                LOG(INFO) << "Found hizb-quarter in " << line;
                 ss << "'1', ";
             } else {
                 ss << "'0', ";

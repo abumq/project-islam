@@ -11,8 +11,8 @@ DatabaseBuilder::DatabaseBuilder(QWidget *parent) :
     ui(new Ui::DatabaseBuilder)
 {
     ui->setupUi(this);
-    on_btnReset_clicked();
-    on_btnReset_clicked();
+    //on_btnReset_clicked();
+    //on_btnReset_2_clicked();
 }
 
 DatabaseBuilder::~DatabaseBuilder()
@@ -44,7 +44,7 @@ void DatabaseBuilder::on_btnBrowse3_clicked()
 void DatabaseBuilder::on_pushButton_clicked()
 {
     if (ui->txtDataFile->text().isEmpty() || ui->txtRukuhSajdahFile->text().isEmpty() || 
-            ui->txtTableName->text().isEmpty() || ui->txtOutputFile->text().isEmpty()) {
+        ui->txtTableName->text().isEmpty() || ui->txtOutputFile->text().isEmpty()) {
         QMessageBox::critical(this, tr("Field required"), tr("All fields are required"));
         return;
     }
@@ -77,13 +77,22 @@ void DatabaseBuilder::on_btnBrowse4_clicked()
 void DatabaseBuilder::on_btnBrowse5_clicked()
 {
     QFileDialog d;
-    ui->txtSqFilename->setText(d.getOpenFileName(this, "Browse SQL File", ui->txtSqFilename->text()));
+    QStringList s = d.getOpenFileNames(this, "Browse SQL File(s)", ui->txtSqFilename->text());
+    if (s.size() > 1) {
+        for (QString f : s) {
+            m_sqlFiles.append(f);
+            QTreeWidgetItem* item = new QTreeWidgetItem(ui->treeSqlFiles);
+            item->setText(0, f);
+        }
+    } else if (s.size() == 1) {
+        ui->txtSqFilename->setText(s.at(0));
+    }
 }
 
 void DatabaseBuilder::on_btnBuild_clicked()
 {
     if (ui->txtSqFilename->text().isEmpty() || 
-            ui->txtSqliteFilename->text().isEmpty()) {
+        ui->txtSqliteFilename->text().isEmpty()) {
         QMessageBox::critical(this, tr("Field required"), tr("All fields are required"));
         return;
     }

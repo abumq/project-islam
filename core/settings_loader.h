@@ -17,6 +17,7 @@ class SettingsLoader
 public:
     
     static const QString kSettingKeyTheme;
+    static const QString kSettingKeyQuranTable;
     static const QString kSettingKeyQuranTranslationTable;
     static const QString kSettingKeyQuranTafseerTable;
     static const QString kSettingKeyRecitationVolume;

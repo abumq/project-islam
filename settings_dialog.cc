@@ -50,7 +50,9 @@ void SettingsDialog::accept()
     m_mainWindow->styleLoader()->reset(m_colorBox->color().red(), m_colorBox->color().green(), m_colorBox->color().blue());
     
     QMap<QString, QVariant> settingsMap;
+    settingsMap = ui->cboQuranOriginals->itemData(ui->cboQuranOriginals->currentIndex()).toMap();
     settingsMap = ui->cboQuranTranslations->itemData(ui->cboQuranTranslations->currentIndex()).toMap();
+    settingsMap = ui->cboQuranTafseers->itemData(ui->cboQuranTafseers->currentIndex()).toMap();
     settingsMap.insert(SettingsLoader::kSettingKeyTheme, StyleLoader::rgb(m_mainWindow->styleLoader()->r(), 
                                                                           m_mainWindow->styleLoader()->g(), m_mainWindow->styleLoader()->b()));
     s.saveSettings(&settingsMap);
@@ -84,13 +86,38 @@ void SettingsDialog::loadSettingsInUi()
     ui->spnMaxLogFileSize->setValue(configurations->maxLogFileSize(el::Level::Global));
     
     // --------------------- Tab: Quran
-    
-    // Translations
+    // Originals
     data::DatabaseManager dbManager;
     data::QueryResult result = dbManager.query(
-                QString("SELECT * FROM sqlite_master WHERE type='table' AND name like 'Quran%Translation%' AND name != 'Quran__English_Transliteration';"));
+                QString("SELECT * FROM sqlite_master WHERE type='table' AND name like 'Quran%Arabic%Original%';"));
     int selectedIndex = 0;
     int i = 0;
+    for (QSqlRecord rec : result) {
+        QString nameTable = rec.value(1).toString();
+        QString displayName = nameTable;
+        displayName = displayName.mid(QString("Quran__Arabic_Original_").length());
+        displayName.replace("_", " ");
+        int index = ui->cboQuranTranslations->findText(displayName);
+        if (index != -1) {
+            // No duplication!
+            continue;
+        }
+        
+        QMap<QString, QVariant> m;
+        m.insert(SettingsLoader::kSettingKeyQuranTable, nameTable);
+        ui->cboQuranOriginals->addItem(displayName, m);
+        if (SettingsLoader().get(SettingsLoader::kSettingKeyQuranTable, 
+                                 QString(quran::Quran::kQuranArabicDatabaseTable)) == nameTable) {
+            selectedIndex = i;
+        }
+        ++i;
+    }
+    ui->cboQuranOriginals->setCurrentIndex(selectedIndex);
+    // Translations
+    result = dbManager.query(
+                QString("SELECT * FROM sqlite_master WHERE type='table' AND name like 'Quran%Translation%';"));
+    selectedIndex = 0;
+    i = 0;
     for (QSqlRecord rec : result) {
         QString nameTranslationTable = rec.value(1).toString();
         QString displayName = nameTranslationTable;

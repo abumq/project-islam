@@ -14,7 +14,6 @@ public:
     static const char* kQuranArabicDatabaseTable;
     static const char* kQuranChapterDatabaseTable;
     static const char* kQuranTransliterationDatabaseTable;
-    static const char* kQuranTafseerDatabaseTable;
     static const char* kQuranDefaultTranslationDatabaseTable;
     static const char* kQuranDefaultTafseerDatabaseTable;
     

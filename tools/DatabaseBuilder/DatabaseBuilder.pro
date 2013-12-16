@@ -7,6 +7,8 @@ TEMPLATE = app
 
 DEFINES += _ELPP_QT_LOGGING
 
+COMPILER = icpc
+
 SOURCES += main.cc\
         databasebuilder.cc \
     dataconverter.cc \
@@ -20,7 +22,6 @@ FORMS    += databasebuilder.ui
 
 QMAKE_CXXFLAGS += -std=c++0x -fPIE
 
-COMPILER = g++
 QMAKE_CC = $$COMPILER
 QMAKE_CXX = $$COMPILER
 QMAKE_LINK = $$COMPILER

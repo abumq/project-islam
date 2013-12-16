@@ -3,7 +3,7 @@
 
 #include "core/logging/easylogging++.h"
 #include "core/settings_loader.h"
-#include "core/utils/utils.h"
+#include "core/utils/filesystem.h"
 
 class LoggingConfigurer {
 public:
@@ -39,7 +39,7 @@ public:
         
         el::Configurations configurations;
         configurations.setToDefault();
-        std::string logFile = utils::buildFilename(QStringList() 
+        std::string logFile = filesystem::buildFilename(QStringList() 
                                                    << SettingsLoader().defaultHomeDir() 
                                                    << "logs" << "project-islam.log").toStdString();
         configurations.set(el::Level::Global, el::ConfigurationType::Filename, logFile);

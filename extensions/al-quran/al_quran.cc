@@ -87,6 +87,12 @@ bool AlQuran::initialize(int argc, const char** argv)
     } else {
         m_reader->turnOffTafseer();
     }
+    // Duration
+    if (setting("load_recite_duration", QVariant(true)).toBool()) {
+        m_reciter->showDurationWhenAvailable();
+    } else {
+        m_reciter->hideDurationWhenAvailable();
+    }
     // Force trigger this slot
     onContainerGeometryChanged(container()->width(), container()->height());
     return true;
@@ -108,6 +114,14 @@ void AlQuran::initializeMenu()
     bool reciter = setting("show_reciter", QVariant(true)).toBool();
     showReciterAction->setChecked(reciter);
     toggleReciter(reciter);
+    
+    QAction* showDurationAction = extensionMenu()->addAction("Show Duration");
+    showDurationAction->setObjectName("showDurationAction");
+    QObject::connect(showDurationAction, SIGNAL(toggled(bool)), this, SLOT(toggleShowDuration(bool)));
+    showDurationAction->setCheckable(true);
+    bool showDuration = setting("load_recite_duration", QVariant(true)).toBool();
+    showDurationAction->setChecked(showDuration);
+    toggleShowDuration(showDuration);
     
     QAction* showBookmarksAction = extensionMenu()->addAction("Bookmarks");
     showBookmarksAction->setObjectName("showBookmarksAction");
@@ -240,6 +254,17 @@ void AlQuran::toggleReader(bool val)
         m_reciter->hideVerseRangeSelector();
         m_reciter->hideCurrentVerseSelector();
     }
+}
+
+void AlQuran::toggleShowDuration(bool val)
+{
+    _TRACE;
+    if (val) {
+        m_reciter->showDurationWhenAvailable();
+    } else {
+        m_reciter->hideDurationWhenAvailable();
+    }
+    saveSetting("load_recite_duration", QVariant(val));
 }
 
 void AlQuran::toggleBookmarkBar(bool val)

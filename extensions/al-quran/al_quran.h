@@ -50,6 +50,7 @@ public slots:
     
     void toggleReciter(bool);
     void toggleReader(bool);
+    void toggleShowDuration(bool);
     void toggleBookmarkBar(bool);
     
     void onToggledTranslation(bool);

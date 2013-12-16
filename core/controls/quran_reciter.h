@@ -38,6 +38,8 @@ public:
     void showCurrentVerseSelector();
     void loadReciters();
     void stopIfPlaying();
+    void hideDurationWhenAvailable();
+    void showDurationWhenAvailable();
 private slots:
     void on_cboChapter_currentIndexChanged(int index);
     
@@ -63,7 +65,8 @@ private slots:
     void on_cboReciter_currentIndexChanged(int index);
     
     void on_btnReloadReciters_clicked();
-    
+    void onDurationChanged(qint64);
+    void onPositionChanged(qint64);
 signals:
     void chapterChanged(const quran::Chapter*);
     void verseRangeChanged(int, int);
@@ -77,6 +80,7 @@ private:
     QDir m_currentRecitationDir;
     QMediaPlayer* m_mediaPlayer;
     QMediaPlaylist* m_playList;
+    bool m_hideDuration;
 };
 
 #endif // QURAN_RECITER_H

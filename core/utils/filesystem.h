@@ -4,7 +4,7 @@
 #include <QDir>
 #include <QString>
 
-namespace utils {
+namespace filesystem {
 
 inline QString buildPath(const QStringList& pathElements) {
     return pathElements.join(QDir::separator()).append(QDir::separator());
@@ -19,6 +19,6 @@ inline QString buildFilename(const QStringList& pathElements,
     return pathElements.join(QDir::separator()).append(QDir::separator()) + filename;
 }
 
-}
+} // namespace filesystem
 
 #endif // UTILS_H

@@ -5,26 +5,6 @@ DEFINES += _ELPP_NO_DEFAULT_LOG_FILE
 TARGET = project-islam
 TEMPLATE = app
 
-SOURCES += main.cc\
-        mainwindow.cc \
-    core/style_loader.cc \
-    core/extension/abstract_extension.cc \
-    core/extension/extension_loader.cc \
-    core/extension/extension_bar.cc \
-    core/extension/extension_item.cc \
-    core/controls/colorbox.cc \
-    core/settings_loader.cc \
-    settings_dialog.cc \
-    core/quran/verse.cc \
-    core/quran/quran.cc \
-    core/quran/chapter.cc \
-    core/data/database_manager.cc \
-    core/data/data_holder.cc \
-    core/update/update_manager.cc \
-    core/utils/memory.h \
-    core/utils/version.h \
-    core/utils/utils.h \
-    core/download_manager.cc
 
 HEADERS  += mainwindow.h \
     core/constants.h \
@@ -46,11 +26,30 @@ HEADERS  += mainwindow.h \
     core/data/database_manager.h \
     core/data/database_manager.h \
     core/data/data_holder.h \
-    core/memory.h \
-    core/update/update_manager.h \
-    core/version.h \
-    core/utils.h \
-    core/download_manager.h
+    core/download_manager.h \
+    core/utils/memory.h \
+    core/utils/version.h \    
+    core/utils/filesystem.h \
+    core/utils/datetime.h \
+    core/update/update_manager.h
+
+SOURCES += main.cc\
+        mainwindow.cc \
+    core/style_loader.cc \
+    core/extension/abstract_extension.cc \
+    core/extension/extension_loader.cc \
+    core/extension/extension_bar.cc \
+    core/extension/extension_item.cc \
+    core/controls/colorbox.cc \
+    core/settings_loader.cc \
+    settings_dialog.cc \
+    core/quran/verse.cc \
+    core/quran/quran.cc \
+    core/quran/chapter.cc \
+    core/data/database_manager.cc \
+    core/data/data_holder.cc \
+    core/update/update_manager.cc \
+    core/download_manager.cc
 
 FORMS    += mainwindow.ui \
     settings_dialog.ui

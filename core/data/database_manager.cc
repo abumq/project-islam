@@ -12,7 +12,7 @@
 #include <QDir>
 
 #include "core/logging/logging.h"
-#include "core/utils/utils.h"
+#include "core/utils/filesystem.h"
 
 namespace data {
 
@@ -20,7 +20,7 @@ DatabaseManager::DatabaseManager(const QString& uniqueId, const QString& dbFilen
         m_uniqueId(uniqueId), m_lastQuerySuccessful(false), m_connections(0) {
     DLOG(INFO) << "Initializing DatabaseManager [" << m_uniqueId << "]";
     
-    const QString kDefaultDatabasePath = utils::buildPath(QStringList() << SettingsLoader().defaultHomeDir() << "data");
+    const QString kDefaultDatabasePath = filesystem::buildPath(QStringList() << SettingsLoader().defaultHomeDir() << "data");
     const QString kDefaultDatabaseName = kDefaultDatabasePath + dbFilename;
     
     if (!QFile(kDefaultDatabaseName).exists()) {

@@ -17,7 +17,7 @@
 
 #include "core/utils/memory.h"
 #include "core/utils/version.h"
-#include "core/utils/utils.h"
+#include "core/utils/filesystem.h"
 #include "core/settings_loader.h"
 #include "core/extension/extension_loader.h"
 #include "core/extension/extension_base.h"
@@ -153,7 +153,7 @@ bool UpdateManager::updatePlatform(QJsonObject* jsonObject)
         QStringList filesList = platformObj["files"].toString().split(',');
         for (QString filename : filesList) {
             
-            QString targetDir = utils::buildPath(QStringList() << m_app->applicationDirPath());
+            QString targetDir = filesystem::buildPath(QStringList() << m_app->applicationDirPath());
             QString tempFilename = targetDir + filename + ".upgrade";
             LOG(INFO) << "Downloading platform file [" 
                       << filename << "] from [" + baseUrl + "] to [" << targetDir << "]";
@@ -161,7 +161,7 @@ bool UpdateManager::updatePlatform(QJsonObject* jsonObject)
         }
         if (result) {
             for (QString filename : filesList) {
-                QString downloadedFilename = utils::buildFilename(
+                QString downloadedFilename = filesystem::buildFilename(
                             QStringList() << m_app->applicationDirPath() << filename + ".upgrade");
                 QString currFilename = downloadedFilename.mid(0, 
                                                               downloadedFilename.length() - 
@@ -204,7 +204,7 @@ bool UpdateManager::updateDatabase(QJsonObject* jsonObject)
         QString baseUrl = databaseObj["base"].toString();
         QStringList filesList = databaseObj["files"].toString().split(',');
         for (QString filename : filesList) {
-            QString targetDir = utils::buildPath(QStringList() << SettingsLoader().defaultHomeDir() << "data");
+            QString targetDir = filesystem::buildPath(QStringList() << SettingsLoader().defaultHomeDir() << "data");
             QString tempFilename = targetDir + filename + ".upgrade";
             LOG(INFO) << "Downloading database file [" 
                       << filename << "] from [" + baseUrl + "] to [" << targetDir << "]";
@@ -248,7 +248,7 @@ bool UpdateManager::updateExtensions(QJsonObject* jsonObject)
                 QString baseUrl = extensionobj["base"].toString();
                 QStringList filesList = extensionobj["files"].toString().split(',');
                 for (QString filename : filesList) {
-                    QString targetDir = utils::buildPath(QStringList() 
+                    QString targetDir = filesystem::buildPath(QStringList() 
                                                          << m_app->applicationDirPath() << "extensions");
                     QString tempFilename = targetDir + filename + ".upgrade";
                     LOG(INFO) << "Downloading extension file [" 
@@ -264,7 +264,7 @@ bool UpdateManager::updateExtensions(QJsonObject* jsonObject)
                     } else {
                         // Extension ready to be upgrade! Filename: file.zip.upgrade
                         for (QString filename : filesList) {
-                            QString downloadedFilename = utils::buildFilename(
+                            QString downloadedFilename = filesystem::buildFilename(
                                         QStringList() << m_app->applicationDirPath() << "extensions" << filename + ".upgrade");
                             QString currFilename = downloadedFilename.mid(0, 
                                                                           downloadedFilename.length() - QString(".zip.upgrade").length());

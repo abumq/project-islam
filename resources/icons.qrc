@@ -2,6 +2,12 @@
     <qresource prefix="/extensions">
         <file alias="memorization">images/brain.png</file>
         <file alias="al-quran">images/quran.png</file>
+        <file>images/hizb.png</file>
+        <file>images/sajdah.png</file>
+    </qresource>
+    <qresource prefix="/controls/quran">
+        <file alias="hizb">images/hizb.png</file>
+        <file alias="sajdah">images/sajdah.png</file>
     </qresource>
     <qresource prefix="/">
         <file alias="project-ico">images/project-islam.ico</file>

@@ -7,7 +7,9 @@
 #include <QTextCursor>
 #include <QScrollBar>
 #include <QResizeEvent>
+#include <QMenu>
 
+#include "core/utils/memory.h"
 #include "core/logging/logging.h"
 #include "core/quran/quran.h"
 
@@ -29,6 +31,7 @@ QuranView::QuranView(quran::Quran* quran, quran::Quran* quranTranslation,
     m_currTo(1)
 {
     _TRACE;
+    
     const QRectF rect = QRectF(0, 0, 1, 1);
     scene()->setSceneRect(rect);
     scaleToDefault();
@@ -164,11 +167,17 @@ void QuranView::update(quran::Chapter* chapter, int from, int to)
         }
         QString verseText = QString(m_showVerseNumbers ? arabicNumber(verse->number()) + " -  " : "") + 
                 QString::fromStdWString(verse->text());
-        if (verse->sajdah()) {
-            verseText.append("<b>" + VerseTextItem::kSajdahChar + "</b>");
+        if (verse->sajdah() && !VerseTextItem::kSajdahChar.isEmpty()) {
+            verseText.append(" <b>" + VerseTextItem::kSajdahChar + "</b>");
         }
-        if (verse->rukuh()) {
-            verseText.append("<b>" + VerseTextItem::kRukuhChar + "</b>");
+        if (verse->rukuh() && !VerseTextItem::kRukuhChar.isEmpty()) {
+            verseText.append(" <b>" + VerseTextItem::kRukuhChar + "</b>");
+        }
+        if (verse->hizbQuarter() && !VerseTextItem::kHizbChar.isEmpty()) {
+            verseText.append(" <b>" + VerseTextItem::kHizbChar + "</b>");
+        }
+        if (verse->manzil() && !VerseTextItem::kManzilChar.isEmpty()) {
+            verseText.append(" <b>" + VerseTextItem::kManzilChar + "</b>");
         }
         VerseTextItem* verseTextItem = new VerseTextItem(verseText, 
                                                          const_cast<quran::Verse*>(verse), nullptr);
@@ -505,8 +514,10 @@ QString QuranView::arabicNumber(int n)
     return nstr;
 }
 
-const QString VerseTextItem::kSajdahChar = "۩";
-const QString VerseTextItem::kRukuhChar = "(؏)";
+const QString VerseTextItem::kSajdahChar = QString::fromUtf8("۩");
+const QString VerseTextItem::kRukuhChar = QString::fromUtf8("(؏)");
+const QString VerseTextItem::kHizbChar = QString::fromUtf8("");
+const QString VerseTextItem::kManzilChar = QString::fromUtf8("");
 
 VerseTextItem::VerseTextItem(const QString& text, quran::Verse* verse, QGraphicsItem* parent) :
     QGraphicsTextItem(text, parent),
@@ -523,6 +534,11 @@ VerseTextItem::VerseTextItem(const QString& text, quran::Verse* verse, QGraphics
 void VerseTextItem::paint(QPainter* painter, const QStyleOptionGraphicsItem* o, QWidget* w)
 {
     QGraphicsTextItem::paint(painter, o, w); 
+}
+
+void VerseTextItem::contextMenuEvent(QGraphicsSceneContextMenuEvent *event)
+{
+    
 }
 
 void VerseTextItem::highlight()

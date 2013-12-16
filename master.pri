@@ -1,5 +1,5 @@
 ## Compiler
-COMPILER = icpc
+COMPILER = g++
 
 ## Modules
 QT       += core gui widgets sql multimedia network

@@ -7,7 +7,7 @@ TEMPLATE = app
 
 DEFINES += _ELPP_QT_LOGGING
 
-COMPILER = icpc
+COMPILER = g++
 
 SOURCES += main.cc\
         databasebuilder.cc \

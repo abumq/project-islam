@@ -17,11 +17,13 @@ class VerseTextItem : public QGraphicsTextItem
 public:
     static const QString kSajdahChar;
     static const QString kRukuhChar;
+    static const QString kHizbChar;
+    static const QString kManzilChar;
     
     VerseTextItem(const QString &text = QString(), quran::Verse* verse = 0, QGraphicsItem* parent = 0);
     
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *o, QWidget *w);
-    
+
     void highlight();
     void unhighlight();
     

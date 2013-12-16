@@ -61,11 +61,6 @@ OTHER_FILES += \
     resources/styles/extension_item.style \
     resources/images/project-islam.png \
     resources/images/project-islam.ico \
-    resources/images/brain.png \
-    resources/data/sql/dua.sql \
-    resources/data/sql/quran/quran_english.sql \
-    resources/data/sql/quran/quran_chapter.sql \
-    resources/data/sql/quran/quran_arabic.sql \
     resources/configs/logging.linux.config \
     resources/configs/logging.win.config \
     extension.pri \

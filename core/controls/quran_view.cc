@@ -536,11 +536,6 @@ void VerseTextItem::paint(QPainter* painter, const QStyleOptionGraphicsItem* o, 
     QGraphicsTextItem::paint(painter, o, w); 
 }
 
-void VerseTextItem::contextMenuEvent(QGraphicsSceneContextMenuEvent *event)
-{
-    
-}
-
 void VerseTextItem::highlight()
 {
     setHtml("<span style='background-color:#FFFF00;'>" + m_plainText + "</span>");

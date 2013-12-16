@@ -6243,33 +6243,3 @@ INSERT INTO Quran__Arabic_Original_Simple (QuranChapterID, VerseNumber, Rukuh, S
 INSERT INTO Quran__Arabic_Original_Simple (QuranChapterID, VerseNumber, Rukuh, Sajdah, Manzil, HizbQuarter, VerseText) VALUES (114, 4, '0', '0', '0', '0', 'مِنْ شَرِّ الْوَسْوَاسِ الْخَنَّاسِ');
 INSERT INTO Quran__Arabic_Original_Simple (QuranChapterID, VerseNumber, Rukuh, Sajdah, Manzil, HizbQuarter, VerseText) VALUES (114, 5, '0', '0', '0', '0', 'الَّذِي يُوَسْوِسُ فِي صُدُورِ النَّاسِ');
 INSERT INTO Quran__Arabic_Original_Simple (QuranChapterID, VerseNumber, Rukuh, Sajdah, Manzil, HizbQuarter, VerseText) VALUES (114, 6, '1', '0', '0', '0', 'مِنَ الْجِنَّةِ وَالنَّاسِ');
-INSERT INTO Quran__Arabic_Original_Simple (QuranChapterID, VerseNumber, Rukuh, Sajdah, Manzil, HizbQuarter, VerseText) VALUES (, );
-INSERT INTO Quran__Arabic_Original_Simple (QuranChapterID, VerseNumber, Rukuh, Sajdah, Manzil, HizbQuarter, VerseText) VALUES (, );
-INSERT INTO Quran__Arabic_Original_Simple (QuranChapterID, VerseNumber, Rukuh, Sajdah, Manzil, HizbQuarter, VerseText) VALUES (# PLEASE DO NOT REMOVE OR CHANGE THIS COPYRIGHT BLOCK, );
-INSERT INTO Quran__Arabic_Original_Simple (QuranChapterID, VerseNumber, Rukuh, Sajdah, Manzil, HizbQuarter, VerseText) VALUES (#====================================================================, );
-INSERT INTO Quran__Arabic_Original_Simple (QuranChapterID, VerseNumber, Rukuh, Sajdah, Manzil, HizbQuarter, VerseText) VALUES (#, );
-INSERT INTO Quran__Arabic_Original_Simple (QuranChapterID, VerseNumber, Rukuh, Sajdah, Manzil, HizbQuarter, VerseText) VALUES (#  Tanzil Quran Text (Simple, version 1.0.2), );
-INSERT INTO Quran__Arabic_Original_Simple (QuranChapterID, VerseNumber, Rukuh, Sajdah, Manzil, HizbQuarter, VerseText) VALUES (#  Copyright (C) 2008-2010 Tanzil.net, );
-INSERT INTO Quran__Arabic_Original_Simple (QuranChapterID, VerseNumber, Rukuh, Sajdah, Manzil, HizbQuarter, VerseText) VALUES (#  License: Creative Commons Attribution 3.0, );
-INSERT INTO Quran__Arabic_Original_Simple (QuranChapterID, VerseNumber, Rukuh, Sajdah, Manzil, HizbQuarter, VerseText) VALUES (#, );
-INSERT INTO Quran__Arabic_Original_Simple (QuranChapterID, VerseNumber, Rukuh, Sajdah, Manzil, HizbQuarter, VerseText) VALUES (#  This copy of quran text is carefully produced, highly , );
-INSERT INTO Quran__Arabic_Original_Simple (QuranChapterID, VerseNumber, Rukuh, Sajdah, Manzil, HizbQuarter, VerseText) VALUES (#  verified and continuously monitored by a group of specialists , );
-INSERT INTO Quran__Arabic_Original_Simple (QuranChapterID, VerseNumber, Rukuh, Sajdah, Manzil, HizbQuarter, VerseText) VALUES (#  at Tanzil project., );
-INSERT INTO Quran__Arabic_Original_Simple (QuranChapterID, VerseNumber, Rukuh, Sajdah, Manzil, HizbQuarter, VerseText) VALUES (#, );
-INSERT INTO Quran__Arabic_Original_Simple (QuranChapterID, VerseNumber, Rukuh, Sajdah, Manzil, HizbQuarter, VerseText) VALUES (#  TERMS OF USE:, );
-INSERT INTO Quran__Arabic_Original_Simple (QuranChapterID, VerseNumber, Rukuh, Sajdah, Manzil, HizbQuarter, VerseText) VALUES (#, );
-INSERT INTO Quran__Arabic_Original_Simple (QuranChapterID, VerseNumber, Rukuh, Sajdah, Manzil, HizbQuarter, VerseText) VALUES (#  - Permission is granted to copy and distribute verbatim copies , );
-INSERT INTO Quran__Arabic_Original_Simple (QuranChapterID, VerseNumber, Rukuh, Sajdah, Manzil, HizbQuarter, VerseText) VALUES (#    of this text, but CHANGING IT IS NOT ALLOWED., );
-INSERT INTO Quran__Arabic_Original_Simple (QuranChapterID, VerseNumber, Rukuh, Sajdah, Manzil, HizbQuarter, VerseText) VALUES (#, );
-INSERT INTO Quran__Arabic_Original_Simple (QuranChapterID, VerseNumber, Rukuh, Sajdah, Manzil, HizbQuarter, VerseText) VALUES (#  - This quran text can be used in any website or application, , );
-INSERT INTO Quran__Arabic_Original_Simple (QuranChapterID, VerseNumber, Rukuh, Sajdah, Manzil, HizbQuarter, VerseText) VALUES (#    provided its source (Tanzil.net) is clearly indicated, and , );
-INSERT INTO Quran__Arabic_Original_Simple (QuranChapterID, VerseNumber, Rukuh, Sajdah, Manzil, HizbQuarter, VerseText) VALUES (#    a link is made to http://tanzil.net to enable users to keep, );
-INSERT INTO Quran__Arabic_Original_Simple (QuranChapterID, VerseNumber, Rukuh, Sajdah, Manzil, HizbQuarter, VerseText) VALUES (#    track of changes., );
-INSERT INTO Quran__Arabic_Original_Simple (QuranChapterID, VerseNumber, Rukuh, Sajdah, Manzil, HizbQuarter, VerseText) VALUES (#, );
-INSERT INTO Quran__Arabic_Original_Simple (QuranChapterID, VerseNumber, Rukuh, Sajdah, Manzil, HizbQuarter, VerseText) VALUES (#  - This copyright notice shall be included in all verbatim copies , );
-INSERT INTO Quran__Arabic_Original_Simple (QuranChapterID, VerseNumber, Rukuh, Sajdah, Manzil, HizbQuarter, VerseText) VALUES (#    of the text, and shall be reproduced appropriately in all files , );
-INSERT INTO Quran__Arabic_Original_Simple (QuranChapterID, VerseNumber, Rukuh, Sajdah, Manzil, HizbQuarter, VerseText) VALUES (#    derived from or containing substantial portion of this text., );
-INSERT INTO Quran__Arabic_Original_Simple (QuranChapterID, VerseNumber, Rukuh, Sajdah, Manzil, HizbQuarter, VerseText) VALUES (#, );
-INSERT INTO Quran__Arabic_Original_Simple (QuranChapterID, VerseNumber, Rukuh, Sajdah, Manzil, HizbQuarter, VerseText) VALUES (#  Please check updates at: http://tanzil.net/updates/, );
-INSERT INTO Quran__Arabic_Original_Simple (QuranChapterID, VerseNumber, Rukuh, Sajdah, Manzil, HizbQuarter, VerseText) VALUES (# , );
-INSERT INTO Quran__Arabic_Original_Simple (QuranChapterID, VerseNumber, Rukuh, Sajdah, Manzil, HizbQuarter, VerseText) VALUES (#====================================================================, );

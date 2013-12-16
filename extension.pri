@@ -4,8 +4,8 @@ include(master.pri)
 TARGET = $$qtLibraryTarget($$NAME)
 TEMPLATE = lib
 
-DEFAULT_LOG_FILE = '\\".l.lg\\"'
-LOGGER_ID = '\\"$$NAME\\"'
+DEFAULT_LOG_FILE = '\"\\".l.lg\\"\"'
+LOGGER_ID = '\"\\"$$NAME\\"\"'
 
 DEFINES += _ELPP_DEFAULT_LOG_FILE=$$DEFAULT_LOG_FILE \
            _LOGGER=$$LOGGER_ID \

@@ -19,19 +19,21 @@ namespace data {
 DatabaseManager::DatabaseManager(const QString& uniqueId, const QString& dbFilename) : 
         m_uniqueId(uniqueId), m_lastQuerySuccessful(false), m_connections(0) {
     DLOG(INFO) << "Initializing DatabaseManager [" << m_uniqueId << "]";
-    
-    const QString kDefaultDatabasePath = filesystem::buildPath(QStringList() << SettingsLoader().defaultHomeDir() << "data");
+    SettingsLoader settingsLoader;
+    const QString kDefaultDatabasePath = filesystem::buildPath(QStringList() << settingsLoader.defaultHomeDir() << "data");
     const QString kDefaultDatabaseName = kDefaultDatabasePath + dbFilename;
     
     if (!QFile(kDefaultDatabaseName).exists()) {
         LOG(ERROR) << "Database not found [" << kDefaultDatabaseName << "] ! Please make sure you have correct home path. Current ["
-                    << SettingsLoader().defaultHomeDir() << "]";
+                    << settingsLoader.defaultHomeDir() << "]";
     }
     
     if (QSqlDatabase::contains(QSqlDatabase::defaultConnection)) {
         QSqlDatabase::removeDatabase(QSqlDatabase::defaultConnection);
     }
     m_sqlDatabase = QSqlDatabase::addDatabase("QSQLITE");
+    m_sqlDatabase.setHostName(settingsLoader.get(SettingsLoader::kSettingKeyDatabaseHost, QVariant(QString(""))).toString());
+    m_sqlDatabase.setPort(settingsLoader.get(SettingsLoader::kSettingKeyDatabasePort, QVariant(-1)).toInt());
     m_sqlDatabase.setDatabaseName(kDefaultDatabaseName);
 }
 
@@ -46,7 +48,7 @@ const data::QueryResult& DatabaseManager::query(const QString& query, const QVar
     QString connectionName = m_uniqueId + "_connection" + QString::number(++m_connections);
     VLOG(9) << "Making connection using [" << connectionName << "]";
     if (!m_sqlDatabase.open()) {
-        DLOG(ERROR) << "Could not open database [" << connectionName << "]";
+        DLOG(ERROR) << "Could not open database using connection [" << connectionName << "]";
         return m_lastQueryResult;
     }
     QSqlQuery sqlQuery(m_sqlDatabase);

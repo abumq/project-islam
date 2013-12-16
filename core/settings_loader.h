@@ -21,6 +21,8 @@ public:
     static const QString kSettingKeyQuranTranslationTable;
     static const QString kSettingKeyQuranTafseerTable;
     static const QString kSettingKeyRecitationVolume;
+    static const QString kSettingKeyDatabaseHost;
+    static const QString kSettingKeyDatabasePort;
     
     explicit SettingsLoader(const char* settingsFilename = "basic_settings.ini");
     ~SettingsLoader();

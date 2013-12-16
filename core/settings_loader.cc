@@ -14,6 +14,8 @@ const QString SettingsLoader::kSettingKeyQuranTable = "default_quran";
 const QString SettingsLoader::kSettingKeyQuranTranslationTable = "default_quran_translation";
 const QString SettingsLoader::kSettingKeyQuranTafseerTable = "default_quran_tafseer";
 const QString SettingsLoader::kSettingKeyRecitationVolume = "recitation_vol";
+const QString SettingsLoader::kSettingKeyDatabaseHost = "db_host";
+const QString SettingsLoader::kSettingKeyDatabasePort = "db_port";
 
 QString SettingsLoader::s_defaultHomeDir = QString("");
 
@@ -63,10 +65,6 @@ QVariant SettingsLoader::get(const QString& key, const QVariant& defaultValue) c
     if (m_settings != nullptr) {
         return m_settings->value(key, defaultValue);
     }
-    // Save default value
-    QMap<QString, QVariant> defValMap;
-    defValMap.insert(key, defaultValue);
-    saveSettings(&defValMap);
     return defaultValue;
 }
 

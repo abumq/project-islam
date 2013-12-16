@@ -50,9 +50,9 @@ void SettingsDialog::accept()
     m_mainWindow->styleLoader()->reset(m_colorBox->color().red(), m_colorBox->color().green(), m_colorBox->color().blue());
     
     QMap<QString, QVariant> settingsMap;
-    settingsMap = ui->cboQuranOriginals->itemData(ui->cboQuranOriginals->currentIndex()).toMap();
-    settingsMap = ui->cboQuranTranslations->itemData(ui->cboQuranTranslations->currentIndex()).toMap();
-    settingsMap = ui->cboQuranTafseers->itemData(ui->cboQuranTafseers->currentIndex()).toMap();
+    settingsMap.insert(SettingsLoader::kSettingKeyQuranTable, ui->cboQuranOriginals->itemData(ui->cboQuranOriginals->currentIndex()));
+    settingsMap.insert(SettingsLoader::kSettingKeyQuranTranslationTable, ui->cboQuranTranslations->itemData(ui->cboQuranTranslations->currentIndex()));
+    settingsMap.insert(SettingsLoader::kSettingKeyQuranTafseerTable, ui->cboQuranTafseers->itemData(ui->cboQuranTafseers->currentIndex()));
     settingsMap.insert(SettingsLoader::kSettingKeyTheme, StyleLoader::rgb(m_mainWindow->styleLoader()->r(), 
                                                                           m_mainWindow->styleLoader()->g(), m_mainWindow->styleLoader()->b()));
     s.saveSettings(&settingsMap);
@@ -97,15 +97,12 @@ void SettingsDialog::loadSettingsInUi()
         QString displayName = nameTable;
         displayName = displayName.mid(QString("Quran__Arabic_Original_").length());
         displayName.replace("_", " ");
-        int index = ui->cboQuranTranslations->findText(displayName);
+        int index = ui->cboQuranOriginals->findText(displayName);
         if (index != -1) {
             // No duplication!
             continue;
         }
-        
-        QMap<QString, QVariant> m;
-        m.insert(SettingsLoader::kSettingKeyQuranTable, nameTable);
-        ui->cboQuranOriginals->addItem(displayName, m);
+        ui->cboQuranOriginals->addItem(displayName, nameTable);
         if (SettingsLoader().get(SettingsLoader::kSettingKeyQuranTable, 
                                  QString(quran::Quran::kQuranArabicDatabaseTable)) == nameTable) {
             selectedIndex = i;
@@ -128,10 +125,7 @@ void SettingsDialog::loadSettingsInUi()
             // No duplication!
             continue;
         }
-        
-        QMap<QString, QVariant> m;
-        m.insert(SettingsLoader::kSettingKeyQuranTranslationTable, nameTranslationTable);
-        ui->cboQuranTranslations->addItem(displayName, m);
+        ui->cboQuranTranslations->addItem(displayName, nameTranslationTable);
         if (SettingsLoader().get(SettingsLoader::kSettingKeyQuranTranslationTable, 
                                  QString(quran::Quran::kQuranDefaultTranslationDatabaseTable)) == nameTranslationTable) {
             selectedIndex = i;
@@ -154,15 +148,14 @@ void SettingsDialog::loadSettingsInUi()
             // No duplication!
             continue;
         }
-        QMap<QString, QVariant> m;
-        m.insert(SettingsLoader::kSettingKeyQuranTafseerTable, nameTafseerTable);
-        ui->cboQuranTafseers->addItem(displayName, m);
+        ui->cboQuranTafseers->addItem(displayName, nameTafseerTable);
         if (SettingsLoader().get(SettingsLoader::kSettingKeyQuranTafseerTable, 
                                  QString(quran::Quran::kQuranDefaultTafseerDatabaseTable)) == nameTafseerTable) {
             selectedIndex = i;
         }
         ++i;
     }
+    ui->cboQuranTafseers->setCurrentIndex(selectedIndex);
 }
 
 void SettingsDialog::on_chkLevelGlobal_clicked(bool checked)

@@ -52,17 +52,19 @@ void Quran::load(const Quran::TextType &textType, const std::string& databaseTab
         quran::Chapter* chapterPtr = &m_chapters.at(cid);
         QVariantMap args;
         args.insert(":QuranChapterID", cid);
-        QString table;
+        
+        // TODO: Check to see whether databaseTable exist in SQLite db, if no use defaults
+        // FIXME: Following reading directions are not necessarily correct because tafseer
+        //        etc can be in Arabic or Urdu etc
+        //        Best way to fix this is embed this information into database
         if (textType == TextType::Original) {
-            table = kQuranArabicDatabaseTable;
             m_readingDirection = ReadingDirection::RightToLeft;
         } else if (textType == TextType::Translation 
                    || textType == TextType::Transliteration 
                    || textType == TextType::Tafseer) {
-            table = QString(databaseTable.empty() ? kQuranDefaultTranslationDatabaseTable : databaseTable.c_str());
             m_readingDirection = ReadingDirection::LeftToRight;
         }
-        data::QueryResult verses = d.query("SELECT * FROM " + table + " WHERE QuranChapterID = :QuranChapterID ORDER BY ID", args);
+        data::QueryResult verses = d.query("SELECT * FROM " + QString(databaseTable.c_str()) + " WHERE QuranChapterID = :QuranChapterID ORDER BY ID", args);
         if (!d.lastQuerySuccessful()) {
             m_ready = false;
             return;

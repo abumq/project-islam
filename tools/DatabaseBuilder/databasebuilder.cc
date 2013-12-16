@@ -24,12 +24,14 @@ void DatabaseBuilder::on_btnBrowse_clicked()
 {
     QFileDialog d;
     ui->txtDataFile->setText(d.getOpenFileName(this, "Browse Quran Data File", ui->txtDataFile->text()));
+    QFileInfo fi(ui->txtDataFile->text());
+    ui->txtTableName->setText("Quran__" + fi.fileName());
 }
 
 void DatabaseBuilder::on_btnBrowse2_clicked()
 {
     QFileDialog d;
-    ui->txtRukuhSajdahFile->setText(d.getOpenFileName(this, "Browse Rukuh / Sajdah File", ui->txtRukuhSajdahFile->text()));
+    ui->txtRukuhSajdahFile->setText(d.getOpenFileName(this, "Browse Base Info File", ui->txtRukuhSajdahFile->text()));
 }
 
 void DatabaseBuilder::on_btnBrowse3_clicked()
@@ -52,13 +54,10 @@ void DatabaseBuilder::on_pushButton_clicked()
     ui->txtRukuhSajdahFile->setEnabled(false);
     ui->txtTableName->setEnabled(false);
     ui->txtOutputFile->setEnabled(false);
-    
     DataConverter dc;
-    
-    dc.startConvert(ui->txtRukuhSajdahFile->text().toStdString(),
-                    ui->txtTableName->text().toStdString(), ui->txtDataFile->text().toStdString(),
-                    ui->txtOutputFile->text().toStdString());
-    
+    for (ConvertData cd : m_convertDataList) {
+        dc.startConvert(&cd);
+    }
     ui->txtDataFile->setEnabled(true);
     ui->txtRukuhSajdahFile->setEnabled(true);
     ui->txtTableName->setEnabled(true);
@@ -134,4 +133,20 @@ void DatabaseBuilder::on_pushButton_2_clicked()
     m_sqlFiles.clear();
     while (ui->treeSqlFiles->topLevelItemCount() > 0)
         ui->treeSqlFiles->takeTopLevelItem(0); 
+}
+
+void DatabaseBuilder::on_pushButton_3_clicked()
+{
+    m_convertDataList.clear();
+    while (ui->treeWidget->topLevelItemCount() > 0)
+        ui->treeWidget->takeTopLevelItem(0); 
+}
+
+void DatabaseBuilder::on_btnAdd_2_clicked()
+{
+    ConvertData cd(ui->txtRukuhSajdahFile->text().toStdString(), ui->txtTableName->text().toStdString(),
+        ui->txtDataFile->text().toStdString(), ui->txtOutputFile->text().toStdString());
+    m_convertDataList.push_back(cd);
+    QTreeWidgetItem* item = new QTreeWidgetItem(ui->treeWidget);
+    item->setText(0, QString(cd.tableName.c_str()));
 }

@@ -4,15 +4,29 @@
 #include <string>
 #include <vector>
 
+class ConvertData {
+public:
+    ConvertData(const std::string& baseInfoFilename, const std::string& tableName, 
+                const std::string& dataFilename, const std::string& outputFilename) :
+        baseInfoFilename(baseInfoFilename),
+        tableName(tableName),
+        dataFilename(dataFilename),
+        outputFilename(outputFilename) {
+        
+    }
+    
+    std::string baseInfoFilename;
+    std::string tableName;
+    std::string dataFilename;
+    std::string outputFilename;
+};
+
 class DataConverter
 {
 public:
     DataConverter();
     
-    void startConvert(const std::string& rukuhSajdahFile, 
-                      const std::string& tableName, 
-                      const std::string& dataFilename, 
-                      const std::string& outputFilename);
+    void startConvert(ConvertData*);
 private:
     std::vector<std::string> &split(const std::string &s, char delim, 
                                     std::vector<std::string> &elems);

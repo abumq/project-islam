@@ -2,7 +2,8 @@
 #define DATABASEBUILDER_H
 
 #include <QDialog>
-
+#include <vector>
+#include "dataconverter.h"
 namespace Ui {
 class DatabaseBuilder;
 }
@@ -38,10 +39,14 @@ private slots:
     
     void on_pushButton_2_clicked();
     
+    void on_pushButton_3_clicked();
+    
+    void on_btnAdd_2_clicked();
+    
 private:
     QStringList m_sqlFiles;
     Ui::DatabaseBuilder *ui;
-    
+    std::vector<ConvertData> m_convertDataList;
 };
 
 #endif // DATABASEBUILDER_H

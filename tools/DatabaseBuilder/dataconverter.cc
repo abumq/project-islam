@@ -9,30 +9,28 @@ DataConverter::DataConverter()
 {
 }
 
-void DataConverter::startConvert(const std::string& rukuhSajdahFile,
-                                 const std::string& tableName, const std::string& dataFilename,
-                                 const std::string& outputFilename)
+void DataConverter::startConvert(ConvertData * data)
 {
-    std::ifstream rslFile;
-    rslFile.open(rukuhSajdahFile.c_str(), std::ifstream::in);
+    std::ifstream baseInfoFile;
+    baseInfoFile.open(data->baseInfoFilename.c_str(), std::ifstream::in);
     
     std::ifstream dataFile;
-    dataFile.open(dataFilename.c_str(), std::ifstream::in);
+    dataFile.open(data->dataFilename.c_str(), std::ifstream::in);
     
     std::ofstream outputFile;
-    outputFile.open(outputFilename.c_str(), std::ofstream::out);
+    outputFile.open(data->outputFilename.c_str(), std::ofstream::out);
     
-    outputFile << " -- " << tableName << " table \n\
+    outputFile << " -- " << data->tableName << " table \n\
                   --     ID \n\
                   --     QuranChapterID \n\
                   --     VerseNumber \n\
                   --     VerseText \n\
                   --     Rukuh \n\
                   --     Sajdah \n\
-                  DROP TABLE IF EXISTS " << tableName << "; \n\
-            CREATE TABLE IF NOT EXISTS " << tableName << " (ID INTEGER PRIMARY KEY ASC, QuranChapterID INTEGER NOT NULL, VerseNumber INTEGER NOT NULL, Rukuh BOOLEAN NOT NULL, Sajdah BOOLEAN NOT NULL, Manzil BOOLEAN NOT NULL, HizbQuarter BOOLEAN NOT NULL, VerseText STRING NOT NULL);" << std::endl;
+                  DROP TABLE IF EXISTS " << data->tableName << "; \n\
+            CREATE TABLE IF NOT EXISTS " << data->tableName << " (ID INTEGER PRIMARY KEY ASC, QuranChapterID INTEGER NOT NULL, VerseNumber INTEGER NOT NULL, Rukuh BOOLEAN NOT NULL, Sajdah BOOLEAN NOT NULL, Manzil BOOLEAN NOT NULL, HizbQuarter BOOLEAN NOT NULL, VerseText STRING NOT NULL);" << std::endl;
     
-    std::string insertStatement = "INSERT INTO " + tableName + " (QuranChapterID, VerseNumber, Rukuh, Sajdah, Manzil, HizbQuarter, VerseText) VALUES (";
+    std::string insertStatement = "INSERT INTO " + data->tableName + " (QuranChapterID, VerseNumber, Rukuh, Sajdah, Manzil, HizbQuarter, VerseText) VALUES (";
     
     std::vector<std::string> rukuhList;
     std::vector<std::string> sajdahList;
@@ -40,8 +38,8 @@ void DataConverter::startConvert(const std::string& rukuhSajdahFile,
     std::vector<std::string> hizbQuarterList;
     std::string rslLine;
     bool s = false, r = false, m = false, hq = false; // Sajdah, Rukuh, Manzil, Hizb-Quarter, Juz
-    while (rslFile.good()) {
-        std::getline(rslFile, rslLine);
+    while (baseInfoFile.good()) {
+        std::getline(baseInfoFile, rslLine);
         if (rslLine.empty() || rslLine[0] == '#') continue; // Comment!
         if (rslLine == "-rukuh") { s = false; m = false; hq = false; r = true; continue; }
         else if (rslLine == "-sajdah") { r = false; m = false; hq = false; s = true; continue; }
@@ -65,7 +63,7 @@ void DataConverter::startConvert(const std::string& rukuhSajdahFile,
         outputFile << std::endl;
     }
     
-    rslFile.close();
+    baseInfoFile.close();
     dataFile.close();
     outputFile.close();
     

@@ -6,37 +6,37 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>695</width>
-    <height>487</height>
+    <width>967</width>
+    <height>675</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Database Builder v0.1</string>
+   <string>Database Builder v0.2</string>
   </property>
   <widget class="QGroupBox" name="groupBox">
    <property name="geometry">
     <rect>
      <x>20</x>
      <y>10</y>
-     <width>661</width>
-     <height>201</height>
+     <width>911</width>
+     <height>361</height>
     </rect>
    </property>
    <property name="title">
     <string>Quran Data - &gt; SQL File</string>
    </property>
    <layout class="QGridLayout" name="gridLayout">
-    <item row="0" column="0">
-     <widget class="QLabel" name="label">
+    <item row="2" column="0">
+     <widget class="QLabel" name="label_3">
       <property name="text">
-       <string>Data File:</string>
+       <string>Table Name</string>
       </property>
      </widget>
     </item>
-    <item row="0" column="1" colspan="3">
-     <widget class="QLineEdit" name="txtDataFile">
+    <item row="3" column="1" colspan="3">
+     <widget class="QLineEdit" name="txtOutputFile">
       <property name="text">
-       <string>/home/mkhan/Dropbox/project-islam/resources/data/quran/Arabic_Original_Uthmani</string>
+       <string>/home/mkhan/Dropbox/project-islam/resources/data/sql/quran/quran_arabic_uthmani.sql</string>
       </property>
      </widget>
     </item>
@@ -47,6 +47,13 @@
       </property>
      </widget>
     </item>
+    <item row="1" column="0">
+     <widget class="QLabel" name="label_2">
+      <property name="text">
+       <string>Base Info List</string>
+      </property>
+     </widget>
+    </item>
     <item row="1" column="4">
      <widget class="QPushButton" name="btnBrowse2">
       <property name="text">
@@ -54,10 +61,17 @@
       </property>
      </widget>
     </item>
-    <item row="2" column="0">
-     <widget class="QLabel" name="label_3">
+    <item row="0" column="1" colspan="3">
+     <widget class="QLineEdit" name="txtDataFile">
       <property name="text">
-       <string>Table Name</string>
+       <string>/home/mkhan/Dropbox/project-islam/resources/data/quran/Arabic_Original_Uthmani</string>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="1" colspan="3">
+     <widget class="QLineEdit" name="txtRukuhSajdahFile">
+      <property name="text">
+       <string>/home/mkhan/Dropbox/project-islam/resources/data/quran/base_info_list</string>
       </property>
      </widget>
     </item>
@@ -75,18 +89,27 @@
       </property>
      </widget>
     </item>
-    <item row="3" column="1" colspan="3">
-     <widget class="QLineEdit" name="txtOutputFile">
-      <property name="text">
-       <string>/home/mkhan/Dropbox/project-islam/resources/data/sql/quran/quran_arabic_uthmani.sql</string>
-      </property>
-     </widget>
-    </item>
     <item row="3" column="4">
      <widget class="QPushButton" name="btnBrowse3">
       <property name="text">
        <string>...</string>
       </property>
+     </widget>
+    </item>
+    <item row="0" column="0">
+     <widget class="QLabel" name="label">
+      <property name="text">
+       <string>Data File:</string>
+      </property>
+     </widget>
+    </item>
+    <item row="5" column="0" colspan="5">
+     <widget class="QTreeWidget" name="treeWidget">
+      <column>
+       <property name="text">
+        <string notr="true">1</string>
+       </property>
+      </column>
      </widget>
     </item>
     <item row="4" column="4">
@@ -103,17 +126,17 @@
       </property>
      </widget>
     </item>
-    <item row="1" column="0">
-     <widget class="QLabel" name="label_2">
+    <item row="4" column="0">
+     <widget class="QPushButton" name="btnAdd_2">
       <property name="text">
-       <string>Base Info List</string>
+       <string>Add</string>
       </property>
      </widget>
     </item>
-    <item row="1" column="1" colspan="3">
-     <widget class="QLineEdit" name="txtRukuhSajdahFile">
+    <item row="4" column="1">
+     <widget class="QPushButton" name="pushButton_3">
       <property name="text">
-       <string>/home/mkhan/Dropbox/project-islam/resources/data/quran/base_info_list</string>
+       <string>Clear</string>
       </property>
      </widget>
     </item>
@@ -122,9 +145,9 @@
   <widget class="QGroupBox" name="groupBox_2">
    <property name="geometry">
     <rect>
-     <x>30</x>
-     <y>210</y>
-     <width>651</width>
+     <x>20</x>
+     <y>400</y>
+     <width>931</width>
      <height>261</height>
     </rect>
    </property>

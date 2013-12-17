@@ -117,6 +117,7 @@ void QuranView::update(quran::Chapter* chapter, int from, int to)
     m_verseTextItems.clear();
     m_verseTextTranslationItems.clear();
     m_verseTextTransliterationItems.clear();
+    m_verseTextTafseerItems.clear();
     m_selectedVerseTextItem = nullptr;
     bool isChapterChanged = m_currentChapter != chapter;
     m_currentChapter = CHECK_NOTNULL(chapter);
@@ -414,12 +415,12 @@ void QuranView::turnOnTransliteration(quran::Quran* transliterationQuran)
 void QuranView::turnOffTafseer()
 {   
     _TRACE;
-    m_quranTafseer = nullptr;
     QList<VerseTextItem*> list = m_verseTextTafseerItems.values();
     for (int i = list.size() - 1; i >= 0; --i) {
         delete list.at(i);
     }
     m_verseTextTafseerItems.clear();
+    m_quranTafseer = nullptr;
     update(m_currFrom, m_currTo);
     emit tafseerToggled(false);
     

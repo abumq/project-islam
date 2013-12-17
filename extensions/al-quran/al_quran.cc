@@ -4,7 +4,7 @@
 #include <QAction>
 #include <QDockWidget>
 #include <QApplication>
-
+#include <QSplitter>
 #include "bookmarks_bar.h"
 #include "core/controls/quran_reciter.h"
 #include "core/controls/quran_reader.h"
@@ -18,7 +18,7 @@ const char* AlQuran::kDescription  = "Al-Qur'an recitation, reading and help mem
 
 AlQuran::AlQuran()
 {
-    memory::turnToNullPtr(m_reciter, m_reader, m_bookmarkBar);
+    memory::turnToNullPtr(m_reciter, m_reader, m_bookmarkBar, m_splitter);
     setExtensionInfo(ExtensionInfo(kMajorVersion, kMinorVersion, kPatchVersion, 
                                    QString(kAuthor), QString(kName), 
                                    QString(kTitle), QString(kDescription)));
@@ -39,16 +39,15 @@ bool AlQuran::initialize(int argc, const char** argv)
     
     // Do not trace location before calling parent's initialize
     _TRACE;
-    memory::deleteAll(m_reciter, m_reader, m_bookmarkBar);
+    memory::deleteAll(m_reciter, m_reader, m_bookmarkBar, m_splitter);
+    m_splitter = new QSplitter(container());
+    m_splitter->setOrientation(Qt::Horizontal);
     m_reciter = new QuranReciter(data()->quranArabic(), container());
     m_reader = new QuranReader(data()->quranArabic(), 
                                data()->quranTranslation(), 
                                data()->quranTransliteration(),
                                data()->quranTafseer(),
-                               container());    
-    m_reciter->hideChapterSelector();
-    m_reciter->hideVerseRangeSelector();
-    m_reciter->hideCurrentVerseSelector();
+                               m_splitter);
     QObject::connect(m_reciter, SIGNAL(chapterChanged(const quran::Chapter*)), this, SLOT(onChapterChangedReciter(const quran::Chapter*)));
     QObject::connect(m_reciter, SIGNAL(verseRangeChanged(int,int)), this, SLOT(onVerseRangeChangedReciter(int,int)));
     QObject::connect(m_reader, SIGNAL(chapterChanged(const quran::Chapter*)), this, SLOT(onChapterChangedReader(const quran::Chapter*)));
@@ -60,12 +59,8 @@ bool AlQuran::initialize(int argc, const char** argv)
     QObject::connect(m_reciter, SIGNAL(currentVerseChanged(int)), this, SLOT(onSelectedVerseChangedReciter(int)));
     QObject::connect(m_reader, SIGNAL(jumpToTextChanged(QString)), this, SLOT(onJumpToTextChanged(QString)));
     // Bookmarks bar
-    m_bookmarkBar = new QDockWidget("Bookmarks", container());
-    BookmarksBar* bar = new BookmarksBar(settingsKeyPrefix());
-    m_bookmarkBar->setAllowedAreas(Qt::RightDockWidgetArea);
-    m_bookmarkBar->setWidget(bar);
-    m_bookmarkBar->setFeatures(QDockWidget::NoDockWidgetFeatures);
-    QObject::connect(bar, SIGNAL(selectionChanged(Bookmark*)), this, SLOT(onBookmarkChanged(Bookmark*)));
+    m_bookmarkBar = new BookmarksBar(settingsKeyPrefix(), m_splitter);
+    QObject::connect(m_bookmarkBar, SIGNAL(selectionChanged(Bookmark*)), this, SLOT(onBookmarkChanged(Bookmark*)));
     
     initializeMenu();
     
@@ -139,14 +134,7 @@ void AlQuran::onContainerGeometryChanged(int w, int h)
     const int kCenterX = (w / 2) - (m_reciter->width() / 2);
     const int kBottom = h - m_reciter->height();
     m_reciter->move(kCenterX, kBottom);
-    
-    if (m_bookmarkBar->isVisible()) {
-        m_bookmarkBar->resize(BookmarksBar::kBookmarkBarWidth, h - m_reciter->height());
-        m_bookmarkBar->move(w - BookmarksBar::kBookmarkBarWidth, 0);
-    }
-    
-    m_reader->resize(w - (m_bookmarkBar->isVisible() ? BookmarksBar::kBookmarkBarWidth : 0), 
-                     h - m_reciter->height());
+    m_splitter->resize(w, h - m_reciter->height());
 }
 
 void AlQuran::onActivated()
@@ -229,7 +217,7 @@ void AlQuran::onJumpToTextChanged(const QString& txt)
 {
     _TRACE;
     if (m_bookmarkBar != nullptr) {
-        static_cast<BookmarksBar*>(m_bookmarkBar->widget())->setCurrentJumpText(txt);
+        m_bookmarkBar->setCurrentJumpText(txt);
     }
 }
 
@@ -254,6 +242,7 @@ void AlQuran::toggleReader(bool val)
         m_reciter->hideVerseRangeSelector();
         m_reciter->hideCurrentVerseSelector();
     }
+    onContainerGeometryChanged(container()->width(), container()->height());
 }
 
 void AlQuran::toggleShowDuration(bool val)

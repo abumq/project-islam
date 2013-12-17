@@ -79,7 +79,7 @@ QuranReciter::QuranReciter(quran::Quran* quran, QWidget *parent) :
             ui->chkRepeat->setEnabled(false);
             ui->volSlider->hide();
         }
-        ui->btnReplayCurrentVerse->hide();
+        ui->btnReplayCurrentVerse->setEnabled(false);
         ui->chkRepeat->setChecked(false);
         on_chkRepeat_clicked(false);
         ui->lblDuration->hide();
@@ -98,6 +98,7 @@ void QuranReciter::hideChapterSelector()
     _TRACE;
     ui->cboChapter->hide();
     ui->lblCboChapter->hide();
+    onControlsVisibilityToggled();
 }
 
 void QuranReciter::showChapterSelector()
@@ -105,6 +106,7 @@ void QuranReciter::showChapterSelector()
     _TRACE;
     ui->cboChapter->show();
     ui->lblCboChapter->show();
+    onControlsVisibilityToggled();
 }
 
 void QuranReciter::hideVerseRangeSelector()
@@ -114,6 +116,7 @@ void QuranReciter::hideVerseRangeSelector()
     ui->spnVerseTo->hide();
     ui->lblVerseRange->hide();
     ui->lblVerseRangeSeparator->hide();
+    onControlsVisibilityToggled();
 }
 
 void QuranReciter::showVerseRangeSelector()
@@ -123,6 +126,7 @@ void QuranReciter::showVerseRangeSelector()
     ui->spnVerseTo->show();
     ui->lblVerseRange->show();
     ui->lblVerseRangeSeparator->show();
+    onControlsVisibilityToggled();
 }
 
 void QuranReciter::hideCurrentVerseSelector()
@@ -130,12 +134,14 @@ void QuranReciter::hideCurrentVerseSelector()
     _TRACE;
     ui->spnVerse->hide();
     ui->lblVerse->hide();
+    onControlsVisibilityToggled();
 }
 
 void QuranReciter::showCurrentVerseSelector()
 {
     ui->spnVerse->show();
     ui->lblVerse->show();
+    onControlsVisibilityToggled();
 }
 
 void QuranReciter::loadReciters()
@@ -144,8 +150,8 @@ void QuranReciter::loadReciters()
     // Reciters
     const QString noReciterAvailableText = " -- NO RECITER AVAILABLE -- ";
     m_recitationsDir = QDir(filesystem::buildPath(QStringList() 
-                                             << SettingsLoader().defaultHomeDir() 
-                                             << "data" << "recitations"), 
+                                                  << SettingsLoader().defaultHomeDir() 
+                                                  << "data" << "recitations"), 
                             QString(), QDir::Name | QDir::IgnoreCase, QDir::Dirs | QDir::NoDotAndDotDot);
     if (!m_recitationsDir.exists()) {
         DLOG(ERROR) << "Recitations directory [" << m_recitationsDir.absolutePath() << "] not found";
@@ -448,7 +454,7 @@ void QuranReciter::onMediaStateChanged(QMediaPlayer::State state)
     case QMediaPlayer::PlayingState:
         ui->btnPlayPause->setText("▮▮");
         ui->btnStop->setEnabled(true);
-        ui->btnReplayCurrentVerse->show();
+        ui->btnReplayCurrentVerse->setEnabled(true);
         if (!m_hideDuration) {
             ui->lblDuration->show();
         }
@@ -457,7 +463,7 @@ void QuranReciter::onMediaStateChanged(QMediaPlayer::State state)
     case QMediaPlayer::PausedState:
         ui->btnPlayPause->setText("▶");
         ui->btnStop->setEnabled(true);
-        ui->btnReplayCurrentVerse->show();
+        ui->btnReplayCurrentVerse->setEnabled(true);
         if (!m_hideDuration) {
             ui->lblDuration->show();
         }
@@ -465,7 +471,7 @@ void QuranReciter::onMediaStateChanged(QMediaPlayer::State state)
     case QMediaPlayer::StoppedState:
         ui->btnPlayPause->setText("▶");
         ui->btnStop->setEnabled(false);
-        ui->btnReplayCurrentVerse->hide();
+        ui->btnReplayCurrentVerse->setEnabled(false);
         ui->lblDuration->hide();
         DVLOG(7) << "Player stopped";
         break;
@@ -521,4 +527,17 @@ void QuranReciter::onPositionChanged(qint64)
     if (!m_ok) return;
     ui->lblDuration->setText(datetime::formatMillisecondsAsDuration(m_mediaPlayer->position()) 
                              + " / " + datetime::formatMillisecondsAsDuration(m_mediaPlayer->duration()));
+}
+
+
+void QuranReciter::onControlsVisibilityToggled()
+{
+    if (!ui->cboChapter->isVisible() 
+        && !ui->spnVerseFrom->isVisible() 
+        && !ui->spnVerseTo->isVisible()
+        && !ui->spnVerse->isVisible()) {
+        resize(width(), 123);
+    } else {
+        resize(width(), 166);
+    }
 }

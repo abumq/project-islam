@@ -6,7 +6,8 @@
 class QuranReciter;
 class QuranReader;
 class Bookmark;
-class QDockWidget;
+class BookmarksBar;
+class QSplitter;
 
 namespace quran {
 class Chapter;
@@ -16,10 +17,10 @@ class AlQuran : public ExtensionBase
 {
     Q_OBJECT
     Q_INTERFACES(ExtensionBase)
-    Q_PLUGIN_METADATA(IID "ProjectIslam.Api.ExtensionBase.AlQuran.v0.1.0")
+    Q_PLUGIN_METADATA(IID "ProjectIslam.Api.ExtensionBase.AlQuran.v1.0.0")
 private:
-    static const unsigned int kMajorVersion = 0;
-    static const unsigned int kMinorVersion = 1;
+    static const unsigned int kMajorVersion = 1;
+    static const unsigned int kMinorVersion = 0;
     static const unsigned int kPatchVersion = 0;
     static const char* kAuthor;
     static const char* kName;
@@ -59,8 +60,8 @@ public slots:
 private:
     QuranReciter* m_reciter;
     QuranReader* m_reader;
-    //BookmarksBar* m_bookmarkBar;
-    QDockWidget* m_bookmarkBar;
+    QSplitter* m_splitter;
+    BookmarksBar* m_bookmarkBar;
 };
 
 #endif // AL_QURAN_H

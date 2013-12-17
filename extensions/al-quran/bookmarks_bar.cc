@@ -4,6 +4,7 @@
 #include <QMenu>
 #include <QAction>
 #include <QPushButton>
+#include <QLabel>
 #include <QInputDialog>
 #include <QSplitter>
 #include "core/logging/logging.h"
@@ -50,6 +51,7 @@ BookmarksBar::BookmarksBar(const QString& settingsKeyPrefix, QWidget *parent) :
     QObject::connect(m_addButton, SIGNAL(clicked()), this, SLOT(add()));
     QObject::connect(m_mergeButton, SIGNAL(clicked()), this, SLOT(merge()));
     
+    ui->gridLayout->addWidget(new QLabel("<b>Bookmarks</b>"), 0, 0, 1, 1);
     ui->gridLayout->addWidget(new QSplitter(this), 0, 0, 1, 1);
     ui->gridLayout->addWidget(m_mergeButton, 0, 1, 1, 1);
     ui->gridLayout->addWidget(m_addButton, 0, 3, 1, 1);

@@ -4,7 +4,7 @@ QT       += core gui widgets sql multimedia network
 
 unix:!win32 {
     ## Compiler
-    COMPILER = g++
+    COMPILER = icpc
 
     ## Standard
     QMAKE_CXXFLAGS += -std=c++0x
@@ -39,6 +39,3 @@ win32 {
     ## Temporary fix - need proper solution!
     INCLUDEPATH += "C:\\Users\\Majid\\Dropbox\\project-islam\\"
 }
-# libimf for Intel C++
-# TODO: export LD_LIBRARY_PATH
-# LIBS += -L/home/mkhan/intel/composer_xe_2013.5.192/compiler/lib/intel64/

@@ -81,6 +81,7 @@ private:
     QMediaPlayer* m_mediaPlayer;
     QMediaPlaylist* m_playList;
     bool m_hideDuration;
+    void onControlsVisibilityToggled();
 };
 
 #endif // QURAN_RECITER_H

@@ -59,8 +59,10 @@ QuranReciter::QuranReciter(quran::Quran* quran, QWidget *parent) :
             int v = settingsLoader.get(SettingsLoader::kSettingKeyRecitationVolume, QVariant(kDefaultVolume)).toInt(&volConvertedOk);
             m_mediaPlayer->setVolume(volConvertedOk ? v : kDefaultVolume);
             ui->volSlider->setValue(m_mediaPlayer->volume());
+            m_mediaPlayer->setObjectName("m_mediaPlayer");
             connect(ui->volSlider, SIGNAL(valueChanged(int)), this, SLOT(onVolumeChanged(int)));
             connect(ui->volSlider, SIGNAL(sliderMoved(int)), this, SLOT(onVolumeChanged(int)));
+            connect(m_mediaPlayer, SIGNAL(volumeChanged(int)), this, SLOT(onVolumeChanged(int)));
             ui->volSlider->setMaximum(100);
             
             on_cboChapter_currentIndexChanged(0);
@@ -429,6 +431,7 @@ void QuranReciter::onVolumeChanged(int v)
         SettingsLoader settingsLoader;
         settingsLoader.saveSettings(SettingsLoader::kSettingKeyRecitationVolume, QVariant(v));
     }
+    ui->volSlider->setValue(v);
 }
 
 void QuranReciter::on_chkRepeat_clicked(bool checked)

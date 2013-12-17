@@ -5,33 +5,47 @@
 #include "core/settings_loader.h"
 #include "core/utils/filesystem.h"
 
+class LoggerConfig {
+public:
+    LoggerConfig(const std::string& id, bool debug = true, bool trace = true) :
+        m_id(id), m_debugStr(debug ? "true" : "false"),
+        m_traceStr(trace ? "true" : "false"){
+        
+    }
+    const std::string& id() { return m_id; }
+    const std::string& debug() { return m_debugStr; }
+    const std::string& trace() { return m_traceStr; }
+private:
+    std::string m_id;
+    std::string m_debugStr;
+    std::string m_traceStr;
+};
+
 class LoggingConfigurer {
 public:
+    static void registerLoggers(std::vector<LoggerConfig>* cs) {
+        for (LoggerConfig c : *cs) {
+            el::Logger* logger = el::Loggers::getLogger(c.id());
+            logger->configurations()->set(el::Level::Debug, el::ConfigurationType::Enabled, c.debug());
+            logger->configurations()->set(el::Level::Trace, el::ConfigurationType::Enabled, c.trace());
+            logger->reconfigure();
+        }
+    }
+    
     static void configureLoggers() {
         
-        el::Logger* defaultLogger = el::Loggers::getLogger("default");
-        el::Logger* dataLogger = el::Loggers::getLogger("data");
-        el::Logger* updateManagerLogger = el::Loggers::getLogger("update_manager");
-        el::Logger* quranLogger = el::Loggers::getLogger("quran");
+        LoggerConfig configsArr[] = {
+            LoggerConfig("default"),
+            LoggerConfig("data"),
+            LoggerConfig("update_manager"),
+            LoggerConfig("quran")
+        };
+        
+        const int totalLoggerConfigs = sizeof(configsArr) / sizeof(configsArr[0]);
+        std::vector<LoggerConfig> configs(configsArr, configsArr + totalLoggerConfigs);
+        registerLoggers(&configs);
         
         el::Loggers::setDefaultConfigurations(baseConfiguration(), true);
-        
-        defaultLogger->configurations()->set(el::Level::Debug, el::ConfigurationType::Enabled, "true");
-        defaultLogger->configurations()->set(el::Level::Trace, el::ConfigurationType::Enabled, "true");
-        defaultLogger->reconfigure();
-        
-        dataLogger->configurations()->set(el::Level::Debug, el::ConfigurationType::Enabled, "true");
-        dataLogger->configurations()->set(el::Level::Trace, el::ConfigurationType::Enabled, "true");
-        dataLogger->reconfigure();
-        
-        updateManagerLogger->configurations()->set(el::Level::Debug, el::ConfigurationType::Enabled, "true");
-        updateManagerLogger->configurations()->set(el::Level::Trace, el::ConfigurationType::Enabled, "true");
-        updateManagerLogger->reconfigure();
-        
-        quranLogger->configurations()->set(el::Level::Debug, el::ConfigurationType::Enabled, "true");
-        quranLogger->configurations()->set(el::Level::Trace, el::ConfigurationType::Enabled, "true");
-        quranLogger->reconfigure();
-        
         el::Helpers::addFlag(el::LoggingFlag::StrictLogFileSizeCheck);
     }
     
@@ -40,8 +54,8 @@ public:
         el::Configurations configurations;
         configurations.setToDefault();
         std::string logFile = filesystem::buildFilename(QStringList() 
-                                                   << SettingsLoader().defaultHomeDir() 
-                                                   << "logs" << "project-islam.log").toStdString();
+                                                        << SettingsLoader().defaultHomeDir() 
+                                                        << "logs" << "project-islam.log").toStdString();
         configurations.set(el::Level::Global, el::ConfigurationType::Filename, logFile);
         configurations.set(el::Level::Trace, el::ConfigurationType::Format, "%datetime %level [%logger] %func %msg");
         configurations.set(el::Level::Debug, el::ConfigurationType::Format, "%datetime %level [%logger] [%func] %msg");

@@ -57,8 +57,7 @@ void MainWindow::initialize()
     }
     
 #if !defined(DISABLE_AUTO_UPDATE)
-    // TODO: Uncomment this - issues with VC++
-    // m_updateManager.initialize(m_app, m_extensionBar);
+    m_updateManager.initialize(m_app, m_extensionBar);
 #endif // DISABLE_AUTO_UPDATE
 
     setWindowState(Qt::WindowMaximized);

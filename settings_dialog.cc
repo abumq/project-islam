@@ -84,7 +84,7 @@ void SettingsDialog::loadSettingsInUi()
     ui->chkLevelDebug->setChecked(configurations->enabled(el::Level::Debug));
     ui->chkLevelVerbose->setChecked(configurations->enabled(el::Level::Verbose));
     
-    ui->spnMaxLogFileSize->setValue(configurations->maxLogFileSize(el::Level::Global));
+    ui->spnMaxLogFileSize->setValue(static_cast<int>(configurations->maxLogFileSize(el::Level::Global)));
     
     // --------------------- Tab: Quran
     // Originals

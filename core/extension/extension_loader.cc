@@ -26,8 +26,17 @@ void ExtensionLoader::loadAll(const QString& appPath, ExtensionBar* extensionBar
     _TRACE;
     LOG(INFO) << "Loading all the extensions. ExtensionBar [" << extensionBar << "]; application path: "
               << appPath;
-    
-    QDir extensionsDir(appPath + "/extensions/", "*.so", QDir::Name | QDir::IgnoreCase, QDir::Files);
+    QString libExtension;
+#if defined(Q_OS_WIN)
+    libExtension = "*.dll";
+#elif defined(Q_OS_LINUX)
+    libExtension = "*.so";
+#elif defined(Q_OS_MAC)
+    libExtension = "*.dylib";
+#else
+#   error Invalid OS detected
+#endif
+    QDir extensionsDir(appPath + "/extensions/", libExtension, QDir::Name | QDir::IgnoreCase, QDir::Files);
     
     for (QString extensionFilename : extensionsDir.entryList()) {
         QPluginLoader loader(extensionsDir.absoluteFilePath(extensionFilename));
@@ -44,13 +53,22 @@ void ExtensionLoader::loadAll(const QString& appPath, ExtensionBar* extensionBar
             LoggingConfigurer::configureLoggers();
             // Arguments
             QStringList arguments = m_app->arguments();
-            int argc = arguments.size();
+            const int argc = arguments.size();
+#if defined(_MSC_VER)
+            // We dynamically allocate because VC++ causes issue
+            const char** argv = (const char**)malloc(argc * sizeof(char*));
+#else
             const char* argv[argc];
+#endif // defined(_MSC_VER)
             for (int i = 0; i < argc; ++i) {
                 argv[i] = arguments.at(i).toStdString().c_str();
             }
             // initialize and add to extension bar
             extensionBase->initialize(argc, argv);
+#if defined(_MSC_VER)
+            for(int i = 0; i < argc; ++i)
+                delete[] argv[i];
+#endif // defined(_MSC_VER)
             extensionBar->addExtension(extensionBase->extension());
         } else {
             LOG(ERROR) << "Error occured while loading extension [" << loader.fileName() << "]: " << loader.errorString();

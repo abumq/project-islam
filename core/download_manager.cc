@@ -16,7 +16,6 @@ DownloadManager::~DownloadManager()
     _TRACE;
 }
 
-
 bool DownloadManager::downloadFile(const QString& url, const QString& filename)
 {
     _TRACE;

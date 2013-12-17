@@ -66,8 +66,6 @@ private slots:
     
     void on_txtJumpTo_returnPressed();
     
-    void on_btnMenu_toggled(bool checked);
-    
     void on_chkTafseer_clicked(bool checked);
     
 signals:

@@ -103,7 +103,8 @@ void QuranView::update(int from, int to)
 void QuranView::update(quran::Chapter* chapter, int from, int to)
 {
     _TRACE;
-    TIMED_FUNC(timer);
+    // FIXME: Following TIMED_FUNC macro threw an error with VC++ 2012
+    // TIMED_FUNC(timer);
     scene()->clear();
     
     // Either we highlight previously selected verse or if none is selected

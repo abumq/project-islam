@@ -5,6 +5,11 @@ DEFINES += _ELPP_NO_DEFAULT_LOG_FILE
 TARGET = project-islam
 TEMPLATE = app
 
+## Utils headers
+HEADERS += core/utils/memory.h \
+    core/utils/version.h \
+    core/utils/filesystem.h \
+    core/utils/datetime.h \
 
 HEADERS  += mainwindow.h \
     core/constants.h \
@@ -27,10 +32,6 @@ HEADERS  += mainwindow.h \
     core/data/database_manager.h \
     core/data/data_holder.h \
     core/download_manager.h \
-    core/utils/memory.h \
-    core/utils/version.h \    
-    core/utils/filesystem.h \
-    core/utils/datetime.h \
     core/update/update_manager.h
 
 SOURCES += main.cc\

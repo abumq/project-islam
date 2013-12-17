@@ -110,7 +110,7 @@ bool UpdateManager::update()
             QString currOs;
 #if defined(Q_OS_LINUX)
             currOs = "linux";
-#elif defined(Q_OS_WIN32) || defined(Q_OS_WIN64)
+#elif defined(Q_OS_WIN)
             currOs = "win";
 #elif defined(Q_OS_MAC)
             currOs = "mac";

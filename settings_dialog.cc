@@ -51,6 +51,7 @@ void SettingsDialog::accept()
     
     QMap<QString, QVariant> settingsMap;
     settingsMap.insert(SettingsLoader::kSettingKeyQuranTable, ui->cboQuranOriginals->itemData(ui->cboQuranOriginals->currentIndex()));
+    settingsMap.insert(SettingsLoader::kSettingKeyQuranTransliterationTable, ui->cboQuranTransliterations->itemData(ui->cboQuranTransliterations->currentIndex()));
     settingsMap.insert(SettingsLoader::kSettingKeyQuranTranslationTable, ui->cboQuranTranslations->itemData(ui->cboQuranTranslations->currentIndex()));
     settingsMap.insert(SettingsLoader::kSettingKeyQuranTafseerTable, ui->cboQuranTafseers->itemData(ui->cboQuranTafseers->currentIndex()));
     settingsMap.insert(SettingsLoader::kSettingKeyTheme, StyleLoader::rgb(m_mainWindow->styleLoader()->r(), 
@@ -104,7 +105,7 @@ void SettingsDialog::loadSettingsInUi()
         }
         ui->cboQuranOriginals->addItem(displayName, nameTable);
         if (SettingsLoader().get(SettingsLoader::kSettingKeyQuranTable, 
-                                 QString(quran::Quran::kQuranArabicDatabaseTable)) == nameTable) {
+                                 QString(quran::Quran::kQuranDefaultArabicDatabaseTable)) == nameTable) {
             selectedIndex = i;
         }
         ++i;
@@ -133,6 +134,29 @@ void SettingsDialog::loadSettingsInUi()
         ++i;
     }
     ui->cboQuranTranslations->setCurrentIndex(selectedIndex);
+    // Transliteration
+    result = dbManager.query(
+                QString("SELECT * FROM sqlite_master WHERE type='table' AND name like 'Quran%Transliteration%';"));
+    selectedIndex = 0;
+    i = 0;
+    for (QSqlRecord rec : result) {
+        QString nameTransliterationTable = rec.value(1).toString();
+        QString displayName = nameTransliterationTable;
+        displayName = displayName.mid(QString("Quran__").length());
+        displayName.replace("_", " ");
+        int index = ui->cboQuranTranslations->findText(displayName);
+        if (index != -1) {
+            // No duplication!
+            continue;
+        }
+        ui->cboQuranTransliterations->addItem(displayName, nameTransliterationTable);
+        if (SettingsLoader().get(SettingsLoader::kSettingKeyQuranTransliterationTable, 
+                                 QString(quran::Quran::kQuranDefaultTransliterationDatabaseTable)) == nameTransliterationTable) {
+            selectedIndex = i;
+        }
+        ++i;
+    }
+    ui->cboQuranTransliterations->setCurrentIndex(selectedIndex);
     // Tafseer
     result = dbManager.query(
                 QString("SELECT * FROM sqlite_master WHERE type='table' AND name like 'Quran%Tafseer%';"));

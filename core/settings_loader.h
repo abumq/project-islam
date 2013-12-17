@@ -19,6 +19,7 @@ public:
     static const QString kSettingKeyTheme;
     static const QString kSettingKeyQuranTable;
     static const QString kSettingKeyQuranTranslationTable;
+    static const QString kSettingKeyQuranTransliterationTable;
     static const QString kSettingKeyQuranTafseerTable;
     static const QString kSettingKeyRecitationVolume;
     static const QString kSettingKeyDatabaseHost;

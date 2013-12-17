@@ -39,13 +39,15 @@ void DataHolder::initialize()
 {
     quranArabic()->load(quran::Quran::TextType::Original, 
                         SettingsLoader().get(QString(SettingsLoader::kSettingKeyQuranTable), 
-                                             QString(quran::Quran::kQuranArabicDatabaseTable)).toString().toStdString());
+                                             QString(quran::Quran::kQuranDefaultArabicDatabaseTable)).toString().toStdString());
     
     quranTranslation()->load(quran::Quran::TextType::Translation, 
                              SettingsLoader().get(QString(SettingsLoader::kSettingKeyQuranTranslationTable), 
                                                   QString(quran::Quran::kQuranDefaultTranslationDatabaseTable)).toString().toStdString());
     
-    quranTransliteration()->load(quran::Quran::TextType::Transliteration, quran::Quran::kQuranTransliterationDatabaseTable);
+    quranTransliteration()->load(quran::Quran::TextType::Transliteration, 
+                                 SettingsLoader().get(QString(SettingsLoader::kSettingKeyQuranTransliterationTable), 
+                                                      QString(quran::Quran::kQuranDefaultTransliterationDatabaseTable)).toString().toStdString());
     quranTafseer()->load(quran::Quran::TextType::Tafseer, 
                          SettingsLoader().get(QString(SettingsLoader::kSettingKeyQuranTafseerTable), 
                                               QString(quran::Quran::kQuranDefaultTafseerDatabaseTable)).toString().toStdString());

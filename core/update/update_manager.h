@@ -17,6 +17,8 @@ class UpdateManager : public DownloadManager
     static const qint64 kCheckIntervalInMs = 7200000; // Every 3 hours
     static const char* kServerUrlBase;
     static const char* kVersionInfoFilename;
+    static const char* kRemoteFilesSuffix;
+    static const char* kLocalFilesSuffix;
 public:
     explicit UpdateManager(QObject* parent = 0);
     virtual ~UpdateManager();

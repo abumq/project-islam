@@ -30,6 +30,9 @@
 const char* UpdateManager::kServerUrlBase = "http://www.icplusplus.com";
 const char* UpdateManager::kVersionInfoFilename = "tools/project-islam/vinfo.txt";
 
+const char* UpdateManager::kRemoteFilesSuffix = ".zip";
+const char* UpdateManager::kLocalFilesSuffix = ".upgrade";
+
 UpdateManager::UpdateManager(QObject *parent) :
     DownloadManager(parent)
 {
@@ -157,7 +160,7 @@ bool UpdateManager::updatePlatform(QJsonObject* jsonObject)
         for (QString filename : filesList) {
             
             QString targetDir = filesystem::buildPath(QStringList() << m_app->applicationDirPath());
-            QString tempFilename = targetDir + filename + ".upgrade";
+            QString tempFilename = targetDir + filename + QString(kLocalFilesSuffix);
             LOG(INFO) << "Downloading platform file [" 
                       << filename << "] from [" + baseUrl + "] to [" << targetDir << "]";
             result = downloadFile(baseUrl + filename, tempFilename) && result;
@@ -165,10 +168,10 @@ bool UpdateManager::updatePlatform(QJsonObject* jsonObject)
         if (result) {
             for (QString filename : filesList) {
                 QString downloadedFilename = filesystem::buildFilename(
-                            QStringList() << m_app->applicationDirPath() << filename + ".upgrade");
-                QString currFilename = downloadedFilename.mid(0, 
-                                                              downloadedFilename.length() - 
-                                                              QString(".zip.upgrade").length());
+                            QStringList() << m_app->applicationDirPath() << filename + QString(kLocalFilesSuffix));
+                const int kExtraSuffix = (QString(kRemoteFilesSuffix) + QString(kLocalFilesSuffix)).length();
+                QString currFilename = downloadedFilename.mid(
+                            0,  downloadedFilename.length() - kExtraSuffix);
                 
                 QFile currFile(currFilename);
                 QFile::Permissions perms;
@@ -208,7 +211,7 @@ bool UpdateManager::updateDatabase(QJsonObject* jsonObject)
         QStringList filesList = databaseObj["files"].toString().split(',');
         for (QString filename : filesList) {
             QString targetDir = filesystem::buildPath(QStringList() << SettingsLoader().defaultHomeDir() << "data");
-            QString tempFilename = targetDir + filename + ".upgrade";
+            QString tempFilename = targetDir + filename + QString(kLocalFilesSuffix);
             LOG(INFO) << "Downloading database file [" 
                       << filename << "] from [" + baseUrl + "] to [" << targetDir << "]";
             result = downloadFile(baseUrl + filename, tempFilename) && result;
@@ -252,8 +255,8 @@ bool UpdateManager::updateExtensions(QJsonObject* jsonObject)
                 QStringList filesList = extensionobj["files"].toString().split(',');
                 for (QString filename : filesList) {
                     QString targetDir = filesystem::buildPath(QStringList() 
-                                                         << m_app->applicationDirPath() << "extensions");
-                    QString tempFilename = targetDir + filename + ".upgrade";
+                                                              << m_app->applicationDirPath() << "extensions");
+                    QString tempFilename = targetDir + filename + QString(kLocalFilesSuffix);
                     LOG(INFO) << "Downloading extension file [" 
                               << filename << "] from [" + baseUrl + "] to [" << targetDir << "]";
                     result = downloadFile(baseUrl + filename, tempFilename) && result;
@@ -265,12 +268,15 @@ bool UpdateManager::updateExtensions(QJsonObject* jsonObject)
                             file.close();
                         }
                     } else {
-                        // Extension ready to be upgrade! Filename: file.zip.upgrade
+                        // Extension ready to be upgrade! Filename: file.remotesuffix.localsuffix
                         for (QString filename : filesList) {
                             QString downloadedFilename = filesystem::buildFilename(
-                                        QStringList() << m_app->applicationDirPath() << "extensions" << filename + ".upgrade");
-                            QString currFilename = downloadedFilename.mid(0, 
-                                                                          downloadedFilename.length() - QString(".zip.upgrade").length());
+                                        QStringList() << m_app->applicationDirPath() << "extensions" 
+                                        << filename + QString(kLocalFilesSuffix));
+                            const int kExtraSuffix = (QString(kRemoteFilesSuffix) + QString(kLocalFilesSuffix)).length();
+                            QString currFilename = downloadedFilename.mid(
+                                        0, 
+                                        downloadedFilename.length() - kExtraSuffix);
                             
                             QFile currFile(currFilename);
                             QFile::Permissions perms;

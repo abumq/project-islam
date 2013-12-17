@@ -13,9 +13,9 @@
 
 namespace quran {
 
-const char* Quran::kQuranArabicDatabaseTable = "Quran__Arabic_Original_Uthmani";
+const char* Quran::kQuranDefaultArabicDatabaseTable = "Quran__Arabic_Original_Uthmani";
 const char* Quran::kQuranChapterDatabaseTable = "QuranChapter";
-const char* Quran::kQuranTransliterationDatabaseTable = "Quran__English_Transliteration";
+const char* Quran::kQuranDefaultTransliterationDatabaseTable = "Quran__English_Transliteration";
 const char* Quran::kQuranDefaultTranslationDatabaseTable = "Quran__English_Translation_Sahih_International";
 const char* Quran::kQuranDefaultTafseerDatabaseTable = "Quran__Arabic_Tafseer_Muyassar";
 

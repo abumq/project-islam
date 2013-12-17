@@ -11,9 +11,9 @@ namespace quran {
 class Quran {
 public:
     static const int kChapterCount = 114;
-    static const char* kQuranArabicDatabaseTable;
+    static const char* kQuranDefaultArabicDatabaseTable;
     static const char* kQuranChapterDatabaseTable;
-    static const char* kQuranTransliterationDatabaseTable;
+    static const char* kQuranDefaultTransliterationDatabaseTable;
     static const char* kQuranDefaultTranslationDatabaseTable;
     static const char* kQuranDefaultTafseerDatabaseTable;
     

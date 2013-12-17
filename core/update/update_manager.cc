@@ -119,7 +119,10 @@ bool UpdateManager::update()
             if (osObj["available"].toBool()) {
                 result = updatePlatform(&osObj);
                 // Following order should not change since we want to 
-                // try to update both platform and extensions before we return
+                // try to update all platform, database and extensions before we return
+                //
+                // TODO: Or do we? What if we have critical database change
+                //       that will not work without platform updated
                 result = updateDatabase(&osObj) && result;
                 result = updateExtensions(&osObj) && result;
             } else {

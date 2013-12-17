@@ -38,6 +38,7 @@ void Quran::load(const Quran::TextType &textType, const std::string& databaseTab
         std::wstring arabicScriptName = result.at(i).value("ArabicScriptName").toString().toStdWString();
         std::wstring arabicName = result.at(i).value("ArabicName").toString().toStdWString();
         std::wstring englishName = result.at(i).value("EnglishName").toString().toStdWString();
+        int revelationOrder = result.at(i).value("RevelationOrder").toInt();
         int rukuhCount = result.at(i).value("RukuhCount").toInt();
         int versesCount = result.at(i).value("VersesCount").toInt();
         int sajdahCount = result.at(i).value("SajdahCount").toInt();
@@ -47,7 +48,7 @@ void Quran::load(const Quran::TextType &textType, const std::string& databaseTab
             positions.push_back(posList.at(j).toInt());
         std::wstring muqattaat = result.at(i).value("Muqattaat").toString().toStdWString();
         quran::Chapter chapter(classification, name, std::move(arabicScriptName), 
-                               std::move(arabicName), std::move(englishName), rukuhCount, versesCount, sajdahCount, std::move(positions), std::move(muqattaat));
+                               std::move(arabicName), std::move(englishName), revelationOrder, rukuhCount, versesCount, sajdahCount, std::move(positions), std::move(muqattaat));
         m_chapters.insert(std::make_pair(cid, std::move(chapter)));
         quran::Chapter* chapterPtr = &m_chapters.at(cid);
         QVariantMap args;

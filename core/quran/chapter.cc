@@ -12,11 +12,12 @@
 namespace quran {
 
 Chapter::Chapter(Classification classification, Name name, std::wstring&& arabicScriptName, 
-                 std::wstring&& arabicName, std::wstring&& englishName, int rukuhCount, int versesCount, 
+                 std::wstring&& arabicName, std::wstring&& englishName, int revelationOrder, int rukuhCount, int versesCount, 
                  int sajdahCount, std::vector<int>&& positions, std::wstring&& muqattaat) : 
     m_classification(classification), m_name(name), m_arabicScriptName(std::move(arabicScriptName)), 
-    m_arabicName(std::move(arabicName)), m_englishName(std::move(englishName)), m_rukuhCount(rukuhCount), 
-    m_versesCount(versesCount), m_sajdahCount(sajdahCount), m_positions(std::move(positions)), m_muqattaat(std::move(muqattaat)) 
+    m_arabicName(std::move(arabicName)), m_englishName(std::move(englishName)), m_revelationOrder(revelationOrder), 
+    m_rukuhCount(rukuhCount), m_versesCount(versesCount), m_sajdahCount(sajdahCount), m_positions(std::move(positions)), 
+    m_muqattaat(std::move(muqattaat)) 
 {
     
 }

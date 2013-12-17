@@ -131,7 +131,7 @@ public:
     };
     
     Chapter(Chapter::Classification classification, Chapter::Name name, std::wstring&& arabicScriptName, 
-            std::wstring&& arabicName, std::wstring&& englishName, int rukuhCount, int versesCount, 
+            std::wstring&& arabicName, std::wstring&& englishName, int revelationOrder, int rukuhCount, int versesCount, 
             int sajdahCount, std::vector<int>&& positions, std::wstring&& muqattaat);
     
     std::wostream& operator<<(std::wostream& os) const;
@@ -142,6 +142,7 @@ public:
     const std::wstring& arabicName(void) const;
     const std::wstring& englishName(void) const;
     const std::wstring& pronounciation(void) const;
+    int revelationOrder(void) const;
     int rukuhCount(void) const;
     int versesCount(void) const;
     int sajdahCount(void) const;
@@ -157,6 +158,7 @@ private:
     std::wstring m_arabicName;
     std::wstring m_englishName;
     std::wstring m_pronounciation;
+    int m_revelationOrder;
     int m_rukuhCount;
     int m_versesCount;
     int m_sajdahCount;

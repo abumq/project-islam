@@ -68,6 +68,7 @@ bool AbstractExtension::isDefault() const
 
 void AbstractExtension::setIsDefault(bool value)
 {
+    _TRACE;
     m_isDefault = value;
 }
 
@@ -78,6 +79,7 @@ QString AbstractExtension::htmlFormattedDescription() const
 
 void AbstractExtension::setExtensionItem(ExtensionItem *extensionItem)
 {
+    _TRACE;
     m_extensionItem = extensionItem;
     if (extensionItem != nullptr) {
         m_titleLabel->setText("<h1><img src='" + extensionItem->icon() + "'/>" + info()->title() + "</h1>");
@@ -124,11 +126,13 @@ void AbstractExtension::update()
 
 QWidget* AbstractExtension::container()
 {
+    _TRACE;
     return m_container;
 }
 
 void AbstractExtension::setContainer(QWidget *parent)
 {
+    _TRACE;
     QWidget::setParent(parent);
     m_parent = parent;
     if (m_parent != nullptr) {
@@ -138,6 +142,7 @@ void AbstractExtension::setContainer(QWidget *parent)
 
 void AbstractExtension::activate()
 {
+    _TRACE;
     m_extensionItem->select();
     show();
     m_extensionItem->extensionBar()->setCurrentExtension(this);
@@ -147,6 +152,7 @@ void AbstractExtension::activate()
 
 void AbstractExtension::deactivate()
 {
+    _TRACE;
     m_extensionItem->deselect();
     hide();
     m_extensionItem->extensionBar()->setCurrentExtension(nullptr);
@@ -177,6 +183,7 @@ QMenu *AbstractExtension::menu() const
 
 void AbstractExtension::setSettingsLoader(SettingsLoader* settingsLoader)
 {
+    _TRACE;
     m_settingsLoader = settingsLoader;
 }
 
@@ -187,6 +194,7 @@ SettingsLoader*AbstractExtension::settingsLoader() const
 
 void AbstractExtension::buildHtmlFormattedDescription()
 {
+    _TRACE;
     if (info()->description().isEmpty()) {
         if (info()->title() != info()->name()) {
             m_htmlFormattedDescription.append("<b>" + info()->title() + "</b>");

@@ -42,7 +42,8 @@ void SettingsLoader::saveSettings(QMap<QString, QVariant>* map) const
 {
     _TRACE;
     if (m_settings == nullptr || !m_settings->isWritable()) {
-        LOG(ERROR) << "Settings are not writable [" << m_settings->status() << "]";
+        LOG(ERROR) << "Settings are not writable ["
+                   << m_settings << "]";
     } else {
         LOG(INFO) << "Saving settings to [" << m_settingsFile << "]";
         for (QString setting : map->keys()) {
@@ -82,7 +83,7 @@ void SettingsLoader::changeSettingsFile(const QString &filename)
         QFile f(m_settingsFile);
         f.open(QFile::ReadWrite);
         if (!f.isOpen()) {
-            LOG(ERROR) << "Cannot create file [" << m_settingsFile << "]";
+            LOG(ERROR) << "Cannot create file [" << m_settingsFile << "]: " << f.errorString();
         } else {
             okToAlloc = true;
         }

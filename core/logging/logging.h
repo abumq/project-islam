@@ -26,6 +26,7 @@ public:
     static void registerLoggers(std::vector<LoggerConfig>* cs) {
         for (LoggerConfig c : *cs) {
             el::Logger* logger = el::Loggers::getLogger(c.id());
+            CHECK(logger != nullptr) << "Could not register logger [" << c.id() << "]";
             logger->configurations()->set(el::Level::Debug, el::ConfigurationType::Enabled, c.debug());
             logger->configurations()->set(el::Level::Trace, el::ConfigurationType::Enabled, c.trace());
             logger->reconfigure();
@@ -43,6 +44,7 @@ public:
         
         const int totalLoggerConfigs = sizeof(configsArr) / sizeof(configsArr[0]);
         std::vector<LoggerConfig> configs(configsArr, configsArr + totalLoggerConfigs);
+        CHECK(!configs.empty()) << "We do not expect configs to be empty!";
         registerLoggers(&configs);
         
         el::Loggers::setDefaultConfigurations(baseConfiguration(), true);

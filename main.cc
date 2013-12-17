@@ -20,15 +20,16 @@ const char* kExtraFiles[kExtraFilesCount] = {
 
 int main(int argc, char *argv[])
 {
+    LoggingConfigurer::configureLoggers();
+    _TRACE;
+
     Q_INIT_RESOURCE(styles);
     Q_INIT_RESOURCE(icons);
     
     QApplication a(argc, argv);
 
     _START_EASYLOGGINGPP(argc, argv);
-    
-    LoggingConfigurer::configureLoggers();
-    
+
     a.setApplicationName("Project Islam Platform");
     a.setApplicationVersion(version::versionString());
     a.setApplicationDisplayName("Project Islam Platform");

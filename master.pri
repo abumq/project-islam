@@ -7,7 +7,7 @@ unix:!win32 {
     COMPILER = g++
 
     ## Standard
-    QMAKE_CXXFLAGS += -std=c++11
+    QMAKE_CXXFLAGS += -std=c++0x
 
     ## Warning suppressions
     QMAKE_CXXFLAGS += -Wno-sign-compare

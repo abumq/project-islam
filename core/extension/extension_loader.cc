@@ -41,10 +41,10 @@ void ExtensionLoader::loadAll(const QString& appPath, ExtensionBar* extensionBar
     for (QString extensionFilename : extensionsDir.entryList()) {
         QPluginLoader loader(extensionsDir.absoluteFilePath(extensionFilename));
         ExtensionBase* extensionBase = qobject_cast<ExtensionBase*>(loader.instance());
-        if (extensionBase != nullptr) {
+        if (extensionBase != nullptr && extensionBase->extension() != nullptr) {
             
             extensionBase->extension()->setDataHolder(m_dataHolder);
-            extensionBase->extension()->setParent(extensionBar->container());
+            extensionBase->extension()->setContainer(extensionBar->container());
             extensionBase->extension()->setSettingsLoader(m_settingsLoader);
             
             QAction* helpMenu = m_menuBar->actions().at(m_menuBar->actions().size() - 1);

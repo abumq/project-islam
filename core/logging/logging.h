@@ -5,6 +5,11 @@
 #include "core/settings_loader.h"
 #include "core/utils/filesystem.h"
 
+#if 0
+#undef _TRACE;
+#define _TRACE (void)0
+#endif // 0 / 1
+
 class LoggerConfig {
 public:
     LoggerConfig(const std::string& id, bool debug = true, bool trace = true) :
@@ -26,25 +31,25 @@ public:
     static void registerLoggers(std::vector<LoggerConfig>* cs) {
         for (LoggerConfig c : *cs) {
             el::Logger* logger = el::Loggers::getLogger(c.id());
-            logger->configurations()->set(el::Level::Debug, el::ConfigurationType::Enabled, c.debug());
+            CHECK(logger != nullptr) << "Could not register logger [" << c.id() << "]";
+            // FIXME: Uncomment following lines - VC++ has issues!
+            /*logger->configurations()->set(el::Level::Debug, el::ConfigurationType::Enabled, c.debug());
             logger->configurations()->set(el::Level::Trace, el::ConfigurationType::Enabled, c.trace());
-            logger->reconfigure();
+            logger->reconfigure();*/
         }
     }
     
     static void configureLoggers() {
-        
         LoggerConfig configsArr[] = {
             LoggerConfig("default"),
             LoggerConfig("data"),
             LoggerConfig("update_manager"),
             LoggerConfig("quran")
         };
-        
         const int totalLoggerConfigs = sizeof(configsArr) / sizeof(configsArr[0]);
         std::vector<LoggerConfig> configs(configsArr, configsArr + totalLoggerConfigs);
+        CHECK(!configs.empty()) << "We do not expect configs to be empty!";
         registerLoggers(&configs);
-        
         el::Loggers::setDefaultConfigurations(baseConfiguration(), true);
         el::Helpers::addFlag(el::LoggingFlag::StrictLogFileSizeCheck);
     }

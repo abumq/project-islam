@@ -23,7 +23,7 @@
     </rect>
    </property>
    <property name="title">
-    <string>Quran Data - &gt; SQL File</string>
+    <string>Quran Data → SQL File</string>
    </property>
    <layout class="QGridLayout" name="gridLayout">
     <item row="2" column="0">

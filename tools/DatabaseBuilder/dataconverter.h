@@ -15,6 +15,10 @@ public:
         
     }
     
+    bool operator==(const std::string& tableName) {
+        return this->tableName == tableName;
+    }
+
     std::string baseInfoFilename;
     std::string tableName;
     std::string dataFilename;

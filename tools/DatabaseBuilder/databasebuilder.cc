@@ -3,6 +3,7 @@
 #include <QFileDialog>
 #include <QMessageBox>
 #include <QTreeWidgetItem>
+#include <easylogging++.h>
 #include "dataconverter.h"
 #include "databuilder.h"
 
@@ -11,8 +12,8 @@ DatabaseBuilder::DatabaseBuilder(QWidget *parent) :
     ui(new Ui::DatabaseBuilder)
 {
     ui->setupUi(this);
-    //on_btnReset_clicked();
-    //on_btnReset_2_clicked();
+    on_btnReset_clicked();
+    on_btnReset_2_clicked();
 }
 
 DatabaseBuilder::~DatabaseBuilder()
@@ -50,6 +51,17 @@ void DatabaseBuilder::on_pushButton_clicked()
         QMessageBox::critical(this, tr("Field required"), tr("All fields are required"));
         return;
     }
+    if (m_convertDataList.empty() || 
+        (!ui->txtTableName->text().isEmpty() 
+         && std::find(m_convertDataList.begin(), m_convertDataList.end(), ui->txtTableName->text().toStdString()) 
+         == m_convertDataList.end())) {
+        LOG(WARNING) << "Forcing to add table [" << ui->txtTableName->text() << "]";
+        on_btnAdd_2_clicked();
+    }
+    if (m_convertDataList.empty()) {
+        QMessageBox::warning(this, tr("Invalid data"), "No data found to convert - Please valid select data first!");
+        return;
+    }
     ui->txtDataFile->setEnabled(false);
     ui->txtRukuhSajdahFile->setEnabled(false);
     ui->txtTableName->setEnabled(false);
@@ -62,9 +74,7 @@ void DatabaseBuilder::on_pushButton_clicked()
     ui->txtRukuhSajdahFile->setEnabled(true);
     ui->txtTableName->setEnabled(true);
     ui->txtOutputFile->setEnabled(true);
-    QMessageBox msg;
-    msg.setText("Successfully converted!");
-    msg.exec();
+    QMessageBox::information(this, tr("Success"), "Successfully converted!");
 }
 
 void DatabaseBuilder::on_btnBrowse4_clicked()
@@ -104,9 +114,7 @@ void DatabaseBuilder::on_btnBuild_clicked()
     db.build(m_sqlFiles);
     ui->txtSqFilename->setEnabled(true);
     ui->txtSqliteFilename->setEnabled(true);
-    QMessageBox msg;
-    msg.setText("Successfully built!");
-    msg.exec();
+    QMessageBox::information(this, tr("Success"), "Successfully built!");
 }
 
 void DatabaseBuilder::on_btnReset_clicked()
@@ -145,7 +153,7 @@ void DatabaseBuilder::on_pushButton_3_clicked()
 void DatabaseBuilder::on_btnAdd_2_clicked()
 {
     ConvertData cd(ui->txtRukuhSajdahFile->text().toStdString(), ui->txtTableName->text().toStdString(),
-        ui->txtDataFile->text().toStdString(), ui->txtOutputFile->text().toStdString());
+                   ui->txtDataFile->text().toStdString(), ui->txtOutputFile->text().toStdString());
     m_convertDataList.push_back(cd);
     QTreeWidgetItem* item = new QTreeWidgetItem(ui->treeWidget);
     item->setText(0, QString(cd.tableName.c_str()));

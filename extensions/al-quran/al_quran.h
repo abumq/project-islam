@@ -1,4 +1,4 @@
-#ifndef AL_QURAN_H
+﻿#ifndef AL_QURAN_H
 #define AL_QURAN_H
 
 #include "core/extension/extension_base.h"
@@ -61,7 +61,10 @@ private:
     QuranReciter* m_reciter;
     QuranReader* m_reader;
     QSplitter* m_splitter;
+    QWidget* m_rightBar;
     BookmarksBar* m_bookmarkBar;
+    
+    void rightBarVisibilityToggle();
 };
 
 #endif // AL_QURAN_H

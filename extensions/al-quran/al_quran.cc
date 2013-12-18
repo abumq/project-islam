@@ -2,9 +2,9 @@
 
 #include <QLabel>
 #include <QAction>
-#include <QDockWidget>
 #include <QApplication>
 #include <QSplitter>
+#include <QGridLayout>
 #include "bookmarks_bar.h"
 #include "core/controls/quran_reciter.h"
 #include "core/controls/quran_reader.h"
@@ -18,7 +18,7 @@ const char* AlQuran::kDescription  = "Al-Qur'an recitation, reading and help mem
 
 AlQuran::AlQuran()
 {
-    memory::turnToNullPtr(m_reciter, m_reader, m_bookmarkBar, m_splitter);
+    memory::turnToNullPtr(m_reciter, m_reader, m_bookmarkBar, m_splitter, m_rightBar);
     setExtensionInfo(ExtensionInfo(kMajorVersion, kMinorVersion, kPatchVersion, 
                                    QString(kAuthor), QString(kName), 
                                    QString(kTitle), QString(kDescription)));
@@ -39,7 +39,7 @@ bool AlQuran::initialize(int argc, const char** argv)
     
     // Do not trace location before calling parent's initialize
     _TRACE;
-    memory::deleteAll(m_reciter, m_reader, m_bookmarkBar, m_splitter);
+    memory::deleteAll(m_reciter, m_reader, m_bookmarkBar, m_splitter, m_rightBar);
     m_splitter = new QSplitter(container());
     m_splitter->setOrientation(Qt::Horizontal);
     m_reciter = new QuranReciter(data()->quranArabic(), container());
@@ -58,9 +58,12 @@ bool AlQuran::initialize(int argc, const char** argv)
     QObject::connect(m_reader, SIGNAL(tafseerToggled(bool)), this, SLOT(onToggledTafseer(bool)));
     QObject::connect(m_reciter, SIGNAL(currentVerseChanged(int)), this, SLOT(onSelectedVerseChangedReciter(int)));
     QObject::connect(m_reader, SIGNAL(jumpToTextChanged(QString)), this, SLOT(onJumpToTextChanged(QString)));
+    m_rightBar = new QWidget(m_splitter);
+    QGridLayout* rightBarLayout = new QGridLayout(m_rightBar);
     // Bookmarks bar
-    m_bookmarkBar = new BookmarksBar(settingsKeyPrefix(), m_splitter);
+    m_bookmarkBar = new BookmarksBar(settingsKeyPrefix());
     QObject::connect(m_bookmarkBar, SIGNAL(selectionChanged(Bookmark*)), this, SLOT(onBookmarkChanged(Bookmark*)));
+    rightBarLayout->addWidget(m_bookmarkBar);
     
     initializeMenu();
     
@@ -260,8 +263,9 @@ void AlQuran::toggleBookmarkBar(bool val)
 {
     _TRACE;
     m_bookmarkBar->setVisible(val);
-    onContainerGeometryChanged(extension()->containerWidth(), extension()->containerHeight());
     saveSetting("show_bookmarks", QVariant(val));
+    rightBarVisibilityToggle();
+    onContainerGeometryChanged(extension()->containerWidth(), extension()->containerHeight());
 }
 
 void AlQuran::onToggledTranslation(bool val)
@@ -280,4 +284,12 @@ void AlQuran::onToggledTafseer(bool val)
 {
     _TRACE;
     saveSetting("load_tafseer", QVariant(val));
+}
+
+void AlQuran::rightBarVisibilityToggle()
+{
+    _TRACE;
+    // FIXME: This does not work in linux!
+    //bool show = m_bookmarkBar->isVisible() /* || .. || */;
+    //m_rightBar->setVisible(show);
 }

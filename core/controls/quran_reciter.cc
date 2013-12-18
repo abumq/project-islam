@@ -146,6 +146,8 @@ void QuranReciter::showCurrentVerseSelector()
 
 void QuranReciter::loadReciters()
 {
+    // TODO: 1.1 Add support to load reciters (keep chapter-by-chapter in mind) from remote server
+    // TODO: 2.1 Add support to load reciters chapter-by-chapter
     ui->cboReciter->clear();
     // Reciters
     const QString noReciterAvailableText = " -- NO RECITER AVAILABLE -- ";
@@ -334,7 +336,9 @@ void QuranReciter::on_cboChapter_currentIndexChanged(int index)
     } else {
         for (QString chapterFolder : entries) {
             DVLOG(8) << "Loading chapter [" << chapterFolder << "]";
-            QDir chapterDir(m_currentRecitationDir.absolutePath() + QDir::separator() + chapterFolder, "*.mp3", 
+            QDir chapterDir(filesystem::buildPath(QStringList() 
+                                                  << m_currentRecitationDir.absolutePath()
+                                                  << chapterFolder), "*.mp3", 
                             QDir::Name | QDir::IgnoreCase, 
                             QDir::Files | QDir::NoDotAndDotDot);
             QStringList verseEntries = chapterDir.entryList();
@@ -351,7 +355,12 @@ void QuranReciter::on_cboChapter_currentIndexChanged(int index)
                         // we added it already
                         continue;
                     }
-                    QString fullVersePath = recitationFolder + chapterFolder + QDir::separator() + verseEntry;
+                    // TODO: 1.2 we will need to update this to load media accordingly
+                    // TODO: 2.2. This will not be verse entry anymore, it's chapter entry
+                    QString fullVersePath = filesystem::buildFilename(QStringList() 
+                                                                      << recitationFolder
+                                                                      << chapterFolder
+                                                                      << verseEntry);
                     QFileInfo fileInfo(fullVersePath);
                     QUrl url = QUrl::fromLocalFile(fileInfo.absoluteFilePath());
                     m_playList->addMedia(url);
@@ -426,6 +435,9 @@ void QuranReciter::onVerseChanged(int)
     }
     DVLOG(7) << "Reciting verse [" << static_cast<int>(m_currentChapter->name()) << ":" << m_playList->currentIndex() << "]";
     if (m_playList->currentIndex() > 0) {
+    
+        // TODO: 2.3. we will need to take this into consideration
+        //          as we should not be emitting this signal anymore because verse not changed anymore!
         emit currentVerseChanged(m_playList->currentIndex());
         ui->spnVerse->setValue(m_playList->currentIndex());
     }

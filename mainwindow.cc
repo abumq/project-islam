@@ -70,8 +70,7 @@ void MainWindow::initialize()
 
 void MainWindow::reloadStyles()
 {
-    // FIXME: Timed block dont work on VC++ for some odd reason!
-    //TIMED_BLOCK(timer, "reloadStyles");
+    TIMED_FUNC(timer);
     m_extensionBar->setStyleSheet(m_styleLoader.load(StyleLoader::StyleType::ExtensionBar));
     m_container->setStyleSheet(m_styleLoader.load(StyleLoader::StyleType::Extension));
     setStyleSheet(m_styleLoader.load(StyleLoader::StyleType::Menu));

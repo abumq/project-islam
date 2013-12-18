@@ -70,22 +70,21 @@ void SettingsDialog::loadSettingsInUi()
     // -------------------- Tab: Logging ------------------------
     
     // All loggers
-    // TODO: Get it using defaultConfigurations() when it's available from Easylogging++
-    el::base::TypedConfigurations* configurations = el::Loggers::getLogger("default")->typedConfigurations();
+    el::base::TypedConfigurations configurations = 
+            el::Loggers::defaultTypedConfigurations();
     
-    std::string filename = configurations->filename(el::Level::Global);
+    std::string filename = configurations.filename(el::Level::Global);
     ui->txtLogFile->setText(QString(filename.c_str()));
-    ui->chkLevelGlobal->setChecked(configurations->enabled(el::Level::Global));
+    ui->chkLevelGlobal->setChecked(configurations.enabled(el::Level::Global));
     on_chkLevelGlobal_clicked(ui->chkLevelGlobal->isChecked());
-    ui->chkLevelInfo->setChecked(configurations->enabled(el::Level::Info));
-    ui->chkLevelWarning->setChecked(configurations->enabled(el::Level::Warning));
-    ui->chkLevelError->setChecked(configurations->enabled(el::Level::Error));
-    ui->chkLevelFatal->setChecked(configurations->enabled(el::Level::Fatal));
-    ui->chkLevelDebug->setChecked(configurations->enabled(el::Level::Debug));
-    ui->chkLevelVerbose->setChecked(configurations->enabled(el::Level::Verbose));
+    ui->chkLevelInfo->setChecked(configurations.enabled(el::Level::Info));
+    ui->chkLevelWarning->setChecked(configurations.enabled(el::Level::Warning));
+    ui->chkLevelError->setChecked(configurations.enabled(el::Level::Error));
+    ui->chkLevelFatal->setChecked(configurations.enabled(el::Level::Fatal));
+    ui->chkLevelDebug->setChecked(configurations.enabled(el::Level::Debug));
+    ui->chkLevelVerbose->setChecked(configurations.enabled(el::Level::Verbose));
     
-    ui->spnMaxLogFileSize->setValue(static_cast<int>(configurations->maxLogFileSize(el::Level::Global)));
-    
+    ui->spnMaxLogFileSize->setValue(static_cast<int>(configurations.maxLogFileSize(el::Level::Global)));
     // --------------------- Tab: Quran
     // Originals
     data::DatabaseManager dbManager;

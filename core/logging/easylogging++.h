@@ -1,5 +1,5 @@
 //
-//  Easylogging++ v9.39
+//  Easylogging++ v9.41
 //  Single-header only, cross-platform logging library for C++ applications
 //
 //  Copyright (c) 2013 Majid Khan
@@ -1752,7 +1752,7 @@ class AbstractRegistry : public base::threading::ThreadSafe {
 
 /// @brief A pointer registry mechanism to manage memory and provide search functionalities. (non-predicate version)
 ///
-/// @detail NOTE: This is thread-unsafe implementation (although it contains lock function, it does not uses these functions)
+/// @detail NOTE: This is thread-unsafe implementation (although it contains lock function, it does not use these functions)
 ///         of AbstractRegistry<T_Ptr, Container>. Any implementation of this class should be  explicitly (by using lock functions)
 template <typename T_Ptr, typename T_Key = const char*>
 class Registry : public AbstractRegistry<T_Ptr, std::map<T_Key, T_Ptr*>> {
@@ -2677,9 +2677,15 @@ class TypedConfigurations : public base::threading::ThreadSafe {
     /// @brief Constructor to initialize (construct) the object off el::Configurations
     /// @param configurations Configurations pointer/reference to base this typed configurations off.
     /// @param logStreamsReference Use ELPP->registeredLoggers()->logStreamsReference()
-    explicit TypedConfigurations(Configurations* configurations, base::LogStreamsReferenceMap* logStreamsReference) {
+    TypedConfigurations(Configurations* configurations, base::LogStreamsReferenceMap* logStreamsReference) {
         m_configurations = configurations;
         m_logStreamsReference = logStreamsReference;
+        build(m_configurations);
+    }
+    
+    TypedConfigurations(const TypedConfigurations& other) {
+        this->m_configurations = other.m_configurations;
+        this->m_logStreamsReference = other.m_logStreamsReference;
         build(m_configurations);
     }
 
@@ -3050,7 +3056,7 @@ typedef std::shared_ptr<LogBuilder> LogBuilderPtr;
 /// @detail This class does not write logs itself instead its used by writer to read configuations from.
 class Logger : public base::threading::ThreadSafe {
  public:
-    explicit Logger(const std::string& id, base::LogStreamsReferenceMap* logStreamsReference) :
+    Logger(const std::string& id, base::LogStreamsReferenceMap* logStreamsReference) :
             m_id(id),
             m_typedConfigurations(nullptr),
             m_parentApplicationName(std::string()),
@@ -3249,6 +3255,10 @@ class RegisteredLoggers : public base::utils::Registry<Logger, std::string> {
     inline void setDefaultConfigurations(const Configurations& configurations) {
         base::threading::lock_guard lock(mutex());
         m_defaultConfigurations.setFromBase(const_cast<Configurations*>(&configurations));
+    }
+
+    inline Configurations* defaultConfigurations(void) {
+        return &m_defaultConfigurations;
     }
 
     Logger* get(const std::string& id, bool forceCreation = true) {
@@ -4872,6 +4882,20 @@ class Loggers : base::StaticClass {
             Loggers::reconfigureAllLoggers(configurations);
         }
     }
+    /// @brief Returns current default
+    static inline const Configurations* defaultConfigurations(void) {
+        return ELPP->registeredLoggers()->defaultConfigurations();
+    }
+    /// @brief Returns log stream reference pointer if needed by user
+    static inline const base::LogStreamsReferenceMap* logStreamsReference(void) {
+        return ELPP->registeredLoggers()->logStreamsReference();
+    }
+    /// @brief Default typed configuration based on existing defaultConf
+    static base::TypedConfigurations defaultTypedConfigurations(void) {
+        return base::TypedConfigurations(
+            ELPP->registeredLoggers()->defaultConfigurations(),
+            ELPP->registeredLoggers()->logStreamsReference());
+    }
     /// @brief Populates all logger IDs in current repository.
     /// @param [out] targetList List of fill up.
     static inline std::vector<std::string>* populateAllLoggerIds(std::vector<std::string>* targetList) {
@@ -4944,9 +4968,9 @@ class Loggers : base::StaticClass {
 class VersionInfo : base::StaticClass {
  public:
     /// @brief Current version number
-    static inline const std::string version(void) { return std::string("9.39"); }
+    static inline const std::string version(void) { return std::string("9.41"); }
     /// @brief Release date of current version
-    static inline const std::string releaseDate(void) { return std::string("17-12-2013 2257hrs"); }
+    static inline const std::string releaseDate(void) { return std::string("18-12-2013 1751hrs"); }
 };
 }  // namespace el
 #undef VLOG_IS_ON
@@ -4976,7 +5000,7 @@ class VersionInfo : base::StaticClass {
 /// @detail Please note in order to check the performance at a certain time you can use obj.checkpoint();
 /// @see el::base::Trackable
 /// @see el::base::Trackable::checkpoint
-#define TIMED_FUNC(obj) TIMED_BLOCK(obj, _ELPP_FUNC)
+#define TIMED_FUNC(obj) TIMED_SCOPE(obj, _ELPP_FUNC)
 #undef PERFORMANCE_CHECKPOINT
 #undef PERFORMANCE_CHECKPOINT_WITH_ID
 #define PERFORMANCE_CHECKPOINT(obj) obj.checkpoint(nullptr, __FILE__, __LINE__, _ELPP_FUNC)

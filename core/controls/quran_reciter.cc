@@ -151,7 +151,7 @@ void QuranReciter::loadReciters()
     const QString noReciterAvailableText = " -- NO RECITER AVAILABLE -- ";
     m_recitationsDir = QDir(filesystem::buildPath(QStringList() 
                                                   << SettingsLoader().defaultHomeDir() 
-                                                  << "data" << "recitations"), 
+                                                  << "data" << "recitations" << "verse-by-verse"), 
                             QString(), QDir::Name | QDir::IgnoreCase, QDir::Dirs | QDir::NoDotAndDotDot);
     if (!m_recitationsDir.exists()) {
         DLOG(ERROR) << "Recitations directory [" << m_recitationsDir.absolutePath() << "] not found";
@@ -164,10 +164,12 @@ void QuranReciter::loadReciters()
             ui->cboReciter->addItem(noReciterAvailableText);
             ui->cboReciter->setEnabled(false);
         } else {
-            DVLOG(8) << "Loading reciters...";
+            DLOG(INFO) << "Loading reciters...";
         }
         for (QString reciter : recitersList) {
-            QString reciterDir(m_recitationsDir.absolutePath() + QDir::separator() + reciter + QDir::separator());
+            QString reciterDir(filesystem::buildPath(QStringList() 
+                                                     << m_recitationsDir.absolutePath()
+                                                     << reciter));
             
             QFile f(reciterDir + "info");
             if (!f.open(QFile::ReadOnly) || !f.exists()) {

@@ -2,23 +2,25 @@
     "linux": {
         "available" : true,
         "platform": {
-            "version": "1.0.0",
+            "version": "0.1.0",
              "force_update" : false,
-             "base"  : "http://www.icplusplus.com/tools/project-islam/",
+             "base"  :
+"http://www.icplusplus.com/tools/project-islam/downloads/linux/",
              "files" : "project-islam.zip"
         },
         "database": {
-             "version": "1.0.0",
+             "version": "0.1.0",
              "force_update" : false,
-             "base" : "http://www.icplusplus.com/tools/project-islam/",
+             "base" :
+"http://www.icplusplus.com/tools/project-islam/downloads/",
              "files" : "project-islam.db.zip"
         },
         "extensions": [
             {
                 "name"   : "al-quran",
-                "version": "1.0.0",
+                "version": "0.1.0",
                 "force_update" : false,
-                "base"   : "http://www.icplusplus.com/tools/project-islam/extensions/",
+                "base"   : "http://www.icplusplus.com/tools/project-islam/downloads/linux/extensions/",
                 "files"  : "libAlQuran.so.1.0.0.zip"
             }
         ]

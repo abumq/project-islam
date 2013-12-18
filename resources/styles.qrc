@@ -5,7 +5,8 @@
         <file alias="extension_item">styles/extension_item.style</file>
         <file alias="extension_bar">styles/extension_bar.style</file>
     </qresource>
-    <qresource prefix="/bg">
+    <qresource prefix="/img">
         <file alias="bg">images/bg.png</file>
+        <file alias="splash">images/splash.png</file>
     </qresource>
 </RCC>

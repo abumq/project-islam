@@ -13,6 +13,7 @@ namespace Ui {
 class MainWindow;
 }
 
+class QSplashScreen;
 class AbstractExtension;
 class ExtensionBar;
 
@@ -21,7 +22,7 @@ class MainWindow : public QMainWindow
     Q_OBJECT
     
 public:
-    MainWindow(QApplication* app);
+    MainWindow(QApplication* app, QSplashScreen* splashScreen);
     ~MainWindow();
 
     void initialize();
@@ -46,6 +47,7 @@ private slots:
 private:
     Ui::MainWindow *ui;
     QApplication* m_app;
+    QSplashScreen* m_splashScreen;
     QWidget* m_container;
     ExtensionBar* m_extensionBar;
     StyleLoader m_styleLoader;

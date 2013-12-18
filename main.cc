@@ -1,5 +1,5 @@
 #include "mainwindow.h"
-
+#include <QSplashScreen>
 #include <QApplication>
 #include <QFile>
 #include <QResource>
@@ -34,8 +34,15 @@ int main(int argc, char *argv[])
     a.setApplicationVersion(version::versionString());
     a.setApplicationDisplayName("Project Islam Platform");
 
-    MainWindow w(&a);
+    QPixmap p(":/img/splash");
+    QSplashScreen splashScreen(p);
+    splashScreen.show();
+    splashScreen.showMessage("Initializing...", Qt::AlignHCenter | Qt::AlignBottom);
+    a.processEvents();
+    
+    MainWindow w(&a, &splashScreen);
     w.show();
+    splashScreen.finish(&w);
     
     int status = a.exec();
     

@@ -5,6 +5,7 @@
 #include <QAction>
 #include <QApplication>
 #include <QMenuBar>
+#include <QSplashScreen>
 
 #include "core/logging/logging.h"
 #include "core/extension/extension_base.h"
@@ -21,7 +22,7 @@ ExtensionLoader::ExtensionLoader(data::DataHolder* dataHolder,
 {
 }
 
-void ExtensionLoader::loadAll(const QString& appPath, ExtensionBar* extensionBar) const
+void ExtensionLoader::loadAll(const QString& appPath, ExtensionBar* extensionBar, QSplashScreen *splashScreen) const
 {
     _TRACE;
     LOG(INFO) << "Loading all the extensions. ExtensionBar [" << extensionBar << "]; application path: "
@@ -37,12 +38,25 @@ void ExtensionLoader::loadAll(const QString& appPath, ExtensionBar* extensionBar
 #   error Invalid OS detected
 #endif
     QDir extensionsDir(appPath + "/extensions/", libExtension, QDir::Name | QDir::IgnoreCase, QDir::Files);
-    
-    for (QString extensionFilename : extensionsDir.entryList()) {
+    QStringList list = extensionsDir.entryList();
+    int count = 0;
+    for (QString extensionFilename : list) {
+        ++count;
+        QString extensionDisplayName = extensionFilename;
+        if (extensionDisplayName.startsWith("lib")) {
+            extensionDisplayName = extensionDisplayName.remove(0, QString("lib").length());
+        }
+        extensionDisplayName = extensionDisplayName.mid(0, extensionDisplayName.length() - 
+                                                        libExtension.length() + 1 /* wildcard */);
+        if (splashScreen != nullptr) {
+            splashScreen->showMessage("Loading Extensions (" + QString::number(count) 
+                                      + " / " + QString::number(list.size()) + ") [" 
+                                      + extensionDisplayName + "]...", Qt::AlignHCenter | Qt::AlignBottom);
+        }
+        m_app->processEvents();
         QPluginLoader loader(extensionsDir.absoluteFilePath(extensionFilename));
         ExtensionBase* extensionBase = qobject_cast<ExtensionBase*>(loader.instance());
         if (extensionBase != nullptr && extensionBase->extension() != nullptr) {
-            
             extensionBase->extension()->setDataHolder(m_dataHolder);
             extensionBase->extension()->setContainer(extensionBar->container());
             extensionBase->extension()->setSettingsLoader(m_settingsLoader);

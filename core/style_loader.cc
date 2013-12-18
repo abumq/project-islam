@@ -36,7 +36,7 @@ QString StyleLoader::load(StyleType type) const
     style.replace("[:color1]", rgba(m_r, m_g, m_b, 255));
     style.replace("[:color2]", rgba(r2, g2, b2, 255));
     style.replace("[:extensionContainerColor]", rgba(m_r, m_g, m_b, 40));
-    style.replace("[:extensionContainerBg]", ":/bg/bg");
+    style.replace("[:extensionContainerBg]", ":/img/bg");
     style.replace("[:extensionTitleColor]", rgba(std::max(m_r - 20, 0), 
                                                  std::max(m_g - 20, 0), 
                                                  std::max(m_b - 20, 0), 255));

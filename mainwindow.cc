@@ -5,6 +5,7 @@
 #include <QResizeEvent>
 #include <QLabel>
 #include <QProcess>
+#include <QSplashScreen>
 
 #include "settings_dialog.h"
 #include "core/utils/memory.h"
@@ -15,15 +16,14 @@
 #include "core/extension/extension_item.h"
 #include "core/extension/extension_loader.h"
 #include "core/logging/logging.h"
-
-MainWindow::MainWindow(QApplication* app) :
+MainWindow::MainWindow(QApplication* app, QSplashScreen *splashScreen) :
     QMainWindow(nullptr),
     ui(new Ui::MainWindow),
-    m_app(app)
+    m_app(app),
+    m_splashScreen(splashScreen)
 {
     memory::turnToNullPtr(m_container, m_extensionBar);
     ui->setupUi(this);
-    
     initialize();
 }
 
@@ -37,6 +37,7 @@ void MainWindow::initialize()
 {
     memory::deleteAll(m_extensionBar, m_container);
     loadSettings();
+    m_dataHolder.initialize(m_app, m_splashScreen);
     
     m_container = new QWidget(this);
     m_container->setObjectName("extensionContainer");
@@ -47,7 +48,7 @@ void MainWindow::initialize()
     addToolBar(Qt::LeftToolBarArea, m_extensionBar);
     
     ExtensionLoader extensionLoader(&m_dataHolder, &m_settingsLoader, m_app, ui->menuBar);
-    extensionLoader.loadAll(m_app->applicationDirPath(), m_extensionBar);
+    extensionLoader.loadAll(m_app->applicationDirPath(), m_extensionBar, m_splashScreen);
     
     ExtensionItem* defaultExtension = m_extensionBar->defaultExtensionItem();
     if (defaultExtension != nullptr) {
@@ -69,6 +70,7 @@ void MainWindow::initialize()
 
 void MainWindow::reloadStyles()
 {
+    // FIXME: Timed block dont work on VC++ for some odd reason!
     //TIMED_BLOCK(timer, "reloadStyles");
     m_extensionBar->setStyleSheet(m_styleLoader.load(StyleLoader::StyleType::ExtensionBar));
     m_container->setStyleSheet(m_styleLoader.load(StyleLoader::StyleType::Extension));

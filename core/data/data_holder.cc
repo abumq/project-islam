@@ -5,6 +5,8 @@
 #   define _PERFORMANCE_LOGGER _LOGGER
 #endif
 #include "core/data/data_holder.h"
+#include <QApplication>
+#include <QSplashScreen>
 #include "core/logging/logging.h"
 
 namespace data {
@@ -12,7 +14,6 @@ namespace data {
 DataHolder::DataHolder()
 {
     _TRACE;
-    initialize();
 }
 
 quran::Quran* DataHolder::quranArabic()
@@ -35,22 +36,38 @@ quran::Quran* DataHolder::quranTranslation()
     return &m_quranTranslation;
 }
 
-void DataHolder::initialize()
+void DataHolder::initialize(QApplication* app, QSplashScreen *splashScreen)
 {
+    if (splashScreen != nullptr) {
+        splashScreen->showMessage("Loading Qur'an...", Qt::AlignHCenter | Qt::AlignBottom);
+    }
     quranArabic()->load(quran::Quran::TextType::Original, 
                         SettingsLoader().get(QString(SettingsLoader::kSettingKeyQuranTable), 
                                              QString(quran::Quran::kQuranDefaultArabicDatabaseTable)).toString().toStdString());
-    
+    if (splashScreen != nullptr) {
+        splashScreen->showMessage("Loading Qur'an... [25%]", Qt::AlignHCenter | Qt::AlignBottom);
+    }
+    app->processEvents();
     quranTranslation()->load(quran::Quran::TextType::Translation, 
                              SettingsLoader().get(QString(SettingsLoader::kSettingKeyQuranTranslationTable), 
                                                   QString(quran::Quran::kQuranDefaultTranslationDatabaseTable)).toString().toStdString());
-    
+    if (splashScreen != nullptr) {
+        splashScreen->showMessage("Loading Qur'an... [50%]", Qt::AlignHCenter | Qt::AlignBottom);
+    }
+    app->processEvents();
     quranTransliteration()->load(quran::Quran::TextType::Transliteration, 
                                  SettingsLoader().get(QString(SettingsLoader::kSettingKeyQuranTransliterationTable), 
                                                       QString(quran::Quran::kQuranDefaultTransliterationDatabaseTable)).toString().toStdString());
+    if (splashScreen != nullptr) {
+        splashScreen->showMessage("Loading Qur'an... [75%]", Qt::AlignHCenter | Qt::AlignBottom);
+    }
+    app->processEvents();
     quranTafseer()->load(quran::Quran::TextType::Tafseer, 
                          SettingsLoader().get(QString(SettingsLoader::kSettingKeyQuranTafseerTable), 
                                               QString(quran::Quran::kQuranDefaultTafseerDatabaseTable)).toString().toStdString());
+    if (splashScreen != nullptr) {
+        splashScreen->showMessage("Loading Qur'an... [100%]", Qt::AlignHCenter | Qt::AlignBottom);
+    }
 }
 
 } // namespace data

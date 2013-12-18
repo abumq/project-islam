@@ -8,14 +8,14 @@
 #include <QSplashScreen>
 
 #include "settings_dialog.h"
-#include "core/utils/memory.h"
-#include "core/constants.h"
-#include "core/extension/abstract_extension.h"
-#include "core/extension/extension_info.h"
-#include "core/extension/extension_bar.h"
-#include "core/extension/extension_item.h"
-#include "core/extension/extension_loader.h"
-#include "core/logging/logging.h"
+#include "utils/memory.h"
+#include "constants.h"
+#include "extension/abstract_extension.h"
+#include "extension/extension_info.h"
+#include "extension/extension_bar.h"
+#include "extension/extension_item.h"
+#include "extension/extension_loader.h"
+#include "logging/logging.h"
 MainWindow::MainWindow(QApplication* app, QSplashScreen *splashScreen) :
     QMainWindow(nullptr),
     ui(new Ui::MainWindow),

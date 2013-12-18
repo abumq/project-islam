@@ -12,4 +12,6 @@ DEFINES += _ELPP_DEFAULT_LOG_FILE=$$DEFAULT_LOG_FILE \
            _PERFORMANCE_LOGGER=$$LOGGER_ID
 
 ## Include base
-INCLUDEPATH += "../../"
+INCLUDEPATH += "../../include/"
+
+LIBS += -L/home/majid/Desktop/test-project-islam-lib/ -lproject-islam

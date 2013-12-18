@@ -3,11 +3,11 @@
 
 #include <QMainWindow>
 
-#include "core/style_loader.h"
-#include "core/settings_loader.h"
-#include "core/data/data_holder.h"
+#include "style_loader.h"
+#include "settings_loader.h"
+#include "data/data_holder.h"
 
-#include "core/update/update_manager.h"
+#include "update/update_manager.h"
 
 namespace Ui {
 class MainWindow;

@@ -6,7 +6,7 @@
 #include <QTreeView>
 #include <QStandardItemModel>
 #include <QStandardItem>
-#include "utils/memory.h"
+#include "core/utils/memory.h"
 #include "bookmark.h"
 
 class QPushButton;

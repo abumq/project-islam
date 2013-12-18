@@ -1,12 +1,12 @@
 #include "settings_dialog.h"
 #include "ui_settings_dialog.h"
 
-#include "logging/logging.h"
+#include "core/logging/logging.h"
 #include "mainwindow.h"
-#include "style_loader.h"
-#include "controls/colorbox.h"
-#include "data/database_manager.h"
-#include "data/data_holder.h"
+#include "core/style_loader.h"
+#include "core/controls/colorbox.h"
+#include "core/data/database_manager.h"
+#include "core/data/data_holder.h"
 
 SettingsDialog::SettingsDialog(MainWindow* mainWindow, QWidget* parent) :
     QDialog(parent),

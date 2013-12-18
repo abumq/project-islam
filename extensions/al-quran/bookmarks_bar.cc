@@ -7,10 +7,10 @@
 #include <QLabel>
 #include <QInputDialog>
 #include <QSplitter>
-#include "logging/logging.h"
-#include "settings_loader.h"
-#include "utils/memory.h"
-#include "quran/chapter.h"
+#include "core/logging/logging.h"
+#include "core/settings_loader.h"
+#include "core/utils/memory.h"
+#include "core/quran/chapter.h"
 
 const char* BookmarksBar::kBookmarkSeparator = ";";
 

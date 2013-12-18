@@ -1,6 +1,6 @@
 #include "bookmark.h"
-#include "logging/logging.h"
-#include "quran/quran.h"
+#include "core/logging/logging.h"
+#include "core/quran/quran.h"
 
 Bookmark::Bookmark() :
     m_name(""), m_chapter(1), m_verseFrom(1), m_verseTo(1)

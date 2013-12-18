@@ -1,7 +1,7 @@
 ﻿#ifndef AL_QURAN_H
 #define AL_QURAN_H
 
-#include "extension/extension_base.h"
+#include "core/extension/extension_base.h"
 
 class QuranReciter;
 class QuranReader;

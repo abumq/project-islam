@@ -6,8 +6,8 @@
 #include <QSplitter>
 #include <QGridLayout>
 #include "bookmarks_bar.h"
-#include "controls/quran_reciter.h"
-#include "controls/quran_reader.h"
+#include "core/controls/quran_reciter.h"
+#include "core/controls/quran_reader.h"
 
 _INITIALIZE_EASYLOGGINGPP
 

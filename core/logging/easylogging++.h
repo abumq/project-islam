@@ -1,5 +1,5 @@
 //
-//  Easylogging++ v9.41
+//  Easylogging++ v9.41 (development / unreleased version)
 //  Single-header only, cross-platform logging library for C++ applications
 //
 //  Copyright (c) 2013 Majid Khan
@@ -1812,12 +1812,10 @@ class Registry : public AbstractRegistry<T_Ptr, std::map<T_Key, T_Ptr*>> {
 
     /// @brief Gets pointer from repository. If none found, nullptr is returned.
     inline T_Ptr* get(const T_Key& uniqKey) {
-        T_Ptr* ptrExisting = nullptr;
-        try {
-            ptrExisting = this->list().at(uniqKey);
-        } catch (...) {
-        }
-        return ptrExisting;
+        iterator it = this->list().find(uniqKey);
+        return it == this->list().end()
+                ? nullptr
+                : it->second;
     }
 
  private:
@@ -3112,7 +3110,11 @@ class Logger : public base::threading::ThreadSafe {
         m_isConfigured = false;  // we set it to false in case if we fail
         initUnflushedCount();
         if (m_typedConfigurations != nullptr) {
-            flush();
+            Configurations* c = const_cast<Configurations*>(&configurations);
+            if (c->hasConfiguration(Level::Global, ConfigurationType::Filename)) {
+                // This check is definitely needed for cases like _ELPP_NO_DEFAULT_LOG_FILE
+                flush();
+            }
         }
         base::threading::lock_guard lock(mutex());
         if (m_configurations != configurations) {

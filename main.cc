@@ -3,6 +3,7 @@
 #include <QApplication>
 #include <QFile>
 #include <QResource>
+#include <QSettings>
 
 #include "core/logging/logging.h"
 #include "core/utils/version.h"
@@ -31,6 +32,7 @@ int main(int argc, char *argv[])
     _START_EASYLOGGINGPP(argc, argv);
 
     a.setApplicationName("Project Islam Platform");
+    a.setOrganizationName("Project Islam");
     a.setApplicationVersion(version::versionString());
     a.setApplicationDisplayName("Project Islam Platform");
 

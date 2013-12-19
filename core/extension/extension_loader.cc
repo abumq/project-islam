@@ -38,8 +38,13 @@ void ExtensionLoader::loadAll(ExtensionBar* extensionBar, QSplashScreen *splashS
 #   error Invalid OS detected
 #endif
     QDir extensionsDir(appPath + "/extensions/", libExtension, QDir::Name | QDir::IgnoreCase, QDir::Files);
+    if (!extensionsDir.exists()) {
+        return;
+    }
     QStringList list = extensionsDir.entryList();
-    
+    if (list.empty()) {
+        return;
+    }
     // Arguments
     QStringList arguments = qApp->arguments();
     const int argc = arguments.size();

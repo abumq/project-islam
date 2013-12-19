@@ -149,6 +149,7 @@ void QuranReciter::loadReciters()
     // TODO: 1.1 Add support to load reciters (keep chapter-by-chapter in mind) from remote server
     // TODO: 2.1 Add support to load reciters chapter-by-chapter
     ui->cboReciter->clear();
+    ui->cboReciter->setEnabled(true);
     // Reciters
     const QString noReciterAvailableText = " -- NO RECITER AVAILABLE -- ";
     m_recitationsDir = QDir(filesystem::buildPath(QStringList() 

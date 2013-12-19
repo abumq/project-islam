@@ -20,6 +20,8 @@ const QString SettingsLoader::kSettingKeyDatabasePort = "db_port";
 
 QString SettingsLoader::s_defaultHomeDir = QString("");
 
+// TODO: Use singleton pattern for this!
+
 SettingsLoader::SettingsLoader(const char* settingsFilename) :
     m_settings(nullptr)
 {
@@ -35,7 +37,9 @@ void SettingsLoader::initialize(const char* settingsFilename)
 {
     _TRACE;
     m_settingsFile = defaultHomeDir() + settingsFilename;
-    changeSettingsFile(m_settingsFile);
+    if (m_settings == nullptr || m_settings->fileName() != m_settingsFile) {
+        changeSettingsFile(m_settingsFile);
+    }
 }
 
 void SettingsLoader::saveSettings(QMap<QString, QVariant>* map) const
@@ -92,7 +96,7 @@ void SettingsLoader::changeSettingsFile(const QString &filename)
         okToAlloc = true;
     }
     if (okToAlloc) {
-        m_settings = new QSettings(m_settingsFile, QSettings::NativeFormat);
+        m_settings = new QSettings(m_settingsFile, QSettings::IniFormat);
     }
 }
 

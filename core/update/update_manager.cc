@@ -58,10 +58,9 @@ UpdateManager::~UpdateManager()
     }
 }
 
-void UpdateManager::initialize(QApplication* app, ExtensionBar* extensionBar)
+void UpdateManager::initialize(ExtensionBar* extensionBar)
 {
     _TRACE;
-    m_app = CHECK_NOTNULL(app);
     m_extensionBar = CHECK_NOTNULL(extensionBar);
     QObject::connect(this, SIGNAL(downloadProgress(qint64,qint64)), 
                      this, SLOT(downloadProgressUpdated(qint64,qint64)));
@@ -159,7 +158,7 @@ bool UpdateManager::updatePlatform(QJsonObject* jsonObject)
         QStringList filesList = platformObj["files"].toString().split(',');
         for (QString filename : filesList) {
             
-            QString targetDir = filesystem::buildPath(QStringList() << m_app->applicationDirPath());
+            QString targetDir = filesystem::buildPath(QStringList() << qApp->applicationDirPath());
             QString tempFilename = targetDir + filename + QString(kLocalFilesSuffix);
             LOG(INFO) << "Downloading platform file [" 
                       << filename << "] from [" + baseUrl + "] to [" << targetDir << "]";
@@ -168,7 +167,7 @@ bool UpdateManager::updatePlatform(QJsonObject* jsonObject)
         if (result) {
             for (QString filename : filesList) {
                 QString downloadedFilename = filesystem::buildFilename(
-                            QStringList() << m_app->applicationDirPath() << filename + QString(kLocalFilesSuffix));
+                            QStringList() << qApp->applicationDirPath() << filename + QString(kLocalFilesSuffix));
                 const int kExtraSuffix = (QString(kRemoteFilesSuffix) + QString(kLocalFilesSuffix)).length();
                 QString currFilename = downloadedFilename.mid(
                             0,  downloadedFilename.length() - kExtraSuffix);
@@ -255,7 +254,7 @@ bool UpdateManager::updateExtensions(QJsonObject* jsonObject)
                 QStringList filesList = extensionobj["files"].toString().split(',');
                 for (QString filename : filesList) {
                     QString targetDir = filesystem::buildPath(QStringList() 
-                                                              << m_app->applicationDirPath() << "extensions");
+                                                              << qApp->applicationDirPath() << "extensions");
                     QString tempFilename = targetDir + filename + QString(kLocalFilesSuffix);
                     LOG(INFO) << "Downloading extension file [" 
                               << filename << "] from [" + baseUrl + "] to [" << targetDir << "]";
@@ -271,7 +270,7 @@ bool UpdateManager::updateExtensions(QJsonObject* jsonObject)
                         // Extension ready to be upgrade! Filename: file.remotesuffix.localsuffix
                         for (QString filename : filesList) {
                             QString downloadedFilename = filesystem::buildFilename(
-                                        QStringList() << m_app->applicationDirPath() << "extensions" 
+                                        QStringList() << qApp->applicationDirPath() << "extensions" 
                                         << filename + QString(kLocalFilesSuffix));
                             const int kExtraSuffix = (QString(kRemoteFilesSuffix) + QString(kLocalFilesSuffix)).length();
                             QString currFilename = downloadedFilename.mid(

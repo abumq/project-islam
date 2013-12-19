@@ -40,7 +40,7 @@ int main(int argc, char *argv[])
     splashScreen.showMessage("Initializing...", Qt::AlignHCenter | Qt::AlignBottom);
     a.processEvents();
     
-    MainWindow w(&a, &splashScreen);
+    MainWindow w(&splashScreen);
     w.show();
     splashScreen.finish(&w);
     

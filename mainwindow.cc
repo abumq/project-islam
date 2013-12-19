@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
+#include <QApplication>
 #include <QMessageBox>
 #include <QResizeEvent>
 #include <QLabel>
@@ -16,10 +17,9 @@
 #include "core/extension/extension_item.h"
 #include "core/extension/extension_loader.h"
 #include "core/logging/logging.h"
-MainWindow::MainWindow(QApplication* app, QSplashScreen *splashScreen) :
+MainWindow::MainWindow(QSplashScreen *splashScreen) :
     QMainWindow(nullptr),
     ui(new Ui::MainWindow),
-    m_app(app),
     m_splashScreen(splashScreen)
 {
     memory::turnToNullPtr(m_container, m_extensionBar);
@@ -37,7 +37,7 @@ void MainWindow::initialize()
 {
     memory::deleteAll(m_extensionBar, m_container);
     loadSettings();
-    m_dataHolder.initialize(m_app, m_splashScreen);
+    m_dataHolder.initialize(m_splashScreen);
     
     m_container = new QWidget(this);
     m_container->setObjectName("extensionContainer");
@@ -47,8 +47,8 @@ void MainWindow::initialize()
     connect(m_extensionBar, SIGNAL(extensionChanged(AbstractExtension*)), this, SLOT(onExtensionChanged(AbstractExtension*)));
     addToolBar(Qt::LeftToolBarArea, m_extensionBar);
     
-    ExtensionLoader extensionLoader(&m_dataHolder, &m_settingsLoader, m_app, ui->menuBar);
-    extensionLoader.loadAll(m_app->applicationDirPath(), m_extensionBar, m_splashScreen);
+    ExtensionLoader extensionLoader(&m_dataHolder, &m_settingsLoader, ui->menuBar);
+    extensionLoader.loadAll(m_extensionBar, m_splashScreen);
     
     ExtensionItem* defaultExtension = m_extensionBar->defaultExtensionItem();
     if (defaultExtension != nullptr) {
@@ -58,7 +58,7 @@ void MainWindow::initialize()
     }
     
 #if !defined(DISABLE_AUTO_UPDATE)
-    m_updateManager.initialize(m_app, m_extensionBar);
+    m_updateManager.initialize(m_extensionBar);
 #endif // DISABLE_AUTO_UPDATE
 
     setWindowState(Qt::WindowMaximized);
@@ -164,6 +164,6 @@ void MainWindow::on_actionFull_Screen_triggered(bool checked)
 
 void MainWindow::restart()
 {
-    m_app->quit();
-    QProcess::startDetached(m_app->arguments()[0], m_app->arguments());
+    qApp->quit();
+    QProcess::startDetached(qApp->arguments()[0], qApp->arguments());
 }

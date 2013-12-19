@@ -5,7 +5,6 @@
 
 class ExtensionBar;
 class SettingsLoader;
-class QApplication;
 class QMenuBar;
 class QSplashScreen;
 namespace data {
@@ -15,14 +14,12 @@ class DataHolder;
 class ExtensionLoader
 {
 public:
-    ExtensionLoader(data::DataHolder* m_dataHolder, SettingsLoader* settingsLoader, 
-                    QApplication *app, QMenuBar *menuBar);
-    void loadAll(const QString& appPath, ExtensionBar* extensionBar, QSplashScreen *splashScreen) const;
+    ExtensionLoader(data::DataHolder* m_dataHolder, SettingsLoader* settingsLoader, QMenuBar *menuBar);
+    void loadAll(ExtensionBar* extensionBar, QSplashScreen *splashScreen) const;
     static bool verifyExtension(const QString& filename);
 private:
     data::DataHolder* m_dataHolder;
     SettingsLoader* m_settingsLoader;
-    QApplication* m_app;
     QMenuBar* m_menuBar;
 };
 

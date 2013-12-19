@@ -14,17 +14,17 @@
 #include "core/data/data_holder.h"
 
 ExtensionLoader::ExtensionLoader(data::DataHolder* dataHolder, 
-                                 SettingsLoader* settingsLoader, QApplication* app, QMenuBar* menuBar) :
+                                 SettingsLoader* settingsLoader, QMenuBar* menuBar) :
     m_dataHolder(dataHolder),
     m_settingsLoader(settingsLoader),
-    m_app(app),
     m_menuBar(menuBar)
 {
 }
 
-void ExtensionLoader::loadAll(const QString& appPath, ExtensionBar* extensionBar, QSplashScreen *splashScreen) const
+void ExtensionLoader::loadAll(ExtensionBar* extensionBar, QSplashScreen *splashScreen) const
 {
     _TRACE;
+    QString appPath = qApp->applicationDirPath();
     LOG(INFO) << "Loading all the extensions. ExtensionBar [" << extensionBar << "]; application path: "
               << appPath;
     QString libExtension;
@@ -39,9 +39,22 @@ void ExtensionLoader::loadAll(const QString& appPath, ExtensionBar* extensionBar
 #endif
     QDir extensionsDir(appPath + "/extensions/", libExtension, QDir::Name | QDir::IgnoreCase, QDir::Files);
     QStringList list = extensionsDir.entryList();
-    int count = 0;
+    
+    // Arguments
+    QStringList arguments = qApp->arguments();
+    const int argc = arguments.size();
+#if defined(_MSC_VER)
+    // We dynamically allocate because VC++ causes issue
+    const char** argv = (const char**)malloc(argc * sizeof(char*));
+#else
+    const char* argv[argc];
+#endif // defined(_MSC_VER)
+    for (int i = 0; i < argc; ++i) {
+        argv[i] = arguments.at(i).toStdString().c_str();
+    }
+    int numberOfExtensions = 0;
     for (QString extensionFilename : list) {
-        ++count;
+        ++numberOfExtensions;
         QString extensionDisplayName = extensionFilename;
         if (extensionDisplayName.startsWith("lib")) {
             extensionDisplayName = extensionDisplayName.remove(0, QString("lib").length());
@@ -49,11 +62,11 @@ void ExtensionLoader::loadAll(const QString& appPath, ExtensionBar* extensionBar
         extensionDisplayName = extensionDisplayName.mid(0, extensionDisplayName.length() - 
                                                         libExtension.length() + 1 /* wildcard */);
         if (splashScreen != nullptr) {
-            splashScreen->showMessage("Loading Extensions (" + QString::number(count) 
+            splashScreen->showMessage("Loading Extensions (" + QString::number(numberOfExtensions) 
                                       + " / " + QString::number(list.size()) + ") [" 
                                       + extensionDisplayName + "]...", Qt::AlignHCenter | Qt::AlignBottom);
+            qApp->processEvents();
         }
-        m_app->processEvents();
         QPluginLoader loader(extensionsDir.absoluteFilePath(extensionFilename));
         ExtensionBase* extensionBase = qobject_cast<ExtensionBase*>(loader.instance());
         if (extensionBase != nullptr && extensionBase->extension() != nullptr) {
@@ -65,29 +78,17 @@ void ExtensionLoader::loadAll(const QString& appPath, ExtensionBar* extensionBar
             m_menuBar->insertMenu(helpMenu, extensionBase->extension()->menu());
             // Extensions may change the configurations so we reconfigure them
             LoggingConfigurer::configureLoggers();
-            // Arguments
-            QStringList arguments = m_app->arguments();
-            const int argc = arguments.size();
-#if defined(_MSC_VER)
-            // We dynamically allocate because VC++ causes issue
-            const char** argv = (const char**)malloc(argc * sizeof(char*));
-#else
-            const char* argv[argc];
-#endif // defined(_MSC_VER)
-            for (int i = 0; i < argc; ++i) {
-                argv[i] = arguments.at(i).toStdString().c_str();
-            }
             // initialize and add to extension bar
             extensionBase->initialize(argc, argv);
-#if defined(_MSC_VER)
-            for(int i = 0; i < argc; ++i)
-                delete[] argv[i];
-#endif // defined(_MSC_VER)
             extensionBar->addExtension(extensionBase->extension());
         } else {
             LOG(ERROR) << "Error occured while loading extension [" << loader.fileName() << "]: " << loader.errorString();
         }
     }
+#if defined(_MSC_VER)
+    for(int i = 0; i < argc; ++i)
+        delete[] argv[i];
+#endif // defined(_MSC_VER)
 }
 
 bool ExtensionLoader::verifyExtension(const QString &filename)

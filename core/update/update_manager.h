@@ -22,7 +22,7 @@ class UpdateManager : public DownloadManager
 public:
     explicit UpdateManager(QObject* parent = 0);
     virtual ~UpdateManager();
-    void initialize(QApplication* app, ExtensionBar* extensionBar);
+    void initialize(ExtensionBar* extensionBar);
 private slots:
     void performAsyncUpdate();
     void downloadProgressUpdated(qint64, qint64);

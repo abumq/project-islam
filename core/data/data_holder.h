@@ -3,7 +3,6 @@
 
 #include "core/quran/quran.h"
 
-class QApplication;
 class QSplashScreen;
 
 namespace data {
@@ -16,7 +15,7 @@ public:
     quran::Quran* quranTranslation();
     quran::Quran* quranTransliteration();
     quran::Quran* quranTafseer();
-    void initialize(QApplication *app, QSplashScreen *splashScreen);
+    void initialize(QSplashScreen *splashScreen);
 private:
     quran::Quran m_quranArabic;
     quran::Quran m_quranTransliteration;

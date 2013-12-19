@@ -22,7 +22,7 @@ class MainWindow : public QMainWindow
     Q_OBJECT
     
 public:
-    MainWindow(QApplication* app, QSplashScreen* splashScreen);
+    MainWindow(QSplashScreen* splashScreen);
     ~MainWindow();
 
     void initialize();
@@ -30,7 +30,6 @@ public:
     void loadSettings();
     SettingsLoader *settingsLoader();
     StyleLoader *styleLoader();
-    
     data::DataHolder* dataHolder();
 protected:
     void resizeEvent(QResizeEvent *);
@@ -46,7 +45,6 @@ private slots:
     
 private:
     Ui::MainWindow *ui;
-    QApplication* m_app;
     QSplashScreen* m_splashScreen;
     QWidget* m_container;
     ExtensionBar* m_extensionBar;

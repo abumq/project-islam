@@ -35,6 +35,7 @@ inline void turnToNullPtr(T*& pointer, T2*&... pointers) {
     memory::turnToNullPtr<T2...>(pointers...);
 }
 #else
+// Visual C++ (pre VS-2013) does not support varidiac templates hence we overload
 template <typename T, typename T2>
 inline void deleteAll(T*& pointer, T2*& pointer2) {
     memory::deleteAll(pointer);

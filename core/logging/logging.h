@@ -27,11 +27,10 @@ public:
         for (LoggerConfig c : *cs) {
             el::Logger* logger = el::Loggers::getLogger(c.id());
             CHECK(logger != nullptr) << "Could not register logger [" << c.id() << "]";
-            // FIXME: Uncomment following lines - VC++ has issues!
-            /*logger->configurations()->set(el::Level::Debug, el::ConfigurationType::Enabled, c.debug());
+            logger->configurations()->set(el::Level::Debug, el::ConfigurationType::Enabled, c.debug());
             logger->configurations()->set(el::Level::Debug, el::ConfigurationType::Enabled, c.debug());
             logger->configurations()->set(el::Level::Trace, el::ConfigurationType::Enabled, c.trace());
-            logger->reconfigure();*/
+            logger->reconfigure();
         }
     }
     

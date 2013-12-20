@@ -14,12 +14,11 @@ class DataHolder;
 class ExtensionLoader
 {
 public:
-    ExtensionLoader(data::DataHolder* m_dataHolder, SettingsLoader* settingsLoader, QMenuBar *menuBar);
+    ExtensionLoader(data::DataHolder* m_dataHolder, QMenuBar *menuBar);
     void loadAll(ExtensionBar* extensionBar, QSplashScreen *splashScreen) const;
     static bool verifyExtension(const QString& filename);
 private:
     data::DataHolder* m_dataHolder;
-    SettingsLoader* m_settingsLoader;
     QMenuBar* m_menuBar;
 };
 

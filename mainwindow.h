@@ -28,7 +28,6 @@ public:
     void initialize();
     void reloadStyles();
     void loadSettings();
-    SettingsLoader *settingsLoader();
     StyleLoader *styleLoader();
     data::DataHolder* dataHolder();
 protected:
@@ -49,7 +48,6 @@ private:
     QWidget* m_container;
     ExtensionBar* m_extensionBar;
     StyleLoader m_styleLoader;
-    SettingsLoader m_settingsLoader;
     Qt::WindowStates m_previousWindowsState;
     data::DataHolder m_dataHolder;
 #if !defined(DISABLE_AUTO_UPDATE)

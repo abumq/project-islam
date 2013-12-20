@@ -292,6 +292,7 @@ void QuranView::zoomOut(float scaleFactor)
 void QuranView::updateView()
 {
     _TRACE;
+    TIMED_FUNC(timer);
     scene()->setSceneRect(QRectF(0, 0, 1, 1)); // Will be updated in updateView()
     // We dont ignore (newSize == m_fontSize) case since we
     // still want to space out verses

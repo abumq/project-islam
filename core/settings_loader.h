@@ -1,9 +1,7 @@
 #ifndef SETTINGS_LOADER_H
 #define SETTINGS_LOADER_H
 
-#include <QString>
 #include <QVariant>
-#include <QFile>
 
 #include "core/constants.h"
 
@@ -25,21 +23,28 @@ public:
     static const QString kSettingKeyDatabaseHost;
     static const QString kSettingKeyDatabasePort;
     
-    explicit SettingsLoader(const char* settingsFilename = "basic_settings.ini");
-    ~SettingsLoader();
+    static SettingsLoader& getInstance();
+    
     void saveSettings(QMap<QString, QVariant>* map) const;
     void saveSettings(const QString &key, const QVariant &value) const;
     QVariant get(const QString &key, const QVariant &defaultValue = QVariant()) const;
-    void changeSettingsFile(const QString& filename);
-    QString settingsFile() const;
-    void initialize(const char* settingsFilename);
-    QString defaultHomeDir();
+    
     void updateDefaultHomeDir(const QString&);
+    QString defaultHomeDir();
 private:
     QString m_settingsFile;
     QSettings* m_settings;
     
     static const QString kMasterSettingsFile;
+    
+private:
+    void changeSettingsFile(const QString& filename);
+    QString settingsFile() const;
+    void initialize(const char* settingsFilename);
+    explicit SettingsLoader(const char* settingsFilename = "basic_settings.ini");
+    ~SettingsLoader();
+    SettingsLoader(const SettingsLoader&);
+    SettingsLoader& operator=(const SettingsLoader&);
 };
 
 #endif // SETTINGS_LOADER_H

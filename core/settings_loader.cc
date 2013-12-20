@@ -20,8 +20,6 @@ const QString SettingsLoader::kSettingKeyDatabasePort = "db_port";
 
 QString SettingsLoader::s_defaultHomeDir = QString("");
 
-// TODO: Use singleton pattern for this!
-
 SettingsLoader::SettingsLoader(const char* settingsFilename) :
     m_settings(nullptr)
 {
@@ -30,6 +28,8 @@ SettingsLoader::SettingsLoader(const char* settingsFilename) :
 
 SettingsLoader::~SettingsLoader()
 {
+    // Important: Do not trace or log anything here
+    // as Easylogging++ repo is already destroyed by this time (because of singleton instance)
     memory::deleteAll(m_settings);
 }
 
@@ -40,6 +40,19 @@ void SettingsLoader::initialize(const char* settingsFilename)
     if (m_settings == nullptr || m_settings->fileName() != m_settingsFile) {
         changeSettingsFile(m_settingsFile);
     }
+    // Following log will not log for the very first time
+    // because of singleton and log file not initialzed before main() is called
+    // so if we see this line in log file, we may have problem because this class should not
+    // call this initialze() very often!
+    //
+    // Important: This is only because we are using '_ELPP_NO_DEFAULT_LOG_FILE'
+    LOG(WARNING) << "Created another instance of [SettingsLoader], filename: [" << settingsFilename << "]";
+}
+
+SettingsLoader& SettingsLoader::getInstance()
+{
+    static SettingsLoader loader;
+    return loader;
 }
 
 void SettingsLoader::saveSettings(QMap<QString, QVariant>* map) const
@@ -77,25 +90,22 @@ QVariant SettingsLoader::get(const QString& key, const QVariant& defaultValue) c
 void SettingsLoader::changeSettingsFile(const QString &filename)
 {
     _TRACE;
-    if (m_settings != nullptr) {
-        delete m_settings;
-        m_settings = nullptr;
-    }
     LOG(INFO) << "Changing settings file to [" << filename << "]";
+    memory::deleteAll(m_settings);
     m_settingsFile = filename;
-    bool okToAlloc = false;
+    bool ok = false;
     if (!QFile::exists(m_settingsFile)) {
         QFile f(m_settingsFile);
         f.open(QFile::ReadWrite);
         if (!f.isOpen()) {
             LOG(ERROR) << "Cannot create file [" << m_settingsFile << "]: " << f.errorString();
         } else {
-            okToAlloc = true;
+            ok = true;
         }
     } else {
-        okToAlloc = true;
+        ok = true;
     }
-    if (okToAlloc) {
+    if (ok) {
         m_settings = new QSettings(m_settingsFile, QSettings::IniFormat);
     }
 }

@@ -106,7 +106,7 @@ void BookmarksBar::save()
         }
     }
     LOG(DEBUG) << "Saving bookmarks: " << serializedForm;
-    SettingsLoader().saveSettings(m_settingsKeyPrefix + "bookmarks", serializedForm);
+    SettingsLoader::getInstance().saveSettings(m_settingsKeyPrefix + "bookmarks", serializedForm);
 }
 
 void BookmarksBar::load()
@@ -116,7 +116,7 @@ void BookmarksBar::load()
     QStringList columnHeaders = QStringList() << "Name" << "Location";
     m_model->setColumnCount(columnHeaders.size());
     m_model->setHorizontalHeaderLabels(columnHeaders);
-    QString bookmarksStr = SettingsLoader().get(m_settingsKeyPrefix + "bookmarks").toString();
+    QString bookmarksStr = SettingsLoader::getInstance().get(m_settingsKeyPrefix + "bookmarks").toString();
     if (!bookmarksStr.isEmpty()) {
         QStringList allBookmarksStr = bookmarksStr.split(kBookmarkSeparator);
         for (QString bookmarkStr : allBookmarksStr) {

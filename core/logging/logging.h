@@ -5,11 +5,18 @@
 #include "core/settings_loader.h"
 #include "core/utils/filesystem.h"
 
+// We redefine TIMED_FUNC and TIMED_SCOPE to use different level of logging
+static const el::Level kPerformanceLoggingLevel = el::Level::Debug;
+#undef TIMED_SCOPE
+#undef TIMED_FUNC
+#define TIMED_SCOPE(obj, blockname) el::base::Trackable obj(blockname, _ELPP_MIN_UNIT, _CURRENT_FILE_PERFORMANCE_LOGGER_ID, true, kPerformanceLoggingLevel)
+#define TIMED_FUNC(obj) TIMED_SCOPE(obj, _ELPP_FUNC)
+
 class LoggerConfig {
 public:
     LoggerConfig(const std::string& id, bool debug = true, bool trace = true) :
         m_id(id), m_debugStr(debug ? "true" : "false"),
-        m_traceStr(trace ? "true" : "false"){
+        m_traceStr(trace ? "true" : "false") {
         
     }
     const std::string& id() { return m_id; }
@@ -28,10 +35,18 @@ public:
             el::Logger* logger = el::Loggers::getLogger(c.id());
             CHECK(logger != nullptr) << "Could not register logger [" << c.id() << "]";
             logger->configurations()->set(el::Level::Debug, el::ConfigurationType::Enabled, c.debug());
-            logger->configurations()->set(el::Level::Debug, el::ConfigurationType::Enabled, c.debug());
             logger->configurations()->set(el::Level::Trace, el::ConfigurationType::Enabled, c.trace());
             logger->reconfigure();
         }
+    }
+    
+    static void reconfigurePerformanceLogger(el::Logger* logger) {
+        _TRACE;
+        if (logger == nullptr) {
+            return;
+        }
+        logger->configurations()->set(kPerformanceLoggingLevel, el::ConfigurationType::Format, "%datetime %level [%logger] %msg");
+        logger->reconfigure();
     }
     
     static void configureLoggers() {
@@ -54,7 +69,7 @@ public:
         el::Configurations configurations;
         configurations.setToDefault();
         std::string logFile = filesystem::buildFilename(QStringList() 
-                                                        << SettingsLoader().defaultHomeDir() 
+                                                        << SettingsLoader::getInstance().defaultHomeDir() 
                                                         << "logs" << "project-islam.log").toStdString();
         configurations.set(el::Level::Global, el::ConfigurationType::Filename, logFile);
         configurations.set(el::Level::Trace, el::ConfigurationType::Format, "%datetime %level [%logger] %func %msg");

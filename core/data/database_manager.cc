@@ -19,21 +19,20 @@ namespace data {
 DatabaseManager::DatabaseManager(const QString& uniqueId, const QString& dbFilename) : 
         m_uniqueId(uniqueId), m_lastQuerySuccessful(false), m_connections(0) {
     DLOG(INFO) << "Initializing DatabaseManager [" << m_uniqueId << "]";
-    SettingsLoader settingsLoader;
-    const QString kDefaultDatabasePath = filesystem::buildPath(QStringList() << settingsLoader.defaultHomeDir() << "data");
+    const QString kDefaultDatabasePath = filesystem::buildPath(QStringList() << SettingsLoader::getInstance().defaultHomeDir() << "data");
     const QString kDefaultDatabaseName = kDefaultDatabasePath + dbFilename;
     
     if (!QFile(kDefaultDatabaseName).exists()) {
         LOG(ERROR) << "Database not found [" << kDefaultDatabaseName << "] ! Please make sure you have correct home path. Current ["
-                    << settingsLoader.defaultHomeDir() << "]";
+                    << SettingsLoader::getInstance().defaultHomeDir() << "]";
     }
     
     if (QSqlDatabase::contains(QSqlDatabase::defaultConnection)) {
         QSqlDatabase::removeDatabase(QSqlDatabase::defaultConnection);
     }
     m_sqlDatabase = QSqlDatabase::addDatabase("QSQLITE");
-    m_sqlDatabase.setHostName(settingsLoader.get(SettingsLoader::kSettingKeyDatabaseHost, QVariant(QString(""))).toString());
-    m_sqlDatabase.setPort(settingsLoader.get(SettingsLoader::kSettingKeyDatabasePort, QVariant(-1)).toInt());
+    m_sqlDatabase.setHostName(SettingsLoader::getInstance().get(SettingsLoader::kSettingKeyDatabaseHost, QVariant(QString(""))).toString());
+    m_sqlDatabase.setPort(SettingsLoader::getInstance().get(SettingsLoader::kSettingKeyDatabasePort, QVariant(-1)).toInt());
     m_sqlDatabase.setDatabaseName(kDefaultDatabaseName);
 }
 

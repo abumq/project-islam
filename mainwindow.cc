@@ -47,7 +47,7 @@ void MainWindow::initialize()
     connect(m_extensionBar, SIGNAL(extensionChanged(AbstractExtension*)), this, SLOT(onExtensionChanged(AbstractExtension*)));
     addToolBar(Qt::LeftToolBarArea, m_extensionBar);
     
-    ExtensionLoader extensionLoader(&m_dataHolder, &m_settingsLoader, ui->menuBar);
+    ExtensionLoader extensionLoader(&m_dataHolder, ui->menuBar);
     extensionLoader.loadAll(m_extensionBar, m_splashScreen);
     
     ExtensionItem* defaultExtension = m_extensionBar->defaultExtensionItem();
@@ -84,7 +84,7 @@ void MainWindow::reloadStyles()
 
 void MainWindow::loadSettings()
 {
-    QString theme = m_settingsLoader.get(SettingsLoader::kSettingKeyTheme, 
+    QString theme = SettingsLoader::getInstance().get(SettingsLoader::kSettingKeyTheme, 
                                          StyleLoader::defaultTheme()).toString();
     QStringList rgbList = theme.split(',');
     int r = rgbList.at(0).trimmed().toInt();
@@ -96,12 +96,6 @@ void MainWindow::loadSettings()
     // in future LoggingConfigurer::configureLoggers() is used we default it to this new log file and other configurations
     
 }
-
-SettingsLoader *MainWindow::settingsLoader()
-{
-    return &m_settingsLoader;
-}
-
 StyleLoader *MainWindow::styleLoader()
 {
     return &m_styleLoader;

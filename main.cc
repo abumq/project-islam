@@ -3,7 +3,6 @@
 #include <QApplication>
 #include <QFile>
 #include <QResource>
-#include <QSettings>
 
 #include "core/logging/logging.h"
 #include "core/utils/version.h"

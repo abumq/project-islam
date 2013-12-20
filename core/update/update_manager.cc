@@ -40,13 +40,13 @@ UpdateManager::UpdateManager(QObject *parent) :
     // Load m_lastChecked
     const QDate defaultDate = QDate::currentDate().addDays(-1);
     QString lastCheckedStr = 
-            SettingsLoader().get("update_checked", 
+            SettingsLoader::getInstance().get("update_checked", 
                                  QVariant(defaultDate.toString())).toString();
     m_lastChecked = QDate::fromString(lastCheckedStr);
     if (m_lastChecked.isNull() || !m_lastChecked.isValid()) {
         m_lastChecked = defaultDate;
     }
-    SettingsLoader().saveSettings("update_checked", QVariant(m_lastChecked.toString()));
+    SettingsLoader::getInstance().saveSettings("update_checked", QVariant(m_lastChecked.toString()));
 }
 
 UpdateManager::~UpdateManager()
@@ -93,7 +93,6 @@ bool UpdateManager::update()
     }
     TIMED_SCOPE(timer, "Update");
     
-    
     bool result = false;
     LOG(INFO) << "Checking for updates...";
     
@@ -138,7 +137,7 @@ bool UpdateManager::update()
     }
     if (result) {
         m_lastChecked = QDate::currentDate();
-        SettingsLoader().saveSettings("update_checked", QVariant(m_lastChecked.toString()));
+        SettingsLoader::getInstance().saveSettings("update_checked", QVariant(m_lastChecked.toString()));
     }
     return result;
 }
@@ -199,7 +198,7 @@ bool UpdateManager::updateDatabase(QJsonObject* jsonObject)
     _TRACE;
     QJsonObject databaseObj = (*jsonObject)["database"].toObject();
     QString ver = databaseObj["version"].toString();
-    QString currVer = SettingsLoader().get("curr_db_ver", QVariant(QString("1.0.0"))).toString();
+    QString currVer = SettingsLoader::getInstance().get("curr_db_ver", QVariant(QString("1.0.0"))).toString();
     bool forceUpdate = databaseObj["force_update"].toBool();
     bool startUpgrade = currVer != ver || forceUpdate;
     bool result = true; // We will mark it false if download fail
@@ -209,7 +208,7 @@ bool UpdateManager::updateDatabase(QJsonObject* jsonObject)
         QString baseUrl = databaseObj["base"].toString();
         QStringList filesList = databaseObj["files"].toString().split(',');
         for (QString filename : filesList) {
-            QString targetDir = filesystem::buildPath(QStringList() << SettingsLoader().defaultHomeDir() << "data");
+            QString targetDir = filesystem::buildPath(QStringList() << SettingsLoader::getInstance().defaultHomeDir() << "data");
             QString tempFilename = targetDir + filename + QString(kLocalFilesSuffix);
             LOG(INFO) << "Downloading database file [" 
                       << filename << "] from [" + baseUrl + "] to [" << targetDir << "]";
@@ -229,7 +228,7 @@ bool UpdateManager::updateDatabase(QJsonObject* jsonObject)
     } else {
         LOG(INFO) << "Database is up to date!";
     }
-    SettingsLoader().saveSettings("curr_db_ver", QVariant(ver));
+    SettingsLoader::getInstance().saveSettings("curr_db_ver", QVariant(ver));
     return result;
 }
 

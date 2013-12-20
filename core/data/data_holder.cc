@@ -43,28 +43,28 @@ void DataHolder::initialize(QSplashScreen *splashScreen)
         qApp->processEvents();
     }
     quranArabic()->load(quran::Quran::TextType::Original, 
-                        SettingsLoader().get(QString(SettingsLoader::kSettingKeyQuranTable), 
+                        SettingsLoader::getInstance().get(QString(SettingsLoader::kSettingKeyQuranTable), 
                                              QString(quran::Quran::kQuranDefaultArabicDatabaseTable)).toString().toStdString());
     if (splashScreen != nullptr) {
         splashScreen->showMessage("Loading Qur'an... [25%]", Qt::AlignHCenter | Qt::AlignBottom);
         qApp->processEvents();
     }
     quranTranslation()->load(quran::Quran::TextType::Translation, 
-                             SettingsLoader().get(QString(SettingsLoader::kSettingKeyQuranTranslationTable), 
+                             SettingsLoader::getInstance().get(QString(SettingsLoader::kSettingKeyQuranTranslationTable), 
                                                   QString(quran::Quran::kQuranDefaultTranslationDatabaseTable)).toString().toStdString());
     if (splashScreen != nullptr) {
         splashScreen->showMessage("Loading Qur'an... [50%]", Qt::AlignHCenter | Qt::AlignBottom);
         qApp->processEvents();
     }
     quranTransliteration()->load(quran::Quran::TextType::Transliteration, 
-                                 SettingsLoader().get(QString(SettingsLoader::kSettingKeyQuranTransliterationTable), 
+                                 SettingsLoader::getInstance().get(QString(SettingsLoader::kSettingKeyQuranTransliterationTable), 
                                                       QString(quran::Quran::kQuranDefaultTransliterationDatabaseTable)).toString().toStdString());
     if (splashScreen != nullptr) {
         splashScreen->showMessage("Loading Qur'an... [75%]", Qt::AlignHCenter | Qt::AlignBottom);
         qApp->processEvents();
     }
     quranTafseer()->load(quran::Quran::TextType::Tafseer, 
-                         SettingsLoader().get(QString(SettingsLoader::kSettingKeyQuranTafseerTable), 
+                         SettingsLoader::getInstance().get(QString(SettingsLoader::kSettingKeyQuranTafseerTable), 
                                               QString(quran::Quran::kQuranDefaultTafseerDatabaseTable)).toString().toStdString());
     if (splashScreen != nullptr) {
         splashScreen->showMessage("Loading Qur'an... [100%]", Qt::AlignHCenter | Qt::AlignBottom);

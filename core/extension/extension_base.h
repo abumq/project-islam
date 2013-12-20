@@ -17,17 +17,12 @@ class ExtensionBase : public QObject
 public:
     ExtensionBase() :
         m_extension(nullptr) {
-        // We dont want to log to default log file made by extension' _ELPP_DEFAULT_LOG_FILE macro
+        // We dont want to log to default log file while initializing interface,
+        // made by extension '_ELPP_DEFAULT_LOG_FILE` macro. We already re-initialze log
+        // file location in initialze() from extension loader
         el::Loggers::reconfigureAllLoggers(el::ConfigurationType::ToFile, "false");
         // Do not call initialize() here since we dont want to run into FATAL error
-        // of __not__ initializing extensionInfo
-#ifdef _LOGGER
-        el::Loggers::getLogger(_LOGGER);
-#endif
-#ifdef _PERFORMANCE_LOGGER
-        el::Loggers::getLogger(_PERFORMANCE_LOGGER);
-#endif
-        el::Loggers::setDefaultConfigurations(LoggingConfigurer::baseConfiguration(), true);
+        // of "NOT" initializing extensionInfo at this point
     }
     
     virtual ~ExtensionBase() {
@@ -55,6 +50,17 @@ public:
     /// Returns true if successfully initialized
     virtual bool initialize(int argc, const char** argv) {
         el::Helpers::setArgs(argc, argv);
+#ifdef _LOGGER
+        el::Loggers::getLogger(_LOGGER);
+#endif // _LOGGER
+#ifdef _PERFORMANCE_LOGGER
+        el::Logger* extensionPerformanceLogger = el::Loggers::getLogger(_PERFORMANCE_LOGGER);
+#endif // _PERFORMANCE_LOGGER
+        el::Loggers::setDefaultConfigurations(LoggingConfigurer::baseConfiguration(), true);
+#ifdef _PERFORMANCE_LOGGER
+        // Make sure this line is after we set default configuration for repo
+        LoggingConfigurer::reconfigurePerformanceLogger(extensionPerformanceLogger);
+#endif // _PERFORMANCE_LOGGER
         CHECK(m_extensionInfo.isInitialized()) << "Please initialize ExtensionInfo (using constructor) from constructor of your extension.";
         QObject::connect(extension(), SIGNAL(containerGeometryChanged(int, int)), this, SLOT(onContainerGeometryChanged(int, int)));
         QObject::connect(extension(), SIGNAL(activated()), this, SLOT(onActivated()));
@@ -76,7 +82,7 @@ public:
     
     inline QString settingsKeyPrefix() {
         return "extension_setting__" + m_extensionInfo.name().replace(" ", "") 
-                                                  + "__";
+                + "__";
     }
     
     inline QVariant setting(const QString& key, const QVariant& defaultValue = QVariant()) {
@@ -103,5 +109,5 @@ private:
 };
 
 Q_DECLARE_INTERFACE(ExtensionBase, "ProjectIslam.Api.ExtensionBase.v1.0")
-    
+
 #endif // EXTENSION_BASE_H

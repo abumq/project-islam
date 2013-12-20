@@ -13,10 +13,8 @@
 #include "core/extension/extension_bar.h"
 #include "core/data/data_holder.h"
 
-ExtensionLoader::ExtensionLoader(data::DataHolder* dataHolder, 
-                                 SettingsLoader* settingsLoader, QMenuBar* menuBar) :
+ExtensionLoader::ExtensionLoader(data::DataHolder* dataHolder, QMenuBar* menuBar) :
     m_dataHolder(dataHolder),
-    m_settingsLoader(settingsLoader),
     m_menuBar(menuBar)
 {
 }
@@ -77,7 +75,7 @@ void ExtensionLoader::loadAll(ExtensionBar* extensionBar, QSplashScreen *splashS
         if (extensionBase != nullptr && extensionBase->extension() != nullptr) {
             extensionBase->extension()->setDataHolder(m_dataHolder);
             extensionBase->extension()->setContainer(extensionBar->container());
-            extensionBase->extension()->setSettingsLoader(m_settingsLoader);
+            extensionBase->extension()->setSettingsLoader(&SettingsLoader::getInstance());
             
             QAction* helpMenu = m_menuBar->actions().at(m_menuBar->actions().size() - 1);
             m_menuBar->insertMenu(helpMenu, extensionBase->extension()->menu());

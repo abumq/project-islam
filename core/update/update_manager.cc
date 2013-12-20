@@ -14,6 +14,7 @@
 #include <QJsonDocument>
 #include <QPluginLoader>
 #include <QNetworkReply>
+#include <QProcess>
 
 #include "core/utils/memory.h"
 #include "core/utils/version.h"
@@ -41,7 +42,7 @@ UpdateManager::UpdateManager(QObject *parent) :
     const QDate defaultDate = QDate::currentDate().addDays(-1);
     QString lastCheckedStr = 
             SettingsLoader::getInstance().get("update_checked", 
-                                 QVariant(defaultDate.toString())).toString();
+                                              QVariant(defaultDate.toString())).toString();
     m_lastChecked = QDate::fromString(lastCheckedStr);
     if (m_lastChecked.isNull() || !m_lastChecked.isValid()) {
         m_lastChecked = defaultDate;
@@ -70,6 +71,45 @@ void UpdateManager::initialize(ExtensionBar* extensionBar)
     // Single shot anyway!
     performAsyncUpdate();
     m_updateTimer.start(kCheckIntervalInMs);
+}
+
+void UpdateManager::updateFiles() const
+{
+    // Check to see if upgrade.info exist,
+    // if yes launch Upgrade binary with arguments
+    // to this application to start detached process
+    // with same arguments - Do not manually restart here!
+    // This will not work
+    QFile upgradeInfoFile("upgrade.info");
+    if (upgradeInfoFile.exists() 
+            && upgradeInfoFile.open(QIODevice::ReadOnly) 
+            && upgradeInfoFile.size() > 0) {
+        upgradeInfoFile.close();
+#if defined(Q_OS_UNIX)
+        QFile upgradeExec(qApp->applicationDirPath() + "/upgrade-lc-now");
+#elif defined(Q_OS_WIN)
+        QFile upgradeExec(qApp->applicationDirPath() + "/upgrade-lc-now.exe");
+#endif // defined(Q_OS_UNIX)
+        if (upgradeExec.exists()) {
+            QStringList arguments = qApp->arguments();
+            qApp->quit();
+            QProcess::startDetached(upgradeExec.fileName(), arguments);
+        }
+    }
+}
+
+void UpdateManager::saveDownloadedFilesListToFile() const
+{
+    QFile f("upgrade.info");
+    if (!f.open(QIODevice::WriteOnly)) {
+        LOG(ERROR) << "Unable to create [upgrade.info]";
+    } else {
+        for (QString filename : m_downloadedFiles) {
+            f.write(QString(filename + "\n").toStdString().c_str());
+            f.flush();
+        }
+        f.close();
+    }
 }
 
 bool UpdateManager::needToCheckForUpdates() const
@@ -119,13 +159,13 @@ bool UpdateManager::update()
             QJsonObject osObj = jsonObject[currOs].toObject();
             if (osObj["available"].toBool()) {
                 result = updatePlatform(&osObj);
-                // Following order should not change since we want to 
-                // try to update all platform, database and extensions before we return
-                //
-                // TODO: Or do we? What if we have critical database change
-                //       that will not work without platform updated
-                result = updateDatabase(&osObj) && result;
-                result = updateExtensions(&osObj) && result;
+                result = result && updateDatabase(&osObj);
+                result = result && updateExtensions(&osObj);
+                if (result) {
+                    // Everything updated successfully! Let's save it to file
+                    saveDownloadedFilesListToFile();
+                    updateFiles();
+                }
             } else {
                 LOG(ERROR) << "No downloadable update available for [" 
                            << currOs << "]";
@@ -161,30 +201,10 @@ bool UpdateManager::updatePlatform(QJsonObject* jsonObject)
             QString tempFilename = targetDir + filename + QString(kLocalFilesSuffix);
             LOG(INFO) << "Downloading platform file [" 
                       << filename << "] from [" + baseUrl + "] to [" << targetDir << "]";
-            result = downloadFile(baseUrl + filename, tempFilename) && result;
-        }
-        if (result) {
-            for (QString filename : filesList) {
-                QString downloadedFilename = filesystem::buildFilename(
-                            QStringList() << qApp->applicationDirPath() << filename + QString(kLocalFilesSuffix));
-                const int kExtraSuffix = (QString(kRemoteFilesSuffix) + QString(kLocalFilesSuffix)).length();
-                QString currFilename = downloadedFilename.mid(
-                            0,  downloadedFilename.length() - kExtraSuffix);
-                
-                QFile currFile(currFilename);
-                QFile::Permissions perms;
-                if (currFile.exists()) {
-                    perms = currFile.permissions();
-                    currFile.rename(currFilename + ".old");
-                    currFile.close();
-                }
-                QFile downloadedFile(downloadedFilename);
-                result = downloadedFile.rename(currFilename);
-                result = downloadedFile.setPermissions(perms) && result;
-                if (result && currFile.exists()) {
-                    currFile.remove();
-                }
-                LOG(INFO) << "Platform has been successfully updated!";
+            // TODO: Uncomment following line 
+            //result = result && downloadFile(baseUrl + filename, tempFilename);
+            if (result) {
+                m_downloadedFiles.push_back(tempFilename);
             }
         }
     } else {
@@ -212,7 +232,7 @@ bool UpdateManager::updateDatabase(QJsonObject* jsonObject)
             QString tempFilename = targetDir + filename + QString(kLocalFilesSuffix);
             LOG(INFO) << "Downloading database file [" 
                       << filename << "] from [" + baseUrl + "] to [" << targetDir << "]";
-            result = downloadFile(baseUrl + filename, tempFilename) && result;
+            result = result && downloadFile(baseUrl + filename, tempFilename);
             if (result) {
                 // Updated, replace tempFilename with db
                 QFile newFile(tempFilename);
@@ -257,7 +277,7 @@ bool UpdateManager::updateExtensions(QJsonObject* jsonObject)
                     QString tempFilename = targetDir + filename + QString(kLocalFilesSuffix);
                     LOG(INFO) << "Downloading extension file [" 
                               << filename << "] from [" + baseUrl + "] to [" << targetDir << "]";
-                    result = downloadFile(baseUrl + filename, tempFilename) && result;
+                    result = result && downloadFile(baseUrl + filename, tempFilename);
                     if (!result || !ExtensionLoader::verifyExtension(tempFilename)) {
                         LOG(WARNING) << "Removing [" << tempFilename << "]";
                         QFile file(tempFilename);
@@ -285,7 +305,7 @@ bool UpdateManager::updateExtensions(QJsonObject* jsonObject)
                             }
                             QFile downloadedFile(downloadedFilename);
                             result = downloadedFile.rename(currFilename);
-                            result = downloadedFile.setPermissions(perms) && result;
+                            result = result && downloadedFile.setPermissions(perms);
                             if (result && currFile.exists()) {
                                 currFile.remove();
                             }

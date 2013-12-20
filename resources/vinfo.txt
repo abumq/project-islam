@@ -2,7 +2,7 @@
     "linux": {
         "available" : true,
         "platform": {
-            "version": "0.1.0",
+            "version": "0.1.1",
              "force_update" : false,
              "base"  :
 "http://www.icplusplus.com/tools/project-islam/downloads/linux/",

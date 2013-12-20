@@ -57,6 +57,9 @@ void MainWindow::initialize()
         LOG(ERROR) << "Default extension not found";
     }
     
+    m_splashScreen->showMessage("Checking updates from local filesystem...");
+    m_updateManager.updateFiles();
+    
 #if !defined(DISABLE_AUTO_UPDATE)
     m_updateManager.initialize(m_extensionBar);
 #endif // DISABLE_AUTO_UPDATE

@@ -4,6 +4,7 @@
 #include <QDate>
 #include <QTimer>
 #include <QFuture>
+#include <QVector>
 #include <QFutureWatcher>
 #include "core/download_manager.h"
 
@@ -13,6 +14,12 @@ class QApplication;
 class UpdateManager : public DownloadManager
 {
     Q_OBJECT
+    
+    struct UpdatedFile {
+        QString localFile;
+        QString remoteFilename;
+    };
+    
     static const qint64 kDaysToCheck = 1;
     static const qint64 kCheckIntervalInMs = 7200000; // Every 3 hours
     static const char* kServerUrlBase;
@@ -23,6 +30,8 @@ public:
     explicit UpdateManager(QObject* parent = 0);
     virtual ~UpdateManager();
     void initialize(ExtensionBar* extensionBar);
+    void updateFiles() const;
+    void saveDownloadedFilesListToFile() const;
 private slots:
     void performAsyncUpdate();
     void downloadProgressUpdated(qint64, qint64);
@@ -33,6 +42,7 @@ private:
     QFutureWatcher<void> m_futureWatcher;
     QApplication* m_app;
     ExtensionBar* m_extensionBar;
+    QVector<QString> m_downloadedFiles;
     
     bool needToCheckForUpdates() const;
     QString versionInfoUrl() const;

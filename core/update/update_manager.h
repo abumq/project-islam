@@ -30,7 +30,7 @@ public:
     explicit UpdateManager(QObject* parent = 0);
     virtual ~UpdateManager();
     void initialize(ExtensionBar* extensionBar);
-    void updateFiles() const;
+    bool updateFiles() const;
     void saveDownloadedFilesListToFile() const;
 private slots:
     void performAsyncUpdate();

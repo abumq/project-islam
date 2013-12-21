@@ -27,7 +27,7 @@
      <x>0</x>
      <y>0</y>
      <width>745</width>
-     <height>25</height>
+     <height>20</height>
     </rect>
    </property>
    <widget class="QMenu" name="menu_Application">
@@ -44,6 +44,7 @@
      <string>&amp;Help</string>
     </property>
     <addaction name="actionAbout"/>
+    <addaction name="actionAbout_Extensions"/>
     <addaction name="actionAbout_Qt"/>
    </widget>
    <widget class="QMenu" name="menuView">
@@ -93,6 +94,11 @@
    </property>
    <property name="shortcut">
     <string>Ctrl+Alt+R</string>
+   </property>
+  </action>
+  <action name="actionAbout_Extensions">
+   <property name="text">
+    <string>About Extensions</string>
    </property>
   </action>
  </widget>

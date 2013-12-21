@@ -73,7 +73,7 @@ void UpdateManager::initialize(ExtensionBar* extensionBar)
     m_updateTimer.start(kCheckIntervalInMs);
 }
 
-void UpdateManager::updateFiles() const
+bool UpdateManager::updateFiles() const
 {
     // Check to see if upgrade.info exist,
     // if yes launch Upgrade binary with arguments
@@ -91,11 +91,19 @@ void UpdateManager::updateFiles() const
         QFile upgradeExec(qApp->applicationDirPath() + "/upgrade-lc-now.exe");
 #endif // defined(Q_OS_UNIX)
         if (upgradeExec.exists()) {
-            QStringList arguments = qApp->arguments();
+            QStringList arguments;
+            QFileInfo upgradeInfoFileInfo("upgrade.info");
+            arguments.append("--upgrade-file");
+            arguments.append(upgradeInfoFileInfo.filePath());
+            arguments.append("--app");
+            arguments.append(qApp->applicationFilePath());
+            arguments.append(qApp->arguments());
             qApp->quit();
             QProcess::startDetached(upgradeExec.fileName(), arguments);
+            return true;
         }
     }
+    return false;
 }
 
 void UpdateManager::saveDownloadedFilesListToFile() const
@@ -164,7 +172,6 @@ bool UpdateManager::update()
                 if (result) {
                     // Everything updated successfully! Let's save it to file
                     saveDownloadedFilesListToFile();
-                    updateFiles();
                 }
             } else {
                 LOG(ERROR) << "No downloadable update available for [" 
@@ -201,8 +208,7 @@ bool UpdateManager::updatePlatform(QJsonObject* jsonObject)
             QString tempFilename = targetDir + filename + QString(kLocalFilesSuffix);
             LOG(INFO) << "Downloading platform file [" 
                       << filename << "] from [" + baseUrl + "] to [" << targetDir << "]";
-            // TODO: Uncomment following line 
-            //result = result && downloadFile(baseUrl + filename, tempFilename);
+            result = result && downloadFile(baseUrl + filename, tempFilename);
             if (result) {
                 m_downloadedFiles.push_back(tempFilename);
             }
@@ -234,15 +240,7 @@ bool UpdateManager::updateDatabase(QJsonObject* jsonObject)
                       << filename << "] from [" + baseUrl + "] to [" << targetDir << "]";
             result = result && downloadFile(baseUrl + filename, tempFilename);
             if (result) {
-                // Updated, replace tempFilename with db
-                QFile newFile(tempFilename);
-                QFile oldFile(targetDir + data::kDefaultDatabaseFilename);
-                QFile::Permissions perms = oldFile.permissions();
-                oldFile.remove();
-                oldFile.close();
-                result = newFile.rename(oldFile.fileName());
-                result = newFile.setPermissions(perms) && result;
-                LOG(INFO) << "Database has been successfully updated!";
+                m_downloadedFiles.push_back(tempFilename);
             }
         }
     } else {
@@ -286,31 +284,7 @@ bool UpdateManager::updateExtensions(QJsonObject* jsonObject)
                             file.close();
                         }
                     } else {
-                        // Extension ready to be upgrade! Filename: file.remotesuffix.localsuffix
-                        for (QString filename : filesList) {
-                            QString downloadedFilename = filesystem::buildFilename(
-                                        QStringList() << qApp->applicationDirPath() << "extensions" 
-                                        << filename + QString(kLocalFilesSuffix));
-                            const int kExtraSuffix = (QString(kRemoteFilesSuffix) + QString(kLocalFilesSuffix)).length();
-                            QString currFilename = downloadedFilename.mid(
-                                        0, 
-                                        downloadedFilename.length() - kExtraSuffix);
-                            
-                            QFile currFile(currFilename);
-                            QFile::Permissions perms;
-                            if (currFile.exists()) {
-                                perms = currFile.permissions();
-                                currFile.rename(currFilename + ".old");
-                                currFile.close();
-                            }
-                            QFile downloadedFile(downloadedFilename);
-                            result = downloadedFile.rename(currFilename);
-                            result = result && downloadedFile.setPermissions(perms);
-                            if (result && currFile.exists()) {
-                                currFile.remove();
-                            }
-                        }
-                        LOG(INFO) << "Extension [" << name << "] has been successfully updated!";
+                        m_downloadedFiles.push_back(tempFilename);
                     }
                 }
             } else {

@@ -1,61 +1,81 @@
 #include <QCoreApplication>
 #include <QFile>
+#include <QFileInfo>
 #include <QStringList>
 #include <QProcess>
-//#include <easylogging++.h>
+#include <easylogging++.h>
 
-//_INITIALIZE_EASYLOGGINGPP
+_INITIALIZE_EASYLOGGINGPP
 
-void performUpdate() {
-    QFile f("upgrade.info");
-    if (!f.open(QIODevice::ReadOnly | QIODevice::Text)) {
-        return;
-    }
-    while (!f.atEnd()) {
-        QString filename = f.readLine();
-        if (filename.isEmpty()) {
-            continue;
-        }
-        //LOG(INFO) << "Filename: " << filename;
-        /*QString downloadedFilename = filesystem::buildFilename(
-                        QStringList() << qApp->applicationDirPath() << filename + QString(kLocalFilesSuffix));
-            const int kExtraSuffix = (QString(kRemoteFilesSuffix) + QString(kLocalFilesSuffix)).length();
-            QString currFilename = downloadedFilename.mid(
-                        0,  downloadedFilename.length() - kExtraSuffix);
-                        
-            QFile currFile(currFilename);
-            QFile::Permissions perms;
-            if (currFile.exists()) {
-                perms = currFile.permissions();
-                currFile.rename(currFilename + ".old");
-                currFile.close();
-            }
-            QFile downloadedFile(downloadedFilename);
-            result = downloadedFile.rename(currFilename);
-            result = downloadedFile.setPermissions(perms) && result;
-            if (result && currFile.exists()) {
-                currFile.remove();
-            }
-            LOG(INFO) << "Platform has been successfully updated!";*/
-    }
-    f.close();
-    f.remove();
-}
+bool performUpdate(const QString&upgradeFile);
 
 int main(int argc, char *argv[])
 {
     QCoreApplication a(argc, argv);
-    //el::Loggers::reconfigureAllLoggers(el::ConfigurationType::ToFile, "false");
-    
+    if (argc == 0) {
+        LOG(ERROR) << "Invalid number of args, [upgrade-file] and [app] required";
+        return 1;
+    }
+    int upgradeFileIdx = qApp->arguments().indexOf("--upgrade-file");
+    if (upgradeFileIdx == -1) {
+        LOG(ERROR) << "Upgrade file not found!";
+        return 1;
+    }
+    QString upgradeFile = qApp->arguments().at(upgradeFileIdx + 1);
     QStringList projectIslamArgs;
-    if (argc > 1) {
-        for (int i = 1; i < argc; ++i) {
-            projectIslamArgs.append(QString(argv[i]));
+    int projectIslamArgsStartIdx = qApp->arguments().indexOf("--app");
+    if (projectIslamArgsStartIdx != -1) {
+        projectIslamArgs.append(qApp->arguments().at(projectIslamArgsStartIdx + 1));
+        for (int i = projectIslamArgsStartIdx + 2; i < argc; ++i) {
+            projectIslamArgs.append(qApp->arguments().at(i));
         }
     }
-    performUpdate();
+    bool result = performUpdate(upgradeFile);
+    if (!result && qApp->arguments().contains("--no-launch-on-failure")) {
+        return 1;
+    }
     if (!projectIslamArgs.isEmpty()) {
         QProcess::startDetached(projectIslamArgs[0], projectIslamArgs);
     }
-    return 0;
+    return result ? 0 : 1;
+}
+
+bool performUpdate(const QString& upgradeFile) {
+    QFileInfo fi(upgradeFile);
+    QFile f(fi.filePath());
+    if (!f.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        LOG(ERROR) << fi.filePath() << ": " << f.errorString();
+        return false;
+    }
+    
+    while (!f.atEnd()) {
+        QString filename = f.readLine();
+        filename = filename.trimmed();
+        if (filename.isEmpty() && !filename.endsWith(".zip.upgrade")) {
+            continue;
+        }
+        LOG(INFO) << "Filename: " << filename;
+        QFile currFile(filename);
+        if (currFile.size() > 0 && currFile.open(QIODevice::ReadWrite)) {
+            QString renamedFile = filename.mid(0, filename.indexOf(".zip.upgrade"));
+            LOG(INFO) << "Renaming from [" << filename << "] to [" << renamedFile << "]";
+            currFile.close();
+            // Get permission of existing file
+            QFile existingFile(renamedFile);
+            QFile::Permissions p;
+            if (existingFile.exists()) {
+                p = existingFile.permissions();
+            } else {
+                p = QFile::ReadOwner | QFile::WriteOwner | QFile::ExeOwner |
+                    QFile::ReadGroup | QFile::ReadOther;
+            }
+            existingFile.remove();
+            currFile.rename(renamedFile);
+            currFile.setPermissions(p);
+        }
+    }
+    f.close();
+    f.remove();
+    LOG(INFO) << "Upgrade completed!";
+    return true;
 }

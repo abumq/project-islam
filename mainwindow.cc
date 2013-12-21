@@ -57,18 +57,20 @@ void MainWindow::initialize()
         LOG(ERROR) << "Default extension not found";
     }
     
-    m_splashScreen->showMessage("Checking updates from local filesystem...");
-    m_updateManager.updateFiles();
-    
+    m_splashScreen->showMessage("Checking updates from local filesystem..."
+                                , Qt::AlignHCenter | Qt::AlignBottom);
+    bool updating = m_updateManager.updateFiles();
+    if (!updating) {
 #if !defined(DISABLE_AUTO_UPDATE)
-    m_updateManager.initialize(m_extensionBar);
+        m_updateManager.initialize(m_extensionBar);
 #endif // DISABLE_AUTO_UPDATE
-
-    setWindowState(Qt::WindowMaximized);
-    m_previousWindowsState = Qt::WindowMaximized;
-    
-    QObject::connect(ui->actionRestart, SIGNAL(triggered()), this, SLOT(restart()));
-    reloadStyles();
+        
+        setWindowState(Qt::WindowMaximized);
+        m_previousWindowsState = Qt::WindowMaximized;
+        
+        QObject::connect(ui->actionRestart, SIGNAL(triggered()), this, SLOT(restart()));
+        reloadStyles();
+    }
 }
 
 void MainWindow::reloadStyles()
@@ -88,7 +90,7 @@ void MainWindow::reloadStyles()
 void MainWindow::loadSettings()
 {
     QString theme = SettingsLoader::getInstance().get(SettingsLoader::kSettingKeyTheme, 
-                                         StyleLoader::defaultTheme()).toString();
+                                                      StyleLoader::defaultTheme()).toString();
     QStringList rgbList = theme.split(',');
     int r = rgbList.at(0).trimmed().toInt();
     int g = rgbList.at(1).trimmed().toInt();

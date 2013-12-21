@@ -4,7 +4,7 @@ QT       += core gui widgets sql multimedia network
 
 unix:!win32 {
     ## Compiler
-    COMPILER = clang++
+    COMPILER = g++
 
     ## Standard
     QMAKE_CXXFLAGS += -std=c++0x

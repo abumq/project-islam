@@ -42,6 +42,10 @@ private slots:
     void on_actionFull_Screen_triggered(bool checked);
     void restart();
     
+    void on_actionAbout_triggered();
+    
+    void on_actionExtension_Bar_triggered(bool checked);
+    
 private:
     Ui::MainWindow *ui;
     QSplashScreen* m_splashScreen;

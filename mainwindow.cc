@@ -17,6 +17,8 @@
 #include "core/extension/extension_item.h"
 #include "core/extension/extension_loader.h"
 #include "core/logging/logging.h"
+#include "core/utils/version.h"
+
 MainWindow::MainWindow(QSplashScreen *splashScreen) :
     QMainWindow(nullptr),
     ui(new Ui::MainWindow),
@@ -165,4 +167,21 @@ void MainWindow::restart()
 {
     qApp->quit();
     QProcess::startDetached(qApp->arguments()[0], qApp->arguments());
+}
+
+void MainWindow::on_actionAbout_triggered()
+{
+    QMessageBox::information(this, "About", 
+                             QString(qApp->applicationDisplayName() + " v") +
+                             version::versionString());
+    
+}
+
+void MainWindow::on_actionExtension_Bar_triggered(bool checked)
+{
+    // FIXME: m_container->setGeometry does not properly work, until it works properly
+    //        we will leave this menu item disabled
+    m_extensionBar->setVisible(checked);
+    m_container->setGeometry(checked ? ExtensionBar::kExtensionBarWidth : 0, 
+                             AbstractExtension::kExtensionTop, width(), height());
 }

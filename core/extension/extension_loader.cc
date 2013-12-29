@@ -89,8 +89,7 @@ void ExtensionLoader::loadAll(ExtensionBar* extensionBar, QSplashScreen *splashS
         }
     }
 #if defined(_MSC_VER)
-    for(int i = 0; i < argc; ++i)
-        delete[] argv[i];
+    delete[] argv;
 #endif // defined(_MSC_VER)
 }
 

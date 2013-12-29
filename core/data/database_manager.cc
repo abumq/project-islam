@@ -22,10 +22,8 @@ DatabaseManager::DatabaseManager(const QString& uniqueId, const QString& dbFilen
     const QString kDefaultDatabasePath = filesystem::buildPath(QStringList() << SettingsLoader::getInstance().defaultHomeDir() << "data");
     const QString kDefaultDatabaseName = kDefaultDatabasePath + dbFilename;
     
-    if (!QFile(kDefaultDatabaseName).exists()) {
-        LOG(ERROR) << "Database not found [" << kDefaultDatabaseName << "] ! Please make sure you have correct home path. Current ["
+    CHECK(QFile(kDefaultDatabaseName).exists()) << "Database not found [" << kDefaultDatabaseName << "] ! Please make sure you have correct home path. Current ["
                     << SettingsLoader::getInstance().defaultHomeDir() << "]";
-    }
     
     if (QSqlDatabase::contains(QSqlDatabase::defaultConnection)) {
         QSqlDatabase::removeDatabase(QSqlDatabase::defaultConnection);

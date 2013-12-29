@@ -104,12 +104,13 @@ void QuranView::update(quran::Chapter* chapter, int from, int to)
 {
     _TRACE;
     TIMED_FUNC(timer);
-    scene()->clear();
-    
     // Either we highlight previously selected verse or if none is selected
     // we highlight 'from'
     int verseNumberToHighlight = m_selectedVerseTextItem != nullptr ? 
                 m_selectedVerseTextItem->verse()->number() : from;
+    // We should not be clearing scene before we check verseNumberToHighlight
+    // otherwise we get an invalid m_selectedVerseTextItem
+    scene()->clear();
     // If previously selected verse is out of range we highlight 'from
     if (verseNumberToHighlight < from || verseNumberToHighlight > to) {
         verseNumberToHighlight = from;
@@ -118,6 +119,7 @@ void QuranView::update(quran::Chapter* chapter, int from, int to)
     m_verseTextTranslationItems.clear();
     m_verseTextTransliterationItems.clear();
     m_verseTextTafseerItems.clear();
+    // We need to assign this to nullptr to prevent any errors
     m_selectedVerseTextItem = nullptr;
     bool isChapterChanged = m_currentChapter != chapter;
     m_currentChapter = CHECK_NOTNULL(chapter);

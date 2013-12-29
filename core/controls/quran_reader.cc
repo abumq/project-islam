@@ -44,7 +44,6 @@ QuranReader::QuranReader(quran::Quran* quran, quran::Quran* quranTranslation,
             ui->cboChapter->addItem(chapterItem);
         }
         ui->cboChapter->setCurrentIndex(0);
-        on_cboChapter_currentIndexChanged(0);
         
         connect(m_quranView, SIGNAL(chapterChanged(const quran::Chapter*)), this, SIGNAL(chapterChanged(const quran::Chapter*)));
         connect(m_quranView, SIGNAL(verseRangeChanged(int,int)), this, SIGNAL(verseRangeChanged(int,int)));

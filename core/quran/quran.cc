@@ -82,7 +82,7 @@ void Quran::load(const Quran::TextType &textType, const std::string& databaseTab
             chapterPtr->m_verses.insert(std::make_pair(number, std::move(verse)));
         }
     }
-    m_ready = true;
+    m_ready = result.size() == kChapterCount;
 }
 
 const quran::Verse* Quran::verse(quran::Chapter::Name chapter, int verseNumber) const 

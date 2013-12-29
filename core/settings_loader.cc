@@ -31,6 +31,7 @@ SettingsLoader::SettingsLoader(const char* settingsFilename) :
     m_settings(nullptr)
 {
     initialize(settingsFilename);
+    initialize(settingsFilename);
 }
 
 SettingsLoader::~SettingsLoader()
@@ -53,7 +54,7 @@ void SettingsLoader::initialize(const char* settingsFilename)
     // call this initialze() very often!
     //
     // Important: This is only because we are using '_ELPP_NO_DEFAULT_LOG_FILE'
-    LOG_EVERY_N(2, WARNING) << "Created multiple instances (" << ELPP_COUNTER_POS
+    LOG_AFTER_N(2, WARNING) << "Created multiple instances (" << ELPP_COUNTER_POS
                             << ") of [SettingsLoader], filename: [" << settingsFilename << "]";
 }
 

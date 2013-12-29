@@ -6,7 +6,7 @@
 #define MyAppPublisher "Project Islam Authors"
 #define MyAppURL "http://www.icplusplus.com/"
 #define MyAppExeName "project-islam.exe"
-#define BaseLocation "\\VBOXSVR\shared-with-vbox\release"
+#define BaseLocation "C:\Users\Majid\Desktop\build\release"
 
 [Setup]
 ; NOTE: The value of AppId uniquely identifies this application.

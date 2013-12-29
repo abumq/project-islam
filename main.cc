@@ -23,12 +23,33 @@ int main(int argc, char *argv[])
     LoggingConfigurer::configureLoggers();
     _TRACE;
     
+    QString appExec = QString(argv[0]);
+    QString appPath = appExec.mid(0, appExec.lastIndexOf(QDir::separator()));
+    // This is important in order to load platform specific plugins
+    // We do not want to use environment variables as that may be changed
+    // by some other Qt application
+    int argc_ = argc + 2;
+#if defined(_MSC_VER)
+    // We dynamically allocate because VC++ causes issue
+    // TODO: Use new() instead of malloc to be compatible with delete[]
+    char** argv_ = (char**)malloc(argc_ * sizeof(char*));
+#else
+    char* argv_[argc_];
+#endif // defined(_MSC_VER)
+    for (int i = 0; i < argc; ++i) {
+        argv_[i] = argv[i];
+    }
+    argv_[argc] = "-platformpluginpath";
+    argv_[argc + 1] = const_cast<char*>((appPath + "/plugins").toStdString().c_str());
+    
+    QApplication a(argc_, argv_);
+    
     Q_INIT_RESOURCE(styles);
     Q_INIT_RESOURCE(icons);
     
-    QApplication a(argc, argv);
+    _START_EASYLOGGINGPP(argc_, argv_);
     
-    _START_EASYLOGGINGPP(argc, argv);
+    LOG(INFO) << "Started app with args: " << a.arguments();
     
     a.setApplicationName("Project Islam Platform");
     a.setOrganizationName("Project Islam");
@@ -43,6 +64,7 @@ int main(int argc, char *argv[])
     
     qApp->addLibraryPath(qApp->applicationDirPath());
     qApp->addLibraryPath(qApp->applicationDirPath() + "/extensions");
+    
     
     MainWindow w(&splashScreen);
     int status;
@@ -65,5 +87,8 @@ int main(int argc, char *argv[])
             f.remove();
         }
     }
+#if defined(_MSC_VER)
+    delete[] argv_;
+#endif // defined(_MSC_VER)
     return status;
 }

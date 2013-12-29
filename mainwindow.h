@@ -30,6 +30,8 @@ public:
     void loadSettings();
     StyleLoader *styleLoader();
     data::DataHolder* dataHolder();
+    bool applicationUpdated() const;
+    
 protected:
     void resizeEvent(QResizeEvent *);
 private slots:
@@ -54,9 +56,7 @@ private:
     StyleLoader m_styleLoader;
     Qt::WindowStates m_previousWindowsState;
     data::DataHolder m_dataHolder;
-#if !defined(DISABLE_AUTO_UPDATE)
     UpdateManager m_updateManager;
-#endif // DISABLE_AUTO_UPDATE
 };
 
 #endif // MAINWINDOW_H

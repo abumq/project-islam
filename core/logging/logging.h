@@ -14,18 +14,22 @@ static const el::Level kPerformanceLoggingLevel = el::Level::Debug;
 
 class LoggerConfig {
 public:
-    LoggerConfig(const std::string& id, bool debug = true, bool trace = true) :
+    LoggerConfig(const std::string& id, bool debug = true, bool trace = true,
+        bool toFile = true) :
         m_id(id), m_debugStr(debug ? "true" : "false"),
-        m_traceStr(trace ? "true" : "false") {
+        m_traceStr(trace ? "true" : "false") ,
+        m_toFile(toFile ? "true" : "false") {
         
     }
     const std::string& id() { return m_id; }
     const std::string& debug() { return m_debugStr; }
     const std::string& trace() { return m_traceStr; }
+    const std::string& toFile() { return m_toFile; }
 private:
     std::string m_id;
     std::string m_debugStr;
     std::string m_traceStr;
+    std::string m_toFile;
 };
 
 class LoggingConfigurer {
@@ -36,6 +40,7 @@ public:
             CHECK(logger != nullptr) << "Could not register logger [" << c.id() << "]";
             logger->configurations()->set(el::Level::Debug, el::ConfigurationType::Enabled, c.debug());
             logger->configurations()->set(el::Level::Trace, el::ConfigurationType::Enabled, c.trace());
+            logger->configurations()->set(el::Level::Global, el::ConfigurationType::ToFile, c.toFile());
             logger->reconfigure();
         }
     }
@@ -54,6 +59,7 @@ public:
             LoggerConfig("default"),
             LoggerConfig("data"),
             LoggerConfig("update_manager"),
+            LoggerConfig("settings_loader", true, true, false),
             LoggerConfig("quran")
         };
         const int totalLoggerConfigs = sizeof(configsArr) / sizeof(configsArr[0]);

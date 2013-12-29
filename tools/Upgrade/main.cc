@@ -3,7 +3,7 @@
 #include <QFileInfo>
 #include <QStringList>
 #include <QProcess>
-#include <easylogging++.h>
+#include "easylogging++.h"
 
 _INITIALIZE_EASYLOGGINGPP
 

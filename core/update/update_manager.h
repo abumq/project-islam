@@ -30,8 +30,10 @@ public:
     explicit UpdateManager(QObject* parent = 0);
     virtual ~UpdateManager();
     void initialize(ExtensionBar* extensionBar);
-    bool updateFiles() const;
+    bool updateFiles();
     void saveDownloadedFilesListToFile() const;
+    bool performedUpdate() const;
+    
 private slots:
     void performAsyncUpdate();
     void downloadProgressUpdated(qint64, qint64);
@@ -43,6 +45,7 @@ private:
     QApplication* m_app;
     ExtensionBar* m_extensionBar;
     QVector<QString> m_downloadedFiles;
+    bool m_performedUpdate;
     
     bool needToCheckForUpdates() const;
     QString versionInfoUrl() const;

@@ -31,3 +31,6 @@ TEMPLATE = app
 
 
 SOURCES += main.cc
+
+HEADERS += \
+    easylogging++.h

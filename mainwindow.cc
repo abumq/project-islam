@@ -38,31 +38,30 @@ MainWindow::~MainWindow()
 void MainWindow::initialize()
 {
     memory::deleteAll(m_extensionBar, m_container);
-    loadSettings();
-    m_dataHolder.initialize(m_splashScreen);
-    
-    m_container = new QWidget(this);
-    m_container->setObjectName("extensionContainer");
-    m_container->setGeometry(ExtensionBar::kExtensionBarWidth, AbstractExtension::kExtensionTop, width(), height());
-    
-    m_extensionBar = new ExtensionBar(this, m_container);
-    connect(m_extensionBar, SIGNAL(extensionChanged(AbstractExtension*)), this, SLOT(onExtensionChanged(AbstractExtension*)));
-    addToolBar(Qt::LeftToolBarArea, m_extensionBar);
-    
-    ExtensionLoader extensionLoader(&m_dataHolder, ui->menuBar);
-    extensionLoader.loadAll(m_extensionBar, m_splashScreen);
-    
-    ExtensionItem* defaultExtension = m_extensionBar->defaultExtensionItem();
-    if (defaultExtension != nullptr) {
-        defaultExtension->showExtension(true);
-    } else {
-        LOG(ERROR) << "Default extension not found";
-    }
-    
     m_splashScreen->showMessage("Checking updates from local filesystem..."
                                 , Qt::AlignHCenter | Qt::AlignBottom);
-    bool updating = m_updateManager.updateFiles();
-    if (!updating) {
+    m_updateManager.updateFiles();
+    if (!m_updateManager.performedUpdate()) {
+        loadSettings();
+        m_dataHolder.initialize(m_splashScreen);
+        
+        m_container = new QWidget(this);
+        m_container->setObjectName("extensionContainer");
+        m_container->setGeometry(ExtensionBar::kExtensionBarWidth, AbstractExtension::kExtensionTop, width(), height());
+        
+        m_extensionBar = new ExtensionBar(this, m_container);
+        connect(m_extensionBar, SIGNAL(extensionChanged(AbstractExtension*)), this, SLOT(onExtensionChanged(AbstractExtension*)));
+        addToolBar(Qt::LeftToolBarArea, m_extensionBar);
+        
+        ExtensionLoader extensionLoader(&m_dataHolder, ui->menuBar);
+        extensionLoader.loadAll(m_extensionBar, m_splashScreen);
+        
+        ExtensionItem* defaultExtension = m_extensionBar->defaultExtensionItem();
+        if (defaultExtension != nullptr) {
+            defaultExtension->showExtension(true);
+        } else {
+            LOG(ERROR) << "Default extension not found";
+        }
 #if !defined(DISABLE_AUTO_UPDATE)
         m_updateManager.initialize(m_extensionBar);
 #endif // DISABLE_AUTO_UPDATE
@@ -184,4 +183,9 @@ void MainWindow::on_actionExtension_Bar_triggered(bool checked)
     m_extensionBar->setVisible(checked);
     m_container->setGeometry(checked ? ExtensionBar::kExtensionBarWidth : 0, 
                              AbstractExtension::kExtensionTop, width(), height());
+}
+
+bool MainWindow::applicationUpdated() const
+{
+    return m_updateManager.performedUpdate();
 }

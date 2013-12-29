@@ -1,3 +1,10 @@
+#ifndef _LOGGER
+#   define _LOGGER "settings_loader"
+#endif
+#ifndef _PERFORMANCE_LOGGER
+#   define _PERFORMANCE_LOGGER _LOGGER
+#endif
+
 #include "settings_loader.h"
 
 #include <QString>
@@ -46,7 +53,8 @@ void SettingsLoader::initialize(const char* settingsFilename)
     // call this initialze() very often!
     //
     // Important: This is only because we are using '_ELPP_NO_DEFAULT_LOG_FILE'
-    LOG(WARNING) << "Created another instance of [SettingsLoader], filename: [" << settingsFilename << "]";
+    LOG_EVERY_N(2, WARNING) << "Created multiple instances (" << ELPP_COUNTER_POS
+                            << ") of [SettingsLoader], filename: [" << settingsFilename << "]";
 }
 
 SettingsLoader& SettingsLoader::getInstance()
@@ -60,7 +68,7 @@ void SettingsLoader::saveSettings(QMap<QString, QVariant>* map) const
     _TRACE;
     if (m_settings == nullptr || !m_settings->isWritable()) {
         LOG_IF(m_settings != nullptr, ERROR) << "Settings are not writable ["
-                   << m_settings->status() << "]";
+                                             << m_settings->status() << "]";
     } else {
         LOG(INFO) << "Saving settings to [" << m_settingsFile << "]";
         for (QString setting : map->keys()) {

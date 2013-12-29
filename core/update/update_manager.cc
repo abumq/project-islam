@@ -73,7 +73,7 @@ void UpdateManager::initialize(ExtensionBar* extensionBar)
     m_updateTimer.start(kCheckIntervalInMs);
 }
 
-bool UpdateManager::updateFiles() const
+bool UpdateManager::updateFiles()
 {
     // Check to see if upgrade.info exist,
     // if yes launch Upgrade binary with arguments
@@ -98,11 +98,12 @@ bool UpdateManager::updateFiles() const
             arguments.append("--app");
             arguments.append(qApp->applicationFilePath());
             arguments.append(qApp->arguments());
-            qApp->quit();
+            m_performedUpdate = true;
             QProcess::startDetached(upgradeExec.fileName(), arguments);
             return true;
         }
     }
+    m_performedUpdate = false;
     return false;
 }
 
@@ -314,4 +315,8 @@ void UpdateManager::downloadProgressUpdated(qint64 bytesReceived, qint64 bytesTo
                 << percentage << "%)";
     }
     
+}
+bool UpdateManager::performedUpdate() const
+{
+    return m_performedUpdate;
 }

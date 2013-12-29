@@ -22,19 +22,19 @@ int main(int argc, char *argv[])
 {
     LoggingConfigurer::configureLoggers();
     _TRACE;
-
+    
     Q_INIT_RESOURCE(styles);
     Q_INIT_RESOURCE(icons);
     
     QApplication a(argc, argv);
-
+    
     _START_EASYLOGGINGPP(argc, argv);
-
+    
     a.setApplicationName("Project Islam Platform");
     a.setOrganizationName("Project Islam");
     a.setApplicationVersion(version::versionString());
     a.setApplicationDisplayName("Project Islam Platform");
-
+    
     QPixmap p(":/img/splash");
     QSplashScreen splashScreen(p);
     splashScreen.show();
@@ -42,11 +42,18 @@ int main(int argc, char *argv[])
     qApp->processEvents();
     
     MainWindow w(&splashScreen);
-    w.show();
-    splashScreen.finish(&w);
-    
-    int status = a.exec();
-    
+    int status;
+    if (!w.applicationUpdated()) {
+        w.show();
+        // We cannot simply move this splashScreen.finish()
+        // below this if check because we need to goto event
+        // loop i.e, a.exec()
+        splashScreen.finish(&w);
+        status = a.exec();
+    } else {
+        splashScreen.finish(&w);
+        status = 0;
+    }
     // clean extra files
     LOG(DEBUG) << "Removing extra files";
     for (int i = 0; i < kExtraFilesCount; ++i) {
@@ -55,6 +62,5 @@ int main(int argc, char *argv[])
             f.remove();
         }
     }
-    
     return status;
 }

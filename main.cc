@@ -41,6 +41,9 @@ int main(int argc, char *argv[])
     splashScreen.showMessage("Initializing...", Qt::AlignHCenter | Qt::AlignBottom);
     qApp->processEvents();
     
+    qApp->addLibraryPath(qApp->applicationDirPath());
+    qApp->addLibraryPath(qApp->applicationDirPath() + "/extensions");
+    
     MainWindow w(&splashScreen);
     int status;
     if (!w.applicationUpdated()) {

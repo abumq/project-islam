@@ -6,7 +6,7 @@
 #define MyAppPublisher "Project Islam Authors"
 #define MyAppURL "http://www.icplusplus.com/"
 #define MyAppExeName "project-islam.exe"
-#define BaseLocation "C:\Users\Majid\Desktop\build\release"
+#define BaseLocation "\\VBOXSVR\shared-with-vbox\release"
 
 [Setup]
 ; NOTE: The value of AppId uniquely identifies this application.
@@ -34,26 +34,14 @@ Name: "english"; MessagesFile: "compiler:Default.isl"
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
 Name: "quicklaunchicon"; Description: "{cm:CreateQuickLaunchIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked; OnlyBelowVersion: 0,6.1
 
+; TODO: Set environment variable QT_QPA_PLATFORM_PLUGIN_PATH to {app}\plugins
+
 [Files]
 Source: "{#BaseLocation}\project-islam.exe"; DestDir: "{app}"; Flags: ignoreversion
-Source: "{#BaseLocation}\icudt51.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "{#BaseLocation}\icudt51.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "{#BaseLocation}\icuin51.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "{#BaseLocation}\icuuc51.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "{#BaseLocation}\libEGL.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "{#BaseLocation}\libGLESv2.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "{#BaseLocation}\Qt5Core.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "{#BaseLocation}\Qt5Gui.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "{#BaseLocation}\Qt5Multimedia.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "{#BaseLocation}\Qt5Network.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "{#BaseLocation}\Qt5Sql.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "{#BaseLocation}\Qt5Widgets.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "{#BaseLocation}\project-islam.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{#BaseLocation}\*.dll"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs  
 Source: "{#BaseLocation}\upgrade-lc-now.exe"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#BaseLocation}\extensions\*"; DestDir: "{app}\extensions"; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: "{#BaseLocation}\plugins\*"; DestDir: "{app}\plugins\"; Flags: ignoreversion recursesubdirs createallsubdirs
-Source: "{#BaseLocation}\msvcp110.dll"; DestDir: "{app}"
-; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Icons]
 Name: "{group}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"

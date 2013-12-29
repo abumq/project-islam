@@ -6,6 +6,7 @@
 #define MyAppPublisher "Project Islam Authors"
 #define MyAppURL "http://www.icplusplus.com/"
 #define MyAppExeName "project-islam.exe"
+#define BaseLocation "C:\Users\Majid\Desktop\build\release"
 
 [Setup]
 ; NOTE: The value of AppId uniquely identifies this application.
@@ -34,22 +35,24 @@ Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{
 Name: "quicklaunchicon"; Description: "{cm:CreateQuickLaunchIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked; OnlyBelowVersion: 0,6.1
 
 [Files]
-Source: "C:\Users\Majid\Desktop\build\release\project-islam.exe"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Users\Majid\Desktop\build\release\icudt51.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Users\Majid\Desktop\build\release\icudt51.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Users\Majid\Desktop\build\release\icuin51.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Users\Majid\Desktop\build\release\icuuc51.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Users\Majid\Desktop\build\release\libEGL.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Users\Majid\Desktop\build\release\libGLESv2.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Users\Majid\Desktop\build\release\Qt5Core.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Users\Majid\Desktop\build\release\Qt5Gui.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Users\Majid\Desktop\build\release\Qt5Multimedia.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Users\Majid\Desktop\build\release\Qt5Network.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Users\Majid\Desktop\build\release\Qt5Sql.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Users\Majid\Desktop\build\release\Qt5Widgets.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Users\Majid\Desktop\build\release\project-islam.exe"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Users\Majid\Desktop\build\upgrade\release\upgrade-lc-now.exe"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Users\Majid\Desktop\build\release\extensions\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "{#BaseLocation}\project-islam.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{#BaseLocation}\icudt51.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{#BaseLocation}\icudt51.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{#BaseLocation}\icuin51.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{#BaseLocation}\icuuc51.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{#BaseLocation}\libEGL.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{#BaseLocation}\libGLESv2.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{#BaseLocation}\Qt5Core.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{#BaseLocation}\Qt5Gui.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{#BaseLocation}\Qt5Multimedia.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{#BaseLocation}\Qt5Network.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{#BaseLocation}\Qt5Sql.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{#BaseLocation}\Qt5Widgets.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{#BaseLocation}\project-islam.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{#BaseLocation}\upgrade-lc-now.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{#BaseLocation}\extensions\*"; DestDir: "{app}\extensions"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "{#BaseLocation}\plugins\*"; DestDir: "{app}\plugins\"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "{#BaseLocation}\msvcp110.dll"; DestDir: "{app}"
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Icons]

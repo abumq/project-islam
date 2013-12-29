@@ -6,7 +6,7 @@
 namespace {
 // Misc
 static const QString kDefaultHomeDir = QDir::homePath() + 
-        QString("/") + QString(".project-islam") +
+        QString("/") + QString("project-islam") +
         QString("/");
         
 } // namespace

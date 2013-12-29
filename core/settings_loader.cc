@@ -15,7 +15,7 @@
 #include "core/utils/memory.h"
 #include "core/constants.h"
 
-const QString SettingsLoader::kMasterSettingsFile = QString(".master.settings");
+const QString SettingsLoader::kMasterSettingsFile = QString("master.settings");
 const QString SettingsLoader::kSettingKeyTheme = "theme";
 const QString SettingsLoader::kSettingKeyQuranTable = "default_quran";
 const QString SettingsLoader::kSettingKeyQuranTranslationTable = "default_quran_translation";

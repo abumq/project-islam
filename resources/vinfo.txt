@@ -4,15 +4,13 @@
         "platform": {
             "version": "0.1.1",
              "force_update" : false,
-             "base"  :
-"http://www.icplusplus.com/tools/project-islam/downloads/linux/",
+             "base"  : "http://www.icplusplus.com/tools/project-islam/downloads/linux/",
              "files" : "project-islam.zip"
         },
         "database": {
              "version": "0.1.0",
              "force_update" : false,
-             "base" :
-"http://www.icplusplus.com/tools/project-islam/downloads/",
+             "base" : "http://www.icplusplus.com/tools/project-islam/downloads/",
              "files" : "project-islam.db.zip"
         },
         "extensions": [
@@ -27,7 +25,19 @@
     },
 
     "win": {
-        "available" : false
+        "available" : true,
+        "platform": {
+            "version": "0.1.1",
+             "force_update" : false,
+             "base"  : "http://www.icplusplus.com/tools/project-islam/downloads/win/",
+             "files" : "project-islam.exe.zip"
+        },
+        "database": {
+             "version": "0.1.0",
+             "force_update" : false,
+             "base" : "http://www.icplusplus.com/tools/project-islam/downloads/",
+             "files" : "project-islam.db.zip"
+        }
     },
 
     "mac": {

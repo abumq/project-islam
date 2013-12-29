@@ -27,7 +27,7 @@
      <x>0</x>
      <y>0</y>
      <width>745</width>
-     <height>20</height>
+     <height>26</height>
     </rect>
    </property>
    <widget class="QMenu" name="menu_Application">
@@ -110,7 +110,7 @@
     <bool>true</bool>
    </property>
    <property name="enabled">
-    <bool>false</bool>
+    <bool>true</bool>
    </property>
    <property name="text">
     <string>Extension Bar</string>

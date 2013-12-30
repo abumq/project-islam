@@ -48,7 +48,6 @@ void ExtensionLoader::loadAll(ExtensionBar* extensionBar, QSplashScreen *splashS
     const int argc = arguments.size();
 #if defined(_MSC_VER)
     // We dynamically allocate because VC++ causes issue
-    // TODO: Use new() instead of malloc to be compatible with delete[]
     const char** argv = (const char**)malloc(argc * sizeof(char*));
 #else
     const char* argv[argc];
@@ -90,7 +89,7 @@ void ExtensionLoader::loadAll(ExtensionBar* extensionBar, QSplashScreen *splashS
         }
     }
 #if defined(_MSC_VER)
-    delete[] argv;
+    free(argv);
 #endif // defined(_MSC_VER)
 }
 

@@ -31,18 +31,16 @@ public:
     
     void updateDefaultHomeDir(const QString&);
     QString defaultHomeDir();
+    ~SettingsLoader();
 private:
     QString m_settingsFile;
     QSettings* m_settings;
-    
     static const QString kMasterSettingsFile;
-    
-private:
+
     void changeSettingsFile(const QString& filename);
     QString settingsFile() const;
     void initialize(const char* settingsFilename);
     explicit SettingsLoader(const char* settingsFilename = "basic_settings.ini");
-    ~SettingsLoader();
     SettingsLoader(const SettingsLoader&);
     SettingsLoader& operator=(const SettingsLoader&);
 };

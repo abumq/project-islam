@@ -22,14 +22,14 @@ int main(int argc, char* argv[])
 {
     LoggingConfigurer::configureLoggers();
     _TRACE;
-    
+    int returnCode;
+#if defined(Q_OS_WIN)
     QString appExec = QString(argv[0]);
     QString pluginsPath = appExec.mid(0, appExec.lastIndexOf(QDir::separator())) + QDir::separator()
             + "plugins";
     // This is important in order to load platform specific plugins
     // We do not want to use environment variables as that may be changed
     // by some other Qt application
-#if defined(Q_OS_WIN)
     int argc_ = argc + 2;
     // We dynamically allocate because VC++ causes issue
     const char** argv_ = (const char**)malloc(argc_ * sizeof(char*));
@@ -48,40 +48,38 @@ int main(int argc, char* argv[])
     // from main(argc, argv) instead of argc_ and argv_ so qApp->arguments() may not
     // behave as expected.
     // See http://qt-project.org/doc/qt-5.0/qtcore/qcoreapplication.html#arguments
-    QApplication a(argc_, const_cast<char**>(argv_));
+    //
+    // NOTE: Until issue of non-terminating application is resolved, we are going
+    // to use argc and argv instead of argc_ and argv_ respectively
+    Q_UNUSED(argc_);
+    Q_UNUSED(argv_);
+    QApplication a(argc, const_cast<char**>(argv));
     
     Q_INIT_RESOURCE(styles);
     Q_INIT_RESOURCE(icons);
     
-    _START_EASYLOGGINGPP(argc_, argv_);
+    _START_EASYLOGGINGPP(argc, argv);
     
     a.setApplicationName("Project Islam Platform");
     a.setOrganizationName("Project Islam");
     a.setApplicationVersion(version::versionString());
     a.setApplicationDisplayName("Project Islam Platform");
-    
+
     QPixmap p(":/img/splash");
     QSplashScreen splashScreen(p);
     splashScreen.show();
     splashScreen.showMessage("Initializing...", Qt::AlignHCenter | Qt::AlignBottom);
     qApp->processEvents();
-    
-    qApp->addLibraryPath(qApp->applicationDirPath());
-    qApp->addLibraryPath(qApp->applicationDirPath() + "/extensions");
-    
-    
+
     MainWindow w(&splashScreen);
-    int status;
     if (!w.applicationUpdated()) {
         w.show();
         // We cannot simply move this splashScreen.finish()
         // below this if check because we need to goto event
         // loop i.e, a.exec()
-        splashScreen.finish(&w);
-        status = a.exec();
+        return a.exec();
     } else {
-        splashScreen.finish(&w);
-        status = 0;
+        returnCode = 0;
     }
     // clean extra files
     LOG(DEBUG) << "Removing extra files";
@@ -94,5 +92,6 @@ int main(int argc, char* argv[])
 #if defined(Q_OS_WIN)
     free(argv_);
 #endif // defined(Q_OS_WIN)
-    return status;
+    LOG(DEBUG) << "Exit status: " << returnCode;
+    return returnCode;
 }

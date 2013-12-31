@@ -14,6 +14,10 @@ DownloadManager::DownloadManager(QObject* parent) :
 DownloadManager::~DownloadManager()
 {
     _TRACE;
+    for (QEventLoop* loop : m_downloadingEventLoops) {
+        loop->exit(1);
+        m_downloadingEventLoops.removeOne(loop);
+    }
 }
 
 bool DownloadManager::downloadFile(const QString& url, const QString& filename)
@@ -44,7 +48,11 @@ QByteArray DownloadManager::downloadBytes(const QString& url, bool* ok)
     QObject::connect(networkReply, SIGNAL(finished()), &loop, SLOT(quit()));
     QObject::connect(networkReply, SIGNAL(downloadProgress(qint64,qint64)), 
                      this, SIGNAL(downloadProgress(qint64,qint64)));
+    m_downloadingEventLoops.push_back(&loop);
     loop.exec();
+    if (m_downloadingEventLoops.contains(&loop)) {
+        m_downloadingEventLoops.removeOne(&loop);
+    }
     if (networkReply->error() == QNetworkReply::NoError) {
         if (ok != nullptr) {
             *ok = true;

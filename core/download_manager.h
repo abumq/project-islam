@@ -2,7 +2,10 @@
 #define DOWNLOAD_MANAGER_H
 
 #include <QString>
+#include <QList>
+
 #include <QNetworkAccessManager>
+class QEventLoop;
 
 class DownloadManager : public QNetworkAccessManager
 {
@@ -14,6 +17,8 @@ public:
     QByteArray downloadBytes(const QString& url, bool* ok = nullptr);
 signals:
     void downloadProgress(qint64 done, qint64 total);
+private:
+    QList<QEventLoop*> m_downloadingEventLoops;
 };
 
 #endif // DOWNLOAD_MANAGER_H

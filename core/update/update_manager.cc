@@ -55,7 +55,10 @@ UpdateManager::~UpdateManager()
     _TRACE;
     if (m_future.isRunning()) {
         LOG(WARNING) << "Updater was running while killed process.";
-        m_future.cancel();
+        m_futureWatcher.cancel();
+        // Ref: http://qt-project.org/doc/qt-5.1/qtcore/qfuturewatcher.html#cancel
+        m_futureWatcher.waitForFinished();
+        m_futureWatcher.thread()->quit();
     }
 }
 

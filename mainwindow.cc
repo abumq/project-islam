@@ -33,13 +33,16 @@ MainWindow::~MainWindow()
 {
     _TRACE;
     memory::deleteAll(m_extensionBar, m_container, ui);
+    SettingsLoader::getInstance().~SettingsLoader();
 }
 
 void MainWindow::initialize()
 {
     memory::deleteAll(m_extensionBar, m_container);
-    m_splashScreen->showMessage("Checking updates from local filesystem..."
-                                , Qt::AlignHCenter | Qt::AlignBottom);
+    if (m_splashScreen != nullptr) {
+        m_splashScreen->showMessage("Checking updates from local filesystem..."
+                                    , Qt::AlignHCenter | Qt::AlignBottom);
+    }
     m_updateManager.updateFiles();
     if (!m_updateManager.performedUpdate()) {
         loadSettings();
@@ -71,6 +74,9 @@ void MainWindow::initialize()
         
         QObject::connect(ui->actionRestart, SIGNAL(triggered()), this, SLOT(restart()));
         reloadStyles();
+    }
+    if (m_splashScreen != nullptr) {
+        m_splashScreen->finish(this);
     }
 }
 

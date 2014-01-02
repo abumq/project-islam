@@ -48,6 +48,8 @@ private slots:
     
     void on_actionExtension_Bar_triggered(bool checked);
     
+    void on_actionAbout_Extensions_triggered();
+    
 private:
     Ui::MainWindow *ui;
     QSplashScreen* m_splashScreen;

@@ -1,6 +1,9 @@
 #ifndef LOGGING_H
 #define LOGGING_H
 
+#define _ELPP_DISABLE_DEBUG_LOGS
+#define _ELPP_DISABLE_TRACE_LOGS
+
 #include "core/logging/easylogging++.h"
 #include "core/settings_loader.h"
 #include "core/utils/filesystem.h"

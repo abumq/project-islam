@@ -35,7 +35,7 @@ DatabaseManager::DatabaseManager(const QString& uniqueId, const QString& dbFilen
 }
 
 DatabaseManager::~DatabaseManager(void) {
-    LOG(DEBUG) << "Destroying DatabaseManager [" << m_uniqueId << "]";
+    DLOG(INFO) << "Destroying DatabaseManager [" << m_uniqueId << "]";
     if (m_sqlDatabase.isOpen()) m_sqlDatabase.close();
 }
 
@@ -43,7 +43,7 @@ const data::QueryResult& DatabaseManager::query(const QString& query, const QVar
     m_lastQueryResult.clear();
     m_lastQuery = query;
     QString connectionName = m_uniqueId + "_connection" + QString::number(++m_connections);
-    VLOG(9) << "Making connection using [" << connectionName << "]";
+    DVLOG(9) << "Making connection using [" << connectionName << "]";
     if (!m_sqlDatabase.open()) {
         DLOG(ERROR) << "Could not open database using connection [" << connectionName << "]";
         return m_lastQueryResult;
@@ -61,7 +61,7 @@ const data::QueryResult& DatabaseManager::query(const QString& query, const QVar
         return m_lastQueryResult;
     } else {
         m_lastQuerySuccessful = true;
-        VLOG(9) << "Successfully executed [" << sqlQuery.executedQuery() << "]";
+        DVLOG(9) << "Successfully executed [" << sqlQuery.executedQuery() << "]";
     }
     while(sqlQuery.next()) {
         m_lastQueryResult << sqlQuery.record();

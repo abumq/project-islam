@@ -96,7 +96,7 @@ void MainWindow::reloadStyles()
 void MainWindow::loadSettings()
 {
     QString theme = SettingsLoader::getInstance()->get(SettingsLoader::kSettingKeyTheme, 
-                                                      StyleLoader::defaultTheme()).toString();
+                                                       StyleLoader::defaultTheme()).toString();
     QStringList rgbList = theme.split(',');
     int r = rgbList.at(0).trimmed().toInt();
     int g = rgbList.at(1).trimmed().toInt();
@@ -193,4 +193,17 @@ void MainWindow::on_actionExtension_Bar_triggered(bool checked)
 bool MainWindow::applicationUpdated() const
 {
     return m_updateManager.performedUpdate();
+}
+
+void MainWindow::on_actionAbout_Extensions_triggered()
+{
+    QString aboutExtensionsStr = "Following extensions are installed: \n";
+    for (AbstractExtension* extension : *m_extensionBar->extensions()) {
+        aboutExtensionsStr.append(
+                    "   - " + extension->info()->name() 
+                    + " v" + extension->info()->versionString() + " by "
+                    + extension->info()->author() + "\n\n"
+                    );
+    }
+    QMessageBox::information(this, "About Extensions", aboutExtensionsStr);
 }

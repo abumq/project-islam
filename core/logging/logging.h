@@ -75,7 +75,7 @@ public:
         el::Configurations configurations;
         configurations.setToDefault();
         std::string logFile = filesystem::buildFilename(QStringList() 
-                                                        << SettingsLoader::getInstance().defaultHomeDir() 
+                                                        << SettingsLoader::getInstance()->defaultHomeDir() 
                                                         << "logs" << "project-islam.log").toStdString();
         configurations.set(el::Level::Global, el::ConfigurationType::Filename, logFile);
         configurations.set(el::Level::Trace, el::ConfigurationType::Format, "%datetime %level [%logger] %func %msg");

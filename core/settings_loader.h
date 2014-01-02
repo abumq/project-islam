@@ -23,7 +23,7 @@ public:
     static const QString kSettingKeyDatabaseHost;
     static const QString kSettingKeyDatabasePort;
     
-    static SettingsLoader& getInstance();
+    static SettingsLoader* getInstance();
     
     void saveSettings(QMap<QString, QVariant>* map) const;
     void saveSettings(const QString &key, const QVariant &value) const;

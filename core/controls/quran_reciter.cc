@@ -55,7 +55,7 @@ QuranReciter::QuranReciter(quran::Quran* quran, QWidget *parent) :
             // Volume
             int kDefaultVolume = 5;
             bool volConvertedOk;
-            int v = SettingsLoader::getInstance().get(SettingsLoader::kSettingKeyRecitationVolume, QVariant(kDefaultVolume)).toInt(&volConvertedOk);
+            int v = SettingsLoader::getInstance()->get(SettingsLoader::kSettingKeyRecitationVolume, QVariant(kDefaultVolume)).toInt(&volConvertedOk);
             m_mediaPlayer->setVolume(volConvertedOk ? v : kDefaultVolume);
             ui->volSlider->setValue(m_mediaPlayer->volume());
             m_mediaPlayer->setObjectName("m_mediaPlayer");
@@ -152,7 +152,7 @@ void QuranReciter::loadReciters()
     // Reciters
     const QString noReciterAvailableText = " -- NO RECITER AVAILABLE -- ";
     m_recitationsDir = QDir(filesystem::buildPath(QStringList() 
-                                                  << SettingsLoader::getInstance().defaultHomeDir() 
+                                                  << SettingsLoader::getInstance()->defaultHomeDir() 
                                                   << "data" << "recitations" << "verse-by-verse"), 
                             QString(), QDir::Name | QDir::IgnoreCase, QDir::Dirs | QDir::NoDotAndDotDot);
     if (!m_recitationsDir.exists()) {
@@ -448,7 +448,7 @@ void QuranReciter::onVolumeChanged(int v)
     _TRACE;
     if (m_mediaPlayer != nullptr) {
         m_mediaPlayer->setVolume(v);
-        SettingsLoader::getInstance().saveSettings(SettingsLoader::kSettingKeyRecitationVolume, QVariant(v));
+        SettingsLoader::getInstance()->saveSettings(SettingsLoader::kSettingKeyRecitationVolume, QVariant(v));
     }
     ui->volSlider->setValue(v);
 }

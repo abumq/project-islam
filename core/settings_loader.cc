@@ -57,10 +57,10 @@ void SettingsLoader::initialize(const char* settingsFilename)
                             << ") of [SettingsLoader], filename: [" << settingsFilename << "]";
 }
 
-SettingsLoader& SettingsLoader::getInstance()
+SettingsLoader* SettingsLoader::getInstance()
 {
     static SettingsLoader loader;
-    return loader;
+    return &loader;
 }
 
 void SettingsLoader::saveSettings(QMap<QString, QVariant>* map) const

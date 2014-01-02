@@ -75,7 +75,7 @@ void ExtensionLoader::loadAll(ExtensionBar* extensionBar, QSplashScreen *splashS
         if (extensionBase != nullptr && extensionBase->extension() != nullptr) {
             extensionBase->extension()->setDataHolder(m_dataHolder);
             extensionBase->extension()->setContainer(extensionBar->container());
-            extensionBase->extension()->setSettingsLoader(&SettingsLoader::getInstance());
+            extensionBase->extension()->setSettingsLoader(SettingsLoader::getInstance());
             
             QAction* helpMenu = m_menuBar->actions().at(m_menuBar->actions().size() - 1);
             m_menuBar->insertMenu(helpMenu, extensionBase->extension()->menu());

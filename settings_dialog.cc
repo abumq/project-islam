@@ -44,8 +44,8 @@ void SettingsDialog::accept()
     configurations.set(el::Level::Global, el::ConfigurationType::MaxLogFileSize, QString::number(ui->spnMaxLogFileSize->value()).toStdString());
     el::Loggers::setDefaultConfigurations(configurations, true);
     
-    homeDirectoryChanged = SettingsLoader::getInstance().defaultHomeDir() != ui->txtHomeDir->text();
-    SettingsLoader::getInstance().updateDefaultHomeDir(ui->txtHomeDir->text());
+    homeDirectoryChanged = SettingsLoader::getInstance()->defaultHomeDir() != ui->txtHomeDir->text();
+    SettingsLoader::getInstance()->updateDefaultHomeDir(ui->txtHomeDir->text());
     m_mainWindow->styleLoader()->reset(m_colorBox->color().red(), m_colorBox->color().green(), m_colorBox->color().blue());
     
     QMap<QString, QVariant> settingsMap;
@@ -55,7 +55,7 @@ void SettingsDialog::accept()
     settingsMap.insert(SettingsLoader::kSettingKeyQuranTafseerTable, ui->cboQuranTafseers->itemData(ui->cboQuranTafseers->currentIndex()));
     settingsMap.insert(SettingsLoader::kSettingKeyTheme, StyleLoader::rgb(m_mainWindow->styleLoader()->r(), 
                                                                           m_mainWindow->styleLoader()->g(), m_mainWindow->styleLoader()->b()));
-    SettingsLoader::getInstance().saveSettings(&settingsMap);
+    SettingsLoader::getInstance()->saveSettings(&settingsMap);
     close();
 }
 
@@ -64,7 +64,7 @@ void SettingsDialog::loadSettingsInUi()
     
     // -------------------- Tab: Environment ------------------------
     m_colorBox->setColor(QColor::fromRgb(m_mainWindow->styleLoader()->r(), m_mainWindow->styleLoader()->g(), m_mainWindow->styleLoader()->b()));
-    ui->txtHomeDir->setText(SettingsLoader::getInstance().defaultHomeDir());
+    ui->txtHomeDir->setText(SettingsLoader::getInstance()->defaultHomeDir());
     
     // -------------------- Tab: Logging ------------------------
     
@@ -102,7 +102,7 @@ void SettingsDialog::loadSettingsInUi()
             continue;
         }
         ui->cboQuranOriginals->addItem(displayName, nameTable);
-        if (SettingsLoader::getInstance().get(SettingsLoader::kSettingKeyQuranTable, 
+        if (SettingsLoader::getInstance()->get(SettingsLoader::kSettingKeyQuranTable, 
                                  QString(quran::Quran::kQuranDefaultArabicDatabaseTable)) == nameTable) {
             selectedIndex = i;
         }
@@ -125,7 +125,7 @@ void SettingsDialog::loadSettingsInUi()
             continue;
         }
         ui->cboQuranTranslations->addItem(displayName, nameTranslationTable);
-        if (SettingsLoader::getInstance().get(SettingsLoader::kSettingKeyQuranTranslationTable, 
+        if (SettingsLoader::getInstance()->get(SettingsLoader::kSettingKeyQuranTranslationTable, 
                                  QString(quran::Quran::kQuranDefaultTranslationDatabaseTable)) == nameTranslationTable) {
             selectedIndex = i;
         }
@@ -148,7 +148,7 @@ void SettingsDialog::loadSettingsInUi()
             continue;
         }
         ui->cboQuranTransliterations->addItem(displayName, nameTransliterationTable);
-        if (SettingsLoader::getInstance().get(SettingsLoader::kSettingKeyQuranTransliterationTable, 
+        if (SettingsLoader::getInstance()->get(SettingsLoader::kSettingKeyQuranTransliterationTable, 
                                  QString(quran::Quran::kQuranDefaultTransliterationDatabaseTable)) == nameTransliterationTable) {
             selectedIndex = i;
         }
@@ -171,7 +171,7 @@ void SettingsDialog::loadSettingsInUi()
             continue;
         }
         ui->cboQuranTafseers->addItem(displayName, nameTafseerTable);
-        if (SettingsLoader::getInstance().get(SettingsLoader::kSettingKeyQuranTafseerTable, 
+        if (SettingsLoader::getInstance()->get(SettingsLoader::kSettingKeyQuranTafseerTable, 
                                  QString(quran::Quran::kQuranDefaultTafseerDatabaseTable)) == nameTafseerTable) {
             selectedIndex = i;
         }

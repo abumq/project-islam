@@ -42,7 +42,7 @@ void DataHolder::initialize(QSplashScreen *splashScreen)
         splashScreen->showMessage("Loading Qur'an...", Qt::AlignHCenter | Qt::AlignBottom);
         qApp->processEvents();
     }
-    std::string quranArabicTable = SettingsLoader::getInstance().get(QString(SettingsLoader::kSettingKeyQuranTable), 
+    std::string quranArabicTable = SettingsLoader::getInstance()->get(QString(SettingsLoader::kSettingKeyQuranTable), 
                                              QString(quran::Quran::kQuranDefaultArabicDatabaseTable)).toString().toStdString();
     quranArabic()->load(quran::Quran::TextType::Original, quranArabicTable);
     CHECK(quranArabic()->ready()) << "Unable to load Quran Arabic from [" << quranArabicTable << "]";
@@ -50,7 +50,7 @@ void DataHolder::initialize(QSplashScreen *splashScreen)
         splashScreen->showMessage("Loading Qur'an... [25%]", Qt::AlignHCenter | Qt::AlignBottom);
         qApp->processEvents();
     }
-    std::string quranTranslationTable = SettingsLoader::getInstance().get(QString(SettingsLoader::kSettingKeyQuranTranslationTable), 
+    std::string quranTranslationTable = SettingsLoader::getInstance()->get(QString(SettingsLoader::kSettingKeyQuranTranslationTable), 
                                                   QString(quran::Quran::kQuranDefaultTranslationDatabaseTable)).toString().toStdString();
     quranTranslation()->load(quran::Quran::TextType::Translation, quranTranslationTable);
     CHECK(quranArabic()->ready()) << "Unable to load Quran Translation from [" << quranTranslationTable << "]";
@@ -59,7 +59,7 @@ void DataHolder::initialize(QSplashScreen *splashScreen)
         qApp->processEvents();
     }
     
-    std::string quranTransliterationTable = SettingsLoader::getInstance().get(QString(SettingsLoader::kSettingKeyQuranTransliterationTable), 
+    std::string quranTransliterationTable = SettingsLoader::getInstance()->get(QString(SettingsLoader::kSettingKeyQuranTransliterationTable), 
                                                       QString(quran::Quran::kQuranDefaultTransliterationDatabaseTable)).toString().toStdString();
     quranTransliteration()->load(quran::Quran::TextType::Transliteration, quranTransliterationTable);
     CHECK(quranArabic()->ready()) << "Unable to load Quran Transliteration from [" << quranTransliterationTable << "]";
@@ -67,7 +67,7 @@ void DataHolder::initialize(QSplashScreen *splashScreen)
         splashScreen->showMessage("Loading Qur'an... [75%]", Qt::AlignHCenter | Qt::AlignBottom);
         qApp->processEvents();
     }
-    std::string quranTafseerTable = SettingsLoader::getInstance().get(QString(SettingsLoader::kSettingKeyQuranTafseerTable), 
+    std::string quranTafseerTable = SettingsLoader::getInstance()->get(QString(SettingsLoader::kSettingKeyQuranTafseerTable), 
                                               QString(quran::Quran::kQuranDefaultTafseerDatabaseTable)).toString().toStdString();
     quranTafseer()->load(quran::Quran::TextType::Tafseer, quranTafseerTable);
     CHECK(quranArabic()->ready()) << "Unable to load Quran Transliteration from [" << quranTafseerTable << "]";

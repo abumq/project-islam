@@ -33,7 +33,6 @@ MainWindow::~MainWindow()
 {
     _TRACE;
     memory::deleteAll(m_extensionBar, m_container, ui);
-    SettingsLoader::getInstance().~SettingsLoader();
 }
 
 void MainWindow::initialize()
@@ -96,7 +95,7 @@ void MainWindow::reloadStyles()
 
 void MainWindow::loadSettings()
 {
-    QString theme = SettingsLoader::getInstance().get(SettingsLoader::kSettingKeyTheme, 
+    QString theme = SettingsLoader::getInstance()->get(SettingsLoader::kSettingKeyTheme, 
                                                       StyleLoader::defaultTheme()).toString();
     QStringList rgbList = theme.split(',');
     int r = rgbList.at(0).trimmed().toInt();

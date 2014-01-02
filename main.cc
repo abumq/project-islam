@@ -37,9 +37,12 @@ int main(int argc, char* argv[])
     for (; i < argc; ++i) {
         argv_[i] = argv[i];
     }
+#   if (!defined(_DEBUG))
+    // We only change argv in non-debug mode to prevent ASSERT(argc == original_argc) failure
     argv_[i++] = "-platformpluginpath";
     std::string pluginsPathStr = pluginsPath.toStdString();
     argv_[i++] = pluginsPathStr.c_str();
+#   endif // (!defined(_DEBUG))
 #else
     int argc_ = argc;
     char** argv_ = argv;
@@ -48,12 +51,7 @@ int main(int argc, char* argv[])
     // from main(argc, argv) instead of argc_ and argv_ so qApp->arguments() may not
     // behave as expected.
     // See http://qt-project.org/doc/qt-5.0/qtcore/qcoreapplication.html#arguments
-    //
-    // NOTE: Until issue of non-terminating application is resolved, we are going
-    // to use argc and argv instead of argc_ and argv_ respectively
-    Q_UNUSED(argc_);
-    Q_UNUSED(argv_);
-    QApplication a(argc, const_cast<char**>(argv));
+    QApplication a(argc_, const_cast<char**>(argv_));
     
     Q_INIT_RESOURCE(styles);
     Q_INIT_RESOURCE(icons);

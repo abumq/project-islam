@@ -34,7 +34,7 @@ void ExtensionLoader::loadAll(ExtensionBar* extensionBar, QSplashScreen *splashS
     libExtension = "*.dylib";
 #else
 #   error Invalid OS detected
-#endif
+#endif // defined(Q_OS_WIN)
     QDir extensionsDir(appPath + "/extensions/", libExtension, QDir::Name | QDir::IgnoreCase, QDir::Files);
     if (!extensionsDir.exists()) {
         return;

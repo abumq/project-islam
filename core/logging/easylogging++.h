@@ -1,5 +1,5 @@
 //
-//  Easylogging++ v9.43
+//  Easylogging++ v9.44
 //  Single-header only, cross-platform logging library for C++ applications
 //
 //  Copyright (c) 2013 Majid Khan
@@ -5017,9 +5017,9 @@ class Loggers : base::StaticClass {
 class VersionInfo : base::StaticClass {
  public:
     /// @brief Current version number
-    static inline const std::string version(void) { return std::string("9.43"); }
+    static inline const std::string version(void) { return std::string("9.44"); }
     /// @brief Release date of current version
-    static inline const std::string releaseDate(void) { return std::string("29-12-2013 1945hrs"); }
+    static inline const std::string releaseDate(void) { return std::string("08-01-2014 1139hrs"); }
 };
 }  // namespace el
 #undef VLOG_IS_ON
@@ -5579,7 +5579,7 @@ static T* checkNotNull(T* ptr, const char* name, const char* loggerId = _CURRENT
 #define DCCHECK_GT(a, b, loggerId) if (_ELPP_DEBUG_LOG) CCHECK_GT(a, b, loggerId)
 #define DCCHECK_LE(a, b, loggerId) if (_ELPP_DEBUG_LOG) CCHECK_LE(a, b, loggerId)
 #define DCCHECK_GE(a, b, loggerId) if (_ELPP_DEBUG_LOG) CCHECK_GE(a, b, loggerId)
-#define DCCHECK_NULLPTR(ptr, loggerId) if (_ELPP_DEBUG_LOG) CCHECK_NOTNULL(ptr, loggerId)
+#define DCCHECK_NOTNULL(ptr, loggerId) if (_ELPP_DEBUG_LOG) CCHECK_NOTNULL(ptr, loggerId)
 #define DCCHECK_STREQ(str1, str2, loggerId) if (_ELPP_DEBUG_LOG) CCHECK_STREQ(str1, str2, loggerId)
 #define DCCHECK_STRNE(str1, str2, loggerId) if (_ELPP_DEBUG_LOG) CCHECK_STRNE(str1, str2, loggerId)
 #define DCCHECK_STRCASEEQ(str1, str2, loggerId) if (_ELPP_DEBUG_LOG) CCHECK_STRCASEEQ(str1, str2, loggerId)
@@ -5592,7 +5592,7 @@ static T* checkNotNull(T* ptr, const char* name, const char* loggerId = _CURRENT
 #define DCHECK_GT(a, b) DCCHECK_GT(a, b, _CURRENT_FILE_LOGGER_ID)
 #define DCHECK_LE(a, b) DCCHECK_LE(a, b, _CURRENT_FILE_LOGGER_ID)
 #define DCHECK_GE(a, b) DCCHECK_GE(a, b, _CURRENT_FILE_LOGGER_ID)
-#define DCHECK_NULLPTR(ptr) DCCHECK_NOTNULL(ptr, _CURRENT_FILE_LOGGER_ID)
+#define DCHECK_NOTNULL(ptr) DCCHECK_NOTNULL(ptr, _CURRENT_FILE_LOGGER_ID)
 #define DCHECK_STREQ(str1, str2) DCCHECK_STREQ(str1, str2, _CURRENT_FILE_LOGGER_ID)
 #define DCHECK_STRNE(str1, str2) DCCHECK_STRNE(str1, str2, _CURRENT_FILE_LOGGER_ID)
 #define DCHECK_STRCASEEQ(str1, str2) DCCHECK_STRCASEEQ(str1, str2, _CURRENT_FILE_LOGGER_ID)

@@ -3,7 +3,7 @@ QT       -= gui
 
 unix:!win32 {
     ## Compiler
-    COMPILER = clang++
+    COMPILER = icpc
 
     ## Standard
     QMAKE_CXXFLAGS += -std=c++0x

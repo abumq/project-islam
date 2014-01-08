@@ -186,10 +186,9 @@ bool UpdateManager::update()
                        << jsonError.errorString() << "]";
         }
     }
-    if (result) {
-        m_lastChecked = QDate::currentDate();
-        SettingsLoader::getInstance()->saveSettings("update_checked", QVariant(m_lastChecked.toString()));
-    }
+    LOG(INFO) << "Updating last checked date";
+    m_lastChecked = QDate::currentDate();
+    SettingsLoader::getInstance()->saveSettings("update_checked", QVariant(m_lastChecked.toString()));
     return result;
 }
 
@@ -263,37 +262,52 @@ bool UpdateManager::updateExtensions(QJsonObject* jsonObject)
         QJsonObject extensionobj = value.toObject();
         QString name = extensionobj["name"].toString();
         AbstractExtension* ex = m_extensionBar->hasExtension(name);
-        if (ex != nullptr) {
-            QString ver = extensionobj["version"].toString();
-            bool forceUpdate = extensionobj["force_update"].toBool();
-            bool startUpgrade = !ex->info()->isCurrentVersion(ver) || forceUpdate;
-            if (startUpgrade) {
-                LOG(INFO) << "Upgrading [" << name << "] from [" 
+#if defined(UPDATE_ONLY_INSTALLED_EXTENSIONS)
+        if (ex == nullptr) {
+            continue;
+        }
+#endif // defined(UPDATE_ONLY_INSTALLED_EXTENSIONS)
+        QString ver = extensionobj["version"].toString();
+        bool forceUpdate = extensionobj["force_update"].toBool();
+        bool startUpgrade = 
+            ((ex != nullptr && !ex->info()->isCurrentVersion(ver) // Installed extension needs version check
+#if !defined(UPDATE_ONLY_INSTALLED_EXTENSIONS)
+                || (ex == nullptr && true) // Uninstalled extensions gets installed without version check
+#endif // defined(UPDATE_ONLY_INSTALLED_EXTENSIONS)
+            )) || forceUpdate; // Forced update / install
+            
+        if (startUpgrade) {
+            if (ex != nullptr) {
+                LOG(INFO) << "Upgrading extension [" << name << "] from [" 
                           << ex->info()->versionString() 
-                          << "] to [" << ver << "]" << (forceUpdate ? " (FORCED)" : "");
-                QString baseUrl = extensionobj["base"].toString();
-                QStringList filesList = extensionobj["files"].toString().split(',');
-                for (QString filename : filesList) {
-                    QString targetDir = filesystem::buildPath(QStringList() 
-                                                              << qApp->applicationDirPath() << "extensions");
-                    QString tempFilename = targetDir + filename + QString(kLocalFilesSuffix);
-                    LOG(INFO) << "Downloading extension file [" 
-                              << filename << "] from [" + baseUrl + "] to [" << targetDir << "]";
-                    result = result && downloadFile(baseUrl + filename, tempFilename);
-                    if (!result || !ExtensionLoader::verifyExtension(tempFilename)) {
-                        LOG(WARNING) << "Removing [" << tempFilename << "]";
-                        QFile file(tempFilename);
-                        if (file.open(QIODevice::ReadWrite)) {
-                            file.remove();
-                            file.close();
-                        }
-                    } else {
-                        m_downloadedFiles.push_back(tempFilename);
-                    }
-                }
+                         << "] to [" << ver << "]" << (forceUpdate ? " (FORCED)" : "");
             } else {
-                LOG(INFO) << "Extension [" << name << "] is up to date!";
+                LOG(INFO) << "Installing extension [" << name << "] " << (forceUpdate ? " (FORCED)" : "");
             }
+            QString baseUrl = extensionobj["base"].toString();
+            QStringList filesList = extensionobj["files"].toString().split(',');
+            for (QString filename : filesList) {
+                QString targetDir = filesystem::buildPath(QStringList() 
+                                                          << qApp->applicationDirPath() << "extensions");
+                QString tempFilename = targetDir + filename + QString(kLocalFilesSuffix);
+                LOG(INFO) << "Downloading extension file [" 
+                          << filename << "] from [" + baseUrl + "] to [" << targetDir << "]";
+                result = result && downloadFile(baseUrl + filename, tempFilename);
+                bool verified = false;
+                if (!result || !(verified = ExtensionLoader::verifyExtension(tempFilename))) {
+                    LOG(WARNING) << "Removing [" << tempFilename << "] Download status: [" 
+                                 << result << "] Verified: [" << verified << "]";
+                    QFile file(tempFilename);
+                    if (file.open(QIODevice::ReadWrite)) {
+                        file.remove();
+                        file.close();
+                    }
+                } else {
+                    m_downloadedFiles.push_back(tempFilename);
+                }
+            }
+        } else {
+            LOG(INFO) << "Extension [" << name << "] is up to date!";
         }
     }
     return result;

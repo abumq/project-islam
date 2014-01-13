@@ -3,6 +3,8 @@
 
 #include "core/extension/extension_base.h"
 
+class SalahTimes;
+
 class Salah : public ExtensionBase
 {
     Q_OBJECT
@@ -30,6 +32,7 @@ public slots:
     virtual void onActivated();
     virtual void onDeactivated();
 private:
+    SalahTimes* m_salahTimes;
 };
 
 #endif // SALAH_H

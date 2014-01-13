@@ -1,4 +1,5 @@
 #include "salah.h"
+#include "core/salah/salah_times.h"
 
 _INITIALIZE_EASYLOGGINGPP
 
@@ -9,6 +10,7 @@ const char* Salah::kDescription  = "Organize your ṣalāh (prayer) including at
 
 Salah::Salah()
 {
+    memory::turnToNullPtr(m_salahTimes);
     setExtensionInfo(ExtensionInfo(kMajorVersion, kMinorVersion, kPatchVersion, 
                                    QString(kAuthor), QString(kName), 
                                    QString(kTitle), QString(kDescription)));
@@ -16,6 +18,7 @@ Salah::Salah()
 
 Salah::~Salah()
 {
+    memory::deleteAll(m_salahTimes);
 }
 
 bool Salah::initialize(int argc, const char** argv)
@@ -28,6 +31,8 @@ bool Salah::initialize(int argc, const char** argv)
     // Do not trace location before calling parent's initialize
     _TRACE;
     initializeMenu();
+    m_salahTimes = new SalahTimes();
+    
     return true;
 }
 

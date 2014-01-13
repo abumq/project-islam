@@ -11,7 +11,8 @@ HEADERS += core/utils/memory.h \
     core/utils/filesystem.h \
     core/utils/datetime.h \
     core/salah/salah_times.h \
-    core/utils/maths.h
+    core/utils/maths.h \
+    core/utils/misc.h
 
 HEADERS  += mainwindow.h \
     core/constants.h \

@@ -2,6 +2,7 @@
 #define SALAH_TIMES_H
 
 #include <map>
+#include "core/utils/misc.h"
 
 class SalahTimes
 {
@@ -44,6 +45,13 @@ public:
     void build(int year, int month, int day, double latitude, double longitude, double timezone);
         
 private:
+    const int kTimesCount = static_cast<int>(bits::countBits(
+        static_cast<long>(TimeType::Fajr) + static_cast<long>(TimeType::Sunrise)
+         + static_cast<long>(TimeType::Dhuhr) + static_cast<long>(TimeType::Asr)
+          + static_cast<long>(TimeType::Sunset) + static_cast<long>(TimeType::Maghrib)
+           + static_cast<long>(TimeType::Isha)));
+    const int kMaxTimeType = static_cast<int>(TimeType::Isha);
+    
     CalculationMethod m_calculationMethod;
     JuristicMethod m_juristicMethod;
     AdjustingMethod m_adjustingMethod;

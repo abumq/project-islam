@@ -23,5 +23,26 @@ double georgianToJulianDate(int year, int month, int day) {
             + floor(kAverageLengthOfMonth * (month + 1))
             + day + b - 1524.5;
 }
+
+double getTimeZone(time_t local_time) {
+    tm* tmp = localtime(&local_time);
+    tmp->tm_isdst = 0;
+    time_t local = mktime(tmp);
+    tmp = gmtime(&local_time);
+    tmp->tm_isdst = 0;
+    time_t gmt = mktime(tmp);
+    return (local - gmt) / 3600.0;
+}
+
+/* compute local time-zone for a specific date */
+double getTimeZone(int year, int month, int day) {
+    tm date = { 0 };
+    date.tm_year = year - 1900;
+    date.tm_mon = month - 1;
+    date.tm_mday = day;
+    date.tm_isdst = -1;                // determine it yourself from system
+    time_t local = mktime(&date);                // seconds since midnight Jan 1, 1970
+    return getTimeZone(local);
+}
 } // namespace datetime
 #endif // DATETIME_H

@@ -5,10 +5,12 @@ include(../../extension.pri)
 DEFINES += # User macros
 
 SOURCES += \
-    salah.cc
+    salah.cc \
+    ../../core/salah/salah_times.cc
 
 HEADERS += \
-    salah.h
+    salah.h \
+    ../../core/salah/salah_times.h
 
 FORMS += \
 

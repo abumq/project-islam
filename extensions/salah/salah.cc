@@ -1,5 +1,6 @@
 #include "salah.h"
 #include "core/salah/salah_times.h"
+#include <QLabel>
 
 _INITIALIZE_EASYLOGGINGPP
 
@@ -32,7 +33,19 @@ bool Salah::initialize(int argc, const char** argv)
     _TRACE;
     initializeMenu();
     m_salahTimes = new SalahTimes();
+    QLabel* prayerTimes = new QLabel(container());
     
+    QString fajr = QString::fromStdString(m_salahTimes->readTime(SalahTimes::TimeType::Fajr));
+    QString dhuhr = QString::fromStdString(m_salahTimes->readTime(SalahTimes::TimeType::Dhuhr));
+    QString asr = QString::fromStdString(m_salahTimes->readTime(SalahTimes::TimeType::Asr));
+    QString maghrib = QString::fromStdString(m_salahTimes->readTime(SalahTimes::TimeType::Maghrib));
+    QString isha = QString::fromStdString(m_salahTimes->readTime(SalahTimes::TimeType::Isha));
+    
+    prayerTimes->setText("Fajr: " + fajr + "\n"
+                         +"Dhuhr: " +  dhuhr + "\n"
+                         +"Asr: " +  asr + "\n"
+                         +"Maghrib: " +  maghrib + "\n"
+                         + "Isha: " + isha);
     return true;
 }
 

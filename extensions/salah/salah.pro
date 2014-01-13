@@ -6,11 +6,11 @@ DEFINES += # User macros
 
 SOURCES += \
     salah.cc \
-    ../../core/salah/salah_times.cc
+    salah_times.cc
 
 HEADERS += \
     salah.h \
-    ../../core/salah/salah_times.h
+    salah_times.h
 
 FORMS += \
 

@@ -2,18 +2,19 @@
 #define SALAH_TIMES_H
 
 #include <cmath>
+#include <string>
 #include <map>
-#include "core/utils/misc.h"
 
 class SalahTimes;
 
 class SalahMethod {
 public:
-    SalahMethod(double fajrAngle = 16.0,
-                bool maghribIsMinutes = false,
-                double maghribValue = 4.0,
-                bool ishaIsMinutes = false,
-                double ishaValue = 14.0);
+    SalahMethod() {}
+    SalahMethod(double fajrAngle,
+                bool maghribIsMinutes,
+                double maghribValue,
+                bool ishaIsMinutes,
+                double ishaValue);
 private:
     double m_fajrAngle;
     bool m_maghribIsMinutes;
@@ -34,19 +35,19 @@ public:
         MWL = 8,            // Muslim World League (MWL)
         Makkah = 16,        // Umm al-Qura, Makkah
         Egypt = 32,         // Egyptian General Authority of Survey
-        Custom = 64,        // Custom Setting
+        Custom = 64         // Custom Setting
     };
     
     enum class JuristicMethod {
         Shafii = 1,    // Shafii (standard)
-        Hanafi = 2,    // Hanafi
+        Hanafi = 2     // Hanafi
     };
     
     enum class AdjustingMethod {
         None = 0,              // No adjustment
         MidNight = 1,          // middle of night
         OneSeventh = 2,        // 1/7th of night
-        AngleBased = 4,        // angle/60th of night
+        AngleBased = 4         // angle/60th of night
     };
     
     enum class TimeType {
@@ -59,25 +60,17 @@ public:
         Isha = 64
     };
     
-    SalahTimes(CalculationMethod calculationMethod = CalculationMethod::Jafari,
+    SalahTimes(CalculationMethod calculationMethod = CalculationMethod::MWL,
                JuristicMethod juristicMethod = JuristicMethod::Shafii,
                AdjustingMethod adjustingMethod = AdjustingMethod::MidNight);
     void build(int year, int month, int day, double latitude, double longitude, double timezone);
     inline const std::map<TimeType, double>* times() const;
     std::string readTime(TimeType t);
 private:
-    const int kTimesCount = static_cast<int>(bits::countBits(
-                                                 static_cast<long>(TimeType::Fajr) + static_cast<long>(TimeType::Sunrise)
-                                                 + static_cast<long>(TimeType::Dhuhr) + static_cast<long>(TimeType::Asr)
-                                                 + static_cast<long>(TimeType::Sunset) + static_cast<long>(TimeType::Maghrib)
-                                                 + static_cast<long>(TimeType::Isha)));
-    const int kMaxTimeType = static_cast<int>(TimeType::Isha);
+    static const int kTimesCount = 7;
+    static const int kMaxTimeType = static_cast<int>(TimeType::Isha);
     
-    const int kCalculationMethodsCount = static_cast<int>(bits::countBits(
-                                                              static_cast<long>(CalculationMethod::Jafari) + static_cast<long>(CalculationMethod::Karachi)
-                                                              + static_cast<long>(CalculationMethod::ISNA) + static_cast<long>(CalculationMethod::MWL)
-                                                              + static_cast<long>(CalculationMethod::Makkah) + static_cast<long>(CalculationMethod::Egypt)
-                                                              + static_cast<long>(CalculationMethod::Custom)));
+    static const int kCalculationMethodsCount = 7;
     
     CalculationMethod m_calculationMethod;
     JuristicMethod m_juristicMethod;

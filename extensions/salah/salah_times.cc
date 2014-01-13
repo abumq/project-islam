@@ -41,7 +41,7 @@ void SalahTimes::build(int year, int month, int day, double latitude, double lon
     m_timezone = timezone;
     m_julianDate = datetime::georgianToJulianDate(year, month, day);
     
-    // Default
+    // Default values
     double defaultTimes[] = { 5, 6, 12, 13, 18, 18, 18 };
     int i = 0;
     int t = 1;
@@ -49,7 +49,7 @@ void SalahTimes::build(int year, int month, int day, double latitude, double lon
         m_times.insert(std::make_pair(static_cast<TimeType>(t), defaultTimes[i++] / 24.0));
         t = t << 1;
     } while (t <= static_cast<int>(kMaxTimeType));
-    // assign times after computing
+    // Assign times after computing
     m_times[TimeType::Fajr] = computePrayerTime(180.0 - m_salahMethods.at(m_calculationMethod).m_fajrAngle, m_times[TimeType::Fajr]);
     m_times[TimeType::Sunrise] = computePrayerTime(180.0 - 0.833, m_times[TimeType::Sunrise]);
     m_times[TimeType::Dhuhr] = computeMidDay(m_times[TimeType::Dhuhr]);

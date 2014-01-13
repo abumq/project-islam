@@ -87,8 +87,7 @@ void ExtensionItem::showExtension(bool checked)
     } else {
         for (ExtensionItem* extensionItem : *m_allExtensionItems) {
             if (extensionItem != this) {
-                extensionItem->extension()->hide();
-                extensionItem->setChecked(false);
+                extensionItem->extension()->deactivate();
             }
         }
         m_extension->activate();

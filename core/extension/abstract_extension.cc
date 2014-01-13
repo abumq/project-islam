@@ -46,7 +46,7 @@ AbstractExtension::~AbstractExtension()
     memory::deleteAll(m_titleLabel, m_menu, m_container);
 }
 
-bool AbstractExtension::operator ==(const AbstractExtension &ex)
+bool AbstractExtension::operator ==(const AbstractExtension& ex)
 {
     if (ex.info() == nullptr) {
         return info() == nullptr;
@@ -56,7 +56,7 @@ bool AbstractExtension::operator ==(const AbstractExtension &ex)
     return ex.info()->name() == info()->name();
 }
 
-const ExtensionInfo *AbstractExtension::info() const
+const ExtensionInfo* AbstractExtension::info() const
 {
     return m_info;
 }
@@ -176,7 +176,7 @@ QLabel* AbstractExtension::titleLabel() const
     return m_titleLabel;
 }
 
-QMenu *AbstractExtension::menu() const
+QMenu* AbstractExtension::menu() const
 {
     return m_menu;
 }
@@ -187,7 +187,7 @@ void AbstractExtension::setSettingsLoader(SettingsLoader* settingsLoader)
     m_settingsLoader = settingsLoader;
 }
 
-SettingsLoader*AbstractExtension::settingsLoader() const
+SettingsLoader* AbstractExtension::settingsLoader() const
 {
     return m_settingsLoader;
 }

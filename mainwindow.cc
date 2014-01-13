@@ -142,7 +142,9 @@ void MainWindow::onExtensionChanged(AbstractExtension *extension)
         setWindowTitle(extension->info()->title());
     }
     m_container->resize(width(), height());
-    m_extensionBar->currentExtension()->resize(m_container->size());
+    if (m_extensionBar->currentExtension() != nullptr) {
+        m_extensionBar->currentExtension()->resize(m_container->size());
+    }
 }
 
 void MainWindow::on_action_Settings_triggered()

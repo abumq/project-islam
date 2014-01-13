@@ -23,14 +23,14 @@
       <enum>QTabWidget::North</enum>
      </property>
      <property name="currentIndex">
-      <number>2</number>
+      <number>1</number>
      </property>
      <property name="elideMode">
       <enum>Qt::ElideNone</enum>
      </property>
-     <widget class="QWidget" name="tabEnvironment">
+     <widget class="QWidget" name="tabGeneral">
       <attribute name="title">
-       <string>Environment</string>
+       <string>General</string>
       </attribute>
       <widget class="QGroupBox" name="groupTheme">
        <property name="geometry">
@@ -65,148 +65,216 @@
        <widget class="QLineEdit" name="txtHomeDir"/>
       </widget>
      </widget>
-     <widget class="QWidget" name="tabLogging">
+     <widget class="QWidget" name="tabLocation">
       <attribute name="title">
-       <string>Logging</string>
+       <string>Location</string>
       </attribute>
-      <widget class="QGroupBox" name="groupBox">
-       <property name="enabled">
-        <bool>false</bool>
-       </property>
+      <widget class="QGroupBox" name="groupBox_5">
        <property name="geometry">
         <rect>
-         <x>10</x>
-         <y>30</y>
-         <width>187</width>
-         <height>142</height>
+         <x>30</x>
+         <y>160</y>
+         <width>711</width>
+         <height>101</height>
         </rect>
        </property>
-       <property name="styleSheet">
-        <string notr="true"/>
-       </property>
        <property name="title">
-        <string>Severity</string>
+        <string>Day Light Savings</string>
        </property>
-       <layout class="QGridLayout" name="gridLayout">
-        <item row="2" column="1">
-         <widget class="QCheckBox" name="chkLevelFatal">
-          <property name="text">
-           <string>Fatal</string>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="1">
-         <widget class="QCheckBox" name="chkLevelWarning">
-          <property name="text">
-           <string>Warning</string>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="0">
-         <widget class="QCheckBox" name="chkLevelInfo">
-          <property name="text">
-           <string>Info</string>
-          </property>
-         </widget>
-        </item>
-        <item row="3" column="0">
-         <widget class="QCheckBox" name="chkLevelDebug">
-          <property name="text">
-           <string>Debug</string>
-          </property>
-         </widget>
-        </item>
-        <item row="3" column="1">
-         <widget class="QCheckBox" name="chkLevelVerbose">
-          <property name="text">
-           <string>Verbose</string>
-          </property>
-         </widget>
-        </item>
-        <item row="2" column="0">
-         <widget class="QCheckBox" name="chkLevelError">
-          <property name="text">
-           <string>Error</string>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="0" colspan="2">
-         <widget class="QCheckBox" name="chkLevelGlobal">
-          <property name="text">
-           <string>All</string>
-          </property>
-         </widget>
-        </item>
-       </layout>
+       <widget class="QRadioButton" name="rdoAutoDayLightSavings">
+        <property name="geometry">
+         <rect>
+          <x>20</x>
+          <y>30</y>
+          <width>111</width>
+          <height>22</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Auto</string>
+        </property>
+        <property name="checked">
+         <bool>true</bool>
+        </property>
+       </widget>
+       <widget class="QRadioButton" name="rdoManualDayLightSavings">
+        <property name="geometry">
+         <rect>
+          <x>20</x>
+          <y>60</y>
+          <width>111</width>
+          <height>22</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Manual</string>
+        </property>
+       </widget>
+       <widget class="QCheckBox" name="chkDayLightSaving">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
+        <property name="geometry">
+         <rect>
+          <x>120</x>
+          <y>60</y>
+          <width>151</width>
+          <height>22</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Day Light Savings</string>
+        </property>
+       </widget>
+       <widget class="QComboBox" name="cboDayLightSavings">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
+        <property name="geometry">
+         <rect>
+          <x>280</x>
+          <y>60</y>
+          <width>131</width>
+          <height>27</height>
+         </rect>
+        </property>
+       </widget>
       </widget>
-      <widget class="QGroupBox" name="groupBox_2">
+      <widget class="QLabel" name="label">
        <property name="geometry">
         <rect>
-         <x>270</x>
-         <y>30</y>
-         <width>471</width>
-         <height>63</height>
+         <x>30</x>
+         <y>20</y>
+         <width>711</width>
+         <height>41</height>
         </rect>
        </property>
-       <property name="title">
-        <string>Log File</string>
+       <property name="text">
+        <string>This data is only stored locally and used when determining prayer times and / or Qibla location</string>
        </property>
-       <layout class="QGridLayout" name="gridLayout_2">
+       <property name="alignment">
+        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+       </property>
+      </widget>
+      <widget class="QWidget" name="">
+       <property name="geometry">
+        <rect>
+         <x>389</x>
+         <y>74</y>
+         <width>351</width>
+         <height>29</height>
+        </rect>
+       </property>
+       <layout class="QFormLayout" name="formLayout_3">
         <item row="0" column="0">
-         <widget class="QLineEdit" name="txtLogFile">
-          <property name="enabled">
-           <bool>false</bool>
+         <widget class="QLabel" name="label_9">
+          <property name="text">
+           <string>City:</string>
           </property>
          </widget>
         </item>
         <item row="0" column="1">
-         <widget class="QPushButton" name="pushButton">
-          <property name="enabled">
-           <bool>false</bool>
-          </property>
-          <property name="minimumSize">
-           <size>
-            <width>0</width>
-            <height>0</height>
-           </size>
-          </property>
+         <widget class="QComboBox" name="cboCity"/>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="">
+       <property name="geometry">
+        <rect>
+         <x>31</x>
+         <y>74</y>
+         <width>351</width>
+         <height>29</height>
+        </rect>
+       </property>
+       <layout class="QFormLayout" name="formLayout_2">
+        <item row="0" column="0">
+         <widget class="QLabel" name="label_3">
           <property name="text">
-           <string>...</string>
+           <string>Country:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="1">
+         <widget class="QComboBox" name="cboCountry"/>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="">
+       <property name="geometry">
+        <rect>
+         <x>450</x>
+         <y>110</y>
+         <width>291</width>
+         <height>29</height>
+        </rect>
+       </property>
+       <layout class="QFormLayout" name="formLayout_4">
+        <item row="0" column="0">
+         <widget class="QLabel" name="label_12">
+          <property name="text">
+           <string>Time Zone:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="1">
+         <widget class="QComboBox" name="cboTimeZone"/>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="">
+       <property name="geometry">
+        <rect>
+         <x>240</x>
+         <y>110</y>
+         <width>201</width>
+         <height>29</height>
+        </rect>
+       </property>
+       <layout class="QFormLayout" name="formLayout_5">
+        <item row="0" column="0">
+         <widget class="QLabel" name="label_11">
+          <property name="text">
+           <string>Longitude:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="1">
+         <widget class="QDoubleSpinBox" name="spnLongitude">
+          <property name="minimum">
+           <double>-180.000000000000000</double>
+          </property>
+          <property name="maximum">
+           <double>180.000000000000000</double>
           </property>
          </widget>
         </item>
        </layout>
       </widget>
-      <widget class="QGroupBox" name="groupBox_3">
+      <widget class="QWidget" name="">
        <property name="geometry">
         <rect>
-         <x>270</x>
+         <x>32</x>
          <y>110</y>
-         <width>411</width>
-         <height>63</height>
+         <width>201</width>
+         <height>29</height>
         </rect>
        </property>
-       <property name="title">
-        <string>Maximum Log File Size</string>
-       </property>
-       <layout class="QHBoxLayout" name="horizontalLayout">
-        <item>
-         <widget class="QSpinBox" name="spnMaxLogFileSize">
-          <property name="minimum">
-           <number>2048</number>
-          </property>
-          <property name="maximum">
-           <number>20971520</number>
-          </property>
-          <property name="value">
-           <number>2097152</number>
+       <layout class="QFormLayout" name="formLayout_6">
+        <item row="0" column="0">
+         <widget class="QLabel" name="label_10">
+          <property name="text">
+           <string>Latitude:</string>
           </property>
          </widget>
         </item>
-        <item>
-         <widget class="QLabel" name="label">
-          <property name="text">
-           <string>Bytes</string>
+        <item row="0" column="1">
+         <widget class="QDoubleSpinBox" name="spnLatitude">
+          <property name="minimum">
+           <double>-90.000000000000000</double>
+          </property>
+          <property name="maximum">
+           <double>90.000000000000000</double>
           </property>
          </widget>
         </item>

@@ -21,7 +21,8 @@ public:
 protected:
     void accept();
 private slots:
-    void on_chkLevelGlobal_clicked(bool checked);
+    
+    void on_rdoManualDayLightSavings_toggled(bool checked);
     
 private:
     Ui::SettingsDialog *ui;

@@ -30,19 +30,6 @@ SettingsDialog::~SettingsDialog()
 void SettingsDialog::accept()
 {
     LOG(INFO) << "Updating settings...";
-    el::Configurations configurations = LoggingConfigurer::baseConfiguration();
-    configurations.set(el::Level::Global, el::ConfigurationType::Filename, ui->txtLogFile->text().toStdString());
-    configurations.set(el::Level::Global, el::ConfigurationType::Enabled, ui->chkLevelGlobal->isChecked() ? "true" : "false");
-    if (!ui->chkLevelGlobal->isChecked()) {
-        configurations.set(el::Level::Error, el::ConfigurationType::Enabled, ui->chkLevelError->isChecked() ? "true" : "false");
-        configurations.set(el::Level::Info, el::ConfigurationType::Enabled, ui->chkLevelInfo->isChecked() ? "true" : "false");
-        configurations.set(el::Level::Warning, el::ConfigurationType::Enabled, ui->chkLevelWarning->isChecked() ? "true" : "false");
-        configurations.set(el::Level::Fatal, el::ConfigurationType::Enabled, ui->chkLevelFatal->isChecked() ? "true" : "false");
-        configurations.set(el::Level::Debug, el::ConfigurationType::Enabled, ui->chkLevelDebug->isChecked() ? "true" : "false");
-        configurations.set(el::Level::Verbose, el::ConfigurationType::Enabled, ui->chkLevelVerbose->isChecked() ? "true" : "false");
-    }
-    configurations.set(el::Level::Global, el::ConfigurationType::MaxLogFileSize, QString::number(ui->spnMaxLogFileSize->value()).toStdString());
-    el::Loggers::setDefaultConfigurations(configurations, true);
     
     homeDirectoryChanged = SettingsLoader::getInstance()->defaultHomeDir() != ui->txtHomeDir->text();
     SettingsLoader::getInstance()->updateDefaultHomeDir(ui->txtHomeDir->text());
@@ -65,25 +52,7 @@ void SettingsDialog::loadSettingsInUi()
     // -------------------- Tab: Environment ------------------------
     m_colorBox->setColor(QColor::fromRgb(m_mainWindow->styleLoader()->r(), m_mainWindow->styleLoader()->g(), m_mainWindow->styleLoader()->b()));
     ui->txtHomeDir->setText(SettingsLoader::getInstance()->defaultHomeDir());
-    
-    // -------------------- Tab: Logging ------------------------
-    
-    // All loggers
-    el::base::TypedConfigurations configurations = 
-            el::Loggers::defaultTypedConfigurations();
-    
-    std::string filename = configurations.filename(el::Level::Global);
-    ui->txtLogFile->setText(QString(filename.c_str()));
-    ui->chkLevelGlobal->setChecked(configurations.enabled(el::Level::Global));
-    on_chkLevelGlobal_clicked(ui->chkLevelGlobal->isChecked());
-    ui->chkLevelInfo->setChecked(configurations.enabled(el::Level::Info));
-    ui->chkLevelWarning->setChecked(configurations.enabled(el::Level::Warning));
-    ui->chkLevelError->setChecked(configurations.enabled(el::Level::Error));
-    ui->chkLevelFatal->setChecked(configurations.enabled(el::Level::Fatal));
-    ui->chkLevelDebug->setChecked(configurations.enabled(el::Level::Debug));
-    ui->chkLevelVerbose->setChecked(configurations.enabled(el::Level::Verbose));
-    
-    ui->spnMaxLogFileSize->setValue(static_cast<int>(configurations.maxLogFileSize(el::Level::Global)));
+
     // --------------------- Tab: Quran
     // Originals
     data::DatabaseManager dbManager;
@@ -180,12 +149,8 @@ void SettingsDialog::loadSettingsInUi()
     ui->cboQuranTafseers->setCurrentIndex(selectedIndex);
 }
 
-void SettingsDialog::on_chkLevelGlobal_clicked(bool checked)
+void SettingsDialog::on_rdoManualDayLightSavings_toggled(bool checked)
 {
-    ui->chkLevelInfo->setEnabled(!checked);
-    ui->chkLevelWarning->setEnabled(!checked);
-    ui->chkLevelError->setEnabled(!checked);
-    ui->chkLevelFatal->setEnabled(!checked);
-    ui->chkLevelDebug->setEnabled(!checked);
-    ui->chkLevelVerbose->setEnabled(!checked);
+    ui->cboDayLightSavings->setEnabled(checked);
+    ui->chkDayLightSaving->setEnabled(checked);
 }

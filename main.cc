@@ -13,16 +13,40 @@
 
 _INITIALIZE_EASYLOGGINGPP
 
-const int kExtraFilesCount = 1;
-const char* kExtraFiles[kExtraFilesCount] = {
-    ".l.lg"
+int returnCode;
+
+class CleanAtEnd {
+public:
+    CleanAtEnd() {
+    }
+
+    ~CleanAtEnd() {
+        // clean extra files
+        DVLOG(9) << "Removing extra files";
+        for (int i = 0; i < kExtraFilesCount; ++i) {
+            QFile f(kExtraFiles[i]);
+            if (f.exists()) {
+                f.remove();
+            }
+        }
+        DVLOG(9) << "Exit status: " << returnCode;
+    }
+    
+private:
+    static const int kExtraFilesCount = 1;
+    const char* kExtraFiles[kExtraFilesCount] = {
+        ".l.lg"
+    };
 };
 
 int main(int argc, char* argv[])
 {
+    CleanAtEnd cleaner;
+    Q_UNUSED(cleaner);
+    
     LoggingConfigurer::configureLoggers();
     _TRACE;
-    int returnCode;
+    
 #if defined(Q_OS_WIN)
     QString appExec = QString(argv[0]);
     QString pluginsPath = appExec.mid(0, appExec.lastIndexOf(QDir::separator())) + QDir::separator()
@@ -62,13 +86,13 @@ int main(int argc, char* argv[])
     a.setOrganizationName("Project Islam");
     a.setApplicationVersion(version::versionString());
     a.setApplicationDisplayName("Project Islam Platform");
-
+    
     QPixmap p(":/img/splash");
     QSplashScreen splashScreen(p);
     splashScreen.show();
     splashScreen.showMessage("Initializing...", Qt::AlignHCenter | Qt::AlignBottom);
     qApp->processEvents();
-
+    
     MainWindow w(&splashScreen);
     if (!w.applicationUpdated()) {
         w.show();
@@ -79,17 +103,8 @@ int main(int argc, char* argv[])
     } else {
         returnCode = 0;
     }
-    // clean extra files
-    LOG(DEBUG) << "Removing extra files";
-    for (int i = 0; i < kExtraFilesCount; ++i) {
-        QFile f(kExtraFiles[i]);
-        if (f.exists()) {
-            f.remove();
-        }
-    }
 #if defined(Q_OS_WIN)
     free(argv_);
 #endif // defined(Q_OS_WIN)
-    LOG(DEBUG) << "Exit status: " << returnCode;
     return returnCode;
 }

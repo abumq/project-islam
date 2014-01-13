@@ -1,7 +1,7 @@
 <RCC>
     <qresource prefix="/extensions">
-        <file alias="memorization">images/brain.png</file>
         <file alias="al-quran">images/quran.png</file>
+        <file alias="salah">images/mosque.png</file>
     </qresource>
     <qresource prefix="/">
         <file alias="project-ico">images/project-islam.ico</file>

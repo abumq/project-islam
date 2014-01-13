@@ -9,6 +9,7 @@ class SettingsDialog;
 
 class ColorBox;
 class MainWindow;
+class QTabWidget;
 
 class SettingsDialog : public QDialog
 {
@@ -18,6 +19,7 @@ public:
     SettingsDialog(MainWindow* mainWindow, QWidget* parent = 0);
     ~SettingsDialog();
     bool homeDirectoryChanged;
+    QTabWidget* settingsTabWidget();
 protected:
     void accept();
 private slots:

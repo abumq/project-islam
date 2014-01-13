@@ -26,6 +26,7 @@ MainWindow::MainWindow(QSplashScreen *splashScreen) :
 {
     memory::turnToNullPtr(m_container, m_extensionBar);
     ui->setupUi(this);
+    m_settingsDialog = new SettingsDialog(this, this);
     initialize();
 }
 
@@ -55,7 +56,7 @@ void MainWindow::initialize()
         connect(m_extensionBar, SIGNAL(extensionChanged(AbstractExtension*)), this, SLOT(onExtensionChanged(AbstractExtension*)));
         addToolBar(Qt::LeftToolBarArea, m_extensionBar);
         
-        ExtensionLoader extensionLoader(&m_dataHolder, ui->menuBar);
+        ExtensionLoader extensionLoader(&m_dataHolder, ui->menuBar, m_settingsDialog->settingsTabWidget());
         extensionLoader.loadAll(m_extensionBar, m_splashScreen);
         
         ExtensionItem* defaultExtension = m_extensionBar->defaultExtensionItem();
@@ -149,9 +150,8 @@ void MainWindow::onExtensionChanged(AbstractExtension *extension)
 
 void MainWindow::on_action_Settings_triggered()
 {
-    SettingsDialog settingsDialog(this, this);
-    settingsDialog.exec();
-    if (settingsDialog.homeDirectoryChanged) {
+    m_settingsDialog->exec();
+    if (m_settingsDialog->homeDirectoryChanged) {
         LOG(INFO) << "Home directory has been updated - restarting";
         restart();
     } else {

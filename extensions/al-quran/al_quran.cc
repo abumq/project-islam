@@ -134,6 +134,9 @@ void AlQuran::initializeMenu()
 
 void AlQuran::onContainerGeometryChanged(int w, int h)
 {
+    if (m_reciter == nullptr || m_splitter == nullptr) {
+        return;
+    }
     const int kCenterX = (w / 2) - (m_reciter->width() / 2);
     const int kBottom = h - m_reciter->height();
     m_reciter->move(kCenterX, kBottom);

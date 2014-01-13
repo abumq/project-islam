@@ -5,6 +5,7 @@
 #include <QAction>
 #include <QApplication>
 #include <QMenuBar>
+#include <QTabWidget>
 #include <QSplashScreen>
 
 #include "core/logging/logging.h"
@@ -13,9 +14,10 @@
 #include "core/extension/extension_bar.h"
 #include "core/data/data_holder.h"
 
-ExtensionLoader::ExtensionLoader(data::DataHolder* dataHolder, QMenuBar* menuBar) :
+ExtensionLoader::ExtensionLoader(data::DataHolder* dataHolder, QMenuBar* menuBar, QTabWidget *settingsTabWidget) :
     m_dataHolder(dataHolder),
-    m_menuBar(menuBar)
+    m_menuBar(menuBar),
+    m_settingsTabWidget(settingsTabWidget)
 {
 }
 
@@ -84,6 +86,10 @@ void ExtensionLoader::loadAll(ExtensionBar* extensionBar, QSplashScreen *splashS
             // initialize and add to extension bar
             extensionBase->initialize(argc, argv);
             extensionBar->addExtension(extensionBase->extension());
+            if (extensionBase->extension()->settingsTabWidget() != nullptr) {
+                m_settingsTabWidget->addTab(extensionBase->extension()->settingsTabWidget(), 
+                    extensionBase->extensionInfo().name());
+            }
         } else {
             LOG(ERROR) << "Error occured while loading extension [" << loader.fileName() << "]: " << loader.errorString();
         }

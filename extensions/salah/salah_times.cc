@@ -1,5 +1,5 @@
 
-#include "core/salah/salah_times.h"
+#include "salah_times.h"
 #include "core/utils/datetime.h"
 #include "core/logging/logging.h"
 

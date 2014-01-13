@@ -46,6 +46,10 @@ public:
         return extension()->dataHolder();
     }
     
+    inline QWidget* settingsTabWidget() {
+        return m_extension->newOrExistingSettingsTabWidget();
+    }
+    
     /// @brief Need to call this in extension and only proceed if this returns true
     /// Returns true if successfully initialized
     virtual bool initialize(int argc, const char** argv) {

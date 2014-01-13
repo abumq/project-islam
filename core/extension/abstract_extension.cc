@@ -19,6 +19,7 @@ AbstractExtension::AbstractExtension(QWidget *parent, ExtensionInfo *extensionIn
     m_info(extensionInfo),
     m_settingsLoader(nullptr),
     m_menu(nullptr),
+    m_settingsTabWidget(nullptr),
     m_isDefault(isDefault)
 {
     _TRACE;
@@ -43,7 +44,7 @@ AbstractExtension::AbstractExtension(QWidget *parent, ExtensionInfo *extensionIn
 AbstractExtension::~AbstractExtension()
 {
     LOG(INFO) << "Unloading extension [" << info()->name() << "]";
-    memory::deleteAll(m_titleLabel, m_menu, m_container);
+    memory::deleteAll(m_titleLabel, m_menu, m_settingsTabWidget, m_container);
 }
 
 bool AbstractExtension::operator ==(const AbstractExtension& ex)
@@ -181,6 +182,11 @@ QMenu* AbstractExtension::menu() const
     return m_menu;
 }
 
+QWidget* AbstractExtension::settingsTabWidget() const
+{
+    return m_settingsTabWidget;
+}
+
 void AbstractExtension::setSettingsLoader(SettingsLoader* settingsLoader)
 {
     _TRACE;
@@ -208,4 +214,12 @@ void AbstractExtension::buildHtmlFormattedDescription()
         m_htmlFormattedDescription.append("<br/>");
         m_htmlFormattedDescription.append(info()->description());
     }
+}
+
+QWidget* AbstractExtension::newOrExistingSettingsTabWidget()
+{
+    if (m_settingsTabWidget == nullptr) {
+        m_settingsTabWidget = new QWidget;
+    }
+    return m_settingsTabWidget;
 }

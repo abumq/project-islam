@@ -27,6 +27,11 @@ SettingsDialog::~SettingsDialog()
     delete ui;
 }
 
+QTabWidget *SettingsDialog::settingsTabWidget()
+{
+    return ui->tabWidget;
+}
+
 void SettingsDialog::accept()
 {
     LOG(INFO) << "Updating settings...";

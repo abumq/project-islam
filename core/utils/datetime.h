@@ -1,6 +1,7 @@
 #ifndef DATETIME_H
 #define DATETIME_H
 
+#include <cmath>
 #include <QString>
 
 namespace datetime {

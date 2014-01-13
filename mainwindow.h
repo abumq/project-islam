@@ -16,6 +16,7 @@ class MainWindow;
 class QSplashScreen;
 class AbstractExtension;
 class ExtensionBar;
+class SettingsDialog;
 
 class MainWindow : public QMainWindow
 {
@@ -59,6 +60,7 @@ private:
     Qt::WindowStates m_previousWindowsState;
     data::DataHolder m_dataHolder;
     UpdateManager m_updateManager;
+    SettingsDialog* m_settingsDialog;
 };
 
 #endif // MAINWINDOW_H

@@ -57,6 +57,7 @@ void SalahTimes::build(int year, int month, int day, double latitude, double lon
     m_times[TimeType::Sunset] = computePrayerTime(0.833, m_times[TimeType::Sunset]);
     m_times[TimeType::Maghrib] = computePrayerTime(m_salahMethods.at(m_calculationMethod).m_maghribValue, m_times[TimeType::Maghrib]);
     m_times[TimeType::Isha] = computePrayerTime(m_salahMethods.at(m_calculationMethod).m_ishaValue, m_times[TimeType::Isha]);
+    adjustTimes();
 }
 
 const std::map<SalahTimes::TimeType, double>*SalahTimes::times() const
@@ -117,7 +118,7 @@ void SalahTimes::adjustTimes()
                 + m_salahMethods[m_calculationMethod].m_maghribValue / 60.0;
     }
     if (m_salahMethods[m_calculationMethod].m_ishaIsMinutes) {
-        m_times[TimeType::Maghrib] = m_times[TimeType::Sunset] 
+        m_times[TimeType::Isha] = m_times[TimeType::Maghrib] 
                 + m_salahMethods[m_calculationMethod].m_ishaValue / 60.0;
     }
     if (m_adjustingMethod != AdjustingMethod::None) {

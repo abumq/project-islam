@@ -9,7 +9,9 @@ TEMPLATE = app
 HEADERS += core/utils/memory.h \
     core/utils/version.h \
     core/utils/filesystem.h \
-    core/utils/datetime.h
+    core/utils/datetime.h \
+    core/salah/salah_times.h \
+    core/utils/maths.h
 
 HEADERS  += mainwindow.h \
     core/constants.h \
@@ -50,7 +52,8 @@ SOURCES += main.cc\
     core/data/database_manager.cc \
     core/data/data_holder.cc \
     core/update/update_manager.cc \
-    core/download_manager.cc
+    core/download_manager.cc \
+    core/salah/salah_times.cc
 
 FORMS    += mainwindow.ui \
     settings_dialog.ui

@@ -112,7 +112,7 @@ void SalahTimes::adjustTimes()
         t = t << 1;
     } while (t <= static_cast<int>(kMaxTimeType));
     const double kDhuharMinutesOffset = 0.0;
-    m_times[TimeType::Dhuhr] = kDhuharMinutesOffset / 60.0;
+    m_times[TimeType::Dhuhr] += kDhuharMinutesOffset / 60.0;
     if (m_salahMethods[m_calculationMethod].m_maghribIsMinutes) {
         m_times[TimeType::Maghrib] = m_times[TimeType::Sunset] 
                 + m_salahMethods[m_calculationMethod].m_maghribValue / 60.0;
@@ -136,20 +136,23 @@ void SalahTimes::adjustHighLatTimes()
     
     // Fajr
     double fajrDiff = nightPortion(m_salahMethods[m_calculationMethod].m_fajrAngle) * nightTime;
-    if (isnan(m_times[TimeType::Fajr]) || timeDiff(m_times[TimeType::Fajr], m_times[TimeType::Sunrise]) > fajrDiff)
+    if (isnan(m_times[TimeType::Fajr]) || timeDiff(m_times[TimeType::Fajr], m_times[TimeType::Sunrise]) > fajrDiff) {
         m_times[TimeType::Fajr] = m_times[TimeType::Sunrise] - fajrDiff;
+    }
     
     // Isha
     double ishaAngle = m_salahMethods[m_calculationMethod].m_ishaIsMinutes ? 18.0 : m_salahMethods[m_calculationMethod].m_ishaValue;
-    double ishaDiff = nightPortion(ishaAngle * nightTime);
-    if (isnan(m_times[TimeType::Isha]) || timeDiff(m_times[TimeType::Sunset], m_times[TimeType::Isha]) > ishaDiff)
-        m_times[TimeType::Isha] = m_times[TimeType::Sunset] - ishaDiff;
+    double ishaDiff = nightPortion(ishaAngle) * nightTime;
+    if (isnan(m_times[TimeType::Isha]) || timeDiff(m_times[TimeType::Sunset], m_times[TimeType::Isha]) > ishaDiff) {
+        m_times[TimeType::Isha] = m_times[TimeType::Sunset] + ishaDiff;
+    }
     
     // Maghrib
     double maghribAngle = m_salahMethods[m_calculationMethod].m_maghribIsMinutes ? 4.0 : m_salahMethods[m_calculationMethod].m_maghribValue;
-    double maghribDiff = nightPortion(maghribAngle * nightTime);
-    if (isnan(m_times[TimeType::Maghrib]) || timeDiff(m_times[TimeType::Sunset], m_times[TimeType::Maghrib]) > maghribDiff)
-        m_times[TimeType::Maghrib] = m_times[TimeType::Sunset] - maghribDiff;
+    double maghribDiff = nightPortion(maghribAngle) * nightTime;
+    if (isnan(m_times[TimeType::Maghrib]) || timeDiff(m_times[TimeType::Sunset], m_times[TimeType::Maghrib]) > maghribDiff) {
+        m_times[TimeType::Maghrib] = m_times[TimeType::Sunset] + maghribDiff;
+    }
 }
 
 double SalahTimes::nightPortion(double angle)

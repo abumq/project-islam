@@ -21,6 +21,8 @@ public:
     static const QString kSettingKeyRecitationVolume;
     static const QString kSettingKeyDatabaseHost;
     static const QString kSettingKeyDatabasePort;
+    static const QString kLatitudeKey;
+    static const QString kLongitudeKey;
     
     static SettingsLoader* getInstance();
     

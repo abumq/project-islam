@@ -24,6 +24,8 @@ const QString SettingsLoader::kSettingKeyQuranTafseerTable = "default_quran_tafs
 const QString SettingsLoader::kSettingKeyRecitationVolume = "recitation_vol";
 const QString SettingsLoader::kSettingKeyDatabaseHost = "db_host";
 const QString SettingsLoader::kSettingKeyDatabasePort = "db_port";
+const QString SettingsLoader::kLatitudeKey = "lat";
+const QString SettingsLoader::kLongitudeKey = "lng";
 
 QString SettingsLoader::s_defaultHomeDir = QString("");
 

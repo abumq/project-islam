@@ -13,11 +13,12 @@
 #include "core/extension/abstract_extension.h"
 #include "core/extension/extension_bar.h"
 #include "core/data/data_holder.h"
+#include "settings_dialog.h"
 
-ExtensionLoader::ExtensionLoader(data::DataHolder* dataHolder, QMenuBar* menuBar, QTabWidget *settingsTabWidget) :
+ExtensionLoader::ExtensionLoader(data::DataHolder* dataHolder, QMenuBar* menuBar, SettingsDialog *settingsDialog) :
     m_dataHolder(dataHolder),
     m_menuBar(menuBar),
-    m_settingsTabWidget(settingsTabWidget)
+    m_settingsDialog(settingsDialog)
 {
 }
 
@@ -78,6 +79,7 @@ void ExtensionLoader::loadAll(ExtensionBar* extensionBar, QSplashScreen *splashS
             extensionBase->extension()->setDataHolder(m_dataHolder);
             extensionBase->extension()->setContainer(extensionBar->container());
             extensionBase->extension()->setSettingsLoader(SettingsLoader::getInstance());
+            extensionBase->extension()->setSettingsMap(m_settingsDialog->settingsMap());
             
             QAction* helpMenu = m_menuBar->actions().at(m_menuBar->actions().size() - 1);
             m_menuBar->insertMenu(helpMenu, extensionBase->extension()->menu());
@@ -87,7 +89,7 @@ void ExtensionLoader::loadAll(ExtensionBar* extensionBar, QSplashScreen *splashS
             extensionBase->initialize(argc, argv);
             extensionBar->addExtension(extensionBase->extension());
             if (extensionBase->extension()->settingsTabWidget() != nullptr) {
-                m_settingsTabWidget->addTab(extensionBase->extension()->settingsTabWidget(), 
+                m_settingsDialog->settingsTabWidget()->addTab(extensionBase->extension()->settingsTabWidget(), 
                     extensionBase->extensionInfo().name());
             }
         } else {

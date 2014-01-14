@@ -1,4 +1,3 @@
-
 #include "salah_times.h"
 #include "core/utils/datetime.h"
 #include "core/logging/logging.h"
@@ -14,7 +13,7 @@ SalahMethod::SalahMethod(double fajrAngle, bool maghribIsMinutes,
 const std::string SalahTimes::kCalculationMethodKey = "calc_method";
 const std::string SalahTimes::kJuristicMethodKey = "juristic_method";
 const std::string SalahTimes::kAdjustingMethodKey = "adjusting_method";
-
+    
 SalahTimes::SalahTimes(SalahMethod::CalculationMethod calculationMethod,
                        SalahMethod::JuristicMethod juristicMethod,
                        SalahMethod::AdjustingMethod adjustingMethod) :
@@ -29,10 +28,20 @@ SalahTimes::SalahTimes(SalahMethod::CalculationMethod calculationMethod,
     m_salahMethods.insert(std::make_pair(SalahMethod::CalculationMethod::Makkah, SalahMethod(19.0, true,  0.0, true,  90.0)));
     m_salahMethods.insert(std::make_pair(SalahMethod::CalculationMethod::Egypt, SalahMethod(19.5, true,  0.0, false, 17.5)));
     m_salahMethods.insert(std::make_pair(SalahMethod::CalculationMethod::Custom, SalahMethod(18.0, true,  0.0, false, 17.0)));
+}
+
+void SalahTimes::build(double latitude, double longitude)
+{
     time_t date = time(NULL);
     tm* t = localtime(&date);
-    build(1900 + t->tm_year, t->tm_mon + 1, t->tm_mday, -35.281983, 149.128718, 
-          datetime::getTimeZone(1900 + t->tm_year, t->tm_mon + 1, t->tm_mday));
+    build(latitude, longitude, datetime::getTimeZone(1900 + t->tm_year, t->tm_mon + 1, t->tm_mday));
+}
+
+void SalahTimes::build(double latitude, double longitude, double timezone)
+{    
+    time_t date = time(NULL);
+    tm* t = localtime(&date);
+    build(1900 + t->tm_year, t->tm_mon + 1, t->tm_mday, latitude, longitude, timezone);
 }
 
 void SalahTimes::build(int year, int month, int day, double latitude, double longitude, double timezone)
@@ -63,7 +72,7 @@ void SalahTimes::build(int year, int month, int day, double latitude, double lon
     adjustTimes();
 }
 
-const std::map<SalahTimes::TimeType, double>*SalahTimes::times() const
+const std::map<SalahTimes::TimeType, double>* SalahTimes::times() const
 {
     return &m_times;
 }

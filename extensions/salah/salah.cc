@@ -1,12 +1,12 @@
 #include "salah.h"
+#include <QLabel>
 #include "salah_times.h"
 #include "settings_tab_widget_form.h"
-#include <QLabel>
-#include <QComboBox>
+#include "core/constants.h"
 
 _INITIALIZE_EASYLOGGINGPP
 
-const char* Salah::kAuthor       = "Project Islam Authors";
+const char* Salah::kAuthor       = "Project Islam Authors\n    Special thanks to:\n      - Mohammad Ebrahim\n      - Mohammadi Panah\n    Jazak Allah Khair";
 const char* Salah::kName         = "Salah";
 const char* Salah::kTitle        = "Ṣalāh";
 const char* Salah::kDescription  = "Organize your ṣalāh (prayer) including athan.";
@@ -37,8 +37,13 @@ bool Salah::initialize(int argc, const char** argv)
     initializeMenu();
     initializeSettingsTabDialog();
     
-    m_salahTimes = new SalahTimes();
-    
+    m_salahTimes = new SalahTimes(
+                static_cast<SalahMethod::CalculationMethod>(setting(QString::fromStdString(SalahTimes::kCalculationMethodKey), QVariant(8)).toInt()),
+                static_cast<SalahMethod::JuristicMethod>(setting(QString::fromStdString(SalahTimes::kJuristicMethodKey), QVariant(1)).toInt()),
+                static_cast<SalahMethod::AdjustingMethod>(setting(QString::fromStdString(SalahTimes::kAdjustingMethodKey), QVariant(8)).toInt())
+                );
+    m_salahTimes->build(nativeSetting(SettingsLoader::kLatitudeKey, QVariant(kDefaultLatitude)).toDouble(),
+                        nativeSetting(SettingsLoader::kLongitudeKey, QVariant(kDefaultLongitude)).toDouble());
     QLabel* prayerTimes = new QLabel(container());
     
     QString fajr = QString::fromStdString(m_salahTimes->readTime(SalahTimes::TimeType::Fajr));
@@ -64,7 +69,9 @@ void Salah::initializeSettingsTabDialog() {
     using namespace std::placeholders;
     m_settingsWidgetForm = new SettingsTabWidgetForm(settingsTabWidget(),
                                                      std::bind(&ExtensionBase::saveSetting, this, _1, _2),
-                                                     std::bind(&ExtensionBase::setting, this, _1, _2));
+                                                     std::bind(&ExtensionBase::setting, this, _1, _2),
+                                                     extension()->settingsMap(),
+                                                     settingsKeyPrefix());
     
 }
 

@@ -7,6 +7,7 @@
 #include "core/controls/colorbox.h"
 #include "core/data/database_manager.h"
 #include "core/data/data_holder.h"
+#include "core/constants.h"
 
 SettingsDialog::SettingsDialog(MainWindow* mainWindow, QWidget* parent) :
     QDialog(parent),
@@ -32,6 +33,11 @@ QTabWidget *SettingsDialog::settingsTabWidget()
     return ui->tabWidget;
 }
 
+QMap<QString, QVariant> *SettingsDialog::settingsMap()
+{
+    return &m_settingsMap;
+}
+
 void SettingsDialog::accept()
 {
     LOG(INFO) << "Updating settings...";
@@ -40,14 +46,16 @@ void SettingsDialog::accept()
     SettingsLoader::getInstance()->updateDefaultHomeDir(ui->txtHomeDir->text());
     m_mainWindow->styleLoader()->reset(m_colorBox->color().red(), m_colorBox->color().green(), m_colorBox->color().blue());
     
-    QMap<QString, QVariant> settingsMap;
-    settingsMap.insert(SettingsLoader::kSettingKeyQuranTable, ui->cboQuranOriginals->itemData(ui->cboQuranOriginals->currentIndex()));
-    settingsMap.insert(SettingsLoader::kSettingKeyQuranTransliterationTable, ui->cboQuranTransliterations->itemData(ui->cboQuranTransliterations->currentIndex()));
-    settingsMap.insert(SettingsLoader::kSettingKeyQuranTranslationTable, ui->cboQuranTranslations->itemData(ui->cboQuranTranslations->currentIndex()));
-    settingsMap.insert(SettingsLoader::kSettingKeyQuranTafseerTable, ui->cboQuranTafseers->itemData(ui->cboQuranTafseers->currentIndex()));
-    settingsMap.insert(SettingsLoader::kSettingKeyTheme, StyleLoader::rgb(m_mainWindow->styleLoader()->r(), 
+    m_settingsMap.insert(SettingsLoader::kSettingKeyQuranTable, ui->cboQuranOriginals->itemData(ui->cboQuranOriginals->currentIndex()));
+    m_settingsMap.insert(SettingsLoader::kSettingKeyQuranTransliterationTable, ui->cboQuranTransliterations->itemData(ui->cboQuranTransliterations->currentIndex()));
+    m_settingsMap.insert(SettingsLoader::kSettingKeyQuranTranslationTable, ui->cboQuranTranslations->itemData(ui->cboQuranTranslations->currentIndex()));
+    m_settingsMap.insert(SettingsLoader::kSettingKeyQuranTafseerTable, ui->cboQuranTafseers->itemData(ui->cboQuranTafseers->currentIndex()));
+    m_settingsMap.insert(SettingsLoader::kSettingKeyTheme, StyleLoader::rgb(m_mainWindow->styleLoader()->r(), 
                                                                           m_mainWindow->styleLoader()->g(), m_mainWindow->styleLoader()->b()));
-    SettingsLoader::getInstance()->saveSettings(&settingsMap);
+    m_settingsMap.insert(SettingsLoader::kLatitudeKey, ui->spnLatitude->value());
+    m_settingsMap.insert(SettingsLoader::kLongitudeKey, ui->spnLongitude->value());
+    SettingsLoader::getInstance()->saveSettings(&m_settingsMap);
+    m_settingsMap.clear();
     close();
 }
 
@@ -58,6 +66,10 @@ void SettingsDialog::loadSettingsInUi()
     m_colorBox->setColor(QColor::fromRgb(m_mainWindow->styleLoader()->r(), m_mainWindow->styleLoader()->g(), m_mainWindow->styleLoader()->b()));
     ui->txtHomeDir->setText(SettingsLoader::getInstance()->defaultHomeDir());
 
+    // ---------------------- Tab: Location
+    ui->spnLatitude->setValue(SettingsLoader::getInstance()->get(SettingsLoader::kLatitudeKey, QVariant(kDefaultLatitude)).toDouble());
+    ui->spnLongitude->setValue(SettingsLoader::getInstance()->get(SettingsLoader::kLongitudeKey, QVariant(kDefaultLongitude)).toDouble());
+    
     // --------------------- Tab: Quran
     // Originals
     data::DatabaseManager dbManager;

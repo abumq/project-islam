@@ -20,6 +20,7 @@ AbstractExtension::AbstractExtension(QWidget *parent, ExtensionInfo *extensionIn
     m_settingsLoader(nullptr),
     m_menu(nullptr),
     m_settingsTabWidget(nullptr),
+    m_settingsMap(nullptr),
     m_isDefault(isDefault)
 {
     _TRACE;
@@ -196,6 +197,17 @@ void AbstractExtension::setSettingsLoader(SettingsLoader* settingsLoader)
 SettingsLoader* AbstractExtension::settingsLoader() const
 {
     return m_settingsLoader;
+}
+
+void AbstractExtension::setSettingsMap(QMap<QString, QVariant> *map)
+{
+    _TRACE;
+    m_settingsMap = map;
+}
+
+QMap<QString, QVariant> *AbstractExtension::settingsMap() const
+{
+    return m_settingsMap;
 }
 
 void AbstractExtension::buildHtmlFormattedDescription()

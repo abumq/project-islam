@@ -2,6 +2,8 @@
 #define SETTINGS_DIALOG_H
 
 #include <QDialog>
+#include <QMap>
+#include <QVariant>
 
 namespace Ui {
 class SettingsDialog;
@@ -20,6 +22,7 @@ public:
     ~SettingsDialog();
     bool homeDirectoryChanged;
     QTabWidget* settingsTabWidget();
+    QMap<QString, QVariant>* settingsMap();
 protected:
     void accept();
 private slots:
@@ -31,6 +34,7 @@ private:
     MainWindow* m_mainWindow;
     ColorBox* m_colorBox;
     void loadSettingsInUi();
+    QMap<QString, QVariant> m_settingsMap;
 };
 
 #endif // SETTINGS_DIALOG_H

@@ -56,7 +56,7 @@ void MainWindow::initialize()
         connect(m_extensionBar, SIGNAL(extensionChanged(AbstractExtension*)), this, SLOT(onExtensionChanged(AbstractExtension*)));
         addToolBar(Qt::LeftToolBarArea, m_extensionBar);
         
-        ExtensionLoader extensionLoader(&m_dataHolder, ui->menuBar, m_settingsDialog->settingsTabWidget());
+        ExtensionLoader extensionLoader(&m_dataHolder, ui->menuBar, m_settingsDialog);
         extensionLoader.loadAll(m_extensionBar, m_splashScreen);
         
         ExtensionItem* defaultExtension = m_extensionBar->defaultExtensionItem();
@@ -199,10 +199,10 @@ bool MainWindow::applicationUpdated() const
 
 void MainWindow::on_actionAbout_Extensions_triggered()
 {
-    QString aboutExtensionsStr = "Following extensions are installed: \n";
+    QString aboutExtensionsStr;
     for (AbstractExtension* extension : *m_extensionBar->extensions()) {
         aboutExtensionsStr.append(
-                    "   - " + extension->info()->name() 
+                    "** " + extension->info()->name() 
                     + " v" + extension->info()->versionString() + " by "
                     + extension->info()->author() + "\n\n"
                     );

@@ -89,12 +89,22 @@ public:
                 + "__";
     }
     
+    inline QString settingKey(const QString& key) {
+        return settingsKeyPrefix() + key;
+    }
+    
+    /// @brief Returns value of extension-specific setting
     inline QVariant setting(const QString& key, const QVariant& defaultValue = QVariant()) {
-        return extension()->settingsLoader()->get(settingsKeyPrefix() + key, defaultValue);
+        return nativeSetting(settingsKeyPrefix() + key, defaultValue);
+    }
+    
+    /// @brief Returns value of native setting
+    inline QVariant nativeSetting(const QString& key, const QVariant& defaultValue = QVariant()) {
+        return extension()->settingsLoader()->get(key, defaultValue);
     }
     
     inline void saveSetting(const QString &key, const QVariant &value) {
-        extension()->settingsLoader()->saveSettings(settingsKeyPrefix() + key, value);
+        extension()->settingsLoader()->saveSettings(settingKey(key), value);
     }
     
 public:

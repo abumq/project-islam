@@ -59,6 +59,9 @@ public:
     void setSettingsLoader(SettingsLoader* settingsLoader);
     SettingsLoader* settingsLoader() const;
     
+    void setSettingsMap(QMap<QString, QVariant>* map);
+    QMap<QString, QVariant>* settingsMap() const;
+    
     int containerWidth() const;
     int containerHeight() const;
     
@@ -76,6 +79,7 @@ private:
     ExtensionInfo* m_info;
     ExtensionItem* m_extensionItem;
     SettingsLoader* m_settingsLoader;
+    QMap<QString, QVariant>* m_settingsMap;
     QMenu *m_menu;
     QWidget* m_settingsTabWidget;
     QString m_htmlFormattedDescription;

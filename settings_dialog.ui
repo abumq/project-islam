@@ -23,7 +23,7 @@
       <enum>QTabWidget::North</enum>
      </property>
      <property name="currentIndex">
-      <number>0</number>
+      <number>1</number>
      </property>
      <property name="elideMode">
       <enum>Qt::ElideNone</enum>
@@ -227,7 +227,7 @@
         <rect>
          <x>240</x>
          <y>110</y>
-         <width>201</width>
+         <width>208</width>
          <height>29</height>
         </rect>
        </property>
@@ -241,11 +241,17 @@
         </item>
         <item row="0" column="1">
          <widget class="QDoubleSpinBox" name="spnLongitude">
+          <property name="decimals">
+           <number>6</number>
+          </property>
           <property name="minimum">
            <double>-180.000000000000000</double>
           </property>
           <property name="maximum">
            <double>180.000000000000000</double>
+          </property>
+          <property name="singleStep">
+           <double>0.000001000000000</double>
           </property>
          </widget>
         </item>
@@ -270,11 +276,17 @@
         </item>
         <item row="0" column="1">
          <widget class="QDoubleSpinBox" name="spnLatitude">
+          <property name="decimals">
+           <number>6</number>
+          </property>
           <property name="minimum">
            <double>-90.000000000000000</double>
           </property>
           <property name="maximum">
            <double>90.000000000000000</double>
+          </property>
+          <property name="singleStep">
+           <double>0.000001000000000</double>
           </property>
          </widget>
         </item>

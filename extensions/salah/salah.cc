@@ -1,5 +1,6 @@
 #include "salah.h"
 #include <QLabel>
+#include <QTime>
 #include "salah_times.h"
 #include "settings_tab_widget_form.h"
 #include "core/constants.h"
@@ -15,8 +16,9 @@ const char* Salah::kDescription  = "Organize your ṣalāh (prayer) including at
 class SalahClock : public Clock {
 public:
     SalahClock(QWidget* parent, SalahTimes::TimeType t, SalahTimes* times)
-        : Clock(parent) {
-        resize(100, 100);
+        : Clock(parent),
+          m_timeType(t) {
+        resize(200);
         if (t == SalahTimes::TimeType::Fajr) {
             setTitle("Fajr");
         } else if (t == SalahTimes::TimeType::Sunrise) {
@@ -36,6 +38,41 @@ public:
         std::pair<int, int> tPair = times->readTimeHourMinutePair(t);
         setTime(tPair.first, tPair.second);
     }
+    
+    void paintEvent(QPaintEvent *e) {
+        Clock::paintEvent(e);
+        if (isPrayerTime()) {
+            select();
+        } else {
+            deselect();
+        }
+    }
+    
+    inline int validMinutes() {
+        if (m_timeType == SalahTimes::TimeType::Fajr) {
+            return 70;
+        } else if (m_timeType == SalahTimes::TimeType::Dhuhr) {
+            return 120;
+        } else if (m_timeType == SalahTimes::TimeType::Asr) {
+            return 60;
+        } else if (m_timeType == SalahTimes::TimeType::Maghrib) {
+            return 30;
+        } else  if (m_timeType == SalahTimes::TimeType::Isha) {
+            return QTime::currentTime().secsTo(QTime(23, 59)) * 60;
+        }
+        return 5; // Sunset and sunrise valid for 5 minutes
+    }
+
+    inline bool isPrayerTime() {
+        if (m_live) {
+            return false;
+        }
+        QTime cTime = QTime::currentTime();
+        int s = cTime.secsTo(QTime(m_h, m_m));
+        return s >= -(validMinutes() * 60) && s <= 0;
+    }
+private:
+    SalahTimes::TimeType m_timeType;
 };
 
 Salah::Salah()
@@ -104,10 +141,10 @@ void Salah::displayClocks()
     
     Clock* liveClock = new Clock(container());
     liveClock->liveClock();
-    liveClock->move(ishaClock->x() + kApartThreshold + 75, asrClock->y() - 50);
+    liveClock->resize(300);
+    liveClock->move(ishaClock->x() + ishaClock->width() + kApartThreshold, asrClock->y() - 50);
     liveClock->setTitle("Current");
     liveClock->setDisplayTextualTime(true);
-    liveClock->resize(200, 200);
 }
 
 void Salah::initializeSettingsTabDialog() {

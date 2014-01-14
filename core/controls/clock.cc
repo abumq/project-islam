@@ -12,6 +12,7 @@ Clock::Clock(QWidget *parent) :
     QWidget(parent)
 {
     m_liveTimer = new QTimer(this);
+    deselect();
 }
 
 Clock::~Clock()
@@ -27,6 +28,11 @@ void Clock::liveClock()
         m_liveTimer->start(1000);
         m_live = true;
     }
+}
+
+void Clock::resize(int sz)
+{
+    QWidget::resize(sz, sz);
 }
 
 void Clock::paintEvent(QPaintEvent *)
@@ -141,4 +147,20 @@ void Clock::setDisplayTextualTime(bool displayTextualTime)
 void Clock::setTitle(const QString& title)
 {
     m_title = title;
+}
+
+void Clock::select()
+{
+    QPalette p(palette());
+    p.setColor(QPalette::Background, Qt::yellow);
+    setAutoFillBackground(true);
+    setPalette(p);
+}
+
+void Clock::deselect()
+{
+    QPalette p(palette());
+    p.setColor(QPalette::Background, Qt::color0);
+    setAutoFillBackground(false);
+    setPalette(p);
 }

@@ -17,14 +17,17 @@ public:
     explicit Clock(QWidget *parent = 0);
     ~Clock();
     void liveClock();
+    void resize(int);
     void paintEvent(QPaintEvent *);
     void setTime(int h, int m, int s = 0);
     void setDisplayTextualTime(bool);
     void setTitle(const QString&);
+    void select();
+    void deselect();
 signals:
     
 public slots:
-private:
+protected:
     int m_h;
     int m_m;
     int m_s;

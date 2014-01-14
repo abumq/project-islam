@@ -23,8 +23,10 @@ public:
     bool homeDirectoryChanged;
     QTabWidget* settingsTabWidget();
     QMap<QString, QVariant>* settingsMap();
+    int exec();
 protected:
     void accept();
+    void reject();
 private slots:
     
     void on_rdoManualDayLightSavings_toggled(bool checked);

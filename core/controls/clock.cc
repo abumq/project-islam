@@ -3,15 +3,34 @@
 #include <QTime>
 #include <QPainter>
 #include <QTextItem>
+#include "core/settings_loader.h"
 
-const QColor Clock::kHourColor = QColor(0, 0, 0, 150);
-const QColor Clock::kMinuteColor = QColor(0, 0, 0, 100);
-const QColor Clock::kTextColor = QColor(0, 0, 0);
+QColor Clock::kHourColor = QColor(0, 0, 0, 150);
+QColor Clock::kMinuteColor = QColor(0, 0, 0, 100);
+QColor Clock::kTextColor = QColor(0, 0, 0);
 
 Clock::Clock(QWidget *parent) :
     QWidget(parent)
 {
     m_liveTimer = new QTimer(this);
+    
+    QString themeColor = SettingsLoader::getInstance()->get(SettingsLoader::kSettingKeyTheme, QVariant("0, 0, 0")).toString();
+    QStringList colors = themeColor.split(",");
+    int r = 0;
+    int g = 0;
+    int b = 0;
+    if (colors.size() >= 3) {
+        r = colors.at(0).trimmed().toInt();
+        g = colors.at(1).trimmed().toInt();
+        b = colors.at(1).trimmed().toInt();
+    }
+    QColor c = QColor(r, g, b);
+    kHourColor = c;
+    kMinuteColor = c;
+    kTextColor = c;
+    kHourColor.setAlpha(150);
+    kMinuteColor.setAlpha(100);
+    kTextColor.setAlpha(255);
     deselect();
 }
 
@@ -137,6 +156,7 @@ void Clock::setTime(int h, int m, int s)
     }
     QString t = tH + ":" + tM + tS;
     setToolTip(m_title.isEmpty() ? "" : ("<b>" + m_title + "</b><br/>") + t);
+    m_liveTimer->stop();
 }
 
 void Clock::setDisplayTextualTime(bool displayTextualTime)

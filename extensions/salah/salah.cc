@@ -49,16 +49,20 @@ public:
     }
     
     inline int validMinutes() {
+        // TODO: Get these from settings i.e, 
+        //         * Sunrise offset for Fajr validity
+        //         * Sunset offset for Maghrib validity
+        //         * Maghrib valid for
         if (m_timeType == SalahTimes::TimeType::Fajr) {
-            return 70;
+            return 70; // Until (sunrise - 5 minutes)
         } else if (m_timeType == SalahTimes::TimeType::Dhuhr) {
-            return 120;
+            return 120; // Until (Asr)
         } else if (m_timeType == SalahTimes::TimeType::Asr) {
-            return 60;
+            return 60; // Until (Sunset - 15 minutes) - 15 minutes of zawal - Configurable
         } else if (m_timeType == SalahTimes::TimeType::Maghrib) {
-            return 30;
+            return 30; // Configurable
         } else  if (m_timeType == SalahTimes::TimeType::Isha) {
-            return QTime::currentTime().secsTo(QTime(23, 59)) * 60;
+            return QTime::currentTime().secsTo(QTime(23, 59)) * 60; // Until midnight
         }
         return 5; // Sunset and sunrise valid for 5 minutes
     }

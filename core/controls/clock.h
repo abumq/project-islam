@@ -10,9 +10,9 @@ class Clock : public QWidget
 {
     Q_OBJECT
 public:
-    static const QColor kHourColor;
-    static const QColor kMinuteColor;
-    static const QColor kTextColor;
+    static QColor kHourColor;
+    static QColor kMinuteColor;
+    static QColor kTextColor;
     
     explicit Clock(QWidget *parent = 0);
     ~Clock();

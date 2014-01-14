@@ -16,10 +16,6 @@ SettingsDialog::SettingsDialog(MainWindow* mainWindow, QWidget* parent) :
     m_mainWindow(mainWindow)
 {
     ui->setupUi(this);
-    ui->tabWidget->setCurrentIndex(0);
-    m_colorBox = new ColorBox(QColor::fromRgb(StyleLoader::kDefaultThemeRed, 
-                                              StyleLoader::kDefaultThemeGreen, StyleLoader::kDefaultThemeBlue), ui->groupTheme);
-    m_colorBox->move(0, 25);
     loadSettingsInUi();
 }
 
@@ -59,9 +55,24 @@ void SettingsDialog::accept()
     close();
 }
 
+void SettingsDialog::reject()
+{
+    m_settingsMap.clear();
+    QDialog::reject();
+}
+
+int SettingsDialog::exec()
+{
+    loadSettingsInUi();
+    return QDialog::exec();
+}
+
 void SettingsDialog::loadSettingsInUi()
 {
-    
+    ui->tabWidget->setCurrentIndex(0);
+    m_colorBox = new ColorBox(QColor::fromRgb(StyleLoader::kDefaultThemeRed, 
+                                              StyleLoader::kDefaultThemeGreen, StyleLoader::kDefaultThemeBlue), ui->groupTheme);
+    m_colorBox->move(0, 25);
     // -------------------- Tab: Environment ------------------------
     m_colorBox->setColor(QColor::fromRgb(m_mainWindow->styleLoader()->r(), m_mainWindow->styleLoader()->g(), m_mainWindow->styleLoader()->b()));
     ui->txtHomeDir->setText(SettingsLoader::getInstance()->defaultHomeDir());

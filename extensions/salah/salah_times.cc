@@ -11,21 +11,24 @@ SalahMethod::SalahMethod(double fajrAngle, bool maghribIsMinutes,
 {
 }
 
+const std::string SalahTimes::kCalculationMethodKey = "calc_method";
+const std::string SalahTimes::kJuristicMethodKey = "juristic_method";
+const std::string SalahTimes::kAdjustingMethodKey = "adjusting_method";
 
-SalahTimes::SalahTimes(CalculationMethod calculationMethod,
-                       JuristicMethod juristicMethod,
-                       AdjustingMethod adjustingMethod) :
+SalahTimes::SalahTimes(SalahMethod::CalculationMethod calculationMethod,
+                       SalahMethod::JuristicMethod juristicMethod,
+                       SalahMethod::AdjustingMethod adjustingMethod) :
     m_calculationMethod(calculationMethod),
     m_juristicMethod(juristicMethod),
     m_adjustingMethod(adjustingMethod)
 {
-    m_salahMethods.insert(std::make_pair(CalculationMethod::Jafari, SalahMethod(16.0, false, 4.0, false, 14.0)));
-    m_salahMethods.insert(std::make_pair(CalculationMethod::Karachi, SalahMethod(18.0, true,  0.0, false, 18.0)));
-    m_salahMethods.insert(std::make_pair(CalculationMethod::ISNA, SalahMethod(15.0, true,  0.0, false, 15.0)));
-    m_salahMethods.insert(std::make_pair(CalculationMethod::MWL, SalahMethod(18.0, true,  0.0, false, 17.0)));
-    m_salahMethods.insert(std::make_pair(CalculationMethod::Makkah, SalahMethod(19.0, true,  0.0, true,  90.0)));
-    m_salahMethods.insert(std::make_pair(CalculationMethod::Egypt, SalahMethod(19.5, true,  0.0, false, 17.5)));
-    m_salahMethods.insert(std::make_pair(CalculationMethod::Custom, SalahMethod(18.0, true,  0.0, false, 17.0)));
+    m_salahMethods.insert(std::make_pair(SalahMethod::CalculationMethod::Jafari, SalahMethod(16.0, false, 4.0, false, 14.0)));
+    m_salahMethods.insert(std::make_pair(SalahMethod::CalculationMethod::Karachi, SalahMethod(18.0, true,  0.0, false, 18.0)));
+    m_salahMethods.insert(std::make_pair(SalahMethod::CalculationMethod::ISNA, SalahMethod(15.0, true,  0.0, false, 15.0)));
+    m_salahMethods.insert(std::make_pair(SalahMethod::CalculationMethod::MWL, SalahMethod(18.0, true,  0.0, false, 17.0)));
+    m_salahMethods.insert(std::make_pair(SalahMethod::CalculationMethod::Makkah, SalahMethod(19.0, true,  0.0, true,  90.0)));
+    m_salahMethods.insert(std::make_pair(SalahMethod::CalculationMethod::Egypt, SalahMethod(19.5, true,  0.0, false, 17.5)));
+    m_salahMethods.insert(std::make_pair(SalahMethod::CalculationMethod::Custom, SalahMethod(18.0, true,  0.0, false, 17.0)));
     time_t date = time(NULL);
     tm* t = localtime(&date);
     build(1900 + t->tm_year, t->tm_mon + 1, t->tm_mday, -35.281983, 149.128718, 
@@ -121,7 +124,7 @@ void SalahTimes::adjustTimes()
         m_times[TimeType::Isha] = m_times[TimeType::Maghrib] 
                 + m_salahMethods[m_calculationMethod].m_ishaValue / 60.0;
     }
-    if (m_adjustingMethod != AdjustingMethod::None) {
+    if (m_adjustingMethod != SalahMethod::AdjustingMethod::None) {
         adjustHighLatTimes();
     }
 }
@@ -157,13 +160,13 @@ void SalahTimes::adjustHighLatTimes()
 
 double SalahTimes::nightPortion(double angle)
 {
-    if (m_adjustingMethod == AdjustingMethod::AngleBased) {
+    if (m_adjustingMethod == SalahMethod::AdjustingMethod::AngleBased) {
         return angle / 60.0;
     }
-    if (m_adjustingMethod == AdjustingMethod::MidNight) {
+    if (m_adjustingMethod == SalahMethod::AdjustingMethod::MidNight) {
         return 1.0 / 2.0;
     }
-    if (m_adjustingMethod == AdjustingMethod::OneSeventh) {
+    if (m_adjustingMethod == SalahMethod::AdjustingMethod::OneSeventh) {
         return 1.0 / 7.0;
     }
     return 0; // Should never reach here

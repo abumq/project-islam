@@ -21,7 +21,8 @@ Salah::Salah()
 
 Salah::~Salah()
 {
-    memory::deleteAll(m_salahTimes, m_settingsWidgetForm);
+    memory::deleteAll(m_salahTimes); 
+    // Do not delete m_settingsWidgetForm since parent (settingsTabWidget()) deletes it
 }
 
 bool Salah::initialize(int argc, const char** argv)
@@ -60,7 +61,11 @@ void Salah::initializeMenu()
 }
 
 void Salah::initializeSettingsTabDialog() {
-    m_settingsWidgetForm = new SettingsTabWidgetForm(settingsTabWidget());
+    using namespace std::placeholders;
+    m_settingsWidgetForm = new SettingsTabWidgetForm(settingsTabWidget(),
+                                                     std::bind(&ExtensionBase::saveSetting, this, _1, _2),
+                                                     std::bind(&ExtensionBase::setting, this, _1, _2));
+    
 }
 
 void Salah::onContainerGeometryChanged(int w, int h)

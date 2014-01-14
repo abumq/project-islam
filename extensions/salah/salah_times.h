@@ -9,6 +9,37 @@ class SalahTimes;
 
 class SalahMethod {
 public:
+    enum class CalculationMethod {
+        Jafari = 1,         // Ithna Ashari
+        Karachi = 2,        // University of Islamic Sciences, Karachi
+        ISNA = 4,           // Islamic Society of North America (ISNA)
+        MWL = 8,            // Muslim World League (MWL)
+        Makkah = 16,        // Umm al-Qura, Makkah
+        Egypt = 32,         // Egyptian General Authority of Survey
+        Custom = 64         // Custom Setting
+    };
+    
+    static const int kCalculationMethodsCount = 7;
+    static const int kMaxCalculationMethod = static_cast<int>(CalculationMethod::Egypt);
+    
+    enum class JuristicMethod {
+        Shafii = 1,    // Shafii (standard)
+        Hanafi = 2     // Hanafi
+    };
+    
+    static const int kJuristicMethodsCount = 2;
+    static const int kMaxJuristicMethod = static_cast<int>(JuristicMethod::Hanafi);
+    
+    enum class AdjustingMethod {
+        None = 1,              // No adjustment
+        MidNight = 2,          // middle of night
+        OneSeventh = 4,        // 1/7th of night
+        AngleBased = 8         // angle/60th of night
+    };
+    
+    static const int kAdjustingMethodCount = 4;
+    static const int kMaxAdjustingMethod = static_cast<int>(AdjustingMethod::AngleBased);
+    
     SalahMethod() {}
     SalahMethod(double fajrAngle,
                 bool maghribIsMinutes,
@@ -28,27 +59,9 @@ private:
 class SalahTimes
 {
 public:
-    enum class CalculationMethod {
-        Jafari = 1,         // Ithna Ashari
-        Karachi = 2,        // University of Islamic Sciences, Karachi
-        ISNA = 4,           // Islamic Society of North America (ISNA)
-        MWL = 8,            // Muslim World League (MWL)
-        Makkah = 16,        // Umm al-Qura, Makkah
-        Egypt = 32,         // Egyptian General Authority of Survey
-        Custom = 64         // Custom Setting
-    };
-    
-    enum class JuristicMethod {
-        Shafii = 1,    // Shafii (standard)
-        Hanafi = 2     // Hanafi
-    };
-    
-    enum class AdjustingMethod {
-        None = 0,              // No adjustment
-        MidNight = 1,          // middle of night
-        OneSeventh = 2,        // 1/7th of night
-        AngleBased = 4         // angle/60th of night
-    };
+    static const std::string kCalculationMethodKey;
+    static const std::string kJuristicMethodKey;
+    static const std::string kAdjustingMethodKey;
     
     enum class TimeType {
         Fajr = 1,
@@ -59,27 +72,25 @@ public:
         Maghrib = 32,
         Isha = 64
     };
+    static const int kTimesCount = 7;
+    static const int kMaxTimeType = static_cast<int>(TimeType::Isha);
     
-    SalahTimes(CalculationMethod calculationMethod = CalculationMethod::MWL,
-               JuristicMethod juristicMethod = JuristicMethod::Shafii,
-               AdjustingMethod adjustingMethod = AdjustingMethod::MidNight);
+    SalahTimes(SalahMethod::CalculationMethod calculationMethod = SalahMethod::CalculationMethod::MWL,
+               SalahMethod::JuristicMethod juristicMethod = SalahMethod::JuristicMethod::Shafii,
+               SalahMethod::AdjustingMethod adjustingMethod = SalahMethod::AdjustingMethod::MidNight);
     void build(int year, int month, int day, double latitude, double longitude, double timezone);
     inline const std::map<TimeType, double>* times() const;
     std::string readTime(TimeType t);
 private:
-    static const int kTimesCount = 7;
-    static const int kMaxTimeType = static_cast<int>(TimeType::Isha);
     
-    static const int kCalculationMethodsCount = 7;
-    
-    CalculationMethod m_calculationMethod;
-    JuristicMethod m_juristicMethod;
-    AdjustingMethod m_adjustingMethod;
+    SalahMethod::CalculationMethod m_calculationMethod;
+    SalahMethod::JuristicMethod m_juristicMethod;
+    SalahMethod::AdjustingMethod m_adjustingMethod;
     double m_latitude;
     double m_longitude;
     double m_timezone;
     double m_julianDate;
-    std::map<CalculationMethod, SalahMethod> m_salahMethods;
+    std::map<SalahMethod::CalculationMethod, SalahMethod> m_salahMethods;
     std::map<TimeType, double> m_times;
     
     double equationOfTime(double julianDate);

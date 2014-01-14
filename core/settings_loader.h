@@ -13,7 +13,6 @@ class SettingsLoader
 {
     static QString s_defaultHomeDir;
 public:
-    
     static const QString kSettingKeyTheme;
     static const QString kSettingKeyQuranTable;
     static const QString kSettingKeyQuranTranslationTable;

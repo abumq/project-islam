@@ -1,5 +1,6 @@
 #include "salah.h"
 #include "salah_times.h"
+#include "settings_tab_widget_form.h"
 #include <QLabel>
 #include <QComboBox>
 
@@ -12,7 +13,7 @@ const char* Salah::kDescription  = "Organize your ṣalāh (prayer) including at
 
 Salah::Salah()
 {
-    memory::turnToNullPtr(m_salahTimes);
+    memory::turnToNullPtr(m_salahTimes, m_settingsWidgetForm);
     setExtensionInfo(ExtensionInfo(kMajorVersion, kMinorVersion, kPatchVersion, 
                                    QString(kAuthor), QString(kName), 
                                    QString(kTitle), QString(kDescription)));
@@ -20,7 +21,7 @@ Salah::Salah()
 
 Salah::~Salah()
 {
-    memory::deleteAll(m_salahTimes);
+    memory::deleteAll(m_salahTimes, m_settingsWidgetForm);
 }
 
 bool Salah::initialize(int argc, const char** argv)
@@ -31,7 +32,7 @@ bool Salah::initialize(int argc, const char** argv)
     }
     // Do not trace location before calling parent's initialize
     _TRACE;
-    memory::deleteAll(m_salahTimes);
+    memory::deleteAll(m_salahTimes, m_settingsWidgetForm);
     initializeMenu();
     initializeSettingsTabDialog();
     
@@ -59,16 +60,7 @@ void Salah::initializeMenu()
 }
 
 void Salah::initializeSettingsTabDialog() {
-    // TODO: Put this in salah times group / sub-frame
-    QLabel* calculationMethodLabel = new QLabel(settingsTabWidget());
-    calculationMethodLabel->setText("Calculation Method:");
-    calculationMethodLabel->move(0, 20);
-    QComboBox* calculationMethodCombo = new QComboBox(settingsTabWidget());
-    calculationMethodCombo->move(calculationMethodLabel->width() + 20, 
-                                 calculationMethodLabel->y() - 10);
-    // TODO: Add custom with other controls
-    calculationMethodCombo->addItems(QStringList() << "Jafari" << "Karachi" << "ISNA"
-                                     << "MWL" << "Makkah" << "Egypt");
+    m_settingsWidgetForm = new SettingsTabWidgetForm(settingsTabWidget());
 }
 
 void Salah::onContainerGeometryChanged(int w, int h)

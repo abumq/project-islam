@@ -4,6 +4,7 @@
 #include "core/extension/extension_base.h"
 
 class SalahTimes;
+class SettingsTabWidgetForm;
 
 class Salah : public ExtensionBase
 {
@@ -34,6 +35,7 @@ public slots:
     virtual void onDeactivated();
 private:
     SalahTimes* m_salahTimes;
+    SettingsTabWidgetForm* m_settingsWidgetForm;
 };
 
 #endif // SALAH_H

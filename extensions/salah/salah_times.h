@@ -7,10 +7,6 @@
 
 class SalahTimes;
 
-// Special thanks to:
-//   * Mohammad Ebrahim
-//   * Mohammadi Panah
-// Jazak Allah Khair
 namespace {
 
     /* degree to radian */
@@ -153,6 +149,7 @@ public:
     void build(int year, int month, int day, double latitude, double longitude, double timezone);
     inline const std::map<TimeType, double>* times() const;
     std::string readTime(TimeType t);
+    std::pair<int, int> readTimeHourMinutePair(TimeType t);
 private:
     
     SalahMethod::CalculationMethod m_calculationMethod;

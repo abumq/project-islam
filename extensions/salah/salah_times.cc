@@ -13,7 +13,7 @@ SalahMethod::SalahMethod(double fajrAngle, bool maghribIsMinutes,
 const std::string SalahTimes::kCalculationMethodKey = "calc_method";
 const std::string SalahTimes::kJuristicMethodKey = "juristic_method";
 const std::string SalahTimes::kAdjustingMethodKey = "adjusting_method";
-    
+
 SalahTimes::SalahTimes(SalahMethod::CalculationMethod calculationMethod,
                        SalahMethod::JuristicMethod juristicMethod,
                        SalahMethod::AdjustingMethod adjustingMethod) :
@@ -79,17 +79,23 @@ const std::map<SalahTimes::TimeType, double>* SalahTimes::times() const
 
 std::string SalahTimes::readTime(SalahTimes::TimeType t)
 {
+    std::pair<int, int> p = readTimeHourMinutePair(t);
+    std::stringstream ss;
+    ss << p.first << ":" << p.second;
+    return ss.str();
+}
+
+std::pair<int, int> SalahTimes::readTimeHourMinutePair(SalahTimes::TimeType t)
+{
     double _time = m_times[t];
     if (isnan(_time)) {
-        return std::string();
+        return std::make_pair(0, 0);
     }
     int hours, minutes;
     _time = fixHour(_time + 0.5 / 60);
     hours = floor(_time);
     minutes = floor((_time - hours) * 60);
-    std::stringstream ss;
-    ss << hours << ":" << minutes;
-    return ss.str();
+    return std::make_pair(hours, minutes);
 }
 
 double SalahTimes::equationOfTime(double julianDate)

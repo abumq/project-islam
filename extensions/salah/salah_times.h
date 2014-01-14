@@ -1,6 +1,7 @@
 #ifndef SALAH_TIMES_H
 #define SALAH_TIMES_H
 
+#define _USE_MATH_DEFINES
 #include <cmath>
 #include <string>
 #include <map>

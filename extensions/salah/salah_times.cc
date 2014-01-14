@@ -1,7 +1,12 @@
 #include "salah_times.h"
 #include "core/utils/datetime.h"
 #include "core/logging/logging.h"
-
+#ifdef _MSC_VER
+#   include <float.h>
+#   define __isNan(x) _isnan(x)
+#else
+#   define __isNan(x) isnan(x)
+#endif // _MSC_VER
 SalahMethod::SalahMethod(double fajrAngle, bool maghribIsMinutes, 
                          double maghribValue, bool ishaIsMinutes, double ishaValue) :
     m_fajrAngle(fajrAngle), m_maghribIsMinutes(maghribIsMinutes),
@@ -88,7 +93,7 @@ std::string SalahTimes::readTime(SalahTimes::TimeType t)
 std::pair<int, int> SalahTimes::readTimeHourMinutePair(SalahTimes::TimeType t)
 {
     double _time = m_times[t];
-    if (isnan(_time)) {
+    if (__isNan(_time)) {
         return std::make_pair(0, 0);
     }
     int hours, minutes;
@@ -154,21 +159,21 @@ void SalahTimes::adjustHighLatTimes()
     
     // Fajr
     double fajrDiff = nightPortion(m_salahMethods[m_calculationMethod].m_fajrAngle) * nightTime;
-    if (isnan(m_times[TimeType::Fajr]) || timeDiff(m_times[TimeType::Fajr], m_times[TimeType::Sunrise]) > fajrDiff) {
+    if (__isNan(m_times[TimeType::Fajr]) || timeDiff(m_times[TimeType::Fajr], m_times[TimeType::Sunrise]) > fajrDiff) {
         m_times[TimeType::Fajr] = m_times[TimeType::Sunrise] - fajrDiff;
     }
     
     // Isha
     double ishaAngle = m_salahMethods[m_calculationMethod].m_ishaIsMinutes ? 18.0 : m_salahMethods[m_calculationMethod].m_ishaValue;
     double ishaDiff = nightPortion(ishaAngle) * nightTime;
-    if (isnan(m_times[TimeType::Isha]) || timeDiff(m_times[TimeType::Sunset], m_times[TimeType::Isha]) > ishaDiff) {
+    if (__isNan(m_times[TimeType::Isha]) || timeDiff(m_times[TimeType::Sunset], m_times[TimeType::Isha]) > ishaDiff) {
         m_times[TimeType::Isha] = m_times[TimeType::Sunset] + ishaDiff;
     }
     
     // Maghrib
     double maghribAngle = m_salahMethods[m_calculationMethod].m_maghribIsMinutes ? 4.0 : m_salahMethods[m_calculationMethod].m_maghribValue;
     double maghribDiff = nightPortion(maghribAngle) * nightTime;
-    if (isnan(m_times[TimeType::Maghrib]) || timeDiff(m_times[TimeType::Sunset], m_times[TimeType::Maghrib]) > maghribDiff) {
+    if (__isNan(m_times[TimeType::Maghrib]) || timeDiff(m_times[TimeType::Sunset], m_times[TimeType::Maghrib]) > maghribDiff) {
         m_times[TimeType::Maghrib] = m_times[TimeType::Sunset] + maghribDiff;
     }
 }

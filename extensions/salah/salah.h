@@ -23,6 +23,7 @@ public:
     ~Salah();
     
     virtual bool initialize(int argc, const char **argv);
+    void initializeSettingsTabDialog();
     void initializeMenu();
     
 public slots:

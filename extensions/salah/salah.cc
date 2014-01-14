@@ -1,6 +1,7 @@
 #include "salah.h"
 #include "salah_times.h"
 #include <QLabel>
+#include <QComboBox>
 
 _INITIALIZE_EASYLOGGINGPP
 
@@ -28,13 +29,11 @@ bool Salah::initialize(int argc, const char** argv)
         // Do not proceed
         return false;
     }
-    
     // Do not trace location before calling parent's initialize
     _TRACE;
+    memory::deleteAll(m_salahTimes);
     initializeMenu();
-    
-    QLabel* test = new QLabel(settingsTabWidget());
-    test->setText("this is test label on settings tab!");
+    initializeSettingsTabDialog();
     
     m_salahTimes = new SalahTimes();
     
@@ -57,6 +56,19 @@ bool Salah::initialize(int argc, const char** argv)
 void Salah::initializeMenu()
 {
     _TRACE;
+}
+
+void Salah::initializeSettingsTabDialog() {
+    // TODO: Put this in salah times group / sub-frame
+    QLabel* calculationMethodLabel = new QLabel(settingsTabWidget());
+    calculationMethodLabel->setText("Calculation Method:");
+    calculationMethodLabel->move(0, 20);
+    QComboBox* calculationMethodCombo = new QComboBox(settingsTabWidget());
+    calculationMethodCombo->move(calculationMethodLabel->width() + 20, 
+                                 calculationMethodLabel->y() - 10);
+    // TODO: Add custom with other controls
+    calculationMethodCombo->addItems(QStringList() << "Jafari" << "Karachi" << "ISNA"
+                                     << "MWL" << "Makkah" << "Egypt");
 }
 
 void Salah::onContainerGeometryChanged(int w, int h)

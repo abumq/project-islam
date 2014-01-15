@@ -24,14 +24,17 @@ public:
     void setTitle(const QString&);
     void select();
     void deselect();
-signals:
-    
-public slots:
+    const QString& title() const;
+    inline bool selected() { return m_selected; }
+    inline int h() const { return m_h; }
+    inline int m() const { return m_m; }
+    inline int s() const { return m_s; }
 protected:
     int m_h;
     int m_m;
     int m_s;
     bool m_live;
+    bool m_selected;
     QTimer* m_liveTimer;
     bool m_displayTextualTime;
     QString m_title;

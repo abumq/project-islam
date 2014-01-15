@@ -34,6 +34,7 @@ public slots:
     virtual void onContainerGeometryChanged(int, int);
     virtual void onActivated();
     virtual void onDeactivated();
+    void onPrayerTime(bool);
 private:
     SalahTimes* m_salahTimes;
     SettingsTabWidgetForm* m_settingsWidgetForm;

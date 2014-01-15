@@ -19,8 +19,8 @@ AbstractExtension::AbstractExtension(QWidget *parent, ExtensionInfo *extensionIn
     m_info(extensionInfo),
     m_settingsLoader(nullptr),
     m_menu(nullptr),
-    m_settingsTabWidget(nullptr),
     m_settingsMap(nullptr),
+    m_settingsTabWidget(nullptr),
     m_isDefault(isDefault)
 {
     _TRACE;

@@ -79,8 +79,8 @@ private:
     ExtensionInfo* m_info;
     ExtensionItem* m_extensionItem;
     SettingsLoader* m_settingsLoader;
-    QMap<QString, QVariant>* m_settingsMap;
     QMenu *m_menu;
+    QMap<QString, QVariant>* m_settingsMap;
     QWidget* m_settingsTabWidget;
     QString m_htmlFormattedDescription;
     bool m_isDefault;

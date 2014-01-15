@@ -13,6 +13,10 @@ Clock::Clock(QWidget *parent) :
     QWidget(parent)
 {
     m_liveTimer = new QTimer(this);
+    connect(m_liveTimer, SIGNAL(timeout()), this, SLOT(update()));
+    // Update clock every second
+    m_liveTimer->start(1000);
+    
     setObjectName("Clock");
     QString themeColor = SettingsLoader::getInstance()->get(SettingsLoader::kSettingKeyTheme, QVariant("0, 0, 0")).toString();
     QStringList colors = themeColor.split(",");
@@ -43,8 +47,6 @@ Clock::~Clock()
 void Clock::liveClock()
 {
     if (!m_live) {
-        connect(m_liveTimer, SIGNAL(timeout()), this, SLOT(update()));
-        m_liveTimer->start(1000);
         m_live = true;
     }
 }
@@ -156,7 +158,6 @@ void Clock::setTime(int h, int m, int s)
     }
     QString t = tH + ":" + tM + tS;
     setToolTip(m_title.isEmpty() ? "" : ("<b>" + m_title + "</b><br/>") + t);
-    m_liveTimer->stop();
 }
 
 void Clock::setDisplayTextualTime(bool displayTextualTime)
@@ -175,6 +176,7 @@ void Clock::select()
     p.setColor(QPalette::Background, Qt::yellow);
     setAutoFillBackground(true);
     setPalette(p);
+    m_selected = true;
 }
 
 void Clock::deselect()
@@ -183,4 +185,10 @@ void Clock::deselect()
     p.setColor(QPalette::Background, Qt::color0);
     setAutoFillBackground(false);
     setPalette(p);
+    m_selected = false;
+}
+
+const QString& Clock::title() const
+{
+    return m_title;
 }

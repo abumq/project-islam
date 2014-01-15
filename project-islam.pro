@@ -9,7 +9,8 @@ TEMPLATE = app
 HEADERS += core/utils/memory.h \
     core/utils/version.h \
     core/utils/filesystem.h \
-    core/utils/datetime.h
+    core/utils/datetime.h \
+    core/utils/notify.h
 
 HEADERS  += mainwindow.h \
     core/constants.h \

@@ -3,12 +3,10 @@
 #include "salah_times.h"
 #include "core/logging/logging.h"
 
-SettingsTabWidgetForm::SettingsTabWidgetForm(QWidget *parent, 
-                                             const SaveSettingFunc& saveFunc, const LoadSettingFunc& loadFunc,
+SettingsTabWidgetForm::SettingsTabWidgetForm(QWidget *parent, const LoadSettingFunc& loadFunc,
                                              QMap<QString, QVariant> *settingsMap, const QString &settingKeyPrefix) :
     QWidget(parent),
     ui(new Ui::SettingsTabWidgetForm),
-    m_saveFunc(saveFunc),
     m_loadFunc(loadFunc),
     m_settingsMap(settingsMap),
     m_settingKeyPrefix(settingKeyPrefix)

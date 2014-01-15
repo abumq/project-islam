@@ -1,10 +1,13 @@
 #include "salah.h"
 #include <QLabel>
 #include <QTime>
+#include "core/logging/logging.h"
 #include "salah_times.h"
 #include "settings_tab_widget_form.h"
 #include "core/constants.h"
 #include "core/controls/clock.h"
+#include "core/utils/notify.h"
+#include "qibla_compass.h"
 
 _INITIALIZE_EASYLOGGINGPP
 
@@ -17,7 +20,8 @@ class SalahClock : public Clock {
 public:
     SalahClock(QWidget* parent, SalahTimes::TimeType t, SalahTimes* times)
         : Clock(parent),
-          m_timeType(t) 
+          m_timeType(t),
+          m_times(times)
     {
         resize(200);
         if (t == SalahTimes::TimeType::Fajr) {
@@ -36,51 +40,70 @@ public:
             setTitle("Isha");
         }
         setDisplayTextualTime(true);
-        std::pair<int, int> tPair = times->readTimeHourMinutePair(t);
+        std::pair<int, int> tPair = m_times->readTimeHourMinutePair(t);
         setTime(tPair.first, tPair.second);
     }
     
     void paintEvent(QPaintEvent *e) 
     {
         Clock::paintEvent(e);
-        if (isPrayerTime()) {
+        if (!selected() && isPrayerTime()) {
             select();
-        } else {
+            notify("Prayer time", "It's time for " + m_title.toStdString() + " prayer");
+            LOG(INFO) << "Prayer time for [" << m_title << "]";
+        } else if (selected() && !isPrayerTime()) {
             deselect();
+            notify("Prayer time", "Time for " + m_title.toStdString() + " prayer is over");
+            LOG(INFO) << "Prayer time over for [" << m_title << "]";
         }
     }
     
-    inline int validMinutes() 
+    int minutesForValidity() 
     {
         // TODO: Get these from settings i.e, 
         //         * Sunrise offset for Fajr validity
         //         * Sunset offset for Maghrib validity
         //         * Maghrib valid for
+        
         if (m_timeType == SalahTimes::TimeType::Fajr) {
-            return 70; // Until (sunrise - 5 minutes)
+            std::pair<int, int> hmPair = m_times->readTimeHourMinutePair(SalahTimes::TimeType::Sunrise);
+            int h = hmPair.first;
+            int m = hmPair.second;
+            return (QTime::currentTime().secsTo(QTime(h, m)) / 60) - 5; // Until (sunrise - 5 minutes)
         } else if (m_timeType == SalahTimes::TimeType::Dhuhr) {
-            return 120; // Until (Asr)
+            std::pair<int, int> hmPair = m_times->readTimeHourMinutePair(SalahTimes::TimeType::Asr);
+            int h = hmPair.first;
+            int m = hmPair.second;
+            return (QTime::currentTime().secsTo(QTime(h, m)) / 60) - 5; // Until (asr - 5 minutes)
         } else if (m_timeType == SalahTimes::TimeType::Asr) {
-            return 60; // Until (Sunset - 15 minutes) - 15 minutes of zawal - Configurable
+            std::pair<int, int> hmPair = m_times->readTimeHourMinutePair(SalahTimes::TimeType::Sunset);
+            int h = hmPair.first;
+            int m = hmPair.second;
+            return (QTime::currentTime().secsTo(QTime(h, m)) / 60) - 15; // Until (sunset - 15 minutes (zawal))
         } else if (m_timeType == SalahTimes::TimeType::Maghrib) {
             return 30; // Configurable
         } else  if (m_timeType == SalahTimes::TimeType::Isha) {
-            return QTime::currentTime().secsTo(QTime(23, 59)) * 60; // Until midnight
+            return QTime::currentTime().secsTo(QTime(23, 59, 59)) / 60; // Until midnight
         }
         return 5; // Sunset and sunrise valid for 5 minutes
     }
-
+    
     inline bool isPrayerTime() 
     {
         if (m_live) {
             return false;
         }
-        QTime cTime = QTime::currentTime();
-        int s = cTime.secsTo(QTime(m_h, m_m));
-        return s >= -(validMinutes() * 60) && s <= 0;
+        int currentPrayerValidFor = minutesForValidity() * 60; // seconds
+        if (currentPrayerValidFor < 0) {
+            return false;
+        } else {
+            int prayerValidSince = QTime::currentTime().secsTo(QTime(m_h, m_m));
+            return prayerValidSince <= 0 && prayerValidSince <= currentPrayerValidFor;
+        }
     }
 private:
     SalahTimes::TimeType m_timeType;
+    SalahTimes* m_times;
 };
 
 Salah::Salah()
@@ -106,6 +129,7 @@ bool Salah::initialize(int argc, const char** argv)
     // Do not trace location before calling parent's initialize
     _TRACE;
     memory::deleteAll(m_salahTimes, m_settingsWidgetForm);
+    notify("Prayer time", "test");
     initializeMenu();
     initializeSettingsTabDialog();
     
@@ -114,9 +138,15 @@ bool Salah::initialize(int argc, const char** argv)
                 static_cast<SalahMethod::JuristicMethod>(setting(QString::fromStdString(SalahTimes::kJuristicMethodKey), QVariant(1)).toInt()),
                 static_cast<SalahMethod::AdjustingMethod>(setting(QString::fromStdString(SalahTimes::kAdjustingMethodKey), QVariant(8)).toInt())
                 );
-    m_salahTimes->build(nativeSetting(SettingsLoader::kLatitudeKey, QVariant(kDefaultLatitude)).toDouble(),
-                        nativeSetting(SettingsLoader::kLongitudeKey, QVariant(kDefaultLongitude)).toDouble());
+    double lat = nativeSetting(SettingsLoader::kLatitudeKey, QVariant(kDefaultLatitude)).toDouble();
+    double lng = nativeSetting(SettingsLoader::kLongitudeKey, QVariant(kDefaultLongitude)).toDouble();
+    m_salahTimes->build(lat, lng);
     displayClocks();
+    
+    QiblaCompass* qiblaCompass = new QiblaCompass(lat, lng, container());
+    qiblaCompass->resize(200);
+    qiblaCompass->hide();
+    
     return true;
 }
 
@@ -159,7 +189,6 @@ void Salah::initializeSettingsTabDialog()
 {
     using namespace std::placeholders;
     m_settingsWidgetForm = new SettingsTabWidgetForm(settingsTabWidget(),
-                                                     std::bind(&ExtensionBase::saveSetting, this, _1, _2),
                                                      std::bind(&ExtensionBase::setting, this, _1, _2),
                                                      extension()->settingsMap(),
                                                      settingsKeyPrefix());

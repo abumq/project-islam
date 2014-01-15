@@ -13,10 +13,9 @@ class SettingsTabWidgetForm : public QWidget
     Q_OBJECT
     
 public:
-    typedef std::function<void(const QString&, const QVariant&)> SaveSettingFunc;
     typedef std::function<QVariant(const QString&, const QVariant&)> LoadSettingFunc;
     
-    SettingsTabWidgetForm(QWidget *parent, const SaveSettingFunc& saveFunc, const LoadSettingFunc& loadFunc, 
+    SettingsTabWidgetForm(QWidget *parent, const LoadSettingFunc& loadFunc, 
         QMap<QString, QVariant> *settingsMap, const QString& settingKeyPrefix);
     ~SettingsTabWidgetForm();
     
@@ -29,7 +28,6 @@ private slots:
     
 private:
     Ui::SettingsTabWidgetForm *ui;
-    SaveSettingFunc m_saveFunc;
     LoadSettingFunc m_loadFunc;
     QMap<QString, QVariant>* m_settingsMap;
     QString m_settingKeyPrefix;

@@ -36,4 +36,4 @@ FORMS += \
     bookmarks_bar.ui
 
 RESOURCES += \
-    icons.qrc
+    icons_al_quran.qrc

@@ -23,7 +23,7 @@ Salah::Salah()
     setExtensionInfo(ExtensionInfo(kMajorVersion, kMinorVersion, kPatchVersion, 
                                    QString(kAuthor), QString(kName), 
                                    QString(kTitle), QString(kDescription)));
-    Q_INIT_RESOURCE(icons);
+    Q_INIT_RESOURCE(icons_salah);
 }
 
 Salah::~Salah()
@@ -54,9 +54,9 @@ bool Salah::initialize(int argc, const char** argv)
     m_salahTimes->build(lat, lng);
     displayClocks();
     
-    m_qiblaCompass = new QiblaCompass(lat, lng, container());
+    m_qiblaCompass = new QiblaCompass(lat, lng, container()); // FIXME: Qibla does not correctly work
     m_qiblaCompass->resize(256);
-    m_qiblaCompass->hide(); // FIXME: Qibla does not correctly work
+    // m_qiblaCompass->hide();
     
     return true;
 }

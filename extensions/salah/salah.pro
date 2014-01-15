@@ -24,4 +24,4 @@ FORMS += \
     settings_tab_widget_form.ui
 
 RESOURCES += \
-    icons.qrc
+    icons_salah.qrc

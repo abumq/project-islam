@@ -14,8 +14,8 @@
 #include <QScrollBar>
 #include "core/logging/logging.h"
 
-const double QiblaCompass::kLatitude = 21.4224950;
-const double QiblaCompass::kLongitude = 39.8261650;
+const double QiblaCompass::kKabbaLatitude = 21.4224950;
+const double QiblaCompass::kKabbaLongitude = 39.8261650;
 
 QiblaCompass::QiblaCompass(double latitude, double longitude, QWidget *parent) :
     QGraphicsView(new QGraphicsScene(parent), parent),
@@ -78,9 +78,9 @@ double QiblaCompass::angle(void) const
     if ((m_longitude > 180.0) || (m_longitude < -180)) {
         return 0;
     }
-    if ((abs(m_latitude - kLatitude) < abs(-0.01)) && abs(m_longitude - kLongitude) < abs(-0.01)) return 0; // We are in Kabba
-    double phiB = kLatitude * M_PI / 180.0;
-    double lambdaB = kLongitude * M_PI / 180.0;
+    if ((abs(m_latitude - kKabbaLatitude) < abs(-0.01)) && abs(m_longitude - kKabbaLongitude) < abs(-0.01)) return 0; // We are in Kabba
+    double phiB = kKabbaLatitude * M_PI / 180.0;
+    double lambdaB = kKabbaLongitude * M_PI / 180.0;
     double phiA = m_latitude * M_PI / 180.0;
     double lambdaA = m_longitude * M_PI / 180.0;
     double psi = 180.0 / M_PI;

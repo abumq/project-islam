@@ -11,15 +11,9 @@
 #include "core/logging/logging.h"
 
 QiblaCompass::QiblaCompass(double latitude, double longitude, QWidget *parent) :
-<<<<<<< HEAD
     QGraphicsView(new QGraphicsScene(parent), parent),
     m_latitude(latitude),
     m_longitude(longitude)
-=======
-    m_latitude(latitude),
-    m_longitude(longitude),
-    QGraphicsView(new QGraphicsScene(parent), parent)
->>>>>>> 69926ae81324f2fdcfb34d17b4dc9ec0d6db8ec7
 {
     _TRACE;
     updateCompass(latitude, longitude);

@@ -106,8 +106,8 @@ void MainWindow::loadSettings()
     
     // TODO: Update log settings also update LoggingConfigurer::baseConfiguration() so that when
     // in future LoggingConfigurer::configureLoggers() is used we default it to this new log file and other configurations
-    
 }
+
 StyleLoader *MainWindow::styleLoader()
 {
     return &m_styleLoader;

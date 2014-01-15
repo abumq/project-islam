@@ -53,6 +53,7 @@ public slots:
     void toggleReader(bool);
     void toggleShowDuration(bool);
     void toggleBookmarkBar(bool);
+    void toggleStopRecitationOnDeactivation(bool);
     
     void onToggledTranslation(bool);
     void onToggledTransliteration(bool);
@@ -63,6 +64,7 @@ private:
     QSplitter* m_splitter;
     QWidget* m_rightBar;
     BookmarksBar* m_bookmarkBar;
+    bool m_stopRecitationOnDeactivation;
     
     void rightBarVisibilityToggle();
 };

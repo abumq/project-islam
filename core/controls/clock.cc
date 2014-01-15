@@ -13,7 +13,7 @@ Clock::Clock(QWidget *parent) :
     QWidget(parent)
 {
     m_liveTimer = new QTimer(this);
-    
+    setObjectName("Clock");
     QString themeColor = SettingsLoader::getInstance()->get(SettingsLoader::kSettingKeyTheme, QVariant("0, 0, 0")).toString();
     QStringList colors = themeColor.split(",");
     int r = 0;

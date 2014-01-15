@@ -17,7 +17,8 @@ class SalahClock : public Clock {
 public:
     SalahClock(QWidget* parent, SalahTimes::TimeType t, SalahTimes* times)
         : Clock(parent),
-          m_timeType(t) {
+          m_timeType(t) 
+    {
         resize(200);
         if (t == SalahTimes::TimeType::Fajr) {
             setTitle("Fajr");
@@ -39,7 +40,8 @@ public:
         setTime(tPair.first, tPair.second);
     }
     
-    void paintEvent(QPaintEvent *e) {
+    void paintEvent(QPaintEvent *e) 
+    {
         Clock::paintEvent(e);
         if (isPrayerTime()) {
             select();
@@ -48,7 +50,8 @@ public:
         }
     }
     
-    inline int validMinutes() {
+    inline int validMinutes() 
+    {
         // TODO: Get these from settings i.e, 
         //         * Sunrise offset for Fajr validity
         //         * Sunset offset for Maghrib validity
@@ -67,7 +70,8 @@ public:
         return 5; // Sunset and sunrise valid for 5 minutes
     }
 
-    inline bool isPrayerTime() {
+    inline bool isPrayerTime() 
+    {
         if (m_live) {
             return false;
         }
@@ -151,7 +155,8 @@ void Salah::displayClocks()
     liveClock->setDisplayTextualTime(true);
 }
 
-void Salah::initializeSettingsTabDialog() {
+void Salah::initializeSettingsTabDialog() 
+{
     using namespace std::placeholders;
     m_settingsWidgetForm = new SettingsTabWidgetForm(settingsTabWidget(),
                                                      std::bind(&ExtensionBase::saveSetting, this, _1, _2),

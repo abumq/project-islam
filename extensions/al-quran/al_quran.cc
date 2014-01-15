@@ -130,6 +130,16 @@ void AlQuran::initializeMenu()
     showBookmarksAction->setChecked(bookmarks);
     toggleBookmarkBar(bookmarks);
     
+    extensionMenu()->addSeparator();
+    
+    QAction* stopRecitationOnDeactivation = extensionMenu()->addAction("Stop Recitation On Deactivation");
+    stopRecitationOnDeactivation->setObjectName("stopOnDeactivateAction");
+    QObject::connect(stopRecitationOnDeactivation, SIGNAL(toggled(bool)), this, SLOT(toggleStopRecitationOnDeactivation(bool)));
+    stopRecitationOnDeactivation->setCheckable(true);
+    bool valStopRecitationOnDeactivation = setting("stop_recitation_on_deactivation", QVariant(true)).toBool();
+    stopRecitationOnDeactivation->setChecked(valStopRecitationOnDeactivation);
+    toggleStopRecitationOnDeactivation(valStopRecitationOnDeactivation);
+    
 }
 
 void AlQuran::onContainerGeometryChanged(int w, int h)
@@ -152,7 +162,7 @@ void AlQuran::onDeactivated()
 {
     _TRACE;
     // Stop if reciting
-    if (m_reciter != nullptr) {
+    if (m_stopRecitationOnDeactivation && m_reciter != nullptr) {
         m_reciter->stopIfPlaying();
     }
 }
@@ -269,6 +279,13 @@ void AlQuran::toggleBookmarkBar(bool val)
     saveSetting("show_bookmarks", QVariant(val));
     rightBarVisibilityToggle();
     onContainerGeometryChanged(extension()->containerWidth(), extension()->containerHeight());
+}
+
+void AlQuran::toggleStopRecitationOnDeactivation(bool val)
+{
+    _TRACE;
+    m_stopRecitationOnDeactivation = val;
+    saveSetting("stop_recitation_on_deactivation", QVariant(val));
 }
 
 void AlQuran::onToggledTranslation(bool val)

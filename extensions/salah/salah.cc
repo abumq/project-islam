@@ -40,6 +40,7 @@ bool Salah::initialize(int argc, const char** argv)
     // Do not trace location before calling parent's initialize
     _TRACE;
     memory::deleteAll(m_salahTimes, m_settingsWidgetForm);
+    notify("Prayer time", "test");
     initializeMenu();
     initializeSettingsTabDialog();
     

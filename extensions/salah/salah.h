@@ -5,6 +5,7 @@
 
 class SalahTimes;
 class SettingsTabWidgetForm;
+class QiblaCompass;
 
 class Salah : public ExtensionBase
 {
@@ -38,6 +39,7 @@ public slots:
 private:
     SalahTimes* m_salahTimes;
     SettingsTabWidgetForm* m_settingsWidgetForm;
+    QiblaCompass* m_qiblaCompass;
 };
 
 #endif // SALAH_H

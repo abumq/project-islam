@@ -3,7 +3,7 @@
 
 #include <cmath>
 #include <QString>
-
+#include <time.h>
 namespace datetime {
 
 inline QString formatMillisecondsAsDuration(qint64 ms) {

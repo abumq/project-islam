@@ -19,10 +19,11 @@ const char* Salah::kDescription  = "Organize your ṣalāh (prayer) including at
 
 Salah::Salah()
 {
-    memory::turnToNullPtr(m_salahTimes, m_settingsWidgetForm);
+    memory::turnToNullPtr(m_salahTimes, m_settingsWidgetForm, m_qiblaCompass);
     setExtensionInfo(ExtensionInfo(kMajorVersion, kMinorVersion, kPatchVersion, 
                                    QString(kAuthor), QString(kName), 
                                    QString(kTitle), QString(kDescription)));
+    Q_INIT_RESOURCE(icons);
 }
 
 Salah::~Salah()
@@ -40,7 +41,6 @@ bool Salah::initialize(int argc, const char** argv)
     // Do not trace location before calling parent's initialize
     _TRACE;
     memory::deleteAll(m_salahTimes, m_settingsWidgetForm);
-    notify("Prayer time", "test");
     initializeMenu();
     initializeSettingsTabDialog();
     
@@ -54,9 +54,9 @@ bool Salah::initialize(int argc, const char** argv)
     m_salahTimes->build(lat, lng);
     displayClocks();
     
-    QiblaCompass* qiblaCompass = new QiblaCompass(lat, lng, container());
-    qiblaCompass->resize(200);
-    qiblaCompass->hide();
+    m_qiblaCompass = new QiblaCompass(lat, lng, container());
+    m_qiblaCompass->resize(256);
+    m_qiblaCompass->hide(); // FIXME: Qibla does not correctly work
     
     return true;
 }
@@ -111,8 +111,11 @@ void Salah::initializeSettingsTabDialog()
     
 }
 
-void Salah::onContainerGeometryChanged(int, int)
+void Salah::onContainerGeometryChanged(int w, int h)
 {
+    if (m_qiblaCompass != nullptr) {
+        m_qiblaCompass->move(w - m_qiblaCompass->width(), 0);
+    }
 }
 
 void Salah::onActivated()

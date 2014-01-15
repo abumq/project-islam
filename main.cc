@@ -21,6 +21,7 @@ public:
     }
 
     ~CleanAtEnd() {
+#if defined(__linux__)
         // clean extra files
         DVLOG(9) << "Removing extra files";
         for (int i = 0; i < kExtraFilesCount; ++i) {
@@ -29,14 +30,17 @@ public:
                 f.remove();
             }
         }
+#endif // defined(__linux__)
         DVLOG(9) << "Exit status: " << returnCode;
     }
     
 private:
+#if defined(__linux__)
     static const int kExtraFilesCount = 1;
     const char* kExtraFiles[kExtraFilesCount] = {
         ".l.lg"
     };
+#endif // defined(__linux__)
 };
 
 int main(int argc, char* argv[])

@@ -7,8 +7,15 @@
 #else
 #   define __isNan(x) isnan(x)
 #endif // _MSC_VER
+#ifndef M_PI
+#   define M_PI		3.14159265358979323846	/* pi */
+#endif // M_PI
 #include <QGraphicsLineItem>
+#include <QScrollBar>
 #include "core/logging/logging.h"
+
+const double QiblaCompass::kLatitude = 21.4224950;
+const double QiblaCompass::kLongitude = 39.8261650;
 
 QiblaCompass::QiblaCompass(double latitude, double longitude, QWidget *parent) :
     QGraphicsView(new QGraphicsScene(parent), parent),
@@ -38,10 +45,10 @@ void QiblaCompass::updateCompass(double latitude, double longitude)
     m_latitude = latitude;
     m_longitude = longitude;
     double a = angle();
-    int length = (width() / 2) - 10;
-    int xStart = width() / 2;
+    int length = (width() / 2);
+    int xStart = 0;
     int xEnd = 0;
-    int yStart = height() / 2;
+    int yStart = 0;
     int yEnd = 0;
     if (a > 0) {
         a = -a;
@@ -49,19 +56,14 @@ void QiblaCompass::updateCompass(double latitude, double longitude)
     xEnd = xStart + cos(a) + length;
     yEnd = yStart + sin(a) + length;
     QGraphicsLineItem* line = scene()->addLine(xStart, yStart, xEnd, yEnd);
-    Q_UNUSED(line);
-    QGraphicsTextItem* n = scene()->addText("N");
-    n->setY(1);
-    n->setX(width() / 2);
-    QGraphicsTextItem* e = scene()->addText("E");
-    e->setY(width() / 2);
-    e->setX(1);
-    QGraphicsTextItem* s = scene()->addText("S");
-    s->setY(height() - 1);
-    s->setX(width() / 2);
-    QGraphicsTextItem* w = scene()->addText("W");
-    w->setY(height() / 2);
-    w->setX(width() - 1);
+    line->setPen(QColor(Qt::red));
+    QPixmap compass(":/icons/compass");
+    QGraphicsPixmapItem* pixmapCompass = scene()->addPixmap(compass);
+    setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    QString tooltip = readDirection() + " (Based on " + QString::number(m_latitude)
+            + ", " + QString::number(m_longitude) + ")";
+    pixmapCompass->setToolTip(tooltip);
 }
 
 double QiblaCompass::angle(void) const
@@ -83,19 +85,21 @@ double QiblaCompass::angle(void) const
     double lambdaA = m_longitude * M_PI / 180.0;
     double psi = 180.0 / M_PI;
     psi *= atan2(sin(lambdaB - lambdaA), cos(phiA) * tan(phiB) - sin(phiA) * cos(lambdaB - lambdaA));
-    return round(psi);
+    return psi;//round(psi);
 }
 
 QString QiblaCompass::readDirection(void) const
 {
     _TRACE;
     double a = angle();
-    return QString::number((a > 0) ? a : -a) + " degrees east of North";
+    return "<b>" + QString::number((a > 0) ? a : -a) 
+            + " degrees " + ((a > 0) ? "east" : "west") + " of North</b>";
 }
 
 void QiblaCompass::resize(int sz)
 {
     _TRACE;
+    scene()->setSceneRect(0, 0, sz, sz);
     QGraphicsView::resize(sz, sz);
     updateCompass(m_latitude, m_longitude);
 }

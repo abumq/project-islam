@@ -7,8 +7,8 @@ class QiblaCompass : public QGraphicsView
 {
     Q_OBJECT
 public:
-    static constexpr double kLatitude = 21.4224950;
-    static constexpr double kLongitude = 39.8261650;
+    static const double kLatitude;
+    static const double kLongitude;
     
     QiblaCompass(double latitude, double longitude, QWidget *parent = 0);
     ~QiblaCompass();

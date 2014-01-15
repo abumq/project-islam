@@ -56,9 +56,9 @@ int SalahClock::minutesForValidity()
         std::pair<int, int> hmPair = m_times->readTimeHourMinutePair(SalahTimes::TimeType::Sunset);
         int h = hmPair.first;
         int m = hmPair.second;
-        return (QTime::currentTime().secsTo(QTime(h, m)) / 60) - 15; // Until (sunset - 15 minutes (zawal))
+        return (QTime::currentTime().secsTo(QTime(h, m)) / 60) - 25; // Until (sunset - 25 minutes (zawal))
     } else if (m_timeType == SalahTimes::TimeType::Maghrib) {
-        return 30; // Configurable
+        return (QTime::currentTime().secsTo(QTime(m_h, m_m)) / 60) + 30;
     } else  if (m_timeType == SalahTimes::TimeType::Isha) {
         return QTime::currentTime().secsTo(QTime(23, 59, 59)) / 60; // Until midnight
     }

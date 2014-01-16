@@ -7,29 +7,14 @@ SalahClock::SalahClock(QWidget* parent, SalahTimes::TimeType t, SalahTimes* time
     m_minutesPrayerAboutToOver(minutesPrayerAboutToOver)
 {
     resize(200);
-    if (t == SalahTimes::TimeType::Fajr) {
-        setTitle("Fajr");
-    } else if (t == SalahTimes::TimeType::Sunrise) {
-        setTitle("Sunrise");
-    } else if (t == SalahTimes::TimeType::Dhuhr) {
-        setTitle("Dhuhr");
-    } else if (t == SalahTimes::TimeType::Asr) {
-        setTitle("Asr");
-    } else if (t == SalahTimes::TimeType::Sunset) {
-        setTitle("Sunset");
-    } else if (t == SalahTimes::TimeType::Maghrib) {
-        setTitle("Maghrib");
-    } else  if (t == SalahTimes::TimeType::Isha) {
-        setTitle("Isha");
-    }
-    setDisplayTextualTime(true);
-    std::pair<int, int> tPair = m_times->readTimeHourMinutePair(t);
-    setTime(tPair.first, tPair.second);
+    refresh();
 }
 
 void SalahClock::paintEvent(QPaintEvent *e) 
 {
     Clock::paintEvent(e);
+    // TODO: Ability to configurable prayerAboutToStart() reminder for each prayer
+    //       and separately for Jumuah as well
     if (!selected() && isPrayerTime()) {
         // reset it for next day
         m_prayerAboutToOverSignalEmitted = false;
@@ -94,11 +79,27 @@ bool SalahClock::isPrayerTimeAboutToOver()
         return false;
     }
     int currentPrayerValidFor = minutesForValidity() * 60; // seconds
-    if (currentPrayerValidFor < 0) {
-        return false;
-    } else {
-        int prayerValidSince = QTime::currentTime().secsTo(QTime(m_h, m_m));
-        return prayerValidSince <= 0 && prayerValidSince <= currentPrayerValidFor
-            && currentPrayerValidFor <= (m_minutesPrayerAboutToOver * 60);
+    return isPrayerTime() && currentPrayerValidFor <= (m_minutesPrayerAboutToOver * 60);
+}
+
+void SalahClock::refresh()
+{
+    if (m_timeType == SalahTimes::TimeType::Fajr) {
+        setTitle("Fajr");
+    } else if (m_timeType == SalahTimes::TimeType::Sunrise) {
+        setTitle("Sunrise");
+    } else if (m_timeType == SalahTimes::TimeType::Dhuhr) {
+        setTitle("Dhuhr"); // TODO: If friday say "Jumuah" instead
+    } else if (m_timeType == SalahTimes::TimeType::Asr) {
+        setTitle("Asr");
+    } else if (m_timeType == SalahTimes::TimeType::Sunset) {
+        setTitle("Sunset");
+    } else if (m_timeType == SalahTimes::TimeType::Maghrib) {
+        setTitle("Maghrib");
+    } else  if (m_timeType == SalahTimes::TimeType::Isha) {
+        setTitle("Isha");
     }
+    setDisplayTextualTime(true);
+    std::pair<int, int> tPair = m_times->readTimeHourMinutePair(m_timeType);
+    setTime(tPair.first, tPair.second);
 }

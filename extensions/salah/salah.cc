@@ -52,6 +52,8 @@ bool Salah::initialize(int argc, const char** argv)
     double lat = nativeSetting(SettingsLoader::kLatitudeKey, QVariant(kDefaultLatitude)).toDouble();
     double lng = nativeSetting(SettingsLoader::kLongitudeKey, QVariant(kDefaultLongitude)).toDouble();
     m_salahTimes->build(lat, lng);
+    // FIXME: Add signal/slot to re-build times when day is changed
+    //             slot should call each clock's refresh()
     displayClocks();
     
     m_qiblaCompass = new QiblaCompass(lat, lng, container()); // FIXME: Qibla does not correctly work
@@ -97,7 +99,7 @@ void Salah::displayClocks()
     ishaClock->move(maghribClock->x() + maghribClock->width() + kApartThreshold, maghribClock->y());
     QObject::connect(ishaClock, SIGNAL(prayerTime(bool)), this, SLOT(onPrayerTime(bool)));
     QObject::connect(ishaClock, SIGNAL(prayerTimeAboutToOver()), this, SLOT(onPrayerTimeAboutToOver()));
-    
+
     Clock* liveClock = new Clock(container());
     liveClock->liveClock();
     liveClock->resize(300);

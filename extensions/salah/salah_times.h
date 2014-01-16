@@ -148,6 +148,7 @@ public:
     SalahTimes(SalahMethod::CalculationMethod calculationMethod = SalahMethod::CalculationMethod::MWL,
                SalahMethod::JuristicMethod juristicMethod = SalahMethod::JuristicMethod::Shafii,
                SalahMethod::AdjustingMethod adjustingMethod = SalahMethod::AdjustingMethod::MidNight);
+    void build(void);
     void build(double latitude, double longitude);
     void build(double latitude, double longitude, double timezone);
     void build(int year, int month, int day, double latitude, double longitude, double timezone);
@@ -163,6 +164,9 @@ private:
     double m_longitude;
     double m_timezone;
     double m_julianDate;
+    int m_year;
+    int m_month;
+    int m_day;
     std::map<SalahMethod::CalculationMethod, SalahMethod> m_salahMethods;
     std::map<TimeType, double> m_times;
     

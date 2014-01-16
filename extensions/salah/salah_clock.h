@@ -11,6 +11,7 @@ public:
     SalahClock(QWidget* parent, SalahTimes::TimeType t, SalahTimes* times, int minutesPrayerAboutToOver = -1);
     bool isPrayerTime();
     bool isPrayerTimeAboutToOver();
+    void refresh();
     inline int minutesPrayerAboutToOver() { return m_minutesPrayerAboutToOver; }
 signals:
     void prayerTime(bool);

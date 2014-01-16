@@ -37,6 +37,11 @@ SalahTimes::SalahTimes(SalahMethod::CalculationMethod calculationMethod,
     m_salahMethods.insert(std::make_pair(SalahMethod::CalculationMethod::Custom, SalahMethod(18.0, true,  0.0, false, 17.0)));
 }
 
+void SalahTimes::build()
+{
+    build(m_latitude, m_longitude);
+}
+
 void SalahTimes::build(double latitude, double longitude)
 {
     time_t date = time(NULL);
@@ -58,7 +63,10 @@ void SalahTimes::build(int year, int month, int day, double latitude, double lon
     m_latitude = latitude;
     m_longitude = longitude;
     m_timezone = timezone;
-    m_julianDate = datetime::georgianToJulianDate(year, month, day);
+    m_year = year;
+    m_month = month;
+    m_day = day;
+    m_julianDate = datetime::georgianToJulianDate(m_year, m_month, m_day);
     
     // Default values
     double defaultTimes[] = { 5, 6, 12, 13, 18, 18, 18 };

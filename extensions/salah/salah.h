@@ -36,10 +36,12 @@ public slots:
     virtual void onActivated();
     virtual void onDeactivated();
     void onPrayerTime(bool);
+    void onPrayerTimeAboutToOver();
 private:
     SalahTimes* m_salahTimes;
     SettingsTabWidgetForm* m_settingsWidgetForm;
     QiblaCompass* m_qiblaCompass;
+    int m_minutesToPrayerAboutToOver;
 };
 
 #endif // SALAH_H

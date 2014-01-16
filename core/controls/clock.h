@@ -22,6 +22,7 @@ public:
     void setTime(int h, int m, int s = 0);
     void setDisplayTextualTime(bool);
     void setTitle(const QString&);
+    void setColor(Qt::GlobalColor color);
     void select();
     void deselect();
     const QString& title() const;

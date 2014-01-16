@@ -26,6 +26,8 @@ private slots:
     
     void on_cboAdjustingMethod_currentIndexChanged(int index);
     
+    void on_spnMinPrayerOver_valueChanged(int arg1);
+    
 private:
     Ui::SettingsTabWidgetForm *ui;
     LoadSettingFunc m_loadFunc;

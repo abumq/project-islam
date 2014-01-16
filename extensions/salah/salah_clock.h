@@ -8,15 +8,20 @@ class QPaintEvent;
 class SalahClock : public Clock {
     Q_OBJECT
 public:
-    SalahClock(QWidget* parent, SalahTimes::TimeType t, SalahTimes* times);
+    SalahClock(QWidget* parent, SalahTimes::TimeType t, SalahTimes* times, int minutesPrayerAboutToOver = -1);
     bool isPrayerTime();
+    bool isPrayerTimeAboutToOver();
+    inline int minutesPrayerAboutToOver() { return m_minutesPrayerAboutToOver; }
 signals:
     void prayerTime(bool);
+    void prayerTimeAboutToOver();
 protected:
     virtual void paintEvent(QPaintEvent *e) ;
 private:
     SalahTimes::TimeType m_timeType;
     SalahTimes* m_times;
+    int m_minutesPrayerAboutToOver;
+    int m_prayerAboutToOverSignalEmitted;
     
     int minutesForValidity();
 };

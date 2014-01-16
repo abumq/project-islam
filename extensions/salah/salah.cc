@@ -43,7 +43,7 @@ bool Salah::initialize(int argc, const char** argv)
     memory::deleteAll(m_salahTimes, m_settingsWidgetForm);
     initializeMenu();
     initializeSettingsTabDialog();
-    
+    m_minutesToPrayerAboutToOver = setting(QString::fromStdString(SalahTimes::kMinutesToPrayerAboutToOverKey), QVariant(30)).toInt();
     m_salahTimes = new SalahTimes(
                 static_cast<SalahMethod::CalculationMethod>(setting(QString::fromStdString(SalahTimes::kCalculationMethodKey), QVariant(8)).toInt()),
                 static_cast<SalahMethod::JuristicMethod>(setting(QString::fromStdString(SalahTimes::kJuristicMethodKey), QVariant(1)).toInt()),
@@ -68,30 +68,35 @@ void Salah::initializeMenu()
 
 void Salah::displayClocks()
 {
+    _TRACE;
     const int kApartThreshold = 5;
     
-    SalahClock* fajrClock = new SalahClock(container(), 
-                                           SalahTimes::TimeType::Fajr, m_salahTimes);
+    SalahClock* fajrClock = new SalahClock(container(), SalahTimes::TimeType::Fajr, m_salahTimes, m_minutesToPrayerAboutToOver);
     fajrClock->move(kApartThreshold, kApartThreshold);
     QObject::connect(fajrClock, SIGNAL(prayerTime(bool)), this, SLOT(onPrayerTime(bool)));
-    SalahClock* dhuhrClock = new SalahClock(container(), 
-                                            SalahTimes::TimeType::Dhuhr, m_salahTimes);
+    QObject::connect(fajrClock, SIGNAL(prayerTimeAboutToOver()), this, SLOT(onPrayerTimeAboutToOver()));
+    
+    SalahClock* dhuhrClock = new SalahClock(container(), SalahTimes::TimeType::Dhuhr, m_salahTimes, m_minutesToPrayerAboutToOver);
     dhuhrClock->move(fajrClock->x() + fajrClock->width() + kApartThreshold, fajrClock->y());
     QObject::connect(dhuhrClock, SIGNAL(prayerTime(bool)), this, SLOT(onPrayerTime(bool)));
-    SalahClock* asrClock = new SalahClock(container(), 
-                                          SalahTimes::TimeType::Asr, m_salahTimes);
+    QObject::connect(dhuhrClock, SIGNAL(prayerTimeAboutToOver()), this, SLOT(onPrayerTimeAboutToOver()));
+    
+    SalahClock* asrClock = new SalahClock(container(), SalahTimes::TimeType::Asr, m_salahTimes, m_minutesToPrayerAboutToOver);
     asrClock->move(
                 ((dhuhrClock->x() + dhuhrClock->width() + kApartThreshold) / 2) - (asrClock->width() / 2), 
                 dhuhrClock->y() + dhuhrClock->height() + kApartThreshold);
     QObject::connect(asrClock, SIGNAL(prayerTime(bool)), this, SLOT(onPrayerTime(bool)));
-    SalahClock* maghribClock = new SalahClock(container(), 
-                                              SalahTimes::TimeType::Maghrib, m_salahTimes);
+    QObject::connect(asrClock, SIGNAL(prayerTimeAboutToOver()), this, SLOT(onPrayerTimeAboutToOver()));
+    
+    SalahClock* maghribClock = new SalahClock(container(), SalahTimes::TimeType::Maghrib, m_salahTimes, m_minutesToPrayerAboutToOver);
     maghribClock->move(kApartThreshold, asrClock->y() + asrClock->height() + kApartThreshold);
     QObject::connect(maghribClock, SIGNAL(prayerTime(bool)), this, SLOT(onPrayerTime(bool)));
-    SalahClock* ishaClock = new SalahClock(container(), 
-                                           SalahTimes::TimeType::Isha, m_salahTimes);
+    QObject::connect(maghribClock, SIGNAL(prayerTimeAboutToOver()), this, SLOT(onPrayerTimeAboutToOver()));
+    
+    SalahClock* ishaClock = new SalahClock(container(),  SalahTimes::TimeType::Isha, m_salahTimes, m_minutesToPrayerAboutToOver);
     ishaClock->move(maghribClock->x() + maghribClock->width() + kApartThreshold, maghribClock->y());
     QObject::connect(ishaClock, SIGNAL(prayerTime(bool)), this, SLOT(onPrayerTime(bool)));
+    QObject::connect(ishaClock, SIGNAL(prayerTimeAboutToOver()), this, SLOT(onPrayerTimeAboutToOver()));
     
     Clock* liveClock = new Clock(container());
     liveClock->liveClock();
@@ -103,6 +108,7 @@ void Salah::displayClocks()
 
 void Salah::initializeSettingsTabDialog() 
 {
+    _TRACE;
     using namespace std::placeholders;
     m_settingsWidgetForm = new SettingsTabWidgetForm(settingsTabWidget(),
                                                      std::bind(&ExtensionBase::setting, this, _1, _2),
@@ -132,13 +138,26 @@ void Salah::onPrayerTime(bool activated)
 {
     _TRACE;
     SalahClock* clock = qobject_cast<SalahClock*>(sender());
+    const int kPrayerTimeNotifySeconds = 30;
+    const int kPrayerTimeOverNotifySeconds = 3;
     if (activated) {
         clock->select();
-        notify("Prayer time", "It's time for " + clock->title().toStdString() + " prayer", 8000);
+        notify("Prayer Time", "It's time for " + clock->title().toStdString() + " prayer", kPrayerTimeNotifySeconds * 1000);
         LOG(INFO) << "Prayer time for [" << clock->title() << "]";
     } else {
         clock->deselect();
-        notify("Prayer time", "Time for " + clock->title().toStdString() + " prayer is over", 8000);
+        notify("Prayer Time", "Time for " + clock->title().toStdString() + " prayer is over", kPrayerTimeOverNotifySeconds * 1000);
         LOG(INFO) << "Prayer time over for [" << clock->title() << "]";
     }
+}
+
+void Salah::onPrayerTimeAboutToOver()
+{
+    _TRACE;
+    const int kPrayerTimeAboutToOverNotifySeconds = 3;
+    SalahClock* clock = qobject_cast<SalahClock*>(sender());
+    clock->setColor(Qt::red);
+    notify("Prayer Time", "Only " + QString::number(clock->minutesPrayerAboutToOver()).toStdString() + " minutes is left for " + clock->title().toStdString(), 
+           kPrayerTimeAboutToOverNotifySeconds * 1000);
+    LOG(INFO) << "Only " << clock->minutesPrayerAboutToOver() << " minutes left for " << clock->title() << " prayer";
 }

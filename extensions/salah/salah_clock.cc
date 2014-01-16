@@ -1,9 +1,10 @@
 #include "salah_clock.h"
 #include <QTime>
-SalahClock::SalahClock(QWidget* parent, SalahTimes::TimeType t, SalahTimes* times) : 
+SalahClock::SalahClock(QWidget* parent, SalahTimes::TimeType t, SalahTimes* times, int minutesPrayerAboutToOver) : 
     Clock(parent),
     m_timeType(t),
-    m_times(times)
+    m_times(times),
+    m_minutesPrayerAboutToOver(minutesPrayerAboutToOver)
 {
     resize(200);
     if (t == SalahTimes::TimeType::Fajr) {
@@ -30,9 +31,17 @@ void SalahClock::paintEvent(QPaintEvent *e)
 {
     Clock::paintEvent(e);
     if (!selected() && isPrayerTime()) {
+        // reset it for next day
+        m_prayerAboutToOverSignalEmitted = false;
         emit prayerTime(true);
     } else if (selected() && !isPrayerTime()) {
+        // reset it for next day
+        m_prayerAboutToOverSignalEmitted = false;
         emit prayerTime(false);
+    }
+    if (!m_prayerAboutToOverSignalEmitted && isPrayerTimeAboutToOver()) {
+        emit prayerTimeAboutToOver();
+        m_prayerAboutToOverSignalEmitted = true;
     }
 }
 
@@ -76,5 +85,20 @@ bool SalahClock::isPrayerTime()
     } else {
         int prayerValidSince = QTime::currentTime().secsTo(QTime(m_h, m_m));
         return prayerValidSince <= 0 && prayerValidSince <= currentPrayerValidFor;
+    }
+}
+
+bool SalahClock::isPrayerTimeAboutToOver()
+{
+    if (m_live || m_minutesPrayerAboutToOver <= 0) {
+        return false;
+    }
+    int currentPrayerValidFor = minutesForValidity() * 60; // seconds
+    if (currentPrayerValidFor < 0) {
+        return false;
+    } else {
+        int prayerValidSince = QTime::currentTime().secsTo(QTime(m_h, m_m));
+        return prayerValidSince <= 0 && prayerValidSince <= currentPrayerValidFor
+            && currentPrayerValidFor <= (m_minutesPrayerAboutToOver * 60);
     }
 }

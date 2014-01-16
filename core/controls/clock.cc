@@ -170,21 +170,24 @@ void Clock::setTitle(const QString& title)
     m_title = title;
 }
 
-void Clock::select()
+void Clock::setColor(Qt::GlobalColor color)
 {
     QPalette p(palette());
-    p.setColor(QPalette::Background, Qt::yellow);
+    p.setColor(QPalette::Background, color);
     setAutoFillBackground(true);
     setPalette(p);
     m_selected = true;
 }
 
+void Clock::select()
+{
+    setColor(Qt::yellow);
+    m_selected = true;
+}
+
 void Clock::deselect()
 {
-    QPalette p(palette());
-    p.setColor(QPalette::Background, Qt::color0);
-    setAutoFillBackground(false);
-    setPalette(p);
+    setColor(Qt::color0);
     m_selected = false;
 }
 

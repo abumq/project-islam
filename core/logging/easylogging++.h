@@ -1,5 +1,5 @@
 //
-//  Easylogging++ v9.46
+//  Easylogging++ v9.47
 //  Single-header only, cross-platform logging library for C++ applications
 //
 //  Copyright (c) 2013 Majid Khan
@@ -643,8 +643,8 @@ namespace consts {
     static const char* kDaysAbbrev[7]                   =      { "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat" };
     static const char* kMonths[12]                      =      { "January", "February", "March", "Apri", "May", "June", "July", "August",
             "September", "October", "November", "December" };
-    static const char* kMonthsAbbrev[12]                =      { "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Ju", "Aug", "Sep", "Oct", "Nov", "Dec" };
-    static const char* kDefaultDateTimeFormat           =      "%d/%M/%Y %h:%m:%s,%g";
+    static const char* kMonthsAbbrev[12]                =      { "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" };
+    static const char* kDefaultDateTimeFormat           =      "%d/%M/%Y %H:%m:%s,%g";
     static const int kYearBase                          =      1900;
     static const char* kAm                              =      "AM";
     static const char* kPm                              =      "PM";
@@ -3959,7 +3959,7 @@ class Writer : base::NoCopy {
                 // Somehow default logger has been unregistered. Not good! Register again
                 elStorage->registeredLoggers()->get(std::string(base::consts::kDefaultLoggerId));
             }
-            Writer(base::consts::kDefaultLoggerId, Level::Error, file, line, func)
+            Writer(base::consts::kDefaultLoggerId, Level::Debug, file, line, func)
                     << "Logger [" << loggerId << "] is not registered yet!";
             m_proceed = false;
         } else {
@@ -5017,9 +5017,9 @@ class Loggers : base::StaticClass {
 class VersionInfo : base::StaticClass {
  public:
     /// @brief Current version number
-    static inline const std::string version(void) { return std::string("9.46"); }
+    static inline const std::string version(void) { return std::string("9.47"); }
     /// @brief Release date of current version
-    static inline const std::string releaseDate(void) { return std::string("12-01-2014 1717hrs"); }
+    static inline const std::string releaseDate(void) { return std::string("17-01-2014 2109hrs"); }
 };
 }  // namespace el
 #undef VLOG_IS_ON

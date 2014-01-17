@@ -155,6 +155,9 @@ public:
     inline const std::map<TimeType, double>* times() const;
     std::string readTime(TimeType t);
     std::pair<int, int> readTimeHourMinutePair(TimeType t);
+    inline int year(void) const { return m_year; }
+    inline int month(void) const { return m_month; }
+    inline int day(void) const { return m_day; }
 private:
     
     SalahMethod::CalculationMethod m_calculationMethod;

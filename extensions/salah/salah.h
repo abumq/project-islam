@@ -6,13 +6,14 @@
 class SalahTimes;
 class SettingsTabWidgetForm;
 class QiblaCompass;
+class SalahClock;
 
 class Salah : public ExtensionBase
 {
     Q_OBJECT
     Q_INTERFACES(ExtensionBase)
     Q_PLUGIN_METADATA(IID "ProjectIslam.Api.ExtensionBase.Salah.v0.1.0")
-private:
+
     static const unsigned int kMajorVersion = 0;
     static const unsigned int kMinorVersion = 1;
     static const unsigned int kPatchVersion = 0;
@@ -31,17 +32,23 @@ public:
     
 public slots:
 
-    // From interface
     virtual void onContainerGeometryChanged(int, int);
     virtual void onActivated();
     virtual void onDeactivated();
     void onPrayerTime(bool);
-    void onPrayerTimeAboutToOver();
+    void onPrayerTimeAboutToOver(int minutesLeft);
+    void checkDayChange();
 private:
     SalahTimes* m_salahTimes;
     SettingsTabWidgetForm* m_settingsWidgetForm;
     QiblaCompass* m_qiblaCompass;
     int m_minutesToPrayerAboutToOver;
+    
+    SalahClock* m_fajrClock;
+    SalahClock* m_dhuhrClock;
+    SalahClock* m_asrClock;
+    SalahClock* m_maghribClock;
+    SalahClock* m_ishaClock;
 };
 
 #endif // SALAH_H

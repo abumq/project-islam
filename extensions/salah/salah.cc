@@ -1,6 +1,7 @@
 #include "salah.h"
 #include <QLabel>
 #include <QTime>
+#include <QTimer>
 #include "core/logging/logging.h"
 #include "salah_times.h"
 #include "settings_tab_widget_form.h"
@@ -19,7 +20,8 @@ const char* Salah::kDescription  = "Organize your ṣalāh (prayer) including at
 
 Salah::Salah()
 {
-    memory::turnToNullPtr(m_salahTimes, m_settingsWidgetForm, m_qiblaCompass);
+    memory::turnToNullPtr(m_salahTimes, m_settingsWidgetForm, m_qiblaCompass,
+                          m_fajrClock, m_dhuhrClock, m_asrClock, m_maghribClock, m_ishaClock);
     setExtensionInfo(ExtensionInfo(kMajorVersion, kMinorVersion, kPatchVersion, 
                                    QString(kAuthor), QString(kName), 
                                    QString(kTitle), QString(kDescription)));
@@ -40,7 +42,8 @@ bool Salah::initialize(int argc, const char** argv)
     }
     // Do not trace location before calling parent's initialize
     _TRACE;
-    memory::deleteAll(m_salahTimes, m_settingsWidgetForm);
+    memory::deleteAll(m_salahTimes, m_settingsWidgetForm,
+                      m_fajrClock, m_dhuhrClock, m_asrClock, m_maghribClock, m_ishaClock);
     initializeMenu();
     initializeSettingsTabDialog();
     m_minutesToPrayerAboutToOver = setting(QString::fromStdString(SalahTimes::kMinutesToPrayerAboutToOverKey), QVariant(30)).toInt();
@@ -52,13 +55,15 @@ bool Salah::initialize(int argc, const char** argv)
     double lat = nativeSetting(SettingsLoader::kLatitudeKey, QVariant(kDefaultLatitude)).toDouble();
     double lng = nativeSetting(SettingsLoader::kLongitudeKey, QVariant(kDefaultLongitude)).toDouble();
     m_salahTimes->build(lat, lng);
-    // FIXME: Add signal/slot to re-build times when day is changed
-    //             slot should call each clock's refresh()
     displayClocks();
     
     m_qiblaCompass = new QiblaCompass(lat, lng, container()); // FIXME: Qibla does not correctly work
     m_qiblaCompass->resize(256);
     // m_qiblaCompass->hide();
+    
+    QTimer* salahTimeChecker = new QTimer(this);
+    connect(salahTimeChecker, SIGNAL(timeout()), this, SLOT(checkDayChange()));
+    salahTimeChecker->start(1000); // Every second
     
     return true;
 }
@@ -73,37 +78,37 @@ void Salah::displayClocks()
     _TRACE;
     const int kApartThreshold = 5;
     
-    SalahClock* fajrClock = new SalahClock(container(), SalahTimes::TimeType::Fajr, m_salahTimes, m_minutesToPrayerAboutToOver);
-    fajrClock->move(kApartThreshold, kApartThreshold);
-    QObject::connect(fajrClock, SIGNAL(prayerTime(bool)), this, SLOT(onPrayerTime(bool)));
-    QObject::connect(fajrClock, SIGNAL(prayerTimeAboutToOver()), this, SLOT(onPrayerTimeAboutToOver()));
+    m_fajrClock = new SalahClock(container(), SalahTimes::TimeType::Fajr, m_salahTimes, m_minutesToPrayerAboutToOver);
+    m_fajrClock->move(kApartThreshold, kApartThreshold);
+    QObject::connect(m_fajrClock, SIGNAL(prayerTime(bool)), this, SLOT(onPrayerTime(bool)));
+    QObject::connect(m_fajrClock, SIGNAL(prayerTimeAboutToOver(int)), this, SLOT(onPrayerTimeAboutToOver(int)));
     
-    SalahClock* dhuhrClock = new SalahClock(container(), SalahTimes::TimeType::Dhuhr, m_salahTimes, m_minutesToPrayerAboutToOver);
-    dhuhrClock->move(fajrClock->x() + fajrClock->width() + kApartThreshold, fajrClock->y());
-    QObject::connect(dhuhrClock, SIGNAL(prayerTime(bool)), this, SLOT(onPrayerTime(bool)));
-    QObject::connect(dhuhrClock, SIGNAL(prayerTimeAboutToOver()), this, SLOT(onPrayerTimeAboutToOver()));
+    m_dhuhrClock = new SalahClock(container(), SalahTimes::TimeType::Dhuhr, m_salahTimes, m_minutesToPrayerAboutToOver);
+    m_dhuhrClock->move(m_fajrClock->x() + m_fajrClock->width() + kApartThreshold, m_fajrClock->y());
+    QObject::connect(m_dhuhrClock, SIGNAL(prayerTime(bool)), this, SLOT(onPrayerTime(bool)));
+    QObject::connect(m_dhuhrClock, SIGNAL(prayerTimeAboutToOver(int)), this, SLOT(onPrayerTimeAboutToOver(int)));
     
-    SalahClock* asrClock = new SalahClock(container(), SalahTimes::TimeType::Asr, m_salahTimes, m_minutesToPrayerAboutToOver);
-    asrClock->move(
-                ((dhuhrClock->x() + dhuhrClock->width() + kApartThreshold) / 2) - (asrClock->width() / 2), 
-                dhuhrClock->y() + dhuhrClock->height() + kApartThreshold);
-    QObject::connect(asrClock, SIGNAL(prayerTime(bool)), this, SLOT(onPrayerTime(bool)));
-    QObject::connect(asrClock, SIGNAL(prayerTimeAboutToOver()), this, SLOT(onPrayerTimeAboutToOver()));
+    m_asrClock = new SalahClock(container(), SalahTimes::TimeType::Asr, m_salahTimes, m_minutesToPrayerAboutToOver);
+    m_asrClock->move(
+                ((m_dhuhrClock->x() + m_dhuhrClock->width() + kApartThreshold) / 2) - (m_asrClock->width() / 2), 
+                m_dhuhrClock->y() + m_dhuhrClock->height() + kApartThreshold);
+    QObject::connect(m_asrClock, SIGNAL(prayerTime(bool)), this, SLOT(onPrayerTime(bool)));
+    QObject::connect(m_asrClock, SIGNAL(prayerTimeAboutToOver(int)), this, SLOT(onPrayerTimeAboutToOver(int)));
     
-    SalahClock* maghribClock = new SalahClock(container(), SalahTimes::TimeType::Maghrib, m_salahTimes, m_minutesToPrayerAboutToOver);
-    maghribClock->move(kApartThreshold, asrClock->y() + asrClock->height() + kApartThreshold);
-    QObject::connect(maghribClock, SIGNAL(prayerTime(bool)), this, SLOT(onPrayerTime(bool)));
-    QObject::connect(maghribClock, SIGNAL(prayerTimeAboutToOver()), this, SLOT(onPrayerTimeAboutToOver()));
+    m_maghribClock = new SalahClock(container(), SalahTimes::TimeType::Maghrib, m_salahTimes, m_minutesToPrayerAboutToOver);
+    m_maghribClock->move(kApartThreshold, m_asrClock->y() + m_asrClock->height() + kApartThreshold);
+    QObject::connect(m_maghribClock, SIGNAL(prayerTime(bool)), this, SLOT(onPrayerTime(bool)));
+    QObject::connect(m_maghribClock, SIGNAL(prayerTimeAboutToOver(int)), this, SLOT(onPrayerTimeAboutToOver(int)));
     
-    SalahClock* ishaClock = new SalahClock(container(),  SalahTimes::TimeType::Isha, m_salahTimes, m_minutesToPrayerAboutToOver);
-    ishaClock->move(maghribClock->x() + maghribClock->width() + kApartThreshold, maghribClock->y());
-    QObject::connect(ishaClock, SIGNAL(prayerTime(bool)), this, SLOT(onPrayerTime(bool)));
-    QObject::connect(ishaClock, SIGNAL(prayerTimeAboutToOver()), this, SLOT(onPrayerTimeAboutToOver()));
-
+    m_ishaClock = new SalahClock(container(),  SalahTimes::TimeType::Isha, m_salahTimes, m_minutesToPrayerAboutToOver);
+    m_ishaClock->move(m_maghribClock->x() + m_maghribClock->width() + kApartThreshold, m_maghribClock->y());
+    QObject::connect(m_ishaClock, SIGNAL(prayerTime(bool)), this, SLOT(onPrayerTime(bool)));
+    QObject::connect(m_ishaClock, SIGNAL(prayerTimeAboutToOver(int)), this, SLOT(onPrayerTimeAboutToOver(int)));
+    
     Clock* liveClock = new Clock(container());
     liveClock->liveClock();
     liveClock->resize(300);
-    liveClock->move(ishaClock->x() + ishaClock->width() + kApartThreshold, asrClock->y() - 50);
+    liveClock->move(m_ishaClock->x() + m_ishaClock->width() + kApartThreshold, m_asrClock->y() - 50);
     liveClock->setTitle("Current");
     liveClock->setDisplayTextualTime(true);
 }
@@ -153,13 +158,33 @@ void Salah::onPrayerTime(bool activated)
     }
 }
 
-void Salah::onPrayerTimeAboutToOver()
+void Salah::onPrayerTimeAboutToOver(int minutesLeft)
 {
     _TRACE;
     const int kPrayerTimeAboutToOverNotifySeconds = 3;
     SalahClock* clock = qobject_cast<SalahClock*>(sender());
     clock->setColor(Qt::red);
-    notify("Prayer Time", "Only " + QString::number(clock->minutesPrayerAboutToOver()).toStdString() + " minutes is left for " + clock->title().toStdString(), 
+    LOG(INFO) << "Only " << minutesLeft << " minutes left for " << clock->title() << " prayer";
+    if (minutesLeft <= 0) {
+        return;
+    }
+    notify("Prayer Time", "Only " + QString::number(minutesLeft).toStdString() + " minutes is left for " + clock->title().toStdString(), 
            kPrayerTimeAboutToOverNotifySeconds * 1000);
-    LOG(INFO) << "Only " << clock->minutesPrayerAboutToOver() << " minutes left for " << clock->title() << " prayer";
+}
+
+void Salah::checkDayChange()
+{
+    if (m_salahTimes != nullptr) {
+        QDate currDate = QDate::currentDate();
+        QDate salahDate = QDate(m_salahTimes->year(), m_salahTimes->month(), m_salahTimes->day());
+        if (currDate != salahDate) {
+            LOG(INFO) << "Refreshing salah times for new day";
+            m_salahTimes->build();
+            m_fajrClock->refresh();
+            m_dhuhrClock->refresh();
+            m_asrClock->refresh();
+            m_maghribClock->refresh();
+            m_ishaClock->refresh();
+        }
+    }
 }

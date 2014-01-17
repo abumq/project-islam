@@ -7,6 +7,7 @@ SalahClock::SalahClock(QWidget* parent, SalahTimes::TimeType t, SalahTimes* time
     m_minutesPrayerAboutToOver(minutesPrayerAboutToOver)
 {
     resize(200);
+    setDisplayTextualTime(true);
     refresh();
 }
 
@@ -24,8 +25,9 @@ void SalahClock::paintEvent(QPaintEvent *e)
         m_prayerAboutToOverSignalEmitted = false;
         emit prayerTime(false);
     }
-    if (!m_prayerAboutToOverSignalEmitted && isPrayerTimeAboutToOver()) {
-        emit prayerTimeAboutToOver();
+    int minutesLeft;
+    if (!m_prayerAboutToOverSignalEmitted && isPrayerTimeAboutToOver(&minutesLeft)) {
+        emit prayerTimeAboutToOver(minutesLeft);
         m_prayerAboutToOverSignalEmitted = true;
     }
 }
@@ -73,13 +75,13 @@ bool SalahClock::isPrayerTime()
     }
 }
 
-bool SalahClock::isPrayerTimeAboutToOver()
+bool SalahClock::isPrayerTimeAboutToOver(int* minutesLeft)
 {
     if (m_live || m_minutesPrayerAboutToOver <= 0) {
         return false;
     }
-    int currentPrayerValidFor = minutesForValidity() * 60; // seconds
-    return isPrayerTime() && currentPrayerValidFor <= (m_minutesPrayerAboutToOver * 60);
+    *minutesLeft = minutesForValidity();
+    return isPrayerTime() && (*minutesLeft <= m_minutesPrayerAboutToOver);
 }
 
 void SalahClock::refresh()
@@ -99,7 +101,6 @@ void SalahClock::refresh()
     } else  if (m_timeType == SalahTimes::TimeType::Isha) {
         setTitle("Isha");
     }
-    setDisplayTextualTime(true);
     std::pair<int, int> tPair = m_times->readTimeHourMinutePair(m_timeType);
     setTime(tPair.first, tPair.second);
 }

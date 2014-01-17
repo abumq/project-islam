@@ -10,12 +10,12 @@ class SalahClock : public Clock {
 public:
     SalahClock(QWidget* parent, SalahTimes::TimeType t, SalahTimes* times, int minutesPrayerAboutToOver = -1);
     bool isPrayerTime();
-    bool isPrayerTimeAboutToOver();
+    bool isPrayerTimeAboutToOver(int *minutesLeft);
     void refresh();
     inline int minutesPrayerAboutToOver() { return m_minutesPrayerAboutToOver; }
 signals:
     void prayerTime(bool);
-    void prayerTimeAboutToOver();
+    void prayerTimeAboutToOver(int);
 protected:
     virtual void paintEvent(QPaintEvent *e) ;
 private:

@@ -8,6 +8,12 @@
 #   define __isNan(x) isnan(x)
 #endif // _MSC_VER
 
+
+const std::string SalahTimes::kCalculationMethodKey = "calc_method";
+const std::string SalahTimes::kJuristicMethodKey = "juristic_method";
+const std::string SalahTimes::kAdjustingMethodKey = "adjusting_method";
+const std::string SalahTimes::kMinutesToPrayerAboutToOverKey = "minutes_to_prayer_about_to_over";
+
 SalahMethod::SalahMethod(double fajrAngle, bool maghribIsMinutes, 
                          double maghribValue, bool ishaIsMinutes, double ishaValue) :
     m_fajrAngle(fajrAngle), m_maghribIsMinutes(maghribIsMinutes),
@@ -15,11 +21,6 @@ SalahMethod::SalahMethod(double fajrAngle, bool maghribIsMinutes,
     m_ishaValue(ishaValue)
 {
 }
-
-const std::string SalahTimes::kCalculationMethodKey = "calc_method";
-const std::string SalahTimes::kJuristicMethodKey = "juristic_method";
-const std::string SalahTimes::kAdjustingMethodKey = "adjusting_method";
-const std::string SalahTimes::kMinutesToPrayerAboutToOverKey = "minutes_to_prayer_about_to_over";
 
 SalahTimes::SalahTimes(SalahMethod::CalculationMethod calculationMethod,
                        SalahMethod::JuristicMethod juristicMethod,

@@ -1,9 +1,11 @@
 #include "salah_clock.h"
 #include <QTime>
-SalahClock::SalahClock(QWidget* parent, SalahTimes::TimeType t, SalahTimes* times, int minutesPrayerAboutToOver) : 
+SalahClock::SalahClock(QWidget* parent, SalahTimes::TimeType t, SalahTimes* times, int minutesPrayerAboutToStart, int minutesPrayerAboutToOver) : 
     Clock(parent),
     m_timeType(t),
     m_times(times),
+    m_prayerAboutToStartSignalEmitted(false),
+    m_minutesPrayerAboutToStart(minutesPrayerAboutToStart),
     m_minutesPrayerAboutToOver(minutesPrayerAboutToOver)
 {
     resize(200);
@@ -16,18 +18,25 @@ void SalahClock::paintEvent(QPaintEvent *e)
     Clock::paintEvent(e);
     // TODO: Ability to configurable prayerAboutToStart() reminder for each prayer
     //       and separately for Jumuah as well
+    int minutesLeftStart;
+    if (!m_prayerAboutToStartSignalEmitted && isPrayerTimeAboutToStart(&minutesLeftStart)) {
+        emit prayerTimeAboutToStart(minutesLeftStart);
+        m_prayerAboutToStartSignalEmitted = true;
+    }
     if (!selected() && isPrayerTime()) {
         // reset it for next day
+        m_prayerAboutToStartSignalEmitted = false;
         m_prayerAboutToOverSignalEmitted = false;
         emit prayerTime(true);
     } else if (selected() && !isPrayerTime()) {
         // reset it for next day
+        m_prayerAboutToStartSignalEmitted = false;
         m_prayerAboutToOverSignalEmitted = false;
         emit prayerTime(false);
     }
-    int minutesLeft;
-    if (!m_prayerAboutToOverSignalEmitted && isPrayerTimeAboutToOver(&minutesLeft)) {
-        emit prayerTimeAboutToOver(minutesLeft);
+    int minutesLeftEnd;
+    if (!m_prayerAboutToOverSignalEmitted && isPrayerTimeAboutToOver(&minutesLeftEnd)) {
+        emit prayerTimeAboutToOver(minutesLeftEnd);
         m_prayerAboutToOverSignalEmitted = true;
     }
 }
@@ -75,6 +84,18 @@ bool SalahClock::isPrayerTime()
     }
 }
 
+bool SalahClock::isPrayerTimeAboutToStart(int *minutesLeft)
+{
+    if (m_live || m_minutesPrayerAboutToStart <= 0) {
+        return false;
+    }
+    *minutesLeft = QTime::currentTime().secsTo(QTime(m_h, m_m)) / 60;
+    if (*minutesLeft <= 0) {
+        return false; // already passed prayer
+    }
+    return !isPrayerTime() && (*minutesLeft <= m_minutesPrayerAboutToStart);
+}
+
 bool SalahClock::isPrayerTimeAboutToOver(int* minutesLeft)
 {
     if (m_live || m_minutesPrayerAboutToOver <= 0) {
@@ -91,7 +112,7 @@ void SalahClock::refresh()
     } else if (m_timeType == SalahTimes::TimeType::Sunrise) {
         setTitle("Sunrise");
     } else if (m_timeType == SalahTimes::TimeType::Dhuhr) {
-        setTitle("Dhuhr"); // TODO: If friday say "Jumuah" instead
+        setTitle(QDate::currentDate().dayOfWeek() == 5 ? "Jumu'ah" : "Dhuhr");
     } else if (m_timeType == SalahTimes::TimeType::Asr) {
         setTitle("Asr");
     } else if (m_timeType == SalahTimes::TimeType::Sunset) {

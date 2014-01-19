@@ -8,12 +8,6 @@
 #   define __isNan(x) isnan(x)
 #endif // _MSC_VER
 
-
-const std::string SalahTimes::kCalculationMethodKey = "calc_method";
-const std::string SalahTimes::kJuristicMethodKey = "juristic_method";
-const std::string SalahTimes::kAdjustingMethodKey = "adjusting_method";
-const std::string SalahTimes::kMinutesToPrayerAboutToOverKey = "minutes_to_prayer_about_to_over";
-
 SalahMethod::SalahMethod(double fajrAngle, bool maghribIsMinutes, 
                          double maghribValue, bool ishaIsMinutes, double ishaValue) :
     m_fajrAngle(fajrAngle), m_maghribIsMinutes(maghribIsMinutes),
@@ -21,6 +15,12 @@ SalahMethod::SalahMethod(double fajrAngle, bool maghribIsMinutes,
     m_ishaValue(ishaValue)
 {
 }
+
+const std::string SalahTimes::kCalculationMethodKey = "calc_method";
+const std::string SalahTimes::kJuristicMethodKey = "juristic_method";
+const std::string SalahTimes::kAdjustingMethodKey = "adjusting_method";
+const std::string SalahTimes::kMinutesToPrayerAboutToStartKey = "minutes_to_prayer_about_to_start";
+const std::string SalahTimes::kMinutesToPrayerAboutToOverKey = "minutes_to_prayer_about_to_over";
 
 SalahTimes::SalahTimes(SalahMethod::CalculationMethod calculationMethod,
                        SalahMethod::JuristicMethod juristicMethod,
@@ -58,9 +58,7 @@ void SalahTimes::build(double latitude, double longitude, double timezone)
 }
 
 void SalahTimes::build(int year, int month, int day, double latitude, double longitude, double timezone)
-{
-    LOG(INFO) << day << "/" << month << "/" << year << " @ " << latitude << ":" << longitude << "; timezone: " << timezone;
-    
+{   
     m_latitude = latitude;
     m_longitude = longitude;
     m_timezone = timezone;
@@ -68,8 +66,11 @@ void SalahTimes::build(int year, int month, int day, double latitude, double lon
     m_month = month;
     m_day = day;
     m_julianDate = datetime::georgianToJulianDate(m_year, m_month, m_day);
+    LOG(INFO) << "Building salah times for " << m_day << "/" << m_month << "/" << m_year 
+              << " @ (" << m_latitude << ", " << m_longitude << ") timezone: " << m_timezone;
     
     // Default values
+    m_times.clear();
     double defaultTimes[] = { 5, 6, 12, 13, 18, 18, 18 };
     int i = 0;
     int t = 1;

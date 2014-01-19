@@ -131,6 +131,7 @@ public:
     static const std::string kCalculationMethodKey;
     static const std::string kJuristicMethodKey;
     static const std::string kAdjustingMethodKey;
+    static const std::string kMinutesToPrayerAboutToStartKey;
     static const std::string kMinutesToPrayerAboutToOverKey;
     
     enum class TimeType {

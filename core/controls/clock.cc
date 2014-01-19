@@ -176,7 +176,6 @@ void Clock::setColor(Qt::GlobalColor color)
     p.setColor(QPalette::Background, color);
     setAutoFillBackground(true);
     setPalette(p);
-    m_selected = true;
 }
 
 void Clock::select()

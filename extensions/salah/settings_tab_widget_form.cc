@@ -67,7 +67,9 @@ SettingsTabWidgetForm::SettingsTabWidgetForm(QWidget *parent, const LoadSettingF
         ++i;
     } while (a <= SalahMethod::kMaxAdjustingMethod);
     
-    // Minutes expire warning
+    // Minutes warning
+    QVariant qv_minutesStartWarning = m_loadFunc(QString::fromStdString(SalahTimes::kMinutesToPrayerAboutToStartKey), QVariant(10));
+    ui->spnMinPrayerStart->setValue(qv_minutesStartWarning.toInt());
     QVariant qv_minutesExpireWarning = m_loadFunc(QString::fromStdString(SalahTimes::kMinutesToPrayerAboutToOverKey), QVariant(30));
     ui->spnMinPrayerOver->setValue(qv_minutesExpireWarning.toInt());
 }
@@ -106,4 +108,10 @@ void SettingsTabWidgetForm::on_spnMinPrayerOver_valueChanged(int val)
 {
     _TRACE;
     addToQueue(QString::fromStdString(SalahTimes::kMinutesToPrayerAboutToOverKey), val);
+}
+
+void SettingsTabWidgetForm::on_spnMinPrayerStart_valueChanged(int val)
+{
+    _TRACE;
+    addToQueue(QString::fromStdString(SalahTimes::kMinutesToPrayerAboutToStartKey), val);
 }

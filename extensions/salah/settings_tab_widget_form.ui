@@ -31,7 +31,7 @@
      <x>20</x>
      <y>10</y>
      <width>721</width>
-     <height>191</height>
+     <height>231</height>
     </rect>
    </property>
    <property name="title">
@@ -110,7 +110,7 @@
     <property name="geometry">
      <rect>
       <x>20</x>
-      <y>160</y>
+      <y>200</y>
       <width>341</width>
       <height>17</height>
      </rect>
@@ -123,7 +123,7 @@
     <property name="geometry">
      <rect>
       <x>360</x>
-      <y>150</y>
+      <y>190</y>
       <width>101</width>
       <height>27</height>
      </rect>
@@ -133,6 +133,35 @@
     </property>
     <property name="value">
      <number>30</number>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_5">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>160</y>
+      <width>331</width>
+      <height>17</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Minutes before prayer is about to start warning:</string>
+    </property>
+   </widget>
+   <widget class="QSpinBox" name="spnMinPrayerStart">
+    <property name="geometry">
+     <rect>
+      <x>360</x>
+      <y>160</y>
+      <width>101</width>
+      <height>27</height>
+     </rect>
+    </property>
+    <property name="maximum">
+     <number>500</number>
+    </property>
+    <property name="singleStep">
+     <number>10</number>
     </property>
    </widget>
   </widget>

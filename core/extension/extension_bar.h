@@ -11,9 +11,7 @@ template <class T> class QVector;
 class ExtensionBar : public QToolBar
 {
     Q_OBJECT
-    
 public:
-    
     static const int kExtensionBarWidth = 82;
     
     ExtensionBar(QWidget *parent, QWidget* container);

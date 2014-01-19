@@ -36,12 +36,14 @@ public slots:
     virtual void onActivated();
     virtual void onDeactivated();
     void onPrayerTime(bool);
+    void onPrayerTimeAboutToStart(int minutesLeft);
     void onPrayerTimeAboutToOver(int minutesLeft);
     void checkDayChange();
 private:
     SalahTimes* m_salahTimes;
     SettingsTabWidgetForm* m_settingsWidgetForm;
     QiblaCompass* m_qiblaCompass;
+    int m_minutesToPrayerAboutToStart;
     int m_minutesToPrayerAboutToOver;
     
     SalahClock* m_fajrClock;

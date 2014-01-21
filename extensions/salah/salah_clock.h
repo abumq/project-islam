@@ -14,6 +14,8 @@ public:
     bool isPrayerTime();
     bool isPrayerTimeAboutToOver(int *minutesLeft);
     void refresh();
+public slots:
+    virtual void emitRequiredSignals();
 signals:
     void prayerTimeAboutToStart(int);
     void prayerTime(bool);

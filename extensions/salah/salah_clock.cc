@@ -1,5 +1,6 @@
 #include "salah_clock.h"
 #include <QTime>
+#include "core/logging/logging.h"
 SalahClock::SalahClock(QWidget* parent, SalahTimes::TimeType t, SalahTimes* times, int minutesPrayerAboutToStart, int minutesPrayerAboutToOver) : 
     Clock(parent),
     m_timeType(t),
@@ -16,29 +17,6 @@ SalahClock::SalahClock(QWidget* parent, SalahTimes::TimeType t, SalahTimes* time
 void SalahClock::paintEvent(QPaintEvent *e) 
 {
     Clock::paintEvent(e);
-    // TODO: Ability to configurable prayerAboutToStart() reminder for each prayer
-    //       and separately for Jumuah as well
-    int minutesLeftStart;
-    if (!m_prayerAboutToStartSignalEmitted && isPrayerTimeAboutToStart(&minutesLeftStart)) {
-        emit prayerTimeAboutToStart(minutesLeftStart);
-        m_prayerAboutToStartSignalEmitted = true;
-    }
-    if (!selected() && isPrayerTime()) {
-        // reset it for next day
-        m_prayerAboutToStartSignalEmitted = false;
-        m_prayerAboutToOverSignalEmitted = false;
-        emit prayerTime(true);
-    } else if (selected() && !isPrayerTime()) {
-        // reset it for next day
-        m_prayerAboutToStartSignalEmitted = false;
-        m_prayerAboutToOverSignalEmitted = false;
-        emit prayerTime(false);
-    }
-    int minutesLeftEnd;
-    if (!m_prayerAboutToOverSignalEmitted && isPrayerTimeAboutToOver(&minutesLeftEnd)) {
-        emit prayerTimeAboutToOver(minutesLeftEnd);
-        m_prayerAboutToOverSignalEmitted = true;
-    }
 }
 
 int SalahClock::minutesForValidity() 
@@ -124,4 +102,31 @@ void SalahClock::refresh()
     }
     std::pair<int, int> tPair = m_times->readTimeHourMinutePair(m_timeType);
     setTime(tPair.first, tPair.second);
+}
+
+void SalahClock::emitRequiredSignals()
+{
+    // TODO: Ability to configurable prayerAboutToStart() reminder for each prayer
+    //       and separately for Jumuah as well
+    int minutesLeftStart;
+    if (!m_prayerAboutToStartSignalEmitted && isPrayerTimeAboutToStart(&minutesLeftStart)) {
+        emit prayerTimeAboutToStart(minutesLeftStart);
+        m_prayerAboutToStartSignalEmitted = true;
+    }
+    if (!selected() && isPrayerTime()) {
+        // reset it for next day
+        m_prayerAboutToStartSignalEmitted = false;
+        m_prayerAboutToOverSignalEmitted = false;
+        emit prayerTime(true);
+    } else if (selected() && !isPrayerTime()) {
+        // reset it for next day
+        m_prayerAboutToStartSignalEmitted = false;
+        m_prayerAboutToOverSignalEmitted = false;
+        emit prayerTime(false);
+    }
+    int minutesLeftEnd;
+    if (!m_prayerAboutToOverSignalEmitted && isPrayerTimeAboutToOver(&minutesLeftEnd)) {
+        emit prayerTimeAboutToOver(minutesLeftEnd);
+        m_prayerAboutToOverSignalEmitted = true;
+    }
 }

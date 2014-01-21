@@ -4,6 +4,7 @@
 #include <QPainter>
 #include <QTextItem>
 #include "core/settings_loader.h"
+#include "core/logging/logging.h"
 
 QColor Clock::kHourColor = QColor(0, 0, 0, 150);
 QColor Clock::kMinuteColor = QColor(0, 0, 0, 100);
@@ -13,7 +14,7 @@ Clock::Clock(QWidget *parent) :
     QWidget(parent)
 {
     m_liveTimer = new QTimer(this);
-    connect(m_liveTimer, SIGNAL(timeout()), this, SLOT(update()));
+    connect(m_liveTimer, SIGNAL(timeout()), this, SLOT(emitRequiredSignals()));
     // Update clock every second
     m_liveTimer->start(1000);
     
@@ -70,11 +71,12 @@ void Clock::paintEvent(QPaintEvent *)
     };
     
     int side = qMin(width(), height());
-    QTime time;
+   
     if (m_live) {
-        time = QTime::currentTime();
-    } else {
-        time = QTime(m_h, m_m, m_s);
+        QTime time = QTime::currentTime();
+        m_h = time.hour();
+        m_m = time.minute();
+        m_s = time.second();
     }
     
     QPainter painter(this);
@@ -86,7 +88,7 @@ void Clock::paintEvent(QPaintEvent *)
     painter.setBrush(kHourColor);
     
     painter.save();
-    painter.rotate(30.0 * ((time.hour() + time.minute() / 60.0)));
+    painter.rotate(30.0 * ((m_h + m_m / 60.0)));
     painter.drawConvexPolygon(hourHand, 3);
     painter.restore();
     
@@ -101,7 +103,7 @@ void Clock::paintEvent(QPaintEvent *)
     painter.setBrush(kMinuteColor);
     
     painter.save();
-    painter.rotate(6.0 * (time.minute() + time.second() / 60.0));
+    painter.rotate(6.0 * (m_m + m_s / 60.0));
     painter.drawConvexPolygon(minuteHand, 3);
     painter.restore();
     
@@ -116,26 +118,27 @@ void Clock::paintEvent(QPaintEvent *)
     painter.setPen(kTextColor);
     if (m_displayTextualTime) {
         painter.setFont(QFont("Arial", 15));
-        QString tH = QString::number(time.hour());
+        QString tH = QString::number(m_h);
         if (tH.length() == 1) {
             tH = "0" + tH;
         }
-        QString tM = QString::number(time.minute());
+        QString tM = QString::number(m_m);
         if (tM.length() == 1) {
             tM = "0" + tM;
         }
-        QString tS = QString::number(time.second());
+        QString tS = QString::number(m_s);
         if (tS.length() == 1) {
             tS = "0" + tS;
         }
-        QString t = tH + ":" + tM + (time.second() == 0 ? "" : ":" + tS);
-        painter.drawText(time.second() == 0 ? -20 : -30, -20, t);
+        QString t = tH + ":" + tM + (m_s == 0 ? "" : ":" + tS);
+        painter.drawText(m_s == 0 ? -20 : -30, -20, t);
     }
     if (!m_title.isEmpty()) {
         int offset = -(m_title.length() * 5);
         painter.setFont(QFont("Arial", 15, QFont::Bold));
         painter.drawText(offset, -50, m_title);
     }
+    emitRequiredSignals();
 }
 
 void Clock::setTime(int h, int m, int s)
@@ -193,4 +196,9 @@ void Clock::deselect()
 const QString& Clock::title() const
 {
     return m_title;
+}
+
+void Clock::emitRequiredSignals()
+{
+    update();
 }

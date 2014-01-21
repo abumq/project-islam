@@ -30,6 +30,8 @@ public:
     inline int h() const { return m_h; }
     inline int m() const { return m_m; }
     inline int s() const { return m_s; }
+public slots:
+    virtual void emitRequiredSignals();
 protected:
     int m_h;
     int m_m;

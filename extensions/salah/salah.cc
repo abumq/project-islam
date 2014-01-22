@@ -159,7 +159,7 @@ void Salah::onPrayerTime(bool activated)
         LOG(INFO) << "Prayer time for [" << clock->title() << "]";
     } else {
         clock->deselect();
-        notify("Prayer Time", "Time for " + clock->title().toStdString() + " prayer is over", kPrayerTimeOverNotifySeconds * 1000);
+        notify("Prayer Time Over", "Time for " + clock->title().toStdString() + " prayer is over", kPrayerTimeOverNotifySeconds * 1000);
         LOG(INFO) << "Prayer time over for [" << clock->title() << "]";
     }
 }
@@ -173,6 +173,7 @@ void Salah::onPrayerTimeAboutToStart(int minutesLeft)
     if (minutesLeft <= 0) {
         return;
     }
+    notify("Prayer About to Start", clock->title().toStdString() + " prayer starting in " + QString::number(minutesLeft).toStdString() + " minutes", 10000);
 }
 
 void Salah::onPrayerTimeAboutToOver(int minutesLeft)

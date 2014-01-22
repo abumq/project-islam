@@ -7,6 +7,7 @@
 #include <QLabel>
 #include <QProcess>
 #include <QSplashScreen>
+#include <QSystemTrayIcon>
 
 #include "settings_dialog.h"
 #include "core/utils/memory.h"
@@ -24,16 +25,23 @@ MainWindow::MainWindow(QSplashScreen *splashScreen) :
     ui(new Ui::MainWindow),
     m_splashScreen(splashScreen)
 {
-    memory::turnToNullPtr(m_container, m_extensionBar);
+    memory::turnToNullPtr(m_container, m_extensionBar, m_trayIcon);
     ui->setupUi(this);
     m_settingsDialog = new SettingsDialog(this, this);
     initialize();
+    if (QSystemTrayIcon::isSystemTrayAvailable()) {
+        m_trayIcon = new QSystemTrayIcon(this);
+        m_trayIcon->setIcon(QIcon(":/project-tray"));
+        m_trayIcon->hide(); // FIXME: This does not work yet!
+    } else {
+        DLOG(INFO) << "System tray not available";
+    }
 }
 
 MainWindow::~MainWindow()
 {
     _TRACE;
-    memory::deleteAll(m_extensionBar, m_container, ui);
+    memory::deleteAll(m_extensionBar, m_container, m_trayIcon, ui);
 }
 
 void MainWindow::initialize()

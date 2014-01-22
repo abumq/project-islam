@@ -4,7 +4,6 @@
 #include <QPainter>
 #include <QTextItem>
 #include "core/settings_loader.h"
-#include "core/logging/logging.h"
 
 QColor Clock::kHourColor = QColor(0, 0, 0, 150);
 QColor Clock::kMinuteColor = QColor(0, 0, 0, 100);

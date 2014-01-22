@@ -17,6 +17,7 @@ class QSplashScreen;
 class AbstractExtension;
 class ExtensionBar;
 class SettingsDialog;
+class QSystemTrayIcon;
 
 class MainWindow : public QMainWindow
 {
@@ -61,6 +62,7 @@ private:
     data::DataHolder m_dataHolder;
     UpdateManager m_updateManager;
     SettingsDialog* m_settingsDialog;
+    QSystemTrayIcon* m_trayIcon;
 };
 
 #endif // MAINWINDOW_H

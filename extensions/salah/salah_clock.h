@@ -9,10 +9,11 @@ class SalahClock : public Clock {
     Q_OBJECT
 public:
     SalahClock(QWidget* parent, SalahTimes::TimeType t, SalahTimes* times, int minutesPrayerAboutToStart = -1, 
-    int minutesPrayerAboutToOver = -1);
-    bool isPrayerTimeAboutToStart(int *minutesLeft);
+               int minutesPrayerAboutToOver = -1);
+    virtual ~SalahClock();
+    bool isPrayerTimeAboutToStart(int* minutesLeft);
     bool isPrayerTime();
-    bool isPrayerTimeAboutToOver(int *minutesLeft);
+    bool isPrayerTimeAboutToOver(int* minutesLeft);
     void refresh();
 public slots:
     virtual void emitRequiredSignals();

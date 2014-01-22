@@ -15,7 +15,7 @@ public:
     static QColor kTextColor;
     
     explicit Clock(QWidget *parent = 0);
-    ~Clock();
+    virtual ~Clock();
     void liveClock();
     void resize(int);
     void paintEvent(QPaintEvent *);

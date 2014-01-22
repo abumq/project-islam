@@ -5,6 +5,7 @@
     </qresource>
     <qresource prefix="/">
         <file alias="project-ico">images/project-islam.ico</file>
+        <file alias="project-tray">images/project-islam22.png</file>
         <file alias="project-png">images/project-islam.png</file>
     </qresource>
     <qresource prefix="/extensions/elements">

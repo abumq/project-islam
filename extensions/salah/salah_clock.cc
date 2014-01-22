@@ -1,7 +1,8 @@
 #include "salah_clock.h"
 #include <QTime>
 #include "core/logging/logging.h"
-SalahClock::SalahClock(QWidget* parent, SalahTimes::TimeType t, SalahTimes* times, int minutesPrayerAboutToStart, int minutesPrayerAboutToOver) : 
+SalahClock::SalahClock(QWidget* parent, SalahTimes::TimeType t, SalahTimes* times, 
+                       int minutesPrayerAboutToStart, int minutesPrayerAboutToOver) : 
     Clock(parent),
     m_timeType(t),
     m_times(times),
@@ -14,7 +15,11 @@ SalahClock::SalahClock(QWidget* parent, SalahTimes::TimeType t, SalahTimes* time
     refresh();
 }
 
-void SalahClock::paintEvent(QPaintEvent *e) 
+SalahClock::~SalahClock()
+{
+}
+
+void SalahClock::paintEvent(QPaintEvent* e) 
 {
     Clock::paintEvent(e);
 }
@@ -48,7 +53,7 @@ int SalahClock::minutesForValidity()
     return 5; // Sunset and sunrise valid for 5 minutes
 }
 
-bool SalahClock::isPrayerTime() 
+bool SalahClock::isPrayerTime()
 {
     if (m_live) {
         return false;
@@ -62,7 +67,7 @@ bool SalahClock::isPrayerTime()
     }
 }
 
-bool SalahClock::isPrayerTimeAboutToStart(int *minutesLeft)
+bool SalahClock::isPrayerTimeAboutToStart(int* minutesLeft)
 {
     if (m_live || m_minutesPrayerAboutToStart <= 0) {
         return false;

@@ -36,6 +36,8 @@ This project is still being developed but is ready to be used as well; but here 
 
 [![Extension (Salah)](https://raw2.github.com/mkhan3189/project-islam/master/resources/screenshots/extension-salah.png)](https://raw2.github.com/mkhan3189/project-islam/master/resources/screenshots/extension-salah.png)
 
+[![Salah Notification](https://raw2.github.com/mkhan3189/project-islam/master/resources/screenshots/salah-notification.png)](https://raw2.github.com/mkhan3189/project-islam/master/resources/screenshots/salah-notification.png)
+
 [![Settings (General)](https://raw2.github.com/mkhan3189/project-islam/master/resources/screenshots/settings-general.png)](https://raw2.github.com/mkhan3189/project-islam/master/resources/screenshots/settings-general.png)
 
 [![Settings (Quran)](https://raw2.github.com/mkhan3189/project-islam/master/resources/screenshots/settings-quran.png)](https://raw2.github.com/mkhan3189/project-islam/master/resources/screenshots/settings-quran.png)

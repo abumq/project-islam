@@ -31,7 +31,7 @@
      <x>20</x>
      <y>10</y>
      <width>721</width>
-     <height>231</height>
+     <height>341</height>
     </rect>
    </property>
    <property name="title">
@@ -53,7 +53,7 @@
      <item row="0" column="0">
       <widget class="QLabel" name="label">
        <property name="text">
-        <string>Calculation Method:</string>
+        <string>Calculation Method: &lt;b&gt;*&lt;/b&gt;</string>
        </property>
       </widget>
      </item>
@@ -75,7 +75,7 @@
      <item row="0" column="0">
       <widget class="QLabel" name="label_2">
        <property name="text">
-        <string>Juristic Method (Asr):</string>
+        <string>Juristic Method (Asr): &lt;b&gt;*&lt;/b&gt;</string>
        </property>
       </widget>
      </item>
@@ -97,7 +97,7 @@
      <item row="0" column="0">
       <widget class="QLabel" name="label_3">
        <property name="text">
-        <string>Adjusting Method:</string>
+        <string>Adjusting Method: &lt;b&gt;*&lt;/b&gt;</string>
        </property>
       </widget>
      </item>
@@ -105,35 +105,6 @@
       <widget class="QComboBox" name="cboAdjustingMethod"/>
      </item>
     </layout>
-   </widget>
-   <widget class="QLabel" name="label_4">
-    <property name="geometry">
-     <rect>
-      <x>20</x>
-      <y>200</y>
-      <width>341</width>
-      <height>17</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Minutes before prayer is about to expire warning:</string>
-    </property>
-   </widget>
-   <widget class="QSpinBox" name="spnMinPrayerOver">
-    <property name="geometry">
-     <rect>
-      <x>360</x>
-      <y>190</y>
-      <width>101</width>
-      <height>27</height>
-     </rect>
-    </property>
-    <property name="maximum">
-     <number>500</number>
-    </property>
-    <property name="value">
-     <number>30</number>
-    </property>
    </widget>
    <widget class="QLabel" name="label_5">
     <property name="geometry">
@@ -145,24 +116,211 @@
      </rect>
     </property>
     <property name="text">
-     <string>Minutes before prayer is about to start warning:</string>
+     <string>Minutes before prayer is about to start warning: &lt;b&gt;*&lt;/b&gt;</string>
     </property>
    </widget>
-   <widget class="QSpinBox" name="spnMinPrayerStart">
+   <widget class="QWidget" name="layoutWidget_2">
     <property name="geometry">
      <rect>
-      <x>360</x>
-      <y>160</y>
-      <width>101</width>
-      <height>27</height>
+      <x>60</x>
+      <y>230</y>
+      <width>180</width>
+      <height>29</height>
      </rect>
     </property>
-    <property name="maximum">
-     <number>500</number>
+    <layout class="QGridLayout" name="gridLayout_2">
+     <item row="0" column="0">
+      <widget class="QLabel" name="label_8">
+       <property name="text">
+        <string>Maghrib</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="1">
+      <widget class="QSpinBox" name="spnMinPrayerStartMaghrib"/>
+     </item>
+     <item row="0" column="2">
+      <widget class="QLabel" name="label_9">
+       <property name="text">
+        <string>minutes</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+   <widget class="QWidget" name="layoutWidget_3">
+    <property name="geometry">
+     <rect>
+      <x>440</x>
+      <y>230</y>
+      <width>180</width>
+      <height>29</height>
+     </rect>
     </property>
-    <property name="singleStep">
-     <number>10</number>
+    <layout class="QGridLayout" name="gridLayout_3">
+     <item row="0" column="0">
+      <widget class="QLabel" name="label_10">
+       <property name="text">
+        <string>Jumu'ah</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="1">
+      <widget class="QSpinBox" name="spnMinPrayerStartJumuah"/>
+     </item>
+     <item row="0" column="2">
+      <widget class="QLabel" name="label_11">
+       <property name="text">
+        <string>minutes</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+   <widget class="QWidget" name="layoutWidget_4">
+    <property name="geometry">
+     <rect>
+      <x>240</x>
+      <y>190</y>
+      <width>168</width>
+      <height>29</height>
+     </rect>
     </property>
+    <layout class="QGridLayout" name="gridLayout_4">
+     <item row="0" column="0">
+      <widget class="QLabel" name="label_12">
+       <property name="text">
+        <string>Dhuhr</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="1">
+      <widget class="QSpinBox" name="spnMinPrayerStartDhuhr"/>
+     </item>
+     <item row="0" column="2">
+      <widget class="QLabel" name="label_13">
+       <property name="text">
+        <string>minutes</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+   <widget class="QWidget" name="layoutWidget_5">
+    <property name="geometry">
+     <rect>
+      <x>260</x>
+      <y>230</y>
+      <width>154</width>
+      <height>29</height>
+     </rect>
+    </property>
+    <layout class="QGridLayout" name="gridLayout_5">
+     <item row="0" column="0">
+      <widget class="QLabel" name="label_14">
+       <property name="text">
+        <string>Isha</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="1">
+      <widget class="QSpinBox" name="spnMinPrayerStartIsha"/>
+     </item>
+     <item row="0" column="2">
+      <widget class="QLabel" name="label_15">
+       <property name="text">
+        <string>minutes</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+   <widget class="QWidget" name="layoutWidget_6">
+    <property name="geometry">
+     <rect>
+      <x>420</x>
+      <y>190</y>
+      <width>154</width>
+      <height>29</height>
+     </rect>
+    </property>
+    <layout class="QGridLayout" name="gridLayout_6">
+     <item row="0" column="0">
+      <widget class="QLabel" name="label_16">
+       <property name="text">
+        <string>Asr</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="1">
+      <widget class="QSpinBox" name="spnMinPrayerStartAsr"/>
+     </item>
+     <item row="0" column="2">
+      <widget class="QLabel" name="label_17">
+       <property name="text">
+        <string>minutes</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+   <widget class="QWidget" name="layoutWidget">
+    <property name="geometry">
+     <rect>
+      <x>60</x>
+      <y>190</y>
+      <width>154</width>
+      <height>29</height>
+     </rect>
+    </property>
+    <layout class="QGridLayout" name="gridLayout">
+     <item row="0" column="0">
+      <widget class="QLabel" name="label_6">
+       <property name="text">
+        <string>Fajr:</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="1">
+      <widget class="QSpinBox" name="spnMinPrayerStartFajr"/>
+     </item>
+     <item row="0" column="2">
+      <widget class="QLabel" name="label_7">
+       <property name="text">
+        <string>minutes</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+   <widget class="QWidget" name="">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>270</y>
+      <width>408</width>
+      <height>29</height>
+     </rect>
+    </property>
+    <layout class="QGridLayout" name="gridLayout_7">
+     <item row="0" column="0">
+      <widget class="QLabel" name="label_4">
+       <property name="text">
+        <string>Minutes before prayer is about to expire warning: &lt;b&gt;*&lt;/b&gt;</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="1">
+      <widget class="QSpinBox" name="spnMinPrayerOver">
+       <property name="maximum">
+        <number>500</number>
+       </property>
+       <property name="value">
+        <number>30</number>
+       </property>
+      </widget>
+     </item>
+    </layout>
    </widget>
   </widget>
  </widget>

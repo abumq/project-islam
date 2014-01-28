@@ -13,7 +13,7 @@ class Salah : public ExtensionBase
     Q_OBJECT
     Q_INTERFACES(ExtensionBase)
     Q_PLUGIN_METADATA(IID "ProjectIslam.Api.ExtensionBase.Salah.v0.1.0")
-
+    
     static const unsigned int kMajorVersion = 0;
     static const unsigned int kMinorVersion = 1;
     static const unsigned int kPatchVersion = 0;
@@ -31,7 +31,7 @@ public:
     void displayClocks();
     
 public slots:
-
+    
     virtual void onContainerGeometryChanged(int, int);
     virtual void onActivated();
     virtual void onDeactivated();
@@ -43,8 +43,15 @@ private:
     SalahTimes* m_salahTimes;
     SettingsTabWidgetForm* m_settingsWidgetForm;
     QiblaCompass* m_qiblaCompass;
-    int m_minutesToPrayerAboutToStart;
+    
     int m_minutesToPrayerAboutToOver;
+    
+    int m_minutesToPrayerAboutToStartFajr;
+    int m_minutesToPrayerAboutToStartDhuhr;
+    int m_minutesToPrayerAboutToStartAsr;
+    int m_minutesToPrayerAboutToStartMaghrib;
+    int m_minutesToPrayerAboutToStartIsha;
+    int m_minutesToPrayerAboutToStartJumuah;
     
     SalahClock* m_fajrClock;
     SalahClock* m_dhuhrClock;

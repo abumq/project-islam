@@ -95,7 +95,7 @@ void SalahClock::refresh()
     } else if (m_timeType == SalahTimes::TimeType::Sunrise) {
         setTitle("Sunrise");
     } else if (m_timeType == SalahTimes::TimeType::Dhuhr) {
-        setTitle(QDate::currentDate().dayOfWeek() == 5 ? "Jumu'ah" : "Dhuhr");
+        setTitle(isJumuah() ? "Jumu'ah" : "Dhuhr");
     } else if (m_timeType == SalahTimes::TimeType::Asr) {
         setTitle("Asr");
     } else if (m_timeType == SalahTimes::TimeType::Sunset) {
@@ -107,6 +107,11 @@ void SalahClock::refresh()
     }
     std::pair<int, int> tPair = m_times->readTimeHourMinutePair(m_timeType);
     setTime(tPair.first, tPair.second);
+}
+
+bool SalahClock::isJumuah()
+{
+    return QDate::currentDate().dayOfWeek() == 5;
 }
 
 void SalahClock::emitRequiredSignals()

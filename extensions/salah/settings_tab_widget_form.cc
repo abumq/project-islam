@@ -68,8 +68,19 @@ SettingsTabWidgetForm::SettingsTabWidgetForm(QWidget *parent, const LoadSettingF
     } while (a <= SalahMethod::kMaxAdjustingMethod);
     
     // Minutes warning
-    QVariant qv_minutesStartWarning = m_loadFunc(QString::fromStdString(SalahTimes::kMinutesToPrayerAboutToStartKey), QVariant(10));
-    ui->spnMinPrayerStart->setValue(qv_minutesStartWarning.toInt());
+    QVariant qv_minutesStartFajrWarning = m_loadFunc(QString::fromStdString(SalahTimes::kMinutesToPrayerAboutToStartFajrKey), QVariant(10));
+    ui->spnMinPrayerStartFajr->setValue(qv_minutesStartFajrWarning.toInt());
+    QVariant qv_minutesStartDhuhrWarning = m_loadFunc(QString::fromStdString(SalahTimes::kMinutesToPrayerAboutToStartDhuhrKey), QVariant(10));
+    ui->spnMinPrayerStartDhuhr->setValue(qv_minutesStartDhuhrWarning.toInt());
+    QVariant qv_minutesStartAsrWarning = m_loadFunc(QString::fromStdString(SalahTimes::kMinutesToPrayerAboutToStartAsrKey), QVariant(10));
+    ui->spnMinPrayerStartAsr->setValue(qv_minutesStartAsrWarning.toInt());
+    QVariant qv_minutesStartMaghribWarning = m_loadFunc(QString::fromStdString(SalahTimes::kMinutesToPrayerAboutToStartMaghribKey), QVariant(10));
+    ui->spnMinPrayerStartMaghrib->setValue(qv_minutesStartMaghribWarning.toInt());
+    QVariant qv_minutesStartIshaWarning = m_loadFunc(QString::fromStdString(SalahTimes::kMinutesToPrayerAboutToStartIshaKey), QVariant(10));
+    ui->spnMinPrayerStartIsha->setValue(qv_minutesStartIshaWarning.toInt());
+    QVariant qv_minutesStartJumuahWarning = m_loadFunc(QString::fromStdString(SalahTimes::kMinutesToPrayerAboutToStartJumuahKey), QVariant(30));
+    ui->spnMinPrayerStartJumuah->setValue(qv_minutesStartJumuahWarning.toInt());
+    
     QVariant qv_minutesExpireWarning = m_loadFunc(QString::fromStdString(SalahTimes::kMinutesToPrayerAboutToOverKey), QVariant(30));
     ui->spnMinPrayerOver->setValue(qv_minutesExpireWarning.toInt());
 }
@@ -110,8 +121,38 @@ void SettingsTabWidgetForm::on_spnMinPrayerOver_valueChanged(int val)
     addToQueue(QString::fromStdString(SalahTimes::kMinutesToPrayerAboutToOverKey), val);
 }
 
-void SettingsTabWidgetForm::on_spnMinPrayerStart_valueChanged(int val)
+void SettingsTabWidgetForm::on_spnMinPrayerStartFajr_valueChanged(int val)
 {
     _TRACE;
-    addToQueue(QString::fromStdString(SalahTimes::kMinutesToPrayerAboutToStartKey), val);
+    addToQueue(QString::fromStdString(SalahTimes::kMinutesToPrayerAboutToStartFajrKey), val);
+}
+
+void SettingsTabWidgetForm::on_spnMinPrayerStartDhuhr_valueChanged(int val)
+{
+    _TRACE;
+    addToQueue(QString::fromStdString(SalahTimes::kMinutesToPrayerAboutToStartDhuhrKey), val);
+}
+
+void SettingsTabWidgetForm::on_spnMinPrayerStartAsr_valueChanged(int val)
+{
+    _TRACE;
+    addToQueue(QString::fromStdString(SalahTimes::kMinutesToPrayerAboutToStartAsrKey), val);
+}
+
+void SettingsTabWidgetForm::on_spnMinPrayerStartMaghrib_valueChanged(int val)
+{
+    _TRACE;
+    addToQueue(QString::fromStdString(SalahTimes::kMinutesToPrayerAboutToStartMaghribKey), val);
+}
+
+void SettingsTabWidgetForm::on_spnMinPrayerStartIsha_valueChanged(int val)
+{
+    _TRACE;
+    addToQueue(QString::fromStdString(SalahTimes::kMinutesToPrayerAboutToStartIshaKey), val);
+}
+
+void SettingsTabWidgetForm::on_spnMinPrayerStartJumuah_valueChanged(int val)
+{
+    _TRACE;
+    addToQueue(QString::fromStdString(SalahTimes::kMinutesToPrayerAboutToStartJumuahKey), val);
 }

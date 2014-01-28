@@ -41,7 +41,7 @@ int notify(const std::string& title, const std::string& message, int durationMs 
     replaceAll(t, "\"", "\\\"", 2);
     ss << "notify-send \"" << t << "\" \"" << m << "\" '-t' " 
        << toString(durationMs);
-    LOG(INFO) << "Running [" << ss.str() << "]";
+    DLOG(INFO) << "Running [" << ss.str() << "]";
     result = system(ss.str().c_str());
 #endif // defined(__linux__)
     return result;

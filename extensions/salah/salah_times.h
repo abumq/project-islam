@@ -131,7 +131,12 @@ public:
     static const std::string kCalculationMethodKey;
     static const std::string kJuristicMethodKey;
     static const std::string kAdjustingMethodKey;
-    static const std::string kMinutesToPrayerAboutToStartKey;
+    static const std::string kMinutesToPrayerAboutToStartFajrKey;
+    static const std::string kMinutesToPrayerAboutToStartDhuhrKey;
+    static const std::string kMinutesToPrayerAboutToStartAsrKey;
+    static const std::string kMinutesToPrayerAboutToStartMaghribKey;
+    static const std::string kMinutesToPrayerAboutToStartIshaKey;
+    static const std::string kMinutesToPrayerAboutToStartJumuahKey;
     static const std::string kMinutesToPrayerAboutToOverKey;
     
     enum class TimeType {

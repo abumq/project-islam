@@ -19,7 +19,12 @@ SalahMethod::SalahMethod(double fajrAngle, bool maghribIsMinutes,
 const std::string SalahTimes::kCalculationMethodKey = "calc_method";
 const std::string SalahTimes::kJuristicMethodKey = "juristic_method";
 const std::string SalahTimes::kAdjustingMethodKey = "adjusting_method";
-const std::string SalahTimes::kMinutesToPrayerAboutToStartKey = "minutes_to_prayer_about_to_start";
+const std::string SalahTimes::kMinutesToPrayerAboutToStartFajrKey = "minutes_to_prayer_about_to_start_fajr";
+const std::string SalahTimes::kMinutesToPrayerAboutToStartDhuhrKey = "minutes_to_prayer_about_to_start_dhuhr";
+const std::string SalahTimes::kMinutesToPrayerAboutToStartAsrKey = "minutes_to_prayer_about_to_start_asr";
+const std::string SalahTimes::kMinutesToPrayerAboutToStartMaghribKey = "minutes_to_prayer_about_to_start_maghrib";
+const std::string SalahTimes::kMinutesToPrayerAboutToStartIshaKey = "minutes_to_prayer_about_to_start_isha";
+const std::string SalahTimes::kMinutesToPrayerAboutToStartJumuahKey = "minutes_to_prayer_about_to_start_jumuah";
 const std::string SalahTimes::kMinutesToPrayerAboutToOverKey = "minutes_to_prayer_about_to_over";
 
 SalahTimes::SalahTimes(SalahMethod::CalculationMethod calculationMethod,

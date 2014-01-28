@@ -15,6 +15,7 @@ public:
     bool isPrayerTime();
     bool isPrayerTimeAboutToOver(int* minutesLeft);
     void refresh();
+    static bool isJumuah();
 public slots:
     virtual void emitRequiredSignals();
 signals:

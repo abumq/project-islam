@@ -28,7 +28,17 @@ private slots:
     
     void on_spnMinPrayerOver_valueChanged(int arg1);
     
-    void on_spnMinPrayerStart_valueChanged(int arg1);
+    void on_spnMinPrayerStartFajr_valueChanged(int arg1);
+    
+    void on_spnMinPrayerStartDhuhr_valueChanged(int arg1);
+    
+    void on_spnMinPrayerStartAsr_valueChanged(int arg1);
+    
+    void on_spnMinPrayerStartMaghrib_valueChanged(int arg1);
+    
+    void on_spnMinPrayerStartIsha_valueChanged(int arg1);
+    
+    void on_spnMinPrayerStartJumuah_valueChanged(int arg1);
     
 private:
     Ui::SettingsTabWidgetForm *ui;

@@ -195,9 +195,6 @@ void QuranView::update(quran::Chapter* chapter, int from, int to)
             scene()->addItem(transliteratedVerseTextItem);
             transliteratedVerseTextItem->setY(locY);
             locY += kSpaceBetweenVerses;
-            if (!hasTranslation() && !hasTafseer()) {
-                locY += 10;
-            }
             m_verseTextTransliterationItems.insert(i, transliteratedVerseTextItem);
         }
         // Translation
@@ -207,9 +204,6 @@ void QuranView::update(quran::Chapter* chapter, int from, int to)
             scene()->addItem(translatedVerseTextItem);
             translatedVerseTextItem->setY(locY);
             locY += kSpaceBetweenVerses;
-            if (!hasTafseer()) {
-                locY += kSpaceBetweenVerses + 10;
-            }
             m_verseTextTranslationItems.insert(i, translatedVerseTextItem);
         }
         // Tafseer
@@ -218,8 +212,11 @@ void QuranView::update(quran::Chapter* chapter, int from, int to)
                                                                     tafseerVerse, nullptr);
             scene()->addItem(tafseerVerseTextItem);
             tafseerVerseTextItem->setY(locY);
-            locY += kSpaceBetweenVerses + 10;
+            locY += kSpaceBetweenVerses;
             m_verseTextTafseerItems.insert(i, tafseerVerseTextItem);
+        }
+        if (hasTransliteration() || hasTranslation() || hasTafseer()) {
+            locY += 10;
         }
         // Highlight verse
         if (i == verseNumberToHighlight) {
@@ -335,18 +332,18 @@ void QuranView::updateView()
     int multi = 0;
     if (hasTransliteration() && hasTranslation() && hasTafseer()) {
         multi = 3;
-    } else if (((hasTransliteration() && hasTranslation()) && !hasTafseer()) ||
-               ((hasTransliteration() && hasTafseer()) && !hasTranslation()) ||
-               ((hasTranslation() && hasTafseer()) && !hasTransliteration())||
-               (hasTranslation() || hasTafseer() || hasTransliteration())) {
+    } else if (((hasTransliteration() && hasTranslation()) && !hasTafseer())
+               || ((hasTransliteration() && hasTafseer()) && !hasTranslation())
+               || ((hasTranslation() && hasTafseer()) && !hasTransliteration())) {
         multi = 2;
+    } else if (hasTranslation() || hasTafseer() || hasTransliteration()) {
+        multi = 1;
     }
     ++multi; // For original verse
     h *= multi;
     h += multi > 1 ? m_verseTextItems.count() * 10 : 0;
     
-    const QRectF rect = QRectF(0, 0, maxWidth, h);
-    scene()->setSceneRect(rect);
+    scene()->setSceneRect(QRectF(0, 0, maxWidth, h));
     if (m_quran->readingDirection() == quran::Quran::ReadingDirection::LeftToRight) {
         horizontalScrollBar()->setValue(horizontalScrollBar()->minimum());
     } else {

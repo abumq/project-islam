@@ -1,5 +1,5 @@
 //
-//  Easylogging++ v9.48
+//  Easylogging++ v9.49
 //  Single-header only, cross-platform logging library for C++ applications
 //
 //  Copyright (c) 2012 - 2014 Majid Khan
@@ -3314,6 +3314,17 @@ class RegisteredLoggers : public base::utils::Registry<Logger, std::string> {
         return logger_;
     }
 
+    bool remove(const std::string& id) {
+        if (id == "default") {
+            return false;
+        }
+        Logger* logger = base::utils::Registry<Logger, std::string>::get(id);
+        if (logger != nullptr) {
+            unregister(logger);
+        }
+        return true;
+    }
+
     inline bool has(const std::string& id) {
         return get(id, false) != nullptr;
     }
@@ -4879,6 +4890,11 @@ class Loggers : base::StaticClass {
     static inline Logger* getLogger(const std::string& identity, bool registerIfNotAvailable = true) {
         return ELPP->registeredLoggers()->get(identity, registerIfNotAvailable);
     }
+    /// @brief Unregisters logger - use it only when you know what you are doing, you may unregister
+    ///        loggers initialized / used by third-party libs.
+    static inline bool unregisterLogger(const std::string& identity) {
+        return ELPP->registeredLoggers()->remove(identity);
+    }
     /// @brief Whether or not logger with id is registered
     static inline bool hasLogger(const std::string& identity) {
         return ELPP->registeredLoggers()->has(identity);
@@ -5017,9 +5033,9 @@ class Loggers : base::StaticClass {
 class VersionInfo : base::StaticClass {
  public:
     /// @brief Current version number
-    static inline const std::string version(void) { return std::string("9.48"); }
+    static inline const std::string version(void) { return std::string("9.49"); }
     /// @brief Release date of current version
-    static inline const std::string releaseDate(void) { return std::string("17-01-2014 2324hrs"); }
+    static inline const std::string releaseDate(void) { return std::string("31-01-2014 1618hrs"); }
 };
 }  // namespace el
 #undef VLOG_IS_ON

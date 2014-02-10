@@ -15,7 +15,7 @@
   </property>
   <property name="windowIcon">
    <iconset resource="resources/icons.qrc">
-    <normaloff>:/project-png</normaloff>:/project-png</iconset>
+    <normaloff>:/img/project-png</normaloff>:/img/project-png</iconset>
   </property>
   <property name="styleSheet">
    <string notr="true"/>
@@ -27,7 +27,7 @@
      <x>0</x>
      <y>0</y>
      <width>745</width>
-     <height>20</height>
+     <height>25</height>
     </rect>
    </property>
    <widget class="QMenu" name="menu_Application">
@@ -60,7 +60,7 @@
   </widget>
   <action name="actionExit">
    <property name="text">
-    <string>E&amp;xit</string>
+    <string>&amp;Quit</string>
    </property>
   </action>
   <action name="actionAbout">

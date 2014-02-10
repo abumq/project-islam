@@ -36,6 +36,7 @@ public:
     
 protected:
     void resizeEvent(QResizeEvent *);
+    void closeEvent(QCloseEvent *);
 private slots:
     void on_actionAbout_Qt_triggered();
     

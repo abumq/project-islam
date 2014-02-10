@@ -84,7 +84,7 @@ void AbstractExtension::setExtensionItem(ExtensionItem *extensionItem)
     _TRACE;
     m_extensionItem = extensionItem;
     if (extensionItem != nullptr) {
-        m_titleLabel->setText("<h1><img src='" + extensionItem->icon() + "'/>" + info()->title() + "</h1>");
+        m_titleLabel->setText("<h1><img src='" + extensionItem->iconName() + "'/>" + info()->title() + "</h1>");
     }
 }
 
@@ -208,6 +208,16 @@ void AbstractExtension::setSettingsMap(QMap<QString, QVariant> *map)
 QMap<QString, QVariant> *AbstractExtension::settingsMap() const
 {
     return m_settingsMap;
+}
+
+void AbstractExtension::setTrayIcon(QSystemTrayIcon *trayIcon)
+{
+    m_trayIcon = trayIcon;
+}
+
+QSystemTrayIcon *AbstractExtension::trayIcon() const
+{
+    return m_trayIcon;
 }
 
 void AbstractExtension::buildHtmlFormattedDescription()

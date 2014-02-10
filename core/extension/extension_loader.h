@@ -8,6 +8,7 @@ class SettingsLoader;
 class QMenuBar;
 class SettingsDialog;
 class QSplashScreen;
+class QSystemTrayIcon;
 namespace data {
 class DataHolder;
 }
@@ -15,13 +16,14 @@ class DataHolder;
 class ExtensionLoader
 {
 public:
-    ExtensionLoader(data::DataHolder* m_dataHolder, QMenuBar *menuBar, SettingsDialog* settingsDialog);
+    ExtensionLoader(data::DataHolder* m_dataHolder, QMenuBar *menuBar, SettingsDialog* settingsDialog, QSystemTrayIcon* trayIcon);
     void loadAll(ExtensionBar* extensionBar, QSplashScreen *splashScreen) const;
     static bool verifyExtension(const QString& filename);
 private:
     data::DataHolder* m_dataHolder;
     QMenuBar* m_menuBar;
     SettingsDialog* m_settingsDialog;
+    QSystemTrayIcon* m_trayIcon;
 };
 
 #endif // EXTENSION_LOADER_H

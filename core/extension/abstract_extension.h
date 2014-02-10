@@ -13,6 +13,7 @@ class QLabel;
 class QMenu;
 class SettingsLoader;
 class ExtensionBase;
+class QSystemTrayIcon;
 
 class AbstractExtension : public QWidget
 {
@@ -62,6 +63,9 @@ public:
     void setSettingsMap(QMap<QString, QVariant>* map);
     QMap<QString, QVariant>* settingsMap() const;
     
+    void setTrayIcon(QSystemTrayIcon* trayIcon);
+    QSystemTrayIcon* trayIcon() const;
+    
     int containerWidth() const;
     int containerHeight() const;
     
@@ -83,6 +87,7 @@ private:
     QMap<QString, QVariant>* m_settingsMap;
     QWidget* m_settingsTabWidget;
     QString m_htmlFormattedDescription;
+    QSystemTrayIcon* m_trayIcon;
     bool m_isDefault;
     
     int m_containerWidth;

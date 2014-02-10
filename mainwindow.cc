@@ -29,13 +29,6 @@ MainWindow::MainWindow(QSplashScreen *splashScreen) :
     ui->setupUi(this);
     m_settingsDialog = new SettingsDialog(this, this);
     initialize();
-    if (QSystemTrayIcon::isSystemTrayAvailable()) {
-        m_trayIcon = new QSystemTrayIcon(this);
-        m_trayIcon->setIcon(QIcon(":/project-tray"));
-        m_trayIcon->hide(); // FIXME: This does not work yet!
-    } else {
-        DLOG(INFO) << "System tray not available";
-    }
 }
 
 MainWindow::~MainWindow()
@@ -51,6 +44,15 @@ void MainWindow::initialize()
         m_splashScreen->showMessage("Checking updates from local filesystem..."
                                     , Qt::AlignHCenter | Qt::AlignBottom);
     }
+    
+    if (QSystemTrayIcon::isSystemTrayAvailable()) {
+        m_trayIcon = new QSystemTrayIcon(QIcon(":/img/project-tray"), this);
+        m_trayIcon->setContextMenu(ui->menu_Application);
+        m_trayIcon->show(); // FIXME: This does not work yet!
+        // qApp->setQuitOnLastWindowClosed(false);
+    } else {
+        DLOG(INFO) << "System tray not available";
+    }
     m_updateManager.updateFiles();
     if (!m_updateManager.performedUpdate()) {
         loadSettings();
@@ -64,7 +66,7 @@ void MainWindow::initialize()
         connect(m_extensionBar, SIGNAL(extensionChanged(AbstractExtension*)), this, SLOT(onExtensionChanged(AbstractExtension*)));
         addToolBar(Qt::LeftToolBarArea, m_extensionBar);
         
-        ExtensionLoader extensionLoader(&m_dataHolder, ui->menuBar, m_settingsDialog);
+        ExtensionLoader extensionLoader(&m_dataHolder, ui->menuBar, m_settingsDialog, m_trayIcon);
         extensionLoader.loadAll(m_extensionBar, m_splashScreen);
         
         ExtensionItem* defaultExtension = m_extensionBar->defaultExtensionItem();
@@ -94,11 +96,9 @@ void MainWindow::reloadStyles()
     m_extensionBar->setStyleSheet(m_styleLoader.load(StyleLoader::StyleType::ExtensionBar));
     m_container->setStyleSheet(m_styleLoader.load(StyleLoader::StyleType::Extension));
     setStyleSheet(m_styleLoader.load(StyleLoader::StyleType::Menu));
-    for (ExtensionItem* item : *m_extensionBar->extensionItems()) {
-        item->setStyleSheet(m_styleLoader.load(StyleLoader::StyleType::ExtensionItem));
-    }
     for (AbstractExtension* extension : *m_extensionBar->extensions()) {
         extension->titleLabel()->setStyleSheet(m_styleLoader.load(StyleLoader::StyleType::Extension));
+        extension->extensionItem()->setStyleSheet(m_styleLoader.load(StyleLoader::StyleType::ExtensionItem));
     }
 }
 
@@ -149,6 +149,9 @@ void MainWindow::onExtensionChanged(AbstractExtension *extension)
 {
     if (extension != nullptr) {
         setWindowTitle(extension->info()->title());
+        if (m_trayIcon != nullptr) {
+            m_trayIcon->setToolTip(windowTitle());
+        }
     }
     m_container->resize(width(), height());
     if (m_extensionBar->currentExtension() != nullptr) {
@@ -216,4 +219,17 @@ void MainWindow::on_actionAbout_Extensions_triggered()
                     );
     }
     QMessageBox::information(this, "About Extensions", aboutExtensionsStr);
+}
+
+void MainWindow::closeEvent(QCloseEvent *event)
+{
+    if (m_trayIcon != nullptr && m_trayIcon->isVisible()) {
+        /*QMessageBox::information(this, windowTitle(),
+                                 tr("The program will keep running in the "
+                                    "system tray. To terminate the program, "
+                                    "choose <b>Quit</b> in the context menu "
+                                    "of the system tray entry."));
+        hide();
+        event->ignore();*/
+    }
 }

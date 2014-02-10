@@ -25,7 +25,7 @@ public:
     
     ExtensionBar* extensionBar() const;
     
-    QString icon() const;
+    QString iconName() const;
 public slots:
     void showExtension(bool);
 private:

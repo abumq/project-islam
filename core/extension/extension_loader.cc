@@ -15,10 +15,11 @@
 #include "core/data/data_holder.h"
 #include "settings_dialog.h"
 
-ExtensionLoader::ExtensionLoader(data::DataHolder* dataHolder, QMenuBar* menuBar, SettingsDialog *settingsDialog) :
+ExtensionLoader::ExtensionLoader(data::DataHolder* dataHolder, QMenuBar* menuBar, SettingsDialog *settingsDialog, QSystemTrayIcon *trayIcon) :
     m_dataHolder(dataHolder),
     m_menuBar(menuBar),
-    m_settingsDialog(settingsDialog)
+    m_settingsDialog(settingsDialog),
+    m_trayIcon(trayIcon)
 {
 }
 
@@ -80,6 +81,7 @@ void ExtensionLoader::loadAll(ExtensionBar* extensionBar, QSplashScreen *splashS
             extensionBase->extension()->setContainer(extensionBar->container());
             extensionBase->extension()->setSettingsLoader(SettingsLoader::getInstance());
             extensionBase->extension()->setSettingsMap(m_settingsDialog->settingsMap());
+            extensionBase->extension()->setTrayIcon(m_trayIcon);
             
             QAction* helpMenu = m_menuBar->actions().at(m_menuBar->actions().size() - 1);
             m_menuBar->insertMenu(helpMenu, extensionBase->extension()->menu());

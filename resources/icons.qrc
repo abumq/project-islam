@@ -1,9 +1,9 @@
-<RCC>
+ <!DOCTYPE RCC><RCC version="1.0">
     <qresource prefix="/extensions">
         <file alias="al-quran">images/quran.png</file>
         <file alias="salah">images/mosque.png</file>
     </qresource>
-    <qresource prefix="/">
+    <qresource prefix="/img">
         <file alias="project-ico">images/project-islam.ico</file>
         <file alias="project-tray">images/project-islam22.png</file>
         <file alias="project-png">images/project-islam.png</file>

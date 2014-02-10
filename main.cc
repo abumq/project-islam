@@ -96,7 +96,6 @@ int main(int argc, char* argv[])
     splashScreen.show();
     splashScreen.showMessage("Initializing...", Qt::AlignHCenter | Qt::AlignBottom);
     qApp->processEvents();
-    
     MainWindow w(&splashScreen);
     if (!w.applicationUpdated()) {
         w.show();

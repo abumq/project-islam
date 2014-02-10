@@ -73,7 +73,7 @@ ExtensionBar *ExtensionItem::extensionBar() const
     return m_extensionBar;
 }
 
-QString ExtensionItem::icon() const
+QString ExtensionItem::iconName() const
 {
     return m_icon;
 }

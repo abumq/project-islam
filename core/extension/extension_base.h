@@ -10,6 +10,7 @@
 #include "core/settings_loader.h"
 #include "core/extension/abstract_extension.h"
 #include "core/extension/extension_info.h"
+#include "core/utils/notify.h"
 
 class ExtensionBase : public QObject
 {
@@ -48,6 +49,18 @@ public:
     
     inline QWidget* settingsTabWidget() {
         return m_extension->newOrExistingSettingsTabWidget();
+    }
+    
+    void notifyInfo(const QString& title, const QString& message, int durationMs = 3000) {
+        ::notifyInfo(extension()->trayIcon(), title, message, durationMs);
+    }
+    
+    void notifyWarn(const QString& title, const QString& message, int durationMs = 3000) {
+        ::notifyWarn(extension()->trayIcon(), title, message, durationMs);
+    }
+    
+    void notifyError(const QString& title, const QString& message, int durationMs = 3000) {
+        ::notifyError(extension()->trayIcon(), title, message, durationMs);
     }
     
     /// @brief Need to call this in extension and only proceed if this returns true

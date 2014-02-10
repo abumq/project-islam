@@ -158,14 +158,14 @@ void Salah::onPrayerTime(bool activated)
     _TRACE;
     SalahClock* clock = qobject_cast<SalahClock*>(sender());
     const int kPrayerTimeNotifySeconds = 30;
-    const int kPrayerTimeOverNotifySeconds = 3;
+    const int kPrayerTimeOverNotifySeconds = 10;
     if (activated) {
         clock->select();
-        notify("Prayer Time", "It's time for " + clock->title().toStdString() + " prayer", kPrayerTimeNotifySeconds * 1000);
+        notifyInfo("Prayer Time", "It's time for " + clock->title() + " prayer", kPrayerTimeNotifySeconds * 1000);
         LOG(INFO) << "Prayer time for [" << clock->title() << "]";
     } else {
         clock->deselect();
-        notify("Prayer Time Over", "Time for " + clock->title().toStdString() + " prayer is over", kPrayerTimeOverNotifySeconds * 1000);
+        notifyInfo("Prayer Time Over", "Time for " + clock->title() + " prayer is over", kPrayerTimeOverNotifySeconds * 1000);
         LOG(INFO) << "Prayer time over for [" << clock->title() << "]";
     }
 }
@@ -179,20 +179,20 @@ void Salah::onPrayerTimeAboutToStart(int minutesLeft)
     if (minutesLeft <= 0) {
         return;
     }
-    notify("Prayer About to Start", clock->title().toStdString() + " prayer starting in " + QString::number(minutesLeft).toStdString() + " minutes", 10000);
+    notifyInfo("Prayer About to Start", clock->title() + " prayer starting in " + QString::number(minutesLeft) + " minutes", 10000);
 }
 
 void Salah::onPrayerTimeAboutToOver(int minutesLeft)
 {
     _TRACE;
-    const int kPrayerTimeAboutToOverNotifySeconds = 3;
+    const int kPrayerTimeAboutToOverNotifySeconds = 20;
     SalahClock* clock = qobject_cast<SalahClock*>(sender());
     clock->setColor(Qt::red);
     LOG(INFO) << "Only " << minutesLeft << " minutes left for " << clock->title() << " prayer";
     if (minutesLeft <= 0) {
         return;
     }
-    notify("Prayer Time", "Only " + QString::number(minutesLeft).toStdString() + " minutes is left for " + clock->title().toStdString(), 
+    notifyWarn("Prayer Time", "Only " + QString::number(minutesLeft) + " minutes left for " + clock->title(), 
            kPrayerTimeAboutToOverNotifySeconds * 1000);
 }
 

@@ -1,5 +1,5 @@
 //
-//  Easylogging++ v9.51
+//  Easylogging++ v9.53
 //  Single-header only, cross-platform logging library for C++ applications
 //
 //  Copyright (c) 2012 - 2014 Majid Khan
@@ -638,6 +638,7 @@ namespace consts {
     static const base::type::char_t* kCurrentHostFormatSpecifier      =      UNICODE_LITERAL("%host");
     static const base::type::char_t* kMessageFormatSpecifier          =      UNICODE_LITERAL("%msg");
     static const base::type::char_t* kVerboseLevelFormatSpecifier     =      UNICODE_LITERAL("%vlevel");
+    static const char* kDateTimeFormatSpecifierForFilename            =      "%datetime";
     // Date/time
     static const char* kDays[7]                         =      { "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday" };
     static const char* kDaysAbbrev[7]                   =      { "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat" };
@@ -2869,14 +2870,15 @@ class TypedConfigurations : public base::threading::ThreadSafe {
     std::string resolveFilename(const std::string& filename) {
         std::string resultingFilename = filename;
         std::size_t dateIndex = std::string::npos;
-        if ((dateIndex = resultingFilename.find(base::consts::kDateTimeFormatSpecifier)) != std::string::npos) {
+        std::string dateTimeFormatSpecifierStr = std::string(base::consts::kDateTimeFormatSpecifierForFilename);
+        if ((dateIndex = resultingFilename.find(dateTimeFormatSpecifierStr.c_str())) != std::string::npos) {
             while (dateIndex > 0 && resultingFilename[dateIndex - 1] == base::consts::kFormatEscapeChar) {
-                dateIndex = resultingFilename.find(base::consts::kDateTimeFormatSpecifier, dateIndex + 1);
+                dateIndex = resultingFilename.find(dateTimeFormatSpecifierStr.c_str(), dateIndex + 1);
             }
             if (dateIndex != std::string::npos) {
-                const base::type::char_t* ptr = resultingFilename.c_str() + dateIndex;
+                const char* ptr = resultingFilename.c_str() + dateIndex;
                 // Goto end of specifier
-                ptr += std::string(base::consts::kDateTimeFormatSpecifier).size();
+                ptr += dateTimeFormatSpecifierStr.size();
                 std::string fmt;
                 if ((resultingFilename.size() > dateIndex) && (ptr[0] == '{')) {
                     // User has provided format for date/time
@@ -2890,7 +2892,7 @@ class TypedConfigurations : public base::threading::ThreadSafe {
                         }
                         ss << *ptr;
                     }
-                    resultingFilename.erase(dateIndex + std::string(base::consts::kDateTimeFormatSpecifier).size(), count);
+                    resultingFilename.erase(dateIndex + dateTimeFormatSpecifierStr.size(), count);
                     fmt = ss.str();
                 } else {
                     fmt = std::string(base::consts::kDefaultDateTimeFormatInFilename);
@@ -2898,7 +2900,7 @@ class TypedConfigurations : public base::threading::ThreadSafe {
                 MillisecondsWidth msWidth(3);
                 std::string now = base::utils::DateTime::getDateTime(fmt.c_str(), &msWidth);
                 base::utils::Str::replaceAll(now, '/', '-'); // Replace path element since we are dealing with filename
-                base::utils::Str::replaceFirstWithEscape(resultingFilename, std::string(base::consts::kDateTimeFormatSpecifier), now);
+                base::utils::Str::replaceAll(resultingFilename, dateTimeFormatSpecifierStr, now);
             }
         }
         return resultingFilename;
@@ -5073,9 +5075,9 @@ class Loggers : base::StaticClass {
 class VersionInfo : base::StaticClass {
  public:
     /// @brief Current version number
-    static inline const std::string version(void) { return std::string("9.51"); }
+    static inline const std::string version(void) { return std::string("9.53"); }
     /// @brief Release date of current version
-    static inline const std::string releaseDate(void) { return std::string("10-02-2014 1244hrs"); }
+    static inline const std::string releaseDate(void) { return std::string("10-02-2014 1500hrs"); }
 };
 }  // namespace el
 #undef VLOG_IS_ON

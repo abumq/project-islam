@@ -158,6 +158,7 @@ void SettingsLoader::updateDefaultHomeDir(const QString& dir)
     }
     if (masterSettingsFile.open(QFile::ReadOnly)) {
         QString l = masterSettingsFile.readAll();
+        l = l.trimmed();
         if (!l.isEmpty()) {
             LOG(INFO) << "Setting up home dir to [" << l << "]";
             s_defaultHomeDir = l;

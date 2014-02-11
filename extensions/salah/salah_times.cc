@@ -70,7 +70,7 @@ void SalahTimes::build(int year, int month, int day, double latitude, double lon
     m_year = year;
     m_month = month;
     m_day = day;
-    m_julianDate = datetime::georgianToJulianDate(m_year, m_month, m_day);
+    m_julianDate = datetime:: gregorianToJulianDate(m_year, m_month, m_day);
     LOG(INFO) << "Building salah times for " << m_day << "/" << m_month << "/" << m_year 
               << " @ (" << m_latitude << ", " << m_longitude << ") timezone: " << m_timezone;
     

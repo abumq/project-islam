@@ -4,13 +4,17 @@
 #include <cmath>
 #include <QString>
 #include <time.h>
+
 namespace datetime {
 
 inline QString formatMillisecondsAsDuration(qint64 ms) {
     return QString::number(ms / 1000) + "s";
 }
 
-double georgianToJulianDate(int year, int month, int day) {
+/**
+ * Converts gregorian date to julian date
+ */
+double  gregorianToJulianDate(int year, int month, int day) {
     // See http://quasar.as.utexas.edu/BillInfo/JulianDatesG.html
     const float kAverageLengthOfYear = 365.25f;
     const float kAverageLengthOfMonth = 30.4375f;
@@ -25,17 +29,22 @@ double georgianToJulianDate(int year, int month, int day) {
             + day + b - 1524.5;
 }
 
-double getTimeZone(time_t local_time) {
-    tm* tmp = localtime(&local_time);
+/**
+ * Compute local time-zone for a specific time_t based date
+ */
+double getTimeZone(time_t localTime) {
+    tm* tmp = localtime(&localTime);
     tmp->tm_isdst = 0;
     time_t local = mktime(tmp);
-    tmp = gmtime(&local_time);
+    tmp = gmtime(&localTime);
     tmp->tm_isdst = 0;
     time_t gmt = mktime(tmp);
     return (local - gmt) / 3600.0;
 }
 
-/* compute local time-zone for a specific date */
+/**
+ * Compute local time-zone for a specific date
+ */
 double getTimeZone(int year, int month, int day) {
     tm date = { 0 };
     date.tm_year = year - 1900;

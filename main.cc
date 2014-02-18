@@ -15,6 +15,10 @@ _INITIALIZE_EASYLOGGINGPP
 
 int returnCode;
 
+void postPerformanceTrackingHandler(const el::PerformanceTrackingData* data) {
+    std::wcout << "Finished: " << data->blockName()->c_str() << " in " << *data->formattedTimeTaken() << std::endl;
+}
+    
 class CleanAtEnd {
 public:
     CleanAtEnd() {
@@ -46,7 +50,9 @@ private:
 int main(int argc, char* argv[])
 {
     CleanAtEnd cleaner;
-    Q_UNUSED(cleaner);
+    Q_UNUSED(cleaner); 
+    
+    el::Helpers::installPostPerformanceTrackingHandler(postPerformanceTrackingHandler);
     
     LoggingConfigurer::configureLoggers();
     _TRACE;

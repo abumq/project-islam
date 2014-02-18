@@ -4,7 +4,7 @@ QT       += core gui widgets sql multimedia network
 
 unix:!win32 {
     ## Compiler
-    COMPILER = icpc
+    COMPILER = g++
     
     ## Standard
     QMAKE_CXXFLAGS += -std=c++0x
@@ -20,7 +20,7 @@ unix:!win32 {
     QMAKE_LINK = $$COMPILER
 
     ## Unix specific defines
-    DEFINES += _ELPP_STACKTRACE_ON_CRASH
+    DEFINES += _ELPP_STACKTRACE_ON_CRASH _ELPP_HANDLE_POST_PERFORMANCE_TRACKING
 }
 
 DEFINES += _ELPP_UNICODE \

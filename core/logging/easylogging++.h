@@ -1,5 +1,5 @@
 //
-//  Easylogging++ v9.54
+//  Easylogging++ v9.55
 //  Single-header only, cross-platform logging library for C++ applications
 //
 //  Copyright (c) 2012 - 2014 Majid Khan
@@ -78,8 +78,14 @@
 #else
 #   define _ELPP_OS_MAC 0
 #endif  // defined(__APPLE__)
+// FreeBSD
+#if defined(__FreeBSD__)
+#   define _ELPP_OS_FREEBSD 1
+#else
+#   define _ELPP_OS_FREEBSD 0
+#endif
 // Unix
-#define _ELPP_OS_UNIX ((_ELPP_OS_LINUX || _ELPP_OS_MAC) && (!_ELPP_OS_WINDOWS))
+#define _ELPP_OS_UNIX ((_ELPP_OS_LINUX || _ELPP_OS_MAC || _ELPP_OS_FREEBSD) && (!_ELPP_OS_WINDOWS))
 // Android
 #if defined(__ANDROID__)
 #   define _ELPP_OS_ANDROID 1
@@ -5134,9 +5140,9 @@ public:
 class VersionInfo : base::StaticClass {
 public:
     /// @brief Current version number
-    static inline const std::string version(void) { return std::string("9.54"); }
+    static inline const std::string version(void) { return std::string("9.55"); }
     /// @brief Release date of current version
-    static inline const std::string releaseDate(void) { return std::string("18-02-2014 1934hrs"); }
+    static inline const std::string releaseDate(void) { return std::string("19-02-2014 0819hrs"); }
 };
 }  // namespace el
 #undef VLOG_IS_ON

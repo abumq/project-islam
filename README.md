@@ -59,3 +59,7 @@ You contribute in many ways, some of them are:
  - Write API documentation
 
 If you wish to program, you must be able to write good C++ code that is efficient, memory friendly and easy to read. Every C++ code will go through code-review to ensure quality (readibility, memory efficient, fast algorithms)
+
+
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/mkhan3189/project-islam/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+

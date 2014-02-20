@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QSystemTrayIcon>
 
 #include "core/style_loader.h"
 #include "core/settings_loader.h"
@@ -17,7 +18,6 @@ class QSplashScreen;
 class AbstractExtension;
 class ExtensionBar;
 class SettingsDialog;
-class QSystemTrayIcon;
 
 class MainWindow : public QMainWindow
 {
@@ -52,6 +52,7 @@ private slots:
     void on_actionExtension_Bar_triggered(bool checked);
     
     void on_actionAbout_Extensions_triggered();
+    void trayIconActivated(QSystemTrayIcon::ActivationReason reason);
     
 private:
     Ui::MainWindow *ui;

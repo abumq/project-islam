@@ -7,7 +7,6 @@
 #include <QLabel>
 #include <QProcess>
 #include <QSplashScreen>
-#include <QSystemTrayIcon>
 
 #include "settings_dialog.h"
 #include "core/utils/memory.h"
@@ -48,8 +47,10 @@ void MainWindow::initialize()
     if (QSystemTrayIcon::isSystemTrayAvailable()) {
         m_trayIcon = new QSystemTrayIcon(QIcon(":/img/project-tray"), this);
         m_trayIcon->setContextMenu(ui->menu_Application);
-        m_trayIcon->show(); // FIXME: This does not work yet!
-        // qApp->setQuitOnLastWindowClosed(false);
+        m_trayIcon->show(); // FIXME: This does not work on some desktop managers!
+        qApp->setQuitOnLastWindowClosed(false);
+        connect(m_trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)),
+                this, SLOT(trayIconActivated(QSystemTrayIcon::ActivationReason)));
     } else {
         DLOG(INFO) << "System tray not available";
     }
@@ -224,12 +225,28 @@ void MainWindow::on_actionAbout_Extensions_triggered()
 void MainWindow::closeEvent(QCloseEvent *event)
 {
     if (m_trayIcon != nullptr && m_trayIcon->isVisible()) {
-        /*QMessageBox::information(this, windowTitle(),
+        QMessageBox::information(this, windowTitle(),
                                  tr("The program will keep running in the "
                                     "system tray. To terminate the program, "
                                     "choose <b>Quit</b> in the context menu "
                                     "of the system tray entry."));
         hide();
-        event->ignore();*/
+        event->ignore();
+    }
+}
+
+void MainWindow::trayIconActivated(QSystemTrayIcon::ActivationReason reason)
+{
+    switch (reason) {
+    case QSystemTrayIcon::DoubleClick:
+    case QSystemTrayIcon::MiddleClick:
+        if (!isVisible()) {
+            showNormal();
+        } else {
+            hide();
+        }
+        break;
+    default:
+        break;
     }
 }

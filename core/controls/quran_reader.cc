@@ -32,6 +32,7 @@ QuranReader::QuranReader(quran::Quran* quran, quran::Quran* quranTranslation,
             ui->spnVerseTo->setEnabled(false);
         }
         m_quranView = new QuranView(m_quran, m_quranTranslation, m_quranTransliteration, m_quranTafseer, this);
+        m_quranView->setObjectName("QuranView");
         m_quranView->setGeometry(5, 
                                  ui->grpControls->geometry().top() + ui->grpControls->geometry().height(),
                                  621, 

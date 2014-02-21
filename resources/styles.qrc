@@ -1,9 +1,9 @@
 <RCC>
     <qresource prefix="/">
-        <file alias="menu">styles/menu.style</file>
-        <file alias="extension">styles/extension.style</file>
-        <file alias="extension_item">styles/extension_item.style</file>
-        <file alias="extension_bar">styles/extension_bar.style</file>
+        <file alias="menu">styles/menu.qss</file>
+        <file alias="extension">styles/extension.qss</file>
+        <file alias="extension_item">styles/extension_item.qss</file>
+        <file alias="extension_bar">styles/extension_bar.qss</file>
     </qresource>
     <qresource prefix="/img">
         <file alias="bg">images/bg.png</file>

@@ -57,16 +57,16 @@ FORMS    += mainwindow.ui \
     settings_dialog.ui
 
 OTHER_FILES += \
-    resources/styles/menu.style \
-    resources/styles/extension_bar.style \
-    resources/styles/extension.style \
-    resources/styles/extension_item.style \
     resources/images/project-islam.png \
     resources/images/project-islam.ico \
     resources/configs/logging.linux.config \
     resources/configs/logging.win.config \
     extension.pri \
-    master.pri
+    master.pri \
+    resources/styles/extension.qss \
+    resources/styles/extension_bar.qss \
+    resources/styles/extension_item.qss \
+    resources/styles/menu.qss
 
 RESOURCES += \
     resources/styles.qrc \

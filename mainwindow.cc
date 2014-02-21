@@ -69,13 +69,7 @@ void MainWindow::initialize()
         
         ExtensionLoader extensionLoader(&m_dataHolder, ui->menuBar, m_settingsDialog, m_trayIcon);
         extensionLoader.loadAll(m_extensionBar, m_splashScreen);
-        
-        ExtensionItem* defaultExtension = m_extensionBar->defaultExtensionItem();
-        if (defaultExtension != nullptr) {
-            defaultExtension->showExtension(true);
-        } else {
-            LOG(ERROR) << "Default extension not found";
-        }
+        initializeDefaultExtension();
 #if !defined(DISABLE_AUTO_UPDATE)
         m_updateManager.initialize(m_extensionBar);
 #endif // DISABLE_AUTO_UPDATE
@@ -151,7 +145,7 @@ void MainWindow::onExtensionChanged(AbstractExtension *extension)
     if (extension != nullptr) {
         setWindowTitle(extension->info()->title());
         if (m_trayIcon != nullptr) {
-            m_trayIcon->setToolTip(windowTitle());
+            m_trayIcon->setToolTip(windowTitle() + " - " + qApp->applicationName());
         }
     }
     m_container->resize(width(), height());
@@ -248,5 +242,31 @@ void MainWindow::trayIconActivated(QSystemTrayIcon::ActivationReason reason)
         break;
     default:
         break;
+    }
+}
+
+void MainWindow::initializeDefaultExtension()
+{
+    const QString kExtensionFromArgParamName = "--extension=";
+    QString extensionFromParam;
+    for (QString arg : qApp->arguments()) {
+        if (arg.startsWith(kExtensionFromArgParamName) && arg.length() > kExtensionFromArgParamName.length()) {
+            extensionFromParam = arg.mid(kExtensionFromArgParamName.length());
+            break;
+        }
+    }
+    ExtensionItem* defaultExtension = nullptr;
+    AbstractExtension* abstractExtensionFromParam = nullptr;
+    if (!extensionFromParam.isEmpty()
+        && (abstractExtensionFromParam = m_extensionBar->hasExtension(extensionFromParam)) != nullptr) {
+        defaultExtension = abstractExtensionFromParam->extensionItem();
+        LOG(INFO) << "Activating extension [" << extensionFromParam << "]";
+    } else {
+        defaultExtension = m_extensionBar->defaultExtensionItem();
+    }
+    if (defaultExtension != nullptr) {
+        defaultExtension->showExtension(true);
+    } else {
+        LOG(ERROR) << "Default extension not found";
     }
 }

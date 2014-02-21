@@ -16,10 +16,11 @@ QComboBox {
      border-radius: 3px;
      padding: 1px 18px 1px 3px;
      min-width: 6em;
+     color: rgba([:elementColor4]);
  }
 
  QComboBox:editable {
-     background: white;
+     background-color: rgb(255, 255, 255);
  }
 
  QComboBox:!editable, QComboBox::drop-down:editable {
@@ -50,7 +51,15 @@ QComboBox {
      image: url(:/extensions/elements/down_arrow_small);
  }
 
+/**************************************************** QTreeView ******************************************/
+QTreeView {
+    background-color: rgb(255,255,255);
+    color: rgb(0,0,0);
+}
+
+
 /**************************************************** QSlider ******************************************/
+ 
  QSlider::groove:horizontal {
      border: 1px solid #999999;
      height: 8px;
@@ -64,6 +73,12 @@ QComboBox {
      width: 18px;
      margin: -2px 0;
      border-radius: 3px;
+ }
+ 
+ /**************************************************** QSpinBox, QCheckBox, QLabel ******************************************/
+ QSpinBox, QCheckBox, QLabel {
+       background-color: rgba(255,255,255, 0);
+       color: rgb(0,0,0);
  }
 
 /**************************************************** QPushButton ******************************************/
@@ -83,3 +98,8 @@ QPushButton, QToolButton {
      border: none;
      background-color: transparent;
  }
+ 
+/**************************************************** QGraphicsView ******************************************/
+QGraphicsView {
+    background-color: rgb(255,255,255);
+}

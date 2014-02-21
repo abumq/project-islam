@@ -19,7 +19,7 @@ class AbstractExtension : public QWidget
 {
     Q_OBJECT
 public:
-    static const int kExtensionTop = 21;
+    static const int kExtensionTop = 17;
     static const unsigned int kExtensionMaxLengthAuthor = 30;
     static const unsigned int kExtensionMaxLengthName = 12;
     static const unsigned int kExtensionMaxLengthTitle = 50;

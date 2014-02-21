@@ -65,6 +65,8 @@ private:
     UpdateManager m_updateManager;
     SettingsDialog* m_settingsDialog;
     QSystemTrayIcon* m_trayIcon;
+    
+    void initializeDefaultExtension();
 };
 
 #endif // MAINWINDOW_H

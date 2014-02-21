@@ -527,6 +527,7 @@ VerseTextItem::VerseTextItem(const QString& text, quran::Verse* verse, QGraphics
     m_highlighted(false),
     m_alignment(Qt::AlignLeft)
 {
+    setDefaultTextColor(QColor(0, 0, 0));
     unhighlight();
     setTextWidth(boundingRect().width() * 1.1);
     setAlignment(m_alignment);
@@ -539,13 +540,13 @@ void VerseTextItem::paint(QPainter* painter, const QStyleOptionGraphicsItem* o, 
 
 void VerseTextItem::highlight()
 {
-    setHtml("<span style='background-color:#FFFF00;'>" + m_plainText + "</span>");
+    setHtml("<span style='background-color:#FFFF00;color:#000000'>" + m_plainText + "</span>");
     m_highlighted = true;
 }
 
 void VerseTextItem::unhighlight()
 {
-    setHtml("<span>" + m_plainText + "</span>");
+    setHtml("<span style='color:#000000'>" + m_plainText + "</span>");
     m_highlighted = false;
 }
 

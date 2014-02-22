@@ -9,7 +9,7 @@
 #include "core/controls/quran_reciter.h"
 #include "core/controls/quran_reader.h"
 
-_INITIALIZE_EASYLOGGINGPP
+INITIALIZE_SHARED_LOGGING
 
 const char* AlQuran::kAuthor       = "Project Islam Authors";
 const char* AlQuran::kName         = "Al-Quran";

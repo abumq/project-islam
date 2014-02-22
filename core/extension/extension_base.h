@@ -11,17 +11,13 @@
 #include "core/extension/abstract_extension.h"
 #include "core/extension/extension_info.h"
 #include "core/utils/notify.h"
-
+    
 class ExtensionBase : public QObject
 {
     // No Q_OBJECT here. Otherwise we get undefined AbstractExtension::staticMetaObject error
 public:
     ExtensionBase() :
         m_extension(nullptr) {
-        // We dont want to log to default log file while initializing interface,
-        // made by extension '_ELPP_DEFAULT_LOG_FILE` macro. We already re-initialze log
-        // file location in initialze() from extension loader
-        el::Loggers::reconfigureAllLoggers(el::ConfigurationType::ToFile, "false");
         // Do not call initialize() here since we dont want to run into FATAL error
         // of "NOT" initializing extensionInfo at this point
     }
@@ -63,19 +59,20 @@ public:
         ::notifyError(extension()->trayIcon(), title, message, durationMs);
     }
     
+    void setLoggingRepository(el::base::type::StoragePointer repo) {
+        m_storagePointer = repo;
+    }
+    
     /// @brief Need to call this in extension and only proceed if this returns true
     /// Returns true if successfully initialized
     virtual bool initialize(int argc, const char** argv) {
+        el::Helpers::setStorage(m_storagePointer);
         el::Helpers::setArgs(argc, argv);
 #ifdef _LOGGER
         el::Loggers::getLogger(_LOGGER);
 #endif // _LOGGER
 #ifdef _PERFORMANCE_LOGGER
         el::Logger* extensionPerformanceLogger = el::Loggers::getLogger(_PERFORMANCE_LOGGER);
-#endif // _PERFORMANCE_LOGGER
-        el::Loggers::setDefaultConfigurations(LoggingConfigurer::baseConfiguration(), true);
-#ifdef _PERFORMANCE_LOGGER
-        // Make sure this line is after we set default configuration for repo
         LoggingConfigurer::reconfigurePerformanceLogger(extensionPerformanceLogger);
 #endif // _PERFORMANCE_LOGGER
         CHECK(m_extensionInfo.isInitialized()) << "Please initialize ExtensionInfo (using constructor) from constructor of your extension.";
@@ -133,8 +130,10 @@ public:
 private:
     AbstractExtension* m_extension;
     ExtensionInfo m_extensionInfo;
+    el::base::type::StoragePointer m_storagePointer;
 };
 
 Q_DECLARE_INTERFACE(ExtensionBase, "ProjectIslam.Api.ExtensionBase.v1.0")
+#define INITIALIZE_SHARED_LOGGING _INITIALIZE_NULL_EASYLOGGINGPP
 
 #endif // EXTENSION_BASE_H

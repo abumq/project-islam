@@ -11,9 +11,9 @@
 #include "salah_clock.h"
 #include "qibla_compass.h"
 
-_INITIALIZE_EASYLOGGINGPP
+INITIALIZE_SHARED_LOGGING
 
-const char* Salah::kAuthor       = "Project Islam Authors\n    Special thanks to:\n      - Mohammad Ebrahim\n      - Mohammadi Panah\n    Jazak Allah Khair";
+const char* Salah::kAuthor       = "Project Islam Authors";
 const char* Salah::kName         = "Salah";
 const char* Salah::kTitle        = "Ṣalāh";
 const char* Salah::kDescription  = "Organize your ṣalāh (prayer) including athan.";

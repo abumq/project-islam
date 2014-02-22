@@ -82,12 +82,14 @@ void ExtensionLoader::loadAll(ExtensionBar* extensionBar, QSplashScreen *splashS
             extensionBase->extension()->setSettingsLoader(SettingsLoader::getInstance());
             extensionBase->extension()->setSettingsMap(m_settingsDialog->settingsMap());
             extensionBase->extension()->setTrayIcon(m_trayIcon);
+            el::base::RegisteredLoggers* r = ELPP->registeredLoggers();
             
             QAction* helpMenu = m_menuBar->actions().at(m_menuBar->actions().size() - 1);
             m_menuBar->insertMenu(helpMenu, extensionBase->extension()->menu());
             // Extensions may change the configurations so we reconfigure them
             LoggingConfigurer::configureLoggers();
             // initialize and add to extension bar
+            extensionBase->setLoggingRepository(ELPP);
             extensionBase->initialize(argc, argv);
             extensionBar->addExtension(extensionBase->extension());
             if (extensionBase->extension()->settingsTabWidget() != nullptr) {

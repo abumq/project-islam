@@ -16,11 +16,6 @@ class ExtensionBase : public QObject
 {
     // No Q_OBJECT here. Otherwise we get undefined AbstractExtension::staticMetaObject error
 public:
-
-    static const char* kAuthor;
-    static const char* kName;
-    static const char* kTitle;
-    static const char* kDescription;
     
     ExtensionBase() :
         m_extension(nullptr) {
@@ -72,9 +67,6 @@ public:
     /// @brief Need to call this in extension and only proceed if this returns true
     /// Returns true if successfully initialized
     virtual bool initialize(int argc, const char** argv) {
-        setExtensionInfo(ExtensionInfo(getMajorVersion(), getMinorVersion(), getPatchVersion(),
-                                   QString(kAuthor), QString(kName), 
-                                   QString(kTitle), QString(kDescription)));
         el::Helpers::setArgs(argc, argv);
 #ifdef _LOGGER
         el::Loggers::getLogger(_LOGGER);
@@ -83,6 +75,9 @@ public:
         el::Logger* extensionPerformanceLogger = el::Loggers::getLogger(_PERFORMANCE_LOGGER);
         LoggingConfigurer::reconfigurePerformanceLogger(extensionPerformanceLogger);
 #endif // _PERFORMANCE_LOGGER
+        setExtensionInfo(ExtensionInfo(getMajorVersion(), getMinorVersion(), getPatchVersion(),
+                                   QString(getAuthor()), QString(getName()), 
+                                   QString(getTitle()), QString(getDescription())));
         CHECK(m_extensionInfo.isInitialized()) << "Please initialize ExtensionInfo (using constructor) from constructor of your extension.";
         QObject::connect(extension(), SIGNAL(containerGeometryChanged(int, int)), this, SLOT(onContainerGeometryChanged(int, int)));
         QObject::connect(extension(), SIGNAL(activated()), this, SLOT(onActivated()));
@@ -126,10 +121,13 @@ public:
     }
     
     virtual inline unsigned int getMajorVersion() = 0;
-    
     virtual inline unsigned int getMinorVersion() = 0;
-    
     virtual inline unsigned int getPatchVersion() = 0;
+    virtual inline const char* getAuthor() = 0;
+    virtual inline const char* getTitle() = 0;
+    virtual inline const char* getName() = 0;
+    virtual inline const char* getDescription() = 0;
+    
     
 public:
     /// @brief Slot that is connected to signal that is emitted when container

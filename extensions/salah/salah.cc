@@ -13,10 +13,10 @@
 
 INITIALIZE_SHARED_LOGGING
 
-const char* ExtensionBase::kAuthor       = "Project Islam Authors";
-const char* ExtensionBase::kName         = "Salah";
-const char* ExtensionBase::kTitle        = "Ṣalāh";
-const char* ExtensionBase::kDescription  = "Organize your ṣalāh (prayer) including athan.";
+const char* Salah::kAuthor       = "Project Islam Authors";
+const char* Salah::kName         = "Salah";
+const char* Salah::kTitle        = "Ṣalāh";
+const char* Salah::kDescription  = "Organize your ṣalāh (prayer) including athan.";
 
 Salah::Salah()
 {

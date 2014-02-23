@@ -11,10 +11,10 @@
 
 INITIALIZE_SHARED_LOGGING
 
-const char* ExtensionBase::kAuthor       = "Project Islam Authors";
-const char* ExtensionBase::kName         = "Al-Quran";
-const char* ExtensionBase::kTitle        = "Al-Qur'an";
-const char* ExtensionBase::kDescription  = "Al-Qur'an recitation, reading and help memorize yourself.";
+const char* AlQuran::kAuthor       = "Project Islam Authors";
+const char* AlQuran::kName         = "Al-Quran";
+const char* AlQuran::kTitle        = "Al-Qur'an";
+const char* AlQuran::kDescription  = "Al-Qur'an recitation, reading and help memorize yourself.";
 
 AlQuran::AlQuran()
 {

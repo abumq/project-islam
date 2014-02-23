@@ -2,7 +2,7 @@
 #define SETTINGS_LOADER_H
 
 #include <QVariant>
-
+#include <memory>
 #include "core/constants.h"
 
 class QSettings;
@@ -26,8 +26,8 @@ public:
     
     static SettingsLoader* getInstance();
     
-    void saveSettings(QMap<QString, QVariant>* map) const;
-    void saveSettings(const QString &key, const QVariant &value) const;
+    void saveSettings(QMap<QString, QVariant>* map);
+    void saveSettings(const QString &key, const QVariant &value);
     QVariant get(const QString &key, const QVariant &defaultValue = QVariant()) const;
     
     void updateDefaultHomeDir(const QString&);
@@ -35,7 +35,7 @@ public:
     ~SettingsLoader();
 private:
     QString m_settingsFile;
-    QSettings* m_settings;
+    std::unique_ptr<QSettings> m_settings;
     static const QString kMasterSettingsFile;
 
     void changeSettingsFile(const QString& filename);

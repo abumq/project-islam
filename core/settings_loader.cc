@@ -29,8 +29,7 @@ const QString SettingsLoader::kLongitudeKey = "lng";
 
 QString SettingsLoader::s_defaultHomeDir = QString("");
 
-SettingsLoader::SettingsLoader(const char* settingsFilename) :
-    m_settings(nullptr)
+SettingsLoader::SettingsLoader(const char* settingsFilename)
 {
     initialize(settingsFilename);
 }
@@ -39,17 +38,13 @@ SettingsLoader::~SettingsLoader()
 {
     // Important: Do not trace or log anything here
     // as Easylogging++ repo is already destroyed by this time (because of singleton instance)
-    
-    // FIXME: here we have dangling pointer (for some reason, dont know yet) but I guess we do
-    // not even need to put this on heap we can just move m_settings to stack instead.
-    memory::deleteAll(m_settings);
 }
 
 void SettingsLoader::initialize(const char* settingsFilename)
 {
     _TRACE;
     m_settingsFile = defaultHomeDir() + settingsFilename;
-    if (m_settings == nullptr || m_settings->fileName() != m_settingsFile) {
+    if (m_settings.get() == nullptr || m_settings->fileName() != m_settingsFile) {
         changeSettingsFile(m_settingsFile);
     }
     // Following log will not log for the very first time
@@ -68,11 +63,11 @@ SettingsLoader* SettingsLoader::getInstance()
     return &loader;
 }
 
-void SettingsLoader::saveSettings(QMap<QString, QVariant>* map) const
+void SettingsLoader::saveSettings(QMap<QString, QVariant>* map)
 {
     _TRACE;
-    if (m_settings == nullptr || !m_settings->isWritable()) {
-        LOG_IF(m_settings != nullptr, ERROR) << "Settings are not writable ["
+    if (m_settings.get() == nullptr || !m_settings->isWritable()) {
+        LOG_IF(m_settings.get() != nullptr, ERROR) << "Settings are not writable ["
                                              << m_settings->status() << "]";
     } else {
         LOG(INFO) << "Saving settings to [" << m_settingsFile << "]";
@@ -83,7 +78,7 @@ void SettingsLoader::saveSettings(QMap<QString, QVariant>* map) const
     }
 }
 
-void SettingsLoader::saveSettings(const QString& key, const QVariant& value) const
+void SettingsLoader::saveSettings(const QString& key, const QVariant& value)
 {
     _TRACE << "Key: " << key << "; Value: " << value.toString();
     QMap<QString, QVariant> settingsMap;
@@ -94,7 +89,7 @@ void SettingsLoader::saveSettings(const QString& key, const QVariant& value) con
 QVariant SettingsLoader::get(const QString& key, const QVariant& defaultValue) const
 {
     _TRACE;
-    if (m_settings != nullptr) {
+    if (m_settings.get() != nullptr) {
         return m_settings->value(key, defaultValue);
     }
     return defaultValue;
@@ -104,7 +99,6 @@ void SettingsLoader::changeSettingsFile(const QString &filename)
 {
     _TRACE;
     LOG(INFO) << "Changing settings file to [" << filename << "]";
-    memory::deleteAll(m_settings);
     m_settingsFile = filename;
     bool ok = false;
     if (!QFile::exists(m_settingsFile)) {
@@ -119,7 +113,7 @@ void SettingsLoader::changeSettingsFile(const QString &filename)
         ok = true;
     }
     if (ok) {
-        m_settings = new QSettings(m_settingsFile, QSettings::IniFormat);
+        m_settings = std::unique_ptr<QSettings>(new QSettings(m_settingsFile, QSettings::IniFormat));
     }
 }
 

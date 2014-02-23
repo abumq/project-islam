@@ -16,6 +16,12 @@ class ExtensionBase : public QObject
 {
     // No Q_OBJECT here. Otherwise we get undefined AbstractExtension::staticMetaObject error
 public:
+
+    static const char* kAuthor;
+    static const char* kName;
+    static const char* kTitle;
+    static const char* kDescription;
+    
     ExtensionBase() :
         m_extension(nullptr) {
         // Do not call initialize() here since we dont want to run into FATAL error
@@ -60,13 +66,15 @@ public:
     }
     
     void setLoggingRepository(el::base::type::StoragePointer repo) {
-        m_storagePointer = repo;
+        el::Helpers::setStorage(repo);
     }
     
     /// @brief Need to call this in extension and only proceed if this returns true
     /// Returns true if successfully initialized
     virtual bool initialize(int argc, const char** argv) {
-        el::Helpers::setStorage(m_storagePointer);
+        setExtensionInfo(ExtensionInfo(getMajorVersion(), getMinorVersion(), getPatchVersion(),
+                                   QString(kAuthor), QString(kName), 
+                                   QString(kTitle), QString(kDescription)));
         el::Helpers::setArgs(argc, argv);
 #ifdef _LOGGER
         el::Loggers::getLogger(_LOGGER);
@@ -117,6 +125,12 @@ public:
         extension()->settingsLoader()->saveSettings(settingKey(key), value);
     }
     
+    virtual inline unsigned int getMajorVersion() = 0;
+    
+    virtual inline unsigned int getMinorVersion() = 0;
+    
+    virtual inline unsigned int getPatchVersion() = 0;
+    
 public:
     /// @brief Slot that is connected to signal that is emitted when container
     /// geometry changes. This is pretty much similar to QWidget::resizeEvent().
@@ -130,7 +144,6 @@ public:
 private:
     AbstractExtension* m_extension;
     ExtensionInfo m_extensionInfo;
-    el::base::type::StoragePointer m_storagePointer;
 };
 
 Q_DECLARE_INTERFACE(ExtensionBase, "ProjectIslam.Api.ExtensionBase.v1.0")

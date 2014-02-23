@@ -2,6 +2,7 @@
 #define EXTENSION_LOADER_H
 
 #include <QString>
+#include "core/logging/easylogging++.h"
 
 class ExtensionBar;
 class SettingsLoader;
@@ -17,7 +18,7 @@ class ExtensionLoader
 {
 public:
     ExtensionLoader(data::DataHolder* m_dataHolder, QMenuBar *menuBar, SettingsDialog* settingsDialog, QSystemTrayIcon* trayIcon);
-    void loadAll(ExtensionBar* extensionBar, QSplashScreen *splashScreen) const;
+    void loadAll(ExtensionBar* extensionBar, QSplashScreen *splashScreen, el::base::type::StoragePointer loggingStoragePointer) const;
     static bool verifyExtension(const QString& filename);
 private:
     data::DataHolder* m_dataHolder;

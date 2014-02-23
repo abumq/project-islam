@@ -68,7 +68,7 @@ void MainWindow::initialize()
         addToolBar(Qt::LeftToolBarArea, m_extensionBar);
         
         ExtensionLoader extensionLoader(&m_dataHolder, ui->menuBar, m_settingsDialog, m_trayIcon);
-        extensionLoader.loadAll(m_extensionBar, m_splashScreen);
+        extensionLoader.loadAll(m_extensionBar, m_splashScreen, el::Helpers::storage());
         initializeDefaultExtension();
 #if !defined(DISABLE_AUTO_UPDATE)
         m_updateManager.initialize(m_extensionBar);

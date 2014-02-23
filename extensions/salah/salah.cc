@@ -13,18 +13,15 @@
 
 INITIALIZE_SHARED_LOGGING
 
-const char* Salah::kAuthor       = "Project Islam Authors";
-const char* Salah::kName         = "Salah";
-const char* Salah::kTitle        = "Ṣalāh";
-const char* Salah::kDescription  = "Organize your ṣalāh (prayer) including athan.";
+const char* ExtensionBase::kAuthor       = "Project Islam Authors";
+const char* ExtensionBase::kName         = "Salah";
+const char* ExtensionBase::kTitle        = "Ṣalāh";
+const char* ExtensionBase::kDescription  = "Organize your ṣalāh (prayer) including athan.";
 
 Salah::Salah()
 {
     memory::turnToNullPtr(m_salahTimes, m_settingsWidgetForm, m_qiblaCompass,
                           m_fajrClock, m_dhuhrClock, m_asrClock, m_maghribClock, m_ishaClock);
-    setExtensionInfo(ExtensionInfo(kMajorVersion, kMinorVersion, kPatchVersion, 
-                                   QString(kAuthor), QString(kName), 
-                                   QString(kTitle), QString(kDescription)));
     Q_INIT_RESOURCE(icons_salah);
 }
 

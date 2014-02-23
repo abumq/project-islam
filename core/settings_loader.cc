@@ -39,6 +39,9 @@ SettingsLoader::~SettingsLoader()
 {
     // Important: Do not trace or log anything here
     // as Easylogging++ repo is already destroyed by this time (because of singleton instance)
+    
+    // FIXME: here we have dangling pointer (for some reason, dont know yet) but I guess we do
+    // not even need to put this on heap we can just move m_settings to stack instead.
     memory::deleteAll(m_settings);
 }
 

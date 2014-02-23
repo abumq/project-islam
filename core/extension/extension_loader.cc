@@ -23,7 +23,7 @@ ExtensionLoader::ExtensionLoader(data::DataHolder* dataHolder, QMenuBar* menuBar
 {
 }
 
-void ExtensionLoader::loadAll(ExtensionBar* extensionBar, QSplashScreen *splashScreen) const
+void ExtensionLoader::loadAll(ExtensionBar* extensionBar, QSplashScreen *splashScreen, el::base::type::StoragePointer loggingStoragePointer) const
 {
     _TRACE;
     QString appPath = qApp->applicationDirPath();
@@ -76,20 +76,18 @@ void ExtensionLoader::loadAll(ExtensionBar* extensionBar, QSplashScreen *splashS
         }
         QPluginLoader loader(extensionsDir.absoluteFilePath(extensionFilename));
         ExtensionBase* extensionBase = qobject_cast<ExtensionBase*>(loader.instance());
+        extensionBase->setLoggingRepository(loggingStoragePointer);
         if (extensionBase != nullptr && extensionBase->extension() != nullptr) {
             extensionBase->extension()->setDataHolder(m_dataHolder);
             extensionBase->extension()->setContainer(extensionBar->container());
             extensionBase->extension()->setSettingsLoader(SettingsLoader::getInstance());
             extensionBase->extension()->setSettingsMap(m_settingsDialog->settingsMap());
             extensionBase->extension()->setTrayIcon(m_trayIcon);
-            el::base::RegisteredLoggers* r = ELPP->registeredLoggers();
-            
             QAction* helpMenu = m_menuBar->actions().at(m_menuBar->actions().size() - 1);
             m_menuBar->insertMenu(helpMenu, extensionBase->extension()->menu());
             // Extensions may change the configurations so we reconfigure them
             LoggingConfigurer::configureLoggers();
             // initialize and add to extension bar
-            extensionBase->setLoggingRepository(ELPP);
             extensionBase->initialize(argc, argv);
             extensionBar->addExtension(extensionBase->extension());
             if (extensionBase->extension()->settingsTabWidget() != nullptr) {

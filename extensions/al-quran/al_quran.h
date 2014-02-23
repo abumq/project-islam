@@ -22,10 +22,6 @@ private:
     static const unsigned int kMajorVersion = 0;
     static const unsigned int kMinorVersion = 1;
     static const unsigned int kPatchVersion = 0;
-    static const char* kAuthor;
-    static const char* kName;
-    static const char* kTitle;
-    static const char* kDescription;
 public:
     AlQuran();
     ~AlQuran();
@@ -33,6 +29,9 @@ public:
     virtual bool initialize(int argc, const char **argv);
     void initializeMenu();
     
+    virtual inline unsigned int getMajorVersion() { return kMajorVersion; }
+    virtual inline unsigned int getMinorVersion() { return kMinorVersion; }
+    virtual inline unsigned int getPatchVersion() { return kPatchVersion; }
 public slots:
 
     // From interface

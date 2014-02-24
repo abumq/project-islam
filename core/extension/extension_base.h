@@ -61,12 +61,14 @@ public:
     }
     
     void setLoggingRepository(el::base::type::StoragePointer repo) {
-        el::Helpers::setStorage(repo);
+        m_storage = repo;
+        el::Helpers::setStorage(m_storage);
     }
     
     /// @brief Need to call this in extension and only proceed if this returns true
     /// Returns true if successfully initialized
     virtual bool initialize(int argc, const char** argv) {
+        el::Helpers::setStorage(m_storage);
         el::Helpers::setArgs(argc, argv);
 #ifdef _LOGGER
         el::Loggers::getLogger(_LOGGER);
@@ -142,6 +144,8 @@ public:
 private:
     AbstractExtension* m_extension;
     ExtensionInfo m_extensionInfo;
+    // Saving it locally is required for some compilers
+    el::base::type::StoragePointer m_storage;
 };
 
 Q_DECLARE_INTERFACE(ExtensionBase, "ProjectIslam.Api.ExtensionBase.v1.0")

@@ -4,7 +4,7 @@ QT       += core gui widgets sql multimedia network
 
 unix:!win32 {
     ## Compiler
-    COMPILER = icpc
+    COMPILER = clang++
     
     ## Standard
     QMAKE_CXXFLAGS += -std=c++0x
@@ -27,7 +27,8 @@ DEFINES += _ELPP_UNICODE \
            _ELPP_QT_LOGGING \
            _ELPP_STL_LOGGING \
            _ELPP_LOG_UNORDERED_MAP \
-           _ELPP_THREAD_SAFE
+           _ELPP_THREAD_SAFE \
+           _ELPP_FORCE_USE_STD_THREAD
 
 win32 {
     message("Using temporary fixes for Windows build")

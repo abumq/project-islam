@@ -1,4 +1,4 @@
-Project Islam Platform
+![Project Islam](https://raw.github.com/mkhan3189/project-islam/master/resources/images/project-islam128.png) Project Islam Platform
 ----------------------
 
 Extendable project for Islam
@@ -7,9 +7,9 @@ This project is still being developed and not ready for use just yet - but surel
 
 #### Extensions Ready
 
- - Al-Quran
+  ![](https://raw.github.com/mkhan3189/project-islam/master/resources/images/quran.png) Al-Qur'an
  
- - Salah
+  ![](https://raw.github.com/mkhan3189/project-islam/master/resources/images/mosque.png) Salah
 
 #### Current Focus
 

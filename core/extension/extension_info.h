@@ -18,7 +18,7 @@ public:
         CHECK(!author.isEmpty()) << "Author name is required";
         CHECK(!name.isEmpty()) << "Extension name is required";
         CHECK(!description.isEmpty()) << "Description is required";
-        CHECK(author.length() <= AbstractExtension::kExtensionMaxLengthAuthor) << "Author name is too long, max allowed: [" 
+        /*CHECK(author.length() <= AbstractExtension::kExtensionMaxLengthAuthor) << "Author name is too long, max allowed: [" 
                                                                                << AbstractExtension::kExtensionMaxLengthAuthor << "]";
         CHECK(name.length() <= AbstractExtension::kExtensionMaxLengthName) << "Extension name is too long, max allowed: [" 
                                                                            << AbstractExtension::kExtensionMaxLengthName << "]";
@@ -28,7 +28,7 @@ public:
                                                                                          << AbstractExtension::kExtensionMaxLengthDescription << "]";
         CHECK(majorVersion <= 99) << "Invalid major version";
         CHECK(minorVersion <= 99) << "Invalid minor version";
-        CHECK(patchVersion <= 99) << "Invalid patch version";
+        CHECK(patchVersion <= 99) << "Invalid patch version";*/
         m_majorVersion = majorVersion;
         m_minorVersion = minorVersion;
         m_patchVersion = patchVersion;

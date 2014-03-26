@@ -76,6 +76,10 @@ void ExtensionLoader::loadAll(ExtensionBar* extensionBar, QSplashScreen *splashS
         }
         QPluginLoader loader(extensionsDir.absoluteFilePath(extensionFilename));
         ExtensionBase* extensionBase = qobject_cast<ExtensionBase*>(loader.instance());
+        if (extensionBase == nullptr) {
+            LOG(ERROR) << "Issue loading [" << extensionFilename << "]: " << loader.errorString();
+            continue;
+        }
         extensionBase->setLoggingRepository(loggingStoragePointer);
         if (extensionBase != nullptr && extensionBase->extension() != nullptr) {
             extensionBase->extension()->setDataHolder(m_dataHolder);

@@ -148,6 +148,7 @@ void AbstractExtension::activate()
     m_extensionItem->select();
     show();
     m_extensionItem->extensionBar()->setCurrentExtension(this);
+    DLOG_IF(m_menu->actions().isEmpty(), INFO) << "No menu found for [" << m_extensionItem->extension()->info()->name() << "]";
     m_menu->menuAction()->setVisible(!m_menu->actions().isEmpty());
     emit activated();
 }

@@ -12,7 +12,7 @@
 static const el::Level kPerformanceLoggingLevel = el::Level::Debug;
 #undef TIMED_SCOPE
 #undef TIMED_FUNC
-#define TIMED_SCOPE(obj, blockname) el::base::Trackable obj(blockname, _ELPP_MIN_UNIT, _CURRENT_FILE_PERFORMANCE_LOGGER_ID, true, kPerformanceLoggingLevel)
+#define TIMED_SCOPE(obj, blockname) el::base::PerformanceTracker obj(blockname, _ELPP_MIN_UNIT, _CURRENT_FILE_PERFORMANCE_LOGGER_ID, true, kPerformanceLoggingLevel)
 #define TIMED_FUNC(obj) TIMED_SCOPE(obj, _ELPP_FUNC)
 
 class LoggerConfig {
@@ -70,7 +70,7 @@ public:
         CHECK(!configs.empty()) << "We do not expect configs to be empty!";
         registerLoggers(&configs);
         el::Loggers::setDefaultConfigurations(baseConfiguration(), true);
-        el::Helpers::addFlag(el::LoggingFlag::StrictLogFileSizeCheck);
+        el::Loggers::addFlag(el::LoggingFlag::StrictLogFileSizeCheck);
     }
     
     static el::Configurations baseConfiguration() {

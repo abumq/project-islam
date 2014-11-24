@@ -1,4 +1,4 @@
-  **Discontinued project - see http://allahu-ahad.org**
+  **Discontinued project - see http://muflihun.com**
 
 ![Project Islam](https://raw.github.com/mkhan3189/project-islam/master/resources/images/project-islam128.png) Project Islam Platform
 ----------------------

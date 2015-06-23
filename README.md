@@ -34,7 +34,7 @@ This project is still being developed and not ready for use just yet - but surel
 
 This project is still being developed but is ready to be used as well; but here are some screen shots under linux (SL6) - Please hover over images below to find out what they are.
 
-[![Extension (Al-Qur'an)](hhttps://raw.githubusercontent.com/mkhan3189/project-islam/master/resources/screenshots/extension-al-quran.png)](https://raw2.github.com/mkhan3189/project-islam/master/resources/screenshots/extension-al-quran.png)
+[![Extension (Al-Qur'an)](https://raw.githubusercontent.com/mkhan3189/project-islam/master/resources/screenshots/extension-al-quran.png)](https://raw2.github.com/mkhan3189/project-islam/master/resources/screenshots/extension-al-quran.png)
 
 [![Extension (Salah)](https://raw.githubusercontent.com/mkhan3189/project-islam/master/resources/screenshots/extension-salah.png)](https://raw2.github.com/mkhan3189/project-islam/master/resources/screenshots/extension-salah.png)
 

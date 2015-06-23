@@ -34,19 +34,19 @@ This project is still being developed and not ready for use just yet - but surel
 
 This project is still being developed but is ready to be used as well; but here are some screen shots under linux (SL6) - Please hover over images below to find out what they are.
 
-[![Extension (Al-Qur'an)](https://raw2.github.com/mkhan3189/project-islam/master/resources/screenshots/extension-al-quran.png)](https://raw2.github.com/mkhan3189/project-islam/master/resources/screenshots/extension-al-quran.png)
+[![Extension (Al-Qur'an)](hhttps://raw.githubusercontent.com/mkhan3189/project-islam/master/resources/screenshots/extension-al-quran.png)](https://raw2.github.com/mkhan3189/project-islam/master/resources/screenshots/extension-al-quran.png)
 
-[![Extension (Salah)](https://raw2.github.com/mkhan3189/project-islam/master/resources/screenshots/extension-salah.png)](https://raw2.github.com/mkhan3189/project-islam/master/resources/screenshots/extension-salah.png)
+[![Extension (Salah)](https://raw.githubusercontent.com/mkhan3189/project-islam/master/resources/screenshots/extension-salah.png)](https://raw2.github.com/mkhan3189/project-islam/master/resources/screenshots/extension-salah.png)
 
-[![Salah Notification](https://raw2.github.com/mkhan3189/project-islam/master/resources/screenshots/salah-notification.png)](https://raw2.github.com/mkhan3189/project-islam/master/resources/screenshots/salah-notification.png)
+[![Salah Notification](hhttps://raw.githubusercontent.com/mkhan3189/project-islam/master/resources/screenshots/salah-notification.png)](https://raw2.github.com/mkhan3189/project-islam/master/resources/screenshots/salah-notification.png)
 
-[![Settings (General)](https://raw2.github.com/mkhan3189/project-islam/master/resources/screenshots/settings-general.png)](https://raw2.github.com/mkhan3189/project-islam/master/resources/screenshots/settings-general.png)
+[![Settings (General)](hhttps://raw.githubusercontent.com/mkhan3189/project-islam/master/resources/screenshots/settings-general.png)](https://raw2.github.com/mkhan3189/project-islam/master/resources/screenshots/settings-general.png)
 
-[![Settings (Quran)](https://raw2.github.com/mkhan3189/project-islam/master/resources/screenshots/settings-quran.png)](https://raw2.github.com/mkhan3189/project-islam/master/resources/screenshots/settings-quran.png)
+[![Settings (Quran)](https://raw.githubusercontent.com/mkhan3189/project-islam/master/resources/screenshots/settings-quran.png)](https://raw2.github.com/mkhan3189/project-islam/master/resources/screenshots/settings-quran.png)
 
-[![Settings (Salah)](https://raw2.github.com/mkhan3189/project-islam/master/resources/screenshots/settings-salah.png)](https://raw2.github.com/mkhan3189/project-islam/master/resources/screenshots/settings-salah.png)
+[![Settings (Salah)](https://raw.githubusercontent.com/mkhan3189/project-islam/master/resources/screenshots/settings-salah.png)](https://raw2.github.com/mkhan3189/project-islam/master/resources/screenshots/settings-salah.png)
 
-[![Quran Translation / Transliteration](https://raw2.github.com/mkhan3189/project-islam/master/resources/screenshots/ql-quran-translation-transliteration.png)](https://raw2.github.com/mkhan3189/project-islam/master/resources/screenshots/ql-quran-translation-transliteration.png)
+[![Quran Translation / Transliteration](https://raw.githubusercontent.com/mkhan3189/project-islam/master/resources/screenshots/ql-quran-translation-transliteration.png)](https://raw2.github.com/mkhan3189/project-islam/master/resources/screenshots/ql-quran-translation-transliteration.png)
 
 Location tab is not completely ready i.e, list of countries/cities and timezones not available but if someone knows their lat/lng, they should be able to find correct Qibla and salah times.
 

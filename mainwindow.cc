@@ -87,7 +87,6 @@ void MainWindow::initialize()
 
 void MainWindow::reloadStyles()
 {
-    TIMED_FUNC(timer);
     m_extensionBar->setStyleSheet(m_styleLoader.load(StyleLoader::StyleType::ExtensionBar));
     m_container->setStyleSheet(m_styleLoader.load(StyleLoader::StyleType::Extension));
     setStyleSheet(m_styleLoader.load(StyleLoader::StyleType::Menu));

@@ -198,7 +198,6 @@ void QuranReader::turnOnTransliteration()
 void QuranReader::on_cboChapter_currentIndexChanged(int index)
 {
     _TRACE;
-    TIMED_FUNC(timer);
     int chapterId = index + 1;
     
     const quran::Chapter* chapter = m_quran->chapter(static_cast<quran::Chapter::Name>(chapterId));

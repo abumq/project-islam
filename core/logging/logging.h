@@ -10,10 +10,6 @@
 
 // We redefine TIMED_FUNC and TIMED_SCOPE to use different level of logging
 static const el::Level kPerformanceLoggingLevel = el::Level::Debug;
-#undef TIMED_SCOPE
-#undef TIMED_FUNC
-#define TIMED_SCOPE(obj, blockname) el::base::PerformanceTracker obj(blockname, _ELPP_MIN_UNIT, _CURRENT_FILE_PERFORMANCE_LOGGER_ID, true, kPerformanceLoggingLevel)
-#define TIMED_FUNC(obj) TIMED_SCOPE(obj, _ELPP_FUNC)
 
 class LoggerConfig {
 public:
@@ -49,7 +45,6 @@ public:
     }
     
     static void reconfigurePerformanceLogger(el::Logger* logger) {
-        _TRACE;
         if (logger == nullptr) {
             return;
         }
@@ -95,5 +90,7 @@ inline MAKE_LOGGABLE(QVariant, qvariant, os) {
     os << qvariant.toString().toStdString().c_str();
     return os;
 }
+
+#define _TRACE std::stringstream ss
 
 #endif // LOGGING_H

@@ -27,7 +27,6 @@ Quran::Quran(void) :
 void Quran::load(const Quran::TextType &textType, const std::string& databaseTable)
 {
     LOG(DEBUG) << "Loading Quran...";
-    TIMED_SCOPE(quranLoadTimer, "Load Complete Quran");
     m_textType = textType;
     data::DatabaseManager d("QuranDataManager");
     data::QueryResult result = d.query("SELECT * FROM " + QString(kQuranChapterDatabaseTable) + " ORDER BY ID");

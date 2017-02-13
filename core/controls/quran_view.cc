@@ -103,7 +103,6 @@ void QuranView::update(int from, int to)
 void QuranView::update(quran::Chapter* chapter, int from, int to)
 {
     _TRACE;
-    TIMED_FUNC(timer);
     // Either we highlight previously selected verse or if none is selected
     // we highlight 'from'
     int verseNumberToHighlight = m_selectedVerseTextItem != nullptr ? 
@@ -122,7 +121,8 @@ void QuranView::update(quran::Chapter* chapter, int from, int to)
     // We need to assign this to nullptr to prevent any errors
     m_selectedVerseTextItem = nullptr;
     bool isChapterChanged = m_currentChapter != chapter;
-    m_currentChapter = CHECK_NOTNULL(chapter);
+    CHECK_NOTNULL(chapter);
+    m_currentChapter = chapter;
     m_ok = m_currentChapter != nullptr;
     m_currFrom = from;
     m_currTo = to;
@@ -291,7 +291,6 @@ void QuranView::zoomOut(float scaleFactor)
 void QuranView::updateView()
 {
     _TRACE;
-    TIMED_FUNC(timer);
     scene()->setSceneRect(QRectF(0, 0, 1, 1)); // Will be updated in updateView()
     // We dont ignore (newSize == m_fontSize) case since we
     // still want to space out verses

@@ -23,13 +23,7 @@ static inline std::string& replaceAll(std::string& str,
 
 inline std::string toString(int val) 
 {
-#if defined(_MSC_VER)
     return std::to_string(val);
-#else
-    return __gnu_cxx::__to_xstring<std::string>(&std::vsnprintf,
-                                                4 * sizeof(int),
-                                                "%d", val);
-#endif // defined(_MSC_VER)
 }
 
 int notify(const std::string& title, const std::string& message, int durationMs = 3000) {

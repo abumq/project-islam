@@ -11,7 +11,7 @@
 #   error This project requires Qt 5.x
 #endif
 
-_INITIALIZE_EASYLOGGINGPP
+INITIALIZE_EASYLOGGINGPP
 
 int returnCode;
     
@@ -84,7 +84,7 @@ int main(int argc, char* argv[])
     Q_INIT_RESOURCE(styles);
     Q_INIT_RESOURCE(icons);
     
-    _START_EASYLOGGINGPP(argc, argv);
+    START_EASYLOGGINGPP(argc, argv);
     
     a.setApplicationName("Project Islam Platform");
     a.setOrganizationName("Project Islam");

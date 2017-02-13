@@ -65,8 +65,9 @@ UpdateManager::~UpdateManager()
 void UpdateManager::initialize(ExtensionBar* extensionBar)
 {
     _TRACE;
-    m_extensionBar = CHECK_NOTNULL(extensionBar);
-    QObject::connect(this, SIGNAL(downloadProgress(qint64,qint64)), 
+    CHECK_NOTNULL(extensionBar);
+    m_extensionBar = extensionBar;
+    QObject::connect(this, SIGNAL(downloadProgress(qint64,qint64)),
                      this, SLOT(downloadProgressUpdated(qint64,qint64)));
     // Update timer
     m_updateTimer.setInterval(kCheckIntervalInMs);
@@ -143,7 +144,6 @@ bool UpdateManager::update()
         LOG(DEBUG) << "Ignorning updater";
         return true;
     }
-    TIMED_SCOPE(timer, "Update");
     
     bool result = false;
     LOG(INFO) << "Checking for updates...";

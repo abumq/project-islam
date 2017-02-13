@@ -5,6 +5,10 @@ DEFINES += _ELPP_NO_DEFAULT_LOG_FILE
 TARGET = project-islam
 TEMPLATE = app
 
+
+
+INCLUDEPATH += /usr/local/include/
+
 ## Utils headers
 HEADERS += core/utils/memory.h \
     core/utils/version.h \
@@ -36,7 +40,8 @@ HEADERS  += mainwindow.h \
     core/update/update_manager.h
 
 SOURCES += main.cc\
-        mainwindow.cc \
+    /usr/local/include/easylogging++.cc \
+    mainwindow.cc \
     core/style_loader.cc \
     core/extension/abstract_extension.cc \
     core/extension/extension_loader.cc \
